@@ -1,14 +1,16 @@
-name: Build Test Branches
+name: Build Test
 
 on:
   push:
     branches:   
     - '*'
-    - '!main'
+    - '!master'
+    - '!gh-pages'
   pull_request:
     branches:
     - '*'
-    - '!main'
+    - '!master'
+    - '!gh-pages'
     types:
     - open
 
@@ -21,15 +23,13 @@ jobs:
         node-version: [20.x]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    
-    - name: Set up Node.js ${{ matrix.node-version }}
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-
+        
     - name: Check for lock file
     - run: |
         if [ ! -f package-lock.json ]; then
@@ -37,8 +37,6 @@ jobs:
           exit 1;
         fi
 
-    - name: Install dependencies
     - run: npm ci
-
     - name: Build project
     - run: npm run build --if-present
