@@ -39,7 +39,7 @@ jobs:
 
     # Install dependencies using npm ci for CI/CD environments
     - name: Install dependencies
-      run: npm ci
+    - run: npm ci
 
     # Build the project if necessary
     - name: Build project
