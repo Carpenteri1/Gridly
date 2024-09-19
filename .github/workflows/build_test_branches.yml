@@ -4,13 +4,11 @@ on:
   push:
     branches:   
     - '*'
-    - '!master'
-    - '!gh-pages'
+    - '!main'
   pull_request:
     branches:
     - '*'
     - '!main'
-    - '!gh-pages'
     types:
     - open
 
