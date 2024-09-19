@@ -1,3 +1,5 @@
+[![Build Test](https://github.com/Carpenteri1/Gridly/actions/workflows/Build_Test_Branches.yml/badge.svg?branch=main)](https://github.com/Carpenteri1/Gridly/actions/workflows/Build_Test_Branches.yml)
+
 # Gridly
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.7.
