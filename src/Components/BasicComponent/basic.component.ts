@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';  // Import CommonModule for *ngFor
 import { SharedService } from '../../app/shared.service';
 
