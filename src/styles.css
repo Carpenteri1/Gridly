@@ -1,3 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import "bootstrap/dist/css/bootstrap.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
+.flex-fill{
+    border:5px solid white;
+    height: 300px;
+    width: 300px;
+    background-color: lightgray;
+}
