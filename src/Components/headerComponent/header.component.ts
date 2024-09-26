@@ -12,7 +12,10 @@ export class HeaderComponent{
 
   constructor(public sharedService: SharedService) {}
 
-  onButtonClick() {
+  addComponent() {
     this.sharedService.addItem();
+  }
+  removeComponent() {
+    this.sharedService.removeItem();
   }
 }

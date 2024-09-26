@@ -19,14 +19,21 @@ export class SharedService {
   }
 
   addItem() {
-    if(this.flexItems.length <= 4){
       const newItem = this.sanitizeHtml(`<div 
         style="
-        height: 100%;
+        height: 300px;
         width:330px;
-        margin-left:1.5em;
+        flex: 1 1 330px;
+        margin: 10px;
         background:darkgrey;">Flex item ${this.flexItems.length}</div>`);
-      this.flexItems.push(newItem); 
+        this.flexItems.push(newItem);     
+  }
+  removeItem(){
+    if(this.flexItems.length > 1){
+      this.flexItems.splice(this.flexItems.length -1,1);
+    }
+    if(this.flexItems.length === 1){
+      this.flexItems.splice(this.flexItems.length,1);
     }
   }
 }
