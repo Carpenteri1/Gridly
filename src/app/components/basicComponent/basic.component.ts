@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';  // Import CommonModule for *ngFor
-import { SharedService } from '../../app/shared.service';
+import { SharedService } from '../../shared.service';
 
 @Component({
   selector: 'basic-component',
