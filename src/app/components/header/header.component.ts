@@ -12,10 +12,7 @@ export class HeaderComponent{
 
   constructor(public sharedService: SharedService) {}
 
-  addComponent() {
-    this.sharedService.addItem();
-  }
-  removeComponent() {
-    this.sharedService.removeItem();
+  AddComponent() {
+    this.sharedService.AddItem();
   }
 }

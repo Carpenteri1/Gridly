@@ -1,3 +1,8 @@
 <div class="d-flex flex-wrap" style="height: 300px;">
-    <div *ngFor="let item of sharedService.flexItems" [innerHTML]="item"></div>
+    <div *ngFor="let item of sharedService.flexItems" 
+    class="action-btn"
+    style="height: 300px; width:330px; flex: 1 1 330px; margin: 10px; background:darkgrey;">
+        Flex item 
+    <button (click)="Remove(item.id)">Remove Button </button>
+</div>
 </div>
