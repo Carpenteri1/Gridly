@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+
 import { CommonModule } from '@angular/common';  // Import CommonModule for *ngFor
 import { SharedService } from '../../shared.service';
 
@@ -11,4 +12,7 @@ import { SharedService } from '../../shared.service';
 })
 export class BasicComponent {
   constructor(public sharedService: SharedService) {}
+  Remove(id: number): void {
+    this.sharedService.Remove(id);
+  }
 }
