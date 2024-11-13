@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { IComponentModel } from './interfaces/IComponent.Model';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class SharedService {
-  flexItems: { id: number }[] = [];
+  flexItems: { IComponentModel: IComponentModel }[] = [];
 
   Remove(id: number) {
     let index = this.GetId(id);
@@ -14,18 +15,18 @@ export class SharedService {
     }
   }
 
-  AddItem() {
+  AddComponent(IComponentModel: IComponentModel) {
     const newId = Math.floor(Math.random() * 100) + 1;
     let index = this.GetId(newId);
-    console.log(index);
     if(index === -1){
-      this.flexItems.push({ id: newId });
+      IComponentModel.Id = newId;
+      this.flexItems.push({ IComponentModel: IComponentModel });
     }
     else
-      this.AddItem();
+      this.AddComponent(IComponentModel);
   }
 
   GetId(id: number): number{
-    return this.flexItems.findIndex(item => item.id == id);
+    return this.flexItems.findIndex(item => item.IComponentModel.Id == id);
   }
 }

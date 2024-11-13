@@ -19,13 +19,13 @@
         <form>
           <div class="form-group">
             <label>App name</label>
-            <input type="name" class="form-control" placeholder="App name">
+            <input type="text" class="form-control" placeholder="App name" [(ngModel)]="IComponentModel.Name" name="name">
           </div>
           <div class="form-group">
-            <label>Adress</label>
-            <input type="name" class="form-control" placeholder="Adress">
+            <label>Service Url</label>
+            <input type="text" class="form-control" placeholder="Url" [(ngModel)]="IComponentModel.Url" name="url">
           </div>
-          <div class="form-group">
+          <!--<div class="form-group">
             <label>App name</label>
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               Välj en ikon
@@ -36,12 +36,12 @@
               <li><a class="dropdown-item" href="#"><i class="bi bi-gear-fill me-2"></i></a></li>
               <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i></a></li>
           </ul>
-          </div>
+          </div>-->
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="AddComponent()">Add new component</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="AddComponent(IComponentModel)">Add</button>
       </div>
     </div>
   </div>
