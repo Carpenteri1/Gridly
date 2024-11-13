@@ -2,7 +2,17 @@
     <div *ngFor="let item of sharedService.flexItems" 
     class="action-btn"
     style="height: 300px; width:330px; flex: 1 1 330px; margin: 10px; background:darkgrey;">
-        Flex item 
-    <button (click)="Remove(item.id)">Remove Button </button>
+    <ul>
+        <li>
+            {{item.IComponentModel.Id}}
+        </li>
+        <li>
+            {{item.IComponentModel.Name}}
+        </li>
+        <li>
+            {{item.IComponentModel.Url}} 
+        </li>
+    </ul>
+    <button (click)="Remove(item.IComponentModel.Id)">Remove Button </button>
 </div>
 </div>
