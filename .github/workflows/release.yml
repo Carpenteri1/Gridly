@@ -46,7 +46,7 @@ jobs:
 
     - name: Build Angular project
       run: |
-        ng build --prod --configuration=production
+        ng build --configuration production
 
     - name: Create Git tag with new version
       run: |
