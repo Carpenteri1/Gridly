@@ -42,6 +42,7 @@ jobs:
 
     - name: Create a tarball of dist folder
       run: |
+           TAG_VERSION=v$(jq -r .version package.json)
            tar -czvf dist-gridly-${TAG_VERSION}.tar.gz -C dist/gridly .  
            echo "tarball with name dist-gridly-${TAG_VERSION}.tar.gz created"
         
