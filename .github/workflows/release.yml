@@ -22,13 +22,14 @@ jobs:
       run: |
         npm ci
         
-    #- name: Install Angular CLI globally
-    #  run: |
-    #    npm install -g @angular/cli
-    - name: Verify Angular CLI installation
+    - name: Install Angular CLI globally
       run: |
-        npx -v  # Verify that npx is available
-        ng version  # Verify that Angular CLI is installed and accessible
+        npm install -g @angular/cli
+        
+    #- name: Verify Angular CLI installation
+    #  run: |
+    #    npx -v  # Verify that npx is available
+    #    ng version  # Verify that Angular CLI is installed and accessible
 
     - name: Get current version from package.json
       id: get_version
