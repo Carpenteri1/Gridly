@@ -1,12 +1,12 @@
 name: Angular Release Workflow
 
-  on:
-#  workflow_dispatch:  # This allows manual triggering from the GitHub UI
-#    inputs:
-#      version:
-#        description: 'Enter the version number (e.g., 1.2.0)'
-#        required: true
-#        #default: 'auto'  # Default version if user doesn't input anything
+on:
+  workflow_dispatch:  # This allows manual triggering from the GitHub UI
+    inputs:
+      version:
+        description: 'Enter the version number (e.g., 1.2.0)'
+        required: true
+        #default: 'auto'  # Default version if user doesn't input anything
 
 jobs:
   build_and_release:
