@@ -4,7 +4,9 @@ on:
   push:
     branches:  
     - 'add-new-release'
-
+env:
+ TAG_VERSION: ''
+ 
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
@@ -34,18 +36,18 @@ jobs:
 
     - name: Create Git tag with package version
       run: |
-        VERSION=$(jq -r .version package.json)
-        git tag v$VERSION
-        echo "Tag created v$VERSION"
+        TAG_VERSION=$(jq -r .version package.json)
+        git tag v$TAG_VERSION
+        echo "Tag created v$TAG_VERSION"
 
     - name: Create a tarball of dist folder
       run: |
-           tar -czvf dist-gridly-v$VERSION.tar.gz -C dist/gridly .  
-           echo "tarball with name dist-gridly-v$VERSION.tar.gz created"
+           tar -czvf dist-gridly-v$TAG_VERSION.tar.gz -C dist/gridly .  
+           echo "tarball with name dist-gridly-v$TAG_VERSION.tar.gz created"
         
     - name: Upload dist tarball to GitHub Releases
       uses: softprops/action-gh-release@v1
       with:
-        files: dist-gridly-v$VERSION.tar.gz  # Upload the tarball as a release asset
+        files: dist-gridly-v$TAG_VERSION.tar.gz  # Upload the tarball as a release asset
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
