@@ -29,20 +29,20 @@ jobs:
       id: get_version
       run: |
         VERSION=$(jq -r .version package.json)
-        echo "Current version is $VERSION"
-        echo "CURRENT_VERSION=$VERSION" >> $GITHUB_ENV
+        echo "Current version is $VERSION TEST"
+        echo "CURRENT_VERSION=$VERSION TEST" >> $GITHUB_ENV
 
-    - name: Ask for version if not provided
-      id: ask_version
-      run: |
-        if [ "${{ github.event.inputs.version }}" != "auto" ]; then
-          echo "Using provided version: ${{ github.event.inputs.version }}"
-          echo "NEW_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-        else
-          NEW_VERSION=$(npm version patch -m "Release version %s")
-          echo "Auto versioning: new version is $NEW_VERSION"
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-        fi
+  #  - name: Ask for version if not provided
+  #    id: ask_version
+  #    run: |
+  #      if [ "${{ github.event.inputs.version }}" != "auto" ]; then
+  #        echo "Using provided version: ${{ github.event.inputs.version }}"
+  #        echo "NEW_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+  #      else
+  #        NEW_VERSION=$(npm version patch -m "Release version %s")
+  #        echo "Auto versioning: new version is $NEW_VERSION"
+  #       echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+  #      fi
 
     - name: Build Angular project
       run: |
@@ -50,8 +50,8 @@ jobs:
 
     - name: Create Git tag with new version
       run: |
-        git tag $NEW_VERSION
-        git push origin $NEW_VERSION
+        git tag v$CURRENT_VERSION
+        git push origin v$CURRENT_VERSION
 
     - name: Upload production build to GitHub Releases
       uses: softprops/action-gh-release@v1
