@@ -1,12 +1,9 @@
 name: Angular Release Workflow
 
 on:
-  workflow_dispatch:  # This allows manual triggering from the GitHub UI
-    inputs:
-      version:
-        description: 'Enter the version number (e.g., 1.2.0)'
-        required: true
-        #default: 'auto'  # Default version if user doesn't input anything
+  push:
+    branches:  
+    - 'add-new-release'
 
 jobs:
   build_and_release:
@@ -31,18 +28,6 @@ jobs:
         VERSION=$(jq -r .version package.json)
         echo "Current version is $VERSION TEST"
         echo "CURRENT_VERSION=$VERSION TEST" >> $GITHUB_ENV
-
-  #  - name: Ask for version if not provided
-  #    id: ask_version
-  #    run: |
-  #      if [ "${{ github.event.inputs.version }}" != "auto" ]; then
-  #        echo "Using provided version: ${{ github.event.inputs.version }}"
-  #        echo "NEW_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-  #      else
-  #        NEW_VERSION=$(npm version patch -m "Release version %s")
-  #        echo "Auto versioning: new version is $NEW_VERSION"
-  #       echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-  #      fi
 
     - name: Build Angular project
       run: |
