@@ -41,6 +41,7 @@ jobs:
     - name: Create a tarball of dist folder
       run: |
            tar -czvf dist-gridly-v$VERSION.tar.gz -C dist/gridly .  
+           echo "tarball with name dist-gridly-v$VERSION.tar.gz created"
         
     - name: Upload dist tarball to GitHub Releases
       uses: softprops/action-gh-release@v1
