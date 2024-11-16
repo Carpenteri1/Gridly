@@ -8,6 +8,8 @@ on:
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # This grants write access to the repository contents
 
     steps:
     - name: Checkout code
@@ -25,25 +27,14 @@ jobs:
     - name: Install Angular CLI globally
       run: |
         npm install -g @angular/cli
-        
-    #- name: Verify Angular CLI installation
-    #  run: |
-    #    npx -v  # Verify that npx is available
-    #    ng version  # Verify that Angular CLI is installed and accessible
-
-    - name: Get current version from package.json
-      id: get_version
-      run: |
-        VERSION=$(jq -r .version package.json)
-        echo "Current version is $VERSION TEST"
-        echo "CURRENT_VERSION=$VERSION TEST" >> $GITHUB_ENV
 
     - name: Build Angular project
       run: |
         ng build --configuration production  # Correct production flag
 
-    - name: Create Git tag with new version
+    - name: Get current version from package.json and create Git tag with version
       run: |
+        VERSION=$(jq -r .version package.json)
         git tag v$VERSION
         git push origin v$VERSION
 
