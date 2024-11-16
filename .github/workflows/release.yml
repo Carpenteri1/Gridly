@@ -41,12 +41,13 @@ jobs:
 
     - name: Create a tarball of dist folder
       run: |
-           tar -czvf dist-gridly-$TAG_VERSION.tar.gz -C dist/gridly .  
-           echo "tarball with name dist-gridly-${TAG_VERSION}.tar.gz created"
+           $name="dist-gridly-${TAG_VERSION}.tar.gz"
+           tar -czvf $name -C dist/gridly .  
+           echo "tarball with name ${name} created"
         
     - name: Upload dist tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
       with:
-        files: dist-gridly-$TAG_VERSION.tar.gz  # Upload the tarball as a release asset
+        files: dist-gridly-${TAG_VERSION}.tar.gz  # Upload the tarball as a release asset
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
