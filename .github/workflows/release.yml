@@ -32,20 +32,19 @@ jobs:
       run: |
         ng build --configuration production  # Correct production flag
 
-    - name: Get current version from package.json and create Git tag with version
+    - name: Create Git tag with package version
       run: |
         VERSION=$(jq -r .version package.json)
         git tag v$VERSION
-        git push origin v$VERSION
+        echo "Tag created v$VERSION"
 
-    - name: List contents of dist/gridly
+    - name: Create a tarball of dist folder
       run: |
-        echo "List everything inside dist/gridly"
-        ls -R ./dist/gridly  # This will recursively list all files in the dist/gridly folder
-
-    - name: Upload production build to GitHub Releases
+           tar -czvf dist-gridly-v$VERSION.tar.gz -C dist/gridly .  
+        
+    - name: Upload dist tarball to GitHub Releases
       uses: softprops/action-gh-release@v1
       with:
-        files: ./dist/gridly/**/*  # Adjust this path to match your dist folder
+        files: dist-gridly-v$VERSION.tar.gz  # Upload the tarball as a release asset
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
