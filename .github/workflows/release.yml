@@ -38,6 +38,11 @@ jobs:
         git tag v$VERSION
         git push origin v$VERSION
 
+    - name: List contents of dist/gridly
+      run: |
+        echo "List everything inside dist/gridly"
+        ls -R ./dist/gridly  # This will recursively list all files in the dist/gridly folder
+
     - name: Upload production build to GitHub Releases
       uses: softprops/action-gh-release@v1
       with:
