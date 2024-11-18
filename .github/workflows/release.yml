@@ -38,13 +38,22 @@ jobs:
         git tag $TAG_VERSION
         echo "Tag created $TAG_VERSION"
 
+   # - name: Create a tarball of dist folder
+   #   run: |
+           # TAG_VERSION=v$(jq -r .version package.json)
+           # $name="dist-gridly-$TAG_VERSION.tar.gz"
+           # tar -czvf $name -C dist/gridly .  
+           # echo "tarball with name ${name} created"
+           # echo "name=$name" >> $GITHUB_ENV
     - name: Create a tarball of dist folder
       run: |
-           TAG_VERSION=v$(jq -r .version package.json)
-           $name="dist-gridly-$TAG_VERSION.tar.gz"
-           tar -czvf $name -C dist/gridly .  
-           echo "tarball with name ${name} created"
-           echo "name=$name" >> $GITHUB_ENV
+            Run TAG_VERSION=v$(jq -r .version package.json)
+            TAG_VERSION=v$(jq -r .version package.json)
+            name="dist-gridly-$TAG_VERSION.tar.gz" # Fixed the variable assignment
+            tar -czvf $name -C dist/gridly .  
+            echo "tarball with name ${name} created"
+            echo "name=$name" >> $GITHUB_ENV
+            shell: /usr/bin/bash -e {0}
         
     - name: Upload dist tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
