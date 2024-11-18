@@ -41,7 +41,7 @@ jobs:
 
     - name: Create a tarball of dist folder
       run: |
-           $name="dist-gridly-${TAG_VERSION}.tar.gz"
+           $name="dist-gridly-$TAG_VERSION.tar.gz"
            tar -czvf $name -C dist/gridly .  
            echo "tarball with name ${name} created"
            echo "name=$name" >> $GITHUB_ENV
