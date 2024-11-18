@@ -35,12 +35,12 @@ jobs:
     - name: Create Git tag with package version
       run: |
         TAG_VERSION=v$(jq -r .version package.json)
-        echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV  # Export to GitHub Actions environment
         git tag $TAG_VERSION
         echo "Tag created $TAG_VERSION"
 
     - name: Create a tarball of dist folder
       run: |
+           TAG_VERSION=v$(jq -r .version package.json)
            $name="dist-gridly-$TAG_VERSION.tar.gz"
            tar -czvf $name -C dist/gridly .  
            echo "tarball with name ${name} created"
