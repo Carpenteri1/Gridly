@@ -42,7 +42,7 @@ jobs:
       run: |
           TAG_VERSION=v$(jq -r .version package.json)
           ZIP_NAME="Gridly-$TAG_VERSION.zip"
-          zip -r dist/$ZIP_NAME ./dist/Gridly
+          zip -r dist/$ZIP_NAME ./dist/gridly
           echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
           
    # - name: Create Git tag with package version
@@ -54,6 +54,6 @@ jobs:
     - name: Upload dist tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
       with:
-        files: dist/Gridly.zip  # Upload the tarball as a release asset
+        files: dist/${{ env.ZIP_NAME }}  # Upload the tarball as a release asset
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
