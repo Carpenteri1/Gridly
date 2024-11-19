@@ -32,10 +32,7 @@ jobs:
       run: |
         ng build --configuration production 
 
-    - name: Debug Build Output
-      run: ls -R ./dist
-
-    - name: Install zip utility (if needed)
+    - name: Install zip utility
       run: sudo apt-get install -y zip
 
     - name: Package build into ZIP
@@ -51,9 +48,9 @@ jobs:
         git tag $TAG_VERSION
         git push origin $TAG_VERSION 
         echo "new tag $TAG_VERSION created and pushed"
-
-    - name: Fetch tags from GitHub
-      run: git fetch --tags  # Ensure that the tag is available for the releas
+      
+    - name: Wait for tag propagation
+      run: sleep 5
         
     - name: Upload dist tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
