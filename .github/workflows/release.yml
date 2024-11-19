@@ -1,0 +1,61 @@
+name: Angular Release Workflow
+
+on:
+  push:
+    branches:  
+    - 'master'
+ 
+jobs:
+  build_and_release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # This grants write access to the repository contents
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '23'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        
+    - name: Install Angular CLI globally
+      run: |
+        npm install -g @angular/cli
+
+    - name: Build Angular project
+      run: |
+        ng build --configuration production 
+
+    - name: Install zip utility
+      run: sudo apt-get install -y zip
+
+    - name: Package build into ZIP
+      run: |
+          TAG_VERSION=v$(jq -r .version package.json)
+          ZIP_NAME="Gridly-$TAG_VERSION.zip"
+          zip -r dist/$ZIP_NAME ./dist/gridly
+          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
+          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
+          
+    - name: Create Git tag with package version
+      run: |
+        git tag $TAG_VERSION
+        git push origin $TAG_VERSION 
+        echo "new tag $TAG_VERSION created and pushed"
+      
+    - name: Wait for tag propagation
+      run: sleep 2
+        
+    - name: Upload dist tarball to GitHub Releases    
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/${{ env.ZIP_NAME }}  # Upload the tarball as a release asset
+        tag_name: ${{ env.TAG_VERSION }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
