@@ -30,34 +30,27 @@ jobs:
 
     - name: Build Angular project
       run: |
-        ng build --configuration production  # Correct production flag
+        ng build --configuration production 
 
-    - name: Create Git tag with package version
+    - name: Install zip utility (if needed)
+      run: sudo apt-get install -y zip
+
+    - name: Package build into ZIP
       run: |
-        TAG_VERSION=v$(jq -r .version package.json)
-        git tag $TAG_VERSION
-        echo "Tag created $TAG_VERSION"
-
-   # - name: Create a tarball of dist folder
+          TAG_VERSION=v$(jq -r .version package.json)
+          ZIP_NAME="Gridly-$TAG_VERSION.zip"
+          zip -r dist/$ZIP_NAME ./dist/Gridly
+          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
+          
+   # - name: Create Git tag with package version
    #   run: |
-           # TAG_VERSION=v$(jq -r .version package.json)
-           # $name="dist-gridly-$TAG_VERSION.tar.gz"
-           # tar -czvf $name -C dist/gridly .  
-           # echo "tarball with name ${name} created"
-           # echo "name=$name" >> $GITHUB_ENV
-    - name: Create a tarball of dist folder
-      run: |
-            Run TAG_VERSION=v$(jq -r .version package.json)
-            TAG_VERSION=v$(jq -r .version package.json)
-            name="dist-gridly-$TAG_VERSION.tar.gz" # Fixed the variable assignment
-            tar -czvf $name -C dist/gridly .  
-            echo "tarball with name ${name} created"
-            echo "name=$name" >> $GITHUB_ENV
-            shell: /usr/bin/bash -e {0}
+   #     TAG_VERSION=v$(jq -r .version package.json)
+   #     git tag $TAG_VERSION
+   #     echo "Tag created $TAG_VERSION"
         
     - name: Upload dist tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
       with:
-        files: $name  # Upload the tarball as a release asset
+        files: dist/Gridly.zip  # Upload the tarball as a release asset
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
