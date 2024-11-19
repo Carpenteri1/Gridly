@@ -3,7 +3,7 @@ name: Angular Release Workflow
 on:
   push:
     branches:  
-    - 'add-new-release'
+    - 'master'
  
 jobs:
   build_and_release:
@@ -50,7 +50,7 @@ jobs:
         echo "new tag $TAG_VERSION created and pushed"
       
     - name: Wait for tag propagation
-      run: sleep 5
+      run: sleep 2
         
     - name: Upload dist tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
