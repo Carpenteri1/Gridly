@@ -51,6 +51,9 @@ jobs:
         git tag $TAG_VERSION
         git push origin $TAG_VERSION 
         echo "new tag $TAG_VERSION created and pushed"
+
+    - name: Fetch tags from GitHub
+      run: git fetch --tags  # Ensure that the tag is available for the releas
         
     - name: Upload dist tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
