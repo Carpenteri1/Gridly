@@ -32,6 +32,9 @@ jobs:
       run: |
         ng build --configuration production 
 
+    - name: Debug Build Output
+      run: ls -R ./dist
+
     - name: Install zip utility (if needed)
       run: sudo apt-get install -y zip
 
