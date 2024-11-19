@@ -1,4 +1,5 @@
 [![Build Test](https://github.com/Carpenteri1/Gridly/actions/workflows/Build_Test_Branches.yml/badge.svg?branch=main)](https://github.com/Carpenteri1/Gridly/actions/workflows/Build_Test_Branches.yml)
+![Test](https://img.shields.io/github/v/release/Carpenteri1/Gridly.svg)
 
 # Gridly
 
