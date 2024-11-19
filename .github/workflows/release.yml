@@ -49,7 +49,8 @@ jobs:
     - name: Create Git tag with package version
       run: |
         git tag $TAG_VERSION
-        echo "Tag created $TAG_VERSION"
+        git push origin $TAG_VERSION 
+        echo "new tag $TAG_VERSION created and pushed"
         
     - name: Upload dist tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
