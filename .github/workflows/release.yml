@@ -56,5 +56,6 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: dist/${{ env.ZIP_NAME }}  # Upload the tarball as a release asset
+        tag_name: ${{ env.TAG_VERSION }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
