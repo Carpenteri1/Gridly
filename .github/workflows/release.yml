@@ -44,12 +44,12 @@ jobs:
           ZIP_NAME="Gridly-$TAG_VERSION.zip"
           zip -r dist/$ZIP_NAME ./dist/gridly
           echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
+          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
           
-   # - name: Create Git tag with package version
-   #   run: |
-   #     TAG_VERSION=v$(jq -r .version package.json)
-   #     git tag $TAG_VERSION
-   #     echo "Tag created $TAG_VERSION"
+    - name: Create Git tag with package version
+      run: |
+        git tag $TAG_VERSION
+        echo "Tag created $TAG_VERSION"
         
     - name: Upload dist tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
