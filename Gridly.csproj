@@ -10,11 +10,26 @@
     <_ContentIncludedByDefault Remove="Views\Main\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Header\index.cshtml" />
     <_ContentIncludedByDefault Remove="Gridly-Client\gridly-prod\prerendered-routes.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\site.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\LICENSE.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\index.html" />
     <None Include="wwwroot\main-VV6QISO7.js" />
+    <None Include="wwwroot\media\bootstrap-icons-OCU552PF.woff" />
+    <None Include="wwwroot\media\bootstrap-icons-X6UQXWUS.woff2" />
     <None Include="wwwroot\polyfills-FFHMD2TL.js" />
     <None Include="wwwroot\scripts-EEEIPNC3.js" />
     <None Include="wwwroot\styles-YYS3C2DX.css" />
