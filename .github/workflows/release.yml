@@ -1,4 +1,4 @@
-name: Angular Release Workflow
+name: Create new release for project
 
 on:
   push:
