@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <Folder Include="Gridly-Client\dist\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/niclastimle/Repos/test/Gridly/Gridly.csproj": {}
+    "/Users/niclastimle/Repos/Gridly/Gridly.csproj": {}
   },
   "projects": {
-    "/Users/niclastimle/Repos/test/Gridly/Gridly.csproj": {
+    "/Users/niclastimle/Repos/Gridly/Gridly.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/niclastimle/Repos/test/Gridly/Gridly.csproj",
+        "projectUniqueName": "/Users/niclastimle/Repos/Gridly/Gridly.csproj",
         "projectName": "Gridly",
-        "projectPath": "/Users/niclastimle/Repos/test/Gridly/Gridly.csproj",
+        "projectPath": "/Users/niclastimle/Repos/Gridly/Gridly.csproj",
         "packagesPath": "/Users/niclastimle/.nuget/packages/",
-        "outputPath": "/Users/niclastimle/Repos/test/Gridly/obj/",
+        "outputPath": "/Users/niclastimle/Repos/Gridly/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/niclastimle/.nuget/NuGet/NuGet.Config"

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "IBh/avjVkfTL7Jsz7xRwXffEMGtIPnYSO7OCJIqAyBAk6aeltWulaeBqRIzVPJR1c013IP6qKaPWkkFeVgqWMg==",
+  "dgSpecHash": "NvkYiATGwudSlP/IfhjyB/2FRVyJcT+dQJleW6FKitSg8idFM5cSrV9Avoi4wiNRotzZwlNb3mTLDOKh8kgT4A==",
   "success": true,
-  "projectFilePath": "/Users/niclastimle/Repos/test/Gridly/Gridly.csproj",
+  "projectFilePath": "/Users/niclastimle/Repos/Gridly/Gridly.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

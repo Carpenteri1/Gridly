@@ -3,7 +3,7 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-app.UseStaticFiles();  // Ensure static files are served
+app.UseStaticFiles();
 
 app.MapControllerRoute(
     name: "default",
