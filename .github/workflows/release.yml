@@ -2,9 +2,9 @@ name: Angular Release Workflow
 
 on:
   push:
-    branches:  
-    - 'main'
- 
+    branches: 
+          - 'main'
+          
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
@@ -13,33 +13,33 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
+    - name: Set up .NET 8
+      uses: actions/setup-dotnet@v3
       with:
-        node-version: '23'
-
-    - name: Install dependencies
-      run: |
-        npm ci
+        dotnet-version: '8.0.x'
         
-    - name: Install Angular CLI globally
-      run: |
-        npm install -g @angular/cli
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build the application
+      run: dotnet build --configuration Release
 
-    - name: Build Angular project
-      run: |
-        ng build --configuration production 
+    - name: Publish the application
+      run: dotnet publish --configuration Release --output ./publish
 
+    - name: debug files
+      run: echo "ls"
+    
     - name: Install zip utility
       run: sudo apt-get install -y zip
 
     - name: Package build into ZIP
       run: |
-          TAG_VERSION=v$(jq -r .version package.json)
+          TAG_VERSION=v$(jq -r .version Gridly-Client/package.json)
           ZIP_NAME="Gridly-$TAG_VERSION.zip"
-          zip -r dist/$ZIP_NAME ./dist/gridly
+          zip -r publish/$ZIP_NAME ./publish
           echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
           echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
           
@@ -48,14 +48,11 @@ jobs:
         git tag $TAG_VERSION
         git push origin $TAG_VERSION 
         echo "new tag $TAG_VERSION created and pushed"
-      
-    - name: Wait for tag propagation
-      run: sleep 2
         
-    - name: Upload dist tarball to GitHub Releases    
+    - name: Upload tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
       with:
-        files: dist/${{ env.ZIP_NAME }}  # Upload the tarball as a release asset
+        files: publish/${{ env.ZIP_NAME }}  # Upload the tarball as a release asset
         tag_name: ${{ env.TAG_VERSION }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
