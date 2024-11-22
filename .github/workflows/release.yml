@@ -52,10 +52,10 @@ jobs:
         git push origin $TAG_VERSION 
         echo "new tag $TAG_VERSION created and pushed"
         
-    - name: Upload dist tarball to GitHub Releases    
+    - name: Upload tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
       with:
-        files: dist/${{ env.ZIP_NAME }}  # Upload the tarball as a release asset
+        files: project/${{ env.ZIP_NAME }}  # Upload the tarball as a release asset
         tag_name: ${{ env.TAG_VERSION }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
