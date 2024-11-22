@@ -55,7 +55,7 @@ jobs:
     - name: Upload tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
       with:
-        files: project/${{ env.ZIP_NAME }}  # Upload the tarball as a release asset
+        files: publish/${{ env.ZIP_NAME }}  # Upload the tarball as a release asset
         tag_name: ${{ env.TAG_VERSION }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
