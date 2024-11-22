@@ -7,8 +7,6 @@
 /bazel-out
 bin/
 obj/
-/bin
-/obj
 
 # Node
 /node_modules
