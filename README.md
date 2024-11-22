@@ -13,5 +13,5 @@
  ![HTML5](https://img.shields.io/badge/-HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
  ![CSS3](https://img.shields.io/badge/-CSS3-1572B6?style=for-the-badge&logo=css3)
  ![Bootstrap](https://img.shields.io/badge/-Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
- ![NPM](https://img.shields.io/badge/NPM-green?style=for-the-badge&logo=npm&logoColor=white)
+ ![NPM](https://img.shields.io/badge/NPM-F7DF1E?style=for-the-badge&logo=npm&logoColor=white)
  ![Yaml](https://img.shields.io/badge/Yaml-FF6C37?style=for-the-badge&logo=yaml&logoColor=white)
