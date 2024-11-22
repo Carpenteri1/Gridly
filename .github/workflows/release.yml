@@ -33,7 +33,7 @@ jobs:
       run: dotnet publish --configuration Release --output ./publish
 
     - name: debug files
-        run: echo "ls"
+      run: echo "ls"
     
     - name: Install zip utility
       run: sudo apt-get install -y zip
