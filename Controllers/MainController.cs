@@ -1,26 +1,27 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Gridly.Models;
 
 namespace Gridly.Controllers;
 
 public class MainController : Controller
 {
-    private readonly ILogger<MainController> _logger;
+    private readonly IWebHostEnvironment _env;
 
-    public MainController(ILogger<MainController> logger)
+    public MainController(IWebHostEnvironment env)
     {
-        _logger = logger;
+        _env = env;
     }
 
+    // This action returns the Angular index.html
     public IActionResult Index()
     {
-        return View();
-    }
+        var indexPath = Path.Combine(_env.WebRootPath, "index.html");
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        // Ensure the file exists
+        if (System.IO.File.Exists(indexPath))
+        {
+            return PhysicalFile(indexPath, "text/html");
+        }
+
+        return NotFound();
     }
 }

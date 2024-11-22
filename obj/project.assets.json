@@ -14,7 +14,7 @@
     "version": "1.0.0",
     "restore": {
       "projectUniqueName": "/Users/niclastimle/Repos/test/Gridly/Gridly.csproj",
-      "projectName": "gridly",
+      "projectName": "Gridly",
       "projectPath": "/Users/niclastimle/Repos/test/Gridly/Gridly.csproj",
       "packagesPath": "/Users/niclastimle/.nuget/packages/",
       "outputPath": "/Users/niclastimle/Repos/test/Gridly/obj/",

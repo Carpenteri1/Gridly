@@ -1,16 +1,12 @@
 {
   "Files": [
     {
-      "Id": "/Users/niclastimle/Repos/test/Gridly/obj/Debug/net8.0/scopedcss/projectbundle/gridly.bundle.scp.css",
-      "PackagePath": "staticwebassets/gridly.bundle.scp.css"
-    },
-    {
       "Id": "/Users/niclastimle/Repos/test/Gridly/wwwroot/css/site.css",
       "PackagePath": "staticwebassets/css/site.css"
     },
     {
-      "Id": "/Users/niclastimle/Repos/test/Gridly/wwwroot/favicon.ico",
-      "PackagePath": "staticwebassets/favicon.ico"
+      "Id": "/Users/niclastimle/Repos/test/Gridly/wwwroot/index.html",
+      "PackagePath": "staticwebassets/index.html"
     },
     {
       "Id": "/Users/niclastimle/Repos/test/Gridly/wwwroot/js/site.js",
@@ -245,20 +241,32 @@
       "PackagePath": "staticwebassets/lib/jquery/dist/jquery.min.map"
     },
     {
-      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.gridly.props",
-      "PackagePath": "build\\gridly.props"
+      "Id": "/Users/niclastimle/Repos/test/Gridly/wwwroot/main-VV6QISO7.js",
+      "PackagePath": "staticwebassets/main-VV6QISO7.js"
     },
     {
-      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.gridly.props",
-      "PackagePath": "buildMultiTargeting\\gridly.props"
+      "Id": "/Users/niclastimle/Repos/test/Gridly/wwwroot/polyfills-FFHMD2TL.js",
+      "PackagePath": "staticwebassets/polyfills-FFHMD2TL.js"
     },
     {
-      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.gridly.props",
-      "PackagePath": "buildTransitive\\gridly.props"
+      "Id": "/Users/niclastimle/Repos/test/Gridly/wwwroot/scripts-EEEIPNC3.js",
+      "PackagePath": "staticwebassets/scripts-EEEIPNC3.js"
     },
     {
-      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.gridly.Microsoft.AspNetCore.StaticWebAssets.props",
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.Gridly.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.Gridly.props",
+      "PackagePath": "build\\Gridly.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.Gridly.props",
+      "PackagePath": "buildMultiTargeting\\Gridly.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.Gridly.props",
+      "PackagePath": "buildTransitive\\Gridly.props"
     }
   ],
   "ElementsToRemove": []

@@ -1,5 +1,5 @@
 {
-  "name": "gridly",
+  "name": "gridly-client",
   "version": "1.0.0-alpha",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "node-run": "node dist/gridly/server/server.mjs"
+    "node-run": "node dist/gridly-client/server/server.mjs"
   },
   "private": true,
   "dependencies": {

@@ -1,3 +1,3 @@
 ﻿<Project>
-  <Import Project="../buildMultiTargeting/gridly.props" />
+  <Import Project="../buildMultiTargeting/Gridly.props" />
 </Project>

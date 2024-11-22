@@ -6,15 +6,15 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v8.0": {
-      "gridly/1.0.0": {
+      "Gridly/1.0.0": {
         "runtime": {
-          "gridly.dll": {}
+          "Gridly.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "gridly/1.0.0": {
+    "Gridly/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

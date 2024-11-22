@@ -6,4 +6,26 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Main\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Header\index.cshtml" />
+    <_ContentIncludedByDefault Remove="Gridly-Client\gridly-prod\prerendered-routes.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\index.html" />
+    <None Include="wwwroot\main-VV6QISO7.js" />
+    <None Include="wwwroot\polyfills-FFHMD2TL.js" />
+    <None Include="wwwroot\scripts-EEEIPNC3.js" />
+    <None Include="wwwroot\styles-YYS3C2DX.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Gridly-Client\dist\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Main\Index.cshtml" />
+  </ItemGroup>
+
 </Project>

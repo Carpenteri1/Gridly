@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Gridly": {
+    "Gridly-Client": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/gridly",
+            "outputPath": "dist/Gridly-Client",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -29,7 +29,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": 
+            "scripts":
             ["bootstrap/dist/js/bootstrap.bundle.min.js"],
             "server": "src/main.server.ts",
             "prerender": true,
@@ -71,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Gridly:build:production"
+              "buildTarget": "Gridly-Client:build:production"
             },
             "development": {
-              "buildTarget": "Gridly:build:development"
+              "buildTarget": "Gridly-Client:build:development"
             }
           },
           "defaultConfiguration": "development"
