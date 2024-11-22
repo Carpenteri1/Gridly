@@ -37,7 +37,7 @@ jobs:
 
     - name: Package build into ZIP
       run: |
-          TAG_VERSION=v${GITHUB_REF#refs/tags/}
+          TAG_VERSION=v$(jq -r .version Gridly-Client/package.json)
           ZIP_NAME="Gridly-$TAG_VERSION.zip"
           zip -r dist/$ZIP_NAME ./publish
           echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
