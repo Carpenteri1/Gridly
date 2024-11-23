@@ -3,7 +3,7 @@ name: Create new release for project
 on:
   push:
     branches: 
-          - 'main'
+          - '*'
           
 jobs:
   build_and_release:
@@ -26,22 +26,30 @@ jobs:
     - name: Build the application
       run: dotnet build --configuration Release
 
-    - name: Publish the application
-      run: dotnet publish --configuration Release --output ./publish
-
-    - name: debug files
-      run: echo "ls"
+    - name: Publish windows version
+      run: dotnet publish -r win-x64 -c Release --self-contained -p:PublishSingleFile=true
+    
+   # - name: Publish linux version
+   #   run: dotnet publish -r win-x64 -c Release --self-contained -p:PublishSingleFile=true
     
     - name: Install zip utility
       run: sudo apt-get install -y zip
 
-    - name: Package build into ZIP
+    - name: Package Windows build into ZIP
       run: |
           TAG_VERSION=v$(jq -r .version Gridly-Client/package.json)
-          ZIP_NAME="Gridly-$TAG_VERSION.zip"
-          zip -r publish/$ZIP_NAME ./publish
-          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
+          ZIP_WINDOWS_NAME="Gridly-Windows-$TAG_VERSION.zip"
+          zip -r publish/$ZIP_WINDOWS_NAME ./bin/Release/net8.0/win-x64
+          echo "ZIP_NAME=$ZIP_WINDOWS_NAME" >> $GITHUB_ENV
           echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
+
+    #- name: Package Linux build into ZIP
+    #  run: |
+    #      TAG_VERSION=v$(jq -r .version Gridly-Client/package.json)
+    #      ZIP_Linux_NAME="Gridly-Linux-$TAG_VERSION.zip"
+    #      zip -r publish/$ZIP_Linux_NAME ./bin/Release/net8.0/linux-x64
+    #      echo "ZIP_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
+    #      echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
           
     - name: Create Git tag with package version
       run: |
@@ -52,7 +60,11 @@ jobs:
     - name: Upload tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
       with:
-        files: publish/${{ env.ZIP_NAME }}  # Upload the tarball as a release asset
+        files: | 
+          publish/${{ env.ZIP_WINDOWS_NAME }}
+    #      publish/${{ env.ZIP_Linux_NAME }}
+        # Upload the tarball as a release asset
+        
         tag_name: ${{ env.TAG_VERSION }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
