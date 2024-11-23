@@ -31,8 +31,8 @@ jobs:
         ls -la
     - name: Copy wwwroot and remove unnecessary files
       run: |     
-          cp /bin/Releases/net8.0/win-x64/publish/wwwroot /bin/Releases/net8.0/win-x64/
-          cp /bin/Releases/net8.0/linux-x64/publish/wwwroot /bin/Releases/net8.0/linux-x64/
+          cp /bin/Release/net8.0/win-x64/publish/wwwroot /bin/Release/net8.0/win-x64/
+          cp /bin/Release/net8.0/linux-x64/publish/wwwroot /bin/Release/net8.0/linux-x64/
    #       rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/win-x64/publish
    #       rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-x64/publish
    #
