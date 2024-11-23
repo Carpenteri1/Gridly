@@ -28,46 +28,49 @@ jobs:
 
     - name: Install zip tool
       run: | 
-        sudo apt-get install -y zip
+         sudo apt-get install -y zip
 
-    - name: Copy wwwroot and remove unnecessary files
-      run: |     
-          cp /home/runner/work/Gridly/Gridly/bin/Releases/net8.0/win-x64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Releases/net8.0/win-x64/
-          cp /home/runner/work/Gridly/Gridly/bin/Releases/net8.0/linux-x64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Releases/net8.0/linux-x64/
-          rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/win-x64/publish
-          rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-x64/publish
-      
-    - name: Package Windows build into ZIP
-      run: |
-          TAG_VERSION=v$(jq -r .version Gridly-Client/package.json)
-          ZIP_WINDOWS_NAME="Gridly-Windows-$TAG_VERSION.zip"
-          cd bin/Release/net8.0/
-          zip -r $ZIP_WINDOWS_NAME /win-x64
-          echo "ZIP_WINDOWS_NAME=$ZIP_WINDOWS_NAME" >> $GITHUB_ENV
-          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
-      
-    - name: Package Linux build into ZIP
-      run: |
-          ZIP_Linux_NAME="Gridly-Linux-${{ env.TAG_VERSION }}.zip"
-          cd bin/Release/net8.0/
-          zip -r $ZIP_Linux_NAME /linux-x64
-          echo "ZIP_Linux_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
-          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
+    - name: show folders
+      run: 
+        ls -la
+   # - name: Copy wwwroot and remove unnecessary files
+   #   run: |     
+   #       cp /home/runner/work/Gridly/Gridly/bin/Releases/net8.0/win-x64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Releases/net8.0/win-x64/
+   #       cp /home/runner/work/Gridly/Gridly/bin/Releases/net8.0/linux-x64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Releases/net8.0/linux-x64/
+   #       rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/win-x64/publish
+   #       rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-x64/publish
+   #
+   # - name: Package Windows build into ZIP
+   #   run: |
+   #       TAG_VERSION=v$(jq -r .version Gridly-Client/package.json)
+   #       ZIP_WINDOWS_NAME="Gridly-Windows-$TAG_VERSION.zip"
+   #       cd bin/Release/net8.0/
+   #       zip -r $ZIP_WINDOWS_NAME /win-x64
+   #       echo "ZIP_WINDOWS_NAME=$ZIP_WINDOWS_NAME" >> $GITHUB_ENV
+   #       echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
+   #   
+   # - name: Package Linux build into ZIP
+   #   run: |
+    #      ZIP_Linux_NAME="Gridly-Linux-${{ env.TAG_VERSION }}.zip"
+    #      cd bin/Release/net8.0/
+   #       zip -r $ZIP_Linux_NAME /linux-x64
+   #       echo "ZIP_Linux_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
+   #       echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
           
-    - name: Create Git tag with package version
-      run: |
-        git tag $TAG_VERSION
-        git push origin $TAG_VERSION 
-        echo "new tag $TAG_VERSION created and pushed"
-        
-    - name: Upload tarball to GitHub Releases    
-      uses: softprops/action-gh-release@v1
-      with:
-        files: | 
-          ${{ env.ZIP_WINDOWS_NAME }}
-          ${{ env.ZIP_Linux_NAME }}
+   # - name: Create Git tag with package version
+   #   run: |
+   #     git tag $TAG_VERSION
+   #     git push origin $TAG_VERSION 
+   #     echo "new tag $TAG_VERSION created and pushed"
+  #      
+  #  - name: Upload tarball to GitHub Releases    
+  #    uses: softprops/action-gh-release@v1
+  #    with:
+  #      files: | 
+  #        ${{ env.ZIP_WINDOWS_NAME }}
+  #        ${{ env.ZIP_Linux_NAME }}
         # Upload the tarball as a release asset
         
-        tag_name: ${{ env.TAG_VERSION }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #      tag_name: ${{ env.TAG_VERSION }}
+  #    env:
+  #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
