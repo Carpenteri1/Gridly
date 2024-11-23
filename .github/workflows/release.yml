@@ -30,14 +30,16 @@ jobs:
       run: 
         ls -la
     - name: Copy wwwroot and remove unnecessary files
-      run: | 
+      run: |
+           echo "real path"
+           realpath Gridly/bin/Releases/net8.0/win-x64/publish/wwwroot
            cd bin/Release/net8.0/win-x64/publish/
            echo "copy from folder"
            ls -la
 
            cd ~/
-           ls -la 
            echo "home folder full path need here"
+           ls -la 
 
    #       cp bin/Release/net8.0/win-x64/publish/wwwroot bin/Release/net8.0/win-x64/
    #       cp bin/Release/net8.0/linux-x64/publish/wwwroot bin/Release/net8.0/linux-x64/
