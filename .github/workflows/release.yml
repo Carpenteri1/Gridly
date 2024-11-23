@@ -37,8 +37,10 @@ jobs:
 
     - name: Copy wwwrooot and remove unnecessary files
       run: |
-          cp wwwroot bin/Release/net8.0/win-x64
-          cp wwwroot bin/Release/net8.0/linux-x64
+          cd bin/Release/net8.0/win-x64/publish
+          cp wwwwroot Gridly/bin/Releases/net8.0/win-x64
+          cd bin/Release/net8.0/linux-x64/publish
+          cp wwwwroot Gridly/bin/Releases/net8.0/linux-x64
           rm -fr bin/Release/net8.0/win-x64/publish
           rm -fr bin/Release/net8.0/linux-x64/publish
       
