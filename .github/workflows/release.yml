@@ -41,7 +41,7 @@ jobs:
           TAG_VERSION=v$(jq -r .version Gridly-Client/package.json)
           ZIP_WINDOWS_NAME="Gridly-Windows-$TAG_VERSION.zip"
           cd bin/Release/net8.0/
-          zip -r $ZIP_WINDOWS_NAME win-x64
+          zip -r /home/runner/work/Gridly/Gridly/$ZIP_WINDOWS_NAME win-x64
           echo "ZIP_WINDOWS_NAME=$ZIP_WINDOWS_NAME" >> $GITHUB_ENV
           echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
       
@@ -49,7 +49,7 @@ jobs:
       run: |
           ZIP_Linux_NAME="Gridly-Linux-${{ env.TAG_VERSION }}.zip"
           cd bin/Release/net8.0/
-          zip -r $ZIP_Linux_NAME linux-x64
+          zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_NAME linux-x64
           echo "ZIP_Linux_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
           echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
           
@@ -63,8 +63,8 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: | 
-          ${{ env.ZIP_WINDOWS_NAME }}
-          ${{ env.ZIP_Linux_NAME }}
+          /home/runner/work/Gridly/Gridly/${{ env.ZIP_WINDOWS_NAME }}
+          /home/runner/work/Gridly/Gridly/${{ env.ZIP_Linux_NAME }}
         # Upload the tarball as a release asset
         
         tag_name: ${{ env.TAG_VERSION }}
