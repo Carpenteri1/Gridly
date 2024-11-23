@@ -32,7 +32,7 @@ jobs:
     - name: Copy wwwroot and remove unnecessary files
       run: |
            echo "real path"
-           realpath bin/Releases/net8.0/win-x64/publish/wwwroot
+           realpath bin
            cd bin/Release/net8.0/win-x64/publish/
            echo "copy from folder"
            ls -la
