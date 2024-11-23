@@ -1,3 +1,4 @@
+/home/runner/work/Gridly/Gridly/bin
 name: Create new release for project
 
 on:
@@ -31,17 +32,17 @@ jobs:
         ls -la
     - name: Copy wwwroot and remove unnecessary files
       run: |
-           echo "real path"
-           realpath bin
-           cd bin/Release/net8.0/win-x64/publish/
-           echo "copy from folder"
-           ls -la
+            cp -r bin/Release/net8.0/win-x64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net8.0/win-x64/
+   #        echo "real path"
+   #        realpath bin
+   #        cd bin/Release/net8.0/win-x64/publish/
+   #        echo "copy from folder"
+   #        ls -la
 
-           cd ~/
-           echo "home folder full path need here"
-           ls -la 
+   #        cd ~/
+   #        echo "home folder full path need here"
+  #         ls -la 
 
-   #       cp bin/Release/net8.0/win-x64/publish/wwwroot bin/Release/net8.0/win-x64/
    #       cp bin/Release/net8.0/linux-x64/publish/wwwroot bin/Release/net8.0/linux-x64/
    #       rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/win-x64/publish
    #       rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-x64/publish
