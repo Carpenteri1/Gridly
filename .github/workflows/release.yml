@@ -34,8 +34,7 @@ jobs:
     - name: Install tools
       run: | 
         sudo apt-get install -y zip
-        sudo apt-get install -y appimagetool
-
+        
     - name: Package Windows build into ZIP
       run: |
           TAG_VERSION=v$(jq -r .version Gridly-Client/package.json)
