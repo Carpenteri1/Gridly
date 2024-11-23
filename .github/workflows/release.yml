@@ -32,7 +32,13 @@ jobs:
     - name: Copy wwwroot and remove unnecessary files
       run: | 
            cd bin/Release/net8.0/win-x64/publish/
+           echo "copy from folder"
            ls -la
+
+           cd ~/
+           ls -la 
+           echo "home folder full path need here"
+
    #       cp bin/Release/net8.0/win-x64/publish/wwwroot bin/Release/net8.0/win-x64/
    #       cp bin/Release/net8.0/linux-x64/publish/wwwroot bin/Release/net8.0/linux-x64/
    #       rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/win-x64/publish
