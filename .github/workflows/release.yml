@@ -26,14 +26,15 @@ jobs:
     - name: Build the application
       run: dotnet build --configuration Release
 
-    - name: Publish windows version
-      run: dotnet publish -r win-x64 -c Release --self-contained -p:PublishSingleFile=true
-    
-   # - name: Publish linux version
-   #   run: dotnet publish -r win-x64 -c Release --self-contained -p:PublishSingleFile=true
-    
-    - name: Install zip utility
-      run: sudo apt-get install -y zip
+    - name: Publish Windows and Linux version
+      run: |
+        dotnet publish -r win-x64 -c Release --self-contained -p:PublishSingleFile=true
+        dotnet publish -r linux-x64 -c Release --self-contained -p:PublishSingleFile=true
+
+    - name: Install tools
+      run: | 
+        sudo apt-get install -y zip
+        sudo apt-get install -y appimagetool
 
     - name: Package Windows build into ZIP
       run: |
@@ -42,14 +43,13 @@ jobs:
           zip -r $ZIP_WINDOWS_NAME ./bin/Release/net8.0/win-x64
           echo "ZIP_WINDOWS_NAME=$ZIP_WINDOWS_NAME" >> $GITHUB_ENV
           echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
-
-    #- name: Package Linux build into ZIP
-    #  run: |
-    #      TAG_VERSION=v$(jq -r .version Gridly-Client/package.json)
-    #      ZIP_Linux_NAME="Gridly-Linux-$TAG_VERSION.zip"
-    #      zip -r publish/$ZIP_Linux_NAME ./bin/Release/net8.0/linux-x64
-    #      echo "ZIP_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
-    #      echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
+      
+    - name: Package Linux build into ZIP
+      run: |
+          ZIP_Linux_NAME="Gridly-Linux-${{ env.TAG_VERSION }}.zip"
+          zip -r $ZIP_Linux_NAME ./bin/Release/net8.0/linux-x64
+          echo "ZIP_Linux_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
+          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
           
     - name: Create Git tag with package version
       run: |
@@ -62,7 +62,7 @@ jobs:
       with:
         files: | 
           ${{ env.ZIP_WINDOWS_NAME }}
-    #      publish/${{ env.ZIP_Linux_NAME }}
+          ${{ env.ZIP_Linux_NAME }}
         # Upload the tarball as a release asset
         
         tag_name: ${{ env.TAG_VERSION }}
