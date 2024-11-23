@@ -14,11 +14,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
-    - name: Set up .NET 8
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '8.0.x'
         
     - name: Restore dependencies
       run: dotnet restore
@@ -26,21 +21,36 @@ jobs:
     - name: Build the application
       run: dotnet build --configuration Release
 
-    - name: Publish the application
-      run: dotnet publish --configuration Release --output ./publish
+    - name: Publish Windows and Linux version
+      run: |
+        dotnet publish -r win-x64 -c Release --self-contained -p:PublishSingleFile=true
+        dotnet publish -r linux-x64 -c Release --self-contained -p:PublishSingleFile=true
 
-    - name: debug files
-      run: echo "ls"
-    
-    - name: Install zip utility
-      run: sudo apt-get install -y zip
-
-    - name: Package build into ZIP
+    - name: Copy wwwroot and remove unnecessary files
+      run: |
+            cp -r bin/Release/net8.0/win-x64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net8.0/win-x64/
+            cp -r bin/Release/net8.0/linux-x64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-x64/
+            rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/win-x64/publish
+            rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-x64/publish
+   
+    - name: Install zip tool
+      run: | 
+         sudo apt-get install -y zip
+    - name: Package Windows build into ZIP
       run: |
           TAG_VERSION=v$(jq -r .version Gridly-Client/package.json)
-          ZIP_NAME="Gridly-$TAG_VERSION.zip"
-          zip -r publish/$ZIP_NAME ./publish
-          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
+          ZIP_WINDOWS_NAME="Gridly-Windows-$TAG_VERSION.zip"
+          cd bin/Release/net8.0/
+          zip -r /home/runner/work/Gridly/Gridly/$ZIP_WINDOWS_NAME win-x64
+          echo "ZIP_WINDOWS_NAME=$ZIP_WINDOWS_NAME" >> $GITHUB_ENV
+          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
+      
+    - name: Package Linux build into ZIP
+      run: |
+          ZIP_Linux_NAME="Gridly-Linux-${{ env.TAG_VERSION }}.zip"
+          cd bin/Release/net8.0/
+          zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_NAME linux-x64
+          echo "ZIP_Linux_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
           echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
           
     - name: Create Git tag with package version
@@ -52,7 +62,11 @@ jobs:
     - name: Upload tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
       with:
-        files: publish/${{ env.ZIP_NAME }}  # Upload the tarball as a release asset
+        files: | 
+          /home/runner/work/Gridly/Gridly/${{ env.ZIP_WINDOWS_NAME }}
+          /home/runner/work/Gridly/Gridly/${{ env.ZIP_Linux_NAME }}
+        # Upload the tarball as a release asset
+        
         tag_name: ${{ env.TAG_VERSION }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
