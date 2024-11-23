@@ -37,16 +37,18 @@ jobs:
         
     - name: Package Windows build into ZIP
       run: |
+          cd /bin/Release/net8.0/
           TAG_VERSION=v$(jq -r .version Gridly-Client/package.json)
           ZIP_WINDOWS_NAME="Gridly-Windows-$TAG_VERSION.zip"
-          zip -r $ZIP_WINDOWS_NAME ./bin/Release/net8.0/win-x64
+          zip -r $ZIP_WINDOWS_NAME /win-x64
           echo "ZIP_WINDOWS_NAME=$ZIP_WINDOWS_NAME" >> $GITHUB_ENV
           echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
       
     - name: Package Linux build into ZIP
       run: |
+          cd /bin/Release/net8.0/
           ZIP_Linux_NAME="Gridly-Linux-${{ env.TAG_VERSION }}.zip"
-          zip -r $ZIP_Linux_NAME ./bin/Release/net8.0/linux-x64
+          zip -r $ZIP_Linux_NAME /linux-x64
           echo "ZIP_Linux_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
           echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
           
