@@ -4,6 +4,12 @@
 ![Release Badge](https://img.shields.io/github/v/release/Carpenteri1/Gridly.svg)
 
 ### Description
+Gridly implements a lightweight, minimal grid system tailored for modern web, leveraging a variety of powerful technologies to create a highly flexible and efficient solution. Its primary goal is to provide shortcuts with an easy-to-use, responsive grid layout that is both lightweight and versatile, making it suitable for a wide range of applications.
+
+By enabling the seamless implementation of applications, websites, and services on local networks. This makes it an ideal solution for managing interconnected systems and hosting centralized dashboards. Gridly aims to include support for creating intuitive, customizable shortcuts to locally or remotely hosted applications, services, and websites, empowering users to navigate and manage their network ecosystem efficiently.
+
+Gridly is built using .NET Core and ASP.NET Core MVC, allowing it to function as a self-contained application. This eliminates the need for additional frameworks like Angular or external dependencies on runtime environments. Users can run Gridly on supported systems without requiring pre-installed .NET or Angular, ensuring a streamlined deployment and setup process.
+
 
 ### Technologies Used
  ![Net](https://img.shields.io/badge/Net-ac99ea?style=for-the-badge&logo=dotnet&logoColor=white)
