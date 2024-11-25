@@ -52,11 +52,11 @@ jobs:
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_NAME linux-x64
           echo "ZIP_Linux_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
           
-    - name: Create Git tag with package version
-      run: |
-        git tag $TAG_VERSION
-        git push origin $TAG_VERSION 
-        echo "new tag $TAG_VERSION created and pushed"
+    #- name: Create Git tag with package version
+    #  run: |
+    #    git tag $TAG_VERSION
+    #    git push origin $TAG_VERSION 
+    #    echo "new tag $TAG_VERSION created and pushed"
         
     - name: Upload tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
