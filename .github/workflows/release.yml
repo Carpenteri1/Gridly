@@ -40,14 +40,14 @@ jobs:
     - name: Package Windows build into ZIP
       run: |
           echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-          ZIP_WINDOWS_NAME="Gridly-Windows-${TAG_VERSION}.zip"
+          ZIP_WINDOWS_NAME="Gridly-Windows-$TAG_VERSION.zip"
           cd bin/Release/net8.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_WINDOWS_NAME win-x64
           echo "ZIP_WINDOWS_NAME=$ZIP_WINDOWS_NAME" >> $GITHUB_ENV
       
     - name: Package Linux build into ZIP
       run: |
-          ZIP_Linux_NAME="Gridly-Linux-${env.TAG_VERSION}.zip"
+          ZIP_Linux_NAME="Gridly-Linux-$TAG_VERSION.zip"
           cd bin/Release/net8.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_NAME linux-x64
           echo "ZIP_Linux_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
