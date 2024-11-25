@@ -47,7 +47,7 @@ jobs:
       
     - name: Package Linux build into ZIP
       run: |
-          ZIP_Linux_NAME="Gridly-Linux-${{ env.TAG_VERSION }}.zip"
+          ZIP_Linux_NAME="Gridly-Linux-$TAG_VERSION.zip"
           cd bin/Release/net8.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_NAME linux-x64
           echo "ZIP_Linux_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
