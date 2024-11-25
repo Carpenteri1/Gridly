@@ -2,8 +2,8 @@ name: Create new release for project
 
 on:
   push:
-    branches: 
-          - 'main'
+    tags:
+      - 'v*'  # Matches tags like v1.0, v2.0, etc.
           
 jobs:
   build_and_release:
@@ -36,22 +36,21 @@ jobs:
     - name: Install zip tool
       run: | 
          sudo apt-get install -y zip
+         
     - name: Package Windows build into ZIP
       run: |
-          TAG_VERSION=v$(jq -r .version Gridly-Client/package.json)
-          ZIP_WINDOWS_NAME="Gridly-Windows-$TAG_VERSION.zip"
+          echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          ZIP_WINDOWS_NAME="Gridly-Windows-${TAG_VERSION}.zip"
           cd bin/Release/net8.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_WINDOWS_NAME win-x64
           echo "ZIP_WINDOWS_NAME=$ZIP_WINDOWS_NAME" >> $GITHUB_ENV
-          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
       
     - name: Package Linux build into ZIP
       run: |
-          ZIP_Linux_NAME="Gridly-Linux-${{ env.TAG_VERSION }}.zip"
+          ZIP_Linux_NAME="Gridly-Linux-${env.TAG_VERSION}.zip"
           cd bin/Release/net8.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_NAME linux-x64
           echo "ZIP_Linux_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
-          echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
           
     - name: Create Git tag with package version
       run: |
