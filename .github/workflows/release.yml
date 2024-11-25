@@ -18,7 +18,7 @@ jobs:
     - name: Set tag version
       run: |
         echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
-        echo "Tagname set to ${{TAG_NAME}}"
+        echo "Tagname set to $TAG_NAME"
         
     - name: Restore dependencies
       run: dotnet restore
