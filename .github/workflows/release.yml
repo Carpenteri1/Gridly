@@ -2,8 +2,10 @@ name: Create new release for project
 
 on:
   push:
-    tags:
-      - 'v*'  # Matches tags like v1.0, v2.0, etc.
+    branches:
+      - '*'
+#    tags:
+#      - 'v*'  # Matches tags like v1.0, v2.0, etc.
           
 jobs:
   build_and_release:
