@@ -2,10 +2,8 @@ name: Create new release for project
 
 on:
   push:
-    branches:
-      - '*'
-#    tags:
-#      - 'v*'  # Matches tags like v1.0, v2.0, etc.
+    tags:
+      - 'v*'  # Matches tags like v1.0, v2.0, etc.
           
 jobs:
   build_and_release:
@@ -20,7 +18,7 @@ jobs:
     - name: Set tag version
       run: |
         echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
-        echo "Tagname set to $TAG_NAME"
+        echo "Tagname set to ${{TAG_NAME}}"
         
     - name: Restore dependencies
       run: dotnet restore
