@@ -18,7 +18,9 @@ jobs:
       uses: actions/checkout@v3
       
     - name: Set tag version
-      run: echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      run: |
+        echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+        echo "Tagname set to $TAG_NAME"
         
     - name: Restore dependencies
       run: dotnet restore
@@ -26,7 +28,7 @@ jobs:
     - name: Build the application
       run: dotnet build --configuration Release
 
-    - name: Publish Windows and Linux version
+    - name: Publish build
       run: |
         dotnet publish -r win-x64 -c Release --self-contained -p:PublishSingleFile=true
         dotnet publish -r linux-x64 -c Release --self-contained -p:PublishSingleFile=true
@@ -44,7 +46,7 @@ jobs:
          
     - name: Package Windows build into ZIP
       run: |
-          echo "TAG_VERSION=$TAG_VERSION"
+          echo "TAG_VERSION=${{ env.TAG_VERSION }}"
           ZIP_WINDOWS_NAME="Gridly-Windows-$TAG_VERSION.zip"
           cd bin/Release/net8.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_WINDOWS_NAME win-x64
@@ -52,7 +54,7 @@ jobs:
 
     - name: Package Linux build into ZIP
       run: |
-          echo "TAG_VERSION=$TAG_VERSION"
+          echo "TAG_VERSION=${{ env.TAG_VERSION }}"
           ZIP_Linux_NAME="Gridly-Linux-$TAG_VERSION.zip"
           cd bin/Release/net8.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_NAME linux-x64
