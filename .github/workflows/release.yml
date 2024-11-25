@@ -47,6 +47,7 @@ jobs:
       
     - name: Package Linux build into ZIP
       run: |
+          TAG_VERSION=$TAG_VERSION
           ZIP_Linux_NAME="Gridly-Linux-$TAG_VERSION.zip"
           cd bin/Release/net8.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_NAME linux-x64
