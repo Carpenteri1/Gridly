@@ -35,6 +35,7 @@ yarn-error.log
 
 # Miscellaneous
 Gridly-Client/.angular/cache
+.angular/cache
 .sass-cache/
 /connect.lock
 /coverage
