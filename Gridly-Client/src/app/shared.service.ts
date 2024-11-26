@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { IComponentModel } from './interfaces/IComponent.Model';
+import {ComponentModel} from "./Models/Component.Model";
+import {Obj} from "@popperjs/core";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class SharedService {
-  flexItems: { IComponentModel: IComponentModel }[] = [];
+  flexItems: ComponentModel[] = [];
 
   Remove(id: number) {
     let index = this.GetId(id);
@@ -15,18 +16,11 @@ export class SharedService {
     }
   }
 
-  AddComponent(IComponentModel: IComponentModel) {
-    const newId = Math.floor(Math.random() * 100) + 1;
-    let index = this.GetId(newId);
-    if(index === -1){
-      IComponentModel.Id = newId;
-      this.flexItems.push({ IComponentModel: IComponentModel });
-    }
-    else
-      this.AddComponent(IComponentModel);
+  AddComponent(newComponent: ComponentModel) {
+    this.flexItems.push(newComponent)
   }
 
   GetId(id: number): number{
-    return this.flexItems.findIndex(item => item.IComponentModel.Id == id);
+    return this.flexItems.findIndex(item => item.Id == id);
   }
 }

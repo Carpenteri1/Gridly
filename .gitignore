@@ -8,9 +8,10 @@
 bin/
 obj/
 Gridly-Client/publish/
+Gridly-Client/dist
 
 # Node
-/node_modules
+Gridly-Client/node_modules
 npm-debug.log
 yarn-error.log
 
@@ -33,7 +34,8 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-/.angular/cache
+Gridly-Client/.angular/cache
+.angular/cache
 .sass-cache/
 /connect.lock
 /coverage

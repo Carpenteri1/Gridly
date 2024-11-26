@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { SharedService } from '../../shared.service';
-import { IComponentModel } from '../../interfaces/IComponent.Model'
+import { ComponentModel } from '../../Models/Component.Model'
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -12,14 +12,16 @@ import { FormsModule } from '@angular/forms';
   })
 
 export class HeaderComponent{
-  IComponentModel: IComponentModel = {
-    Id:0,
-    Name:'test',
-    Url:'localhost'
-  }
   constructor(public sharedService: SharedService){}
-
-  AddComponent(IComponentModel: IComponentModel) {
-    this.sharedService.AddComponent(IComponentModel);
+  Name:string = "";
+  Url:string = "";
+  AddComponent() {
+    const newId = Math.floor(Math.random() * 100) + 1;
+    let index = this.sharedService.GetId(newId);
+    if(index === -1){
+      this.sharedService.AddComponent(new ComponentModel(newId,this.Name,this.Url));
+    }
+    else
+      this.AddComponent();
   }
 }

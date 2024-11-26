@@ -1,18 +1,18 @@
 <div class="d-flex flex-wrap" style="height: 300px;">
-    <div *ngFor="let item of sharedService.flexItems" 
+    <div *ngFor="let item of sharedService.flexItems"
     class="action-btn"
     style="height: 300px; width:330px; flex: 1 1 330px; margin: 10px; background:darkgrey;">
     <ul>
         <li>
-            {{item.IComponentModel.Id}}
+            {{item.Id}}
         </li>
         <li>
-            {{item.IComponentModel.Name}}
+            {{item.Name}}
         </li>
         <li>
-            {{item.IComponentModel.Url}} 
+            {{item.Url}}
         </li>
     </ul>
-    <button (click)="Remove(item.IComponentModel.Id)">Remove Button </button>
+    <button (click)="Remove(item.Id)">Remove Button </button>
 </div>
 </div>
