@@ -8,6 +8,7 @@
 bin/
 obj/
 Gridly-Client/publish/
+Gridly-Client/dist
 
 # Node
 /node_modules
