@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
-import {ComponentModel} from "./Models/Component.Model";
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { ComponentModel } from './Models/Component.Model';
+import {subscribe} from "node:diagnostics_channel";
 
 @Injectable({
   providedIn: 'root'
@@ -19,11 +22,25 @@ export class SharedService {
   }
 
   AddComponent(newComponent: ComponentModel) {
-    this.flexItems.push(newComponent)
-   // return this.http.post(`${this.apiUrl}/save`, this.flexItems);
-    return this.http.post(`${this.apiUrl}/save`, this.flexItems);
-  }
+    this.http.post<ComponentModel>(this.apiUrl, newComponent, {
+      responseType: 'json',
+      headers: {'Content-Type': 'application/json'}
+    }).subscribe(
+      Response => {
+        this.flexItems.push(newComponent);
+      },
+      error => {
+        console.error('There was an error!', error);
+      }
+    )
 
+  }
+  /*
+  private handleError(error: any) {
+    console.error('An error occurred', error);
+    return throwError(error);
+  }
+  */
   GetId(id: number): number{
     return this.flexItems.findIndex(item => item.Id == id);
   }
