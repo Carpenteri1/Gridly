@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
 import { ComponentModel } from './Models/Component.Model';
-import {subscribe} from "node:diagnostics_channel";
 
 @Injectable({
   providedIn: 'root'
@@ -35,12 +32,7 @@ export class SharedService {
     )
 
   }
-  /*
-  private handleError(error: any) {
-    console.error('An error occurred', error);
-    return throwError(error);
-  }
-  */
+
   GetId(id: number): number{
     return this.flexItems.findIndex(item => item.Id == id);
   }
