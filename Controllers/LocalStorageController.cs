@@ -12,13 +12,10 @@ public class LayoutController : ControllerBase {
         => LocalComponentHandler.Save(newComponent);
 
     [HttpGet("get")]
-    public async Task<dynamic[]> Get()
-    {
-        var obj = await LocalComponentHandler.Get();
-        return obj;
-    }
+    public async Task<dynamic[]> Get() => 
+        await LocalComponentHandler.Get();
     
-    [HttpPost("Remove")]
-    public async Task<IResult> Remove(int componentId) 
-        => Results.Ok();
+    [HttpPost("delete")]
+    public async Task<IResult> Delete(int componentId) 
+        => await LocalComponentHandler.Delete(componentId);
 }
