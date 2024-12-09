@@ -13,10 +13,10 @@ public class LocalComponentHandler
         await DataStorage.ReadFromJsonFile();
 
     public static async Task<IResult> Delete(int componentId)
-    {
-       var components = await DataStorage.ReadFromJsonFile();
-       return DataStorage.ReadToJsonFile(components.Where(x => x.id != componentId).ToArray())
-           ? Results.Ok()
-           : Results.NotFound();
+    { 
+        //TODO get the id in the list here and make a new list without that id and store it
+        var components = await DataStorage.ReadFromJsonFile();
+        //var component = components.FirstOrDefault(c => c.GetProperty("Id").GetInt32() == componentId);
+       return Results.Ok();
     }
 }

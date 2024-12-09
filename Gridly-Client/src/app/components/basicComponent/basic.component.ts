@@ -18,6 +18,6 @@ export class BasicComponent implements OnInit {
   }
 
   Remove(id: number): void {
-    this.sharedService.Remove(id);
+    this.sharedService.RemoveComponent(id);
   }
 }

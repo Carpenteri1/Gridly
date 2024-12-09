@@ -15,7 +15,7 @@ public class LayoutController : ControllerBase {
     public async Task<dynamic[]> Get() => 
         await LocalComponentHandler.Get();
     
-    [HttpPost("delete")]
-    public async Task<IResult> Delete(int componentId) 
-        => await LocalComponentHandler.Delete(componentId);
+    [HttpDelete("delete/{Id}")]
+    public async Task<IResult> Delete(int Id) 
+        => await LocalComponentHandler.Delete(Id);
 }

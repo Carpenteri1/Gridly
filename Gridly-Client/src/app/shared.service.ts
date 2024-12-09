@@ -13,11 +13,17 @@ export class SharedService{
 
   private apiUrl = 'http://localhost:7575/api/layout/'; // Replace with your actual API URL
   constructor(private http: HttpClient) {}
-  Remove(id: number) {
-    let index = this.GetId(id);
-    if(index > -1){
-      this.flexItems.splice(index, 1);
-    }
+  RemoveComponent(id: number) {
+    this.http.delete<ComponentModel[]>(`${this.apiUrl}delete/${id}`)
+      .subscribe(() => {
+          let index = this.GetId(id);
+          if(index > -1){
+            this.flexItems.splice(index, 1);
+          }
+      },
+        (error) =>{
+          console.error('Error deleting component:', error);
+        });
   }
 
   AddComponent(newComponent: ComponentModel) {
