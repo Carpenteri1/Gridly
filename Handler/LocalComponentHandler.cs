@@ -1,16 +1,16 @@
 using System.Text.Json;
-using Gridly.Models;
 
 namespace Gridly.Handler;
 
-public class LocalComponentHandler : ComponentModel
+public class LocalComponentHandler
 {
-    public static IResult Save(ComponentModel newComponent)
+    private const string fileName = "componentData.json";
+    public static IResult Save(dynamic newComponent)
     {
         try
         {
             string jsonString = JsonSerializer.Serialize(newComponent);
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data.json");
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
             File.WriteAllText(filePath, jsonString);
 
             return Results.Ok();
@@ -18,6 +18,20 @@ public class LocalComponentHandler : ComponentModel
         catch (Exception)
         {
             return Results.StatusCode(500);
+        }
+    }
+    
+    public static async Task<dynamic[]> Get()
+    {
+        try
+        {
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+            string jsonString = await File.ReadAllTextAsync(filePath);
+            return JsonSerializer.Deserialize<dynamic[]>(jsonString);
+        }
+        catch (Exception)
+        {
+            return Array.Empty<dynamic>();
         }
     }
 }
