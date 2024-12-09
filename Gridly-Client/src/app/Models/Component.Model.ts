@@ -1,11 +1,11 @@
 export class ComponentModel{
-  Id:number;
-  Name:string;
-  Url:string;
+  id: number;
+  name: string;
+  url: string;
 
-  constructor(Id:number,Name:string,Url:string) {
-    this.Id = Id;
-    this.Name = Name;
-    this.Url = Url;
+  constructor(id: number, name: string, url: string) {
+    this.id = id;
+    this.name = name;
+    this.url = url;
   }
 }
