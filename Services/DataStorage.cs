@@ -1,17 +1,18 @@
 using System.Text.Json;
+using Gridly.Models;
 
 namespace Gridly.Services;
 
 public class DataStorage
 {
     private const string fileName = "componentData.json";
+    private static readonly string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
 
-    public static bool ReadToJsonFile(dynamic newComponent)
+    public static bool ReadToJsonFile(ComponentModel[] newComponent)
     {
         try
         {
             string jsonString = JsonSerializer.Serialize(newComponent);
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
             File.WriteAllText(filePath, jsonString);
 
             return true;
@@ -22,17 +23,17 @@ public class DataStorage
         }
     }
 
-    public static async Task<dynamic[]> ReadFromJsonFile()
+    public static async Task<ComponentModel[]> ReadFromJsonFile()
     {
         try
         {
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
             string jsonString = await File.ReadAllTextAsync(filePath);
-            return JsonSerializer.Deserialize<dynamic[]>(jsonString);
+            return JsonSerializer.Deserialize<ComponentModel[]>(jsonString);
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            return Array.Empty<dynamic>();
+            Console.WriteLine(e.Message);
+            return Array.Empty<ComponentModel>();
         }
     }
 }

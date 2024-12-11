@@ -1,22 +1,29 @@
-using System.Text.Json;
+using Gridly.Models;
 using Gridly.Services;
 
 namespace Gridly.Handler;
 
 public class LocalComponentHandler
 {
-    public static IResult Save(dynamic newComponent) =>
+    public static IResult Save(ComponentModel[] newComponent) =>
         DataStorage.ReadToJsonFile(newComponent) ? 
             Results.Ok() : Results.StatusCode(500);
 
-    public static async Task<dynamic[]> Get() => 
+    public static async Task<ComponentModel[]> Get() => 
         await DataStorage.ReadFromJsonFile();
 
-    public static async Task<IResult> Delete(int componentId)
+    public static IResult Delete(int componentId)
     { 
-        //TODO get the id in the list here and make a new list without that id and store it
-        var components = await DataStorage.ReadFromJsonFile();
-        //var component = components.FirstOrDefault(c => c.GetProperty("Id").GetInt32() == componentId);
+       var componentModels  = DataStorage.ReadFromJsonFile()
+           .Result.Where(x => x.Id != componentId).ToArray();
+       
+       if (!componentModels.Any()) 
+           return DataStorage.ReadToJsonFile(componentModels) 
+               ? Results.Ok() : Results.StatusCode(500);
+       
+       if(!DataStorage.ReadToJsonFile(componentModels))
+           return Results.StatusCode(500);
+       
        return Results.Ok();
     }
 }

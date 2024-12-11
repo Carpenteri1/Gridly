@@ -1,4 +1,5 @@
 using Gridly.Handler;
+using Gridly.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gridly.Controllers;
@@ -8,14 +9,14 @@ namespace Gridly.Controllers;
 public class LayoutController : ControllerBase {
            
     [HttpPost("save")]
-    public async Task<IResult> Save([FromBody] dynamic[] newComponent) 
+    public async Task<IResult> Save([FromBody] ComponentModel[] newComponent) 
         => LocalComponentHandler.Save(newComponent);
 
     [HttpGet("get")]
-    public async Task<dynamic[]> Get() => 
+    public async Task<ComponentModel[]> Get() => 
         await LocalComponentHandler.Get();
     
     [HttpDelete("delete/{Id}")]
-    public async Task<IResult> Delete(int Id) 
-        => await LocalComponentHandler.Delete(Id);
+    public IResult Delete(int Id) 
+        => LocalComponentHandler.Delete(Id);
 }
