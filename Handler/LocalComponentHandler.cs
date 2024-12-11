@@ -1,37 +1,29 @@
-using System.Text.Json;
+using Gridly.Models;
+using Gridly.Services;
 
 namespace Gridly.Handler;
 
 public class LocalComponentHandler
 {
-    private const string fileName = "componentData.json";
-    public static IResult Save(dynamic newComponent)
-    {
-        try
-        {
-            string jsonString = JsonSerializer.Serialize(newComponent);
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-            File.WriteAllText(filePath, jsonString);
+    public static IResult Save(ComponentModel[] newComponent) =>
+        DataStorage.ReadToJsonFile(newComponent) ? 
+            Results.Ok() : Results.StatusCode(500);
 
-            return Results.Ok();
-        }
-        catch (Exception)
-        {
-            return Results.StatusCode(500);
-        }
-    }
-    
-    public static async Task<dynamic[]> Get()
-    {
-        try
-        {
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-            string jsonString = await File.ReadAllTextAsync(filePath);
-            return JsonSerializer.Deserialize<dynamic[]>(jsonString);
-        }
-        catch (Exception)
-        {
-            return Array.Empty<dynamic>();
-        }
+    public static async Task<ComponentModel[]> Get() => 
+        await DataStorage.ReadFromJsonFile();
+
+    public static IResult Delete(int componentId)
+    { 
+       var componentModels  = DataStorage.ReadFromJsonFile()
+           .Result.Where(x => x.Id != componentId).ToArray();
+       
+       if (!componentModels.Any()) 
+           return DataStorage.ReadToJsonFile(componentModels) 
+               ? Results.Ok() : Results.StatusCode(500);
+       
+       if(!DataStorage.ReadToJsonFile(componentModels))
+           return Results.StatusCode(500);
+       
+       return Results.Ok();
     }
 }
