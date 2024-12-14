@@ -11,7 +11,7 @@ export class SharedService{
   flexItems: ComponentModel[] = [];
   isLoading = true;
 
-  private apiUrl = 'http://localhost:7575/api/layout/'; // Replace with your actual API URL
+  private apiUrl = '/api/layout/';
   constructor(private http: HttpClient) {}
   RemoveComponent(id: number) {
     this.http.delete<ComponentModel[]>(`${this.apiUrl}delete/${id}`)
