@@ -5,9 +5,8 @@ namespace Gridly.Services;
 
 public class DataStorage
 {
-    private const string fileName = "componentData.json";
-    private static readonly string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-
+    private const string jsonComponentFileName = "componentData.json";
+    private static readonly string filePath = Path.Combine(Directory.GetCurrentDirectory(),"Assets/ComponentData", jsonComponentFileName);
     public static bool ReadToJsonFile(ComponentModel[] newComponent)
     {
         try
@@ -17,8 +16,9 @@ public class DataStorage
 
             return true;
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             return false;
         }
     }
@@ -30,10 +30,10 @@ public class DataStorage
             string jsonString = await File.ReadAllTextAsync(filePath);
             return JsonSerializer.Deserialize<ComponentModel[]>(jsonString);
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-            return Array.Empty<ComponentModel>();
-        }
+        catch (NullReferenceException e) { Console.WriteLine(e.Message); }
+        catch(JsonException e) { Console.WriteLine(e.Message); }
+        catch (Exception e) { Console.WriteLine(e.Message); }
+        
+        return Array.Empty<ComponentModel>();
     }
 }

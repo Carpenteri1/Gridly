@@ -12,4 +12,12 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Main}/{action=Index}");
 
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapFallbackToFile("index.html");
+});
+
 app.Run();
