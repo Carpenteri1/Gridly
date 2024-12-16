@@ -1,20 +1,14 @@
 <div *ngIf="sharedService.isLoading">Loading components...</div>
 
 <div *ngIf="!sharedService.isLoading" class="d-flex flex-wrap" style="height: 300px;">
-    <div *ngFor="let item of sharedService.flexItems"
-    class="action-btn"
-    style="height: 300px; width:330px; flex: 1 1 330px; margin: 10px; background:darkgrey;">
-    <ul>
-        <li>
-            {{item.id}}
-        </li>
-        <li>
-            {{item.name}}
-        </li>
-        <li>
-            {{item.url}}
-        </li>
-    </ul>
-    <button (click)="Remove(item.id)">Remove Button </button>
-</div>
+  <a href="{{item.url}}" *ngFor="let item of sharedService.flexItems">
+    <div
+      class="action-btn text-center"
+      style="height: 300px; width:330px; flex: 1 1 330px; margin: 10px; background:darkgrey;">
+      <div class="row">
+        <h2>{{item.name}}</h2>
+      </div>
+      <button (click)="Remove(item.id)">Remove Button </button>
+    </div>
+  </a>
 </div>
