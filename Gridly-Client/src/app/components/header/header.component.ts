@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 
 
 export class HeaderComponent{
-  urlPattern = /^(https:\/\/|http:\/\/)[A-Za-z]+$/;
+  urlPattern = /^(https:\/\/|http:\/\/)[A-Za-z]+(\.[A-Za-z]{2,}$)/;
   namePattern = /^[A-Za-z]+$/;
   constructor(public sharedService: SharedService){}
   Name:string = "";
