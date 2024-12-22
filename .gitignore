@@ -43,6 +43,9 @@ Gridly-Client/.angular/cache
 testem.log
 /typings
 
+# Changes I wanna hide
+/Assets/ComponentData/componentData.json
+
 
 # System files
 .DS_Store
