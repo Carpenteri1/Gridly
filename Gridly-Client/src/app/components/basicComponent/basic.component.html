@@ -4,7 +4,7 @@
     <div *ngFor="let item of sharedService.flexItems"
       class="d-flex m-2 flex-column"
       style="height: 300px; flex: 1 1 330px; background:darkgrey;">
-      <div class="d-flex justify-content-end">
+      <div class="d-flex justify-content-end p-1">
         <button (click)="Remove(item.id)">X</button>
         <!-- <a href="{{item.url}}" style="border:2px solid greenyellow;" target="_blank"></a> -->
       </div>
