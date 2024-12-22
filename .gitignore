@@ -45,6 +45,7 @@ testem.log
 
 # Changes I wanna hide
 Assets/ComponentData/componentData.json
+!Assets/ComponentData/componentData.json
 
 
 # System files
