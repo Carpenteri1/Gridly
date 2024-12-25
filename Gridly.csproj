@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\favicon.ico" />
     <None Include="wwwroot\index.html" />
     <None Include="wwwroot\main.js" />
     <None Include="wwwroot\media\bootstrap-icons.woff" />
