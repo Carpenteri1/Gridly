@@ -25,19 +25,21 @@
             <label class="form-label">Service Url</label>
             <input type="text" class="form-control" placeholder="Url" [(ngModel)]="Url" name="url">
           </div>
-          <div class="form-group pb-2"><!--TODO: Hide when Upload icon checkbox is set-->
-            <label class="form-label>">Link url</label>
-            <input type="checkbox" />
+          <div>
+            <label class="form-label"></label>
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="iconOptions" data-bs-toggle="dropdown" aria-expanded="false">
+              Icon
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="iconOptions">
+              <li><a class="dropdown-item" (click)="WantToUploadIcon()">Upload</a></li>
+              <li><a class="dropdown-item" (click)="WantToLinkToImage()">Link to image</a></li>
+            </ul>
           </div>
-          <div class="form-group pb-2"><!--TODO: Hide when link url is set-->
-            <label class="form-label>">Upload Icon</label>
-            <input type="checkbox" />
-          </div>
-          <div class="form-group"><!--TODO: Hide when link url is set-->
+          <div class="form-group" [hidden]="!wantToUploadIcon" ><!--TODO: Hide when link url is set-->
             <label for="formFile" class="form-label">Upload Icon</label>
-            <input class="form-control" type="file" id="formFile"/>
+            <input class="form-control" type="file" id="formFile" (change)="onFileUpload($event)"/>
           </div>
-          <div class="form-group"><!--TODO: Hide when Upload icon checkbox is set-->
+          <div [hidden]="!wantToLinkToImage" class="form-group"><!--TODO: Hide when Upload icon checkbox is set-->
             <label for="formUrl" class="form-label">Set url for icon</label>
             <input class="form-control" type="text" id="formUrl"/>
           </div>
