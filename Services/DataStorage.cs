@@ -9,10 +9,24 @@ public class DataStorage
     private static readonly string filePath = Path.Combine(Directory.GetCurrentDirectory(),"Assets/ComponentData", jsonComponentFileName);
     public static bool ReadToJsonFile(ComponentModel[] newComponent)
     {
+        /*foreach (var component in newComponent)
+        {
+            
+            var fileData = Convert.FromBase64String(component.IconData.Split(',')[1]); // Decode Base64
+            var uploadsFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+            if (!Directory.Exists(uploadsFolderPath))
+            {
+                Directory.CreateDirectory(uploadsFolderPath);
+            }
+
+            var filePath = Path.Combine(uploadsFolderPath, $"{component.Name}.png"); // Save as a PNG
+            System.IO.File.WriteAllBytes(filePath, fileData);
+        }*/
+        
         try
         {
             string jsonString = JsonSerializer.Serialize(newComponent);
-            File.WriteAllText(filePath, jsonString);
+            File.WriteAllText(filePath, jsonString);    
 
             return true;
         }

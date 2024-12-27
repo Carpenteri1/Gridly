@@ -19,11 +19,11 @@
         <form>
           <div class="form-group pb-2">
             <label class="form-label">App name</label>
-            <input type="text" class="form-control" placeholder="App name" [(ngModel)]="Name" name="name">
+            <input type="text" class="form-control" placeholder="App name" [(ngModel)]="name" name="name">
           </div>
           <div class="form-group pb-2">
             <label class="form-label">Service Url</label>
-            <input type="text" class="form-control" placeholder="Url" [(ngModel)]="Url" name="url">
+            <input type="text" class="form-control" placeholder="Url" [(ngModel)]="url" name="url">
           </div>
           <div>
             <label class="form-label"></label>
@@ -35,13 +35,13 @@
               <li><a class="dropdown-item" (click)="WantToLinkToImage()">Link to image</a></li>
             </ul>
           </div>
-          <div class="form-group" [hidden]="!wantToUploadIcon" ><!--TODO: Hide when link url is set-->
+          <div class="form-group" [hidden]="!wantToUploadIcon" >
             <label for="formFile" class="form-label">Upload Icon</label>
-            <input class="form-control" type="file" id="formFile" (change)="onFileUpload($event)"/>
+            <input class="form-control" type="file" id="formFile" (change)="OnFileUpload($event)" [(ngModel)]="iconData"/>
           </div>
-          <div [hidden]="!wantToLinkToImage" class="form-group"><!--TODO: Hide when Upload icon checkbox is set-->
+          <div [hidden]="!wantToLinkToImage" class="form-group">
             <label for="formUrl" class="form-label">Set url for icon</label>
-            <input class="form-control" type="text" id="formUrl"/>
+            <input class="form-control" type="text" id="formUrl" [(ngModel)]="iconData"/>
           </div>
         </form>
       </div>

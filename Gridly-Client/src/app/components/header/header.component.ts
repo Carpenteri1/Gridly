@@ -18,48 +18,53 @@ export class HeaderComponent{
   namePattern = /^[A-Za-z]+$/;
   wantToUploadIcon = false;
   wantToLinkToImage = false;
-  IconFile:any = [];
-  Name:string = "";
-  Url:string = "";
-  IconUrl:string = "";
+  iconData: string = "";
+  name:string = "";
+  url:string = "";
 
   constructor(public sharedService: SharedService){}
 
   AddComponent() {
     const newId = Math.floor(Math.random() * 100) + 1;
     let index = this.sharedService.GetId(newId);
-    if(index === -1 && this.Name !== "" && this.Url !== ""){
-      this.sharedService.AddComponent(new ComponentModel(newId,this.Name,this.Url));
+    if(index === -1 && this.name !== "" && this.url !== ""){
+      this.sharedService.AddComponent(new ComponentModel(
+        newId,this.name,this.url,this.iconData));
     }
     else
       this.AddComponent();
   }
   get CanAddComponent(): boolean{
-    if(this.Name !== "" && this.Url !== "" &&
-      this.urlPattern.test(this.Url) && this.namePattern.test(this.Name)){
-      if(this.IconUrl != null && this.IconUrl != "" ||
-        this.IconFile != null && this.IconFile.length > 0){
+    if(this.name !== "" && this.url !== "" &&
+      this.urlPattern.test(this.url) && this.namePattern.test(this.name) ){
+
+      if(this.iconData !== null && this.iconData !== ""){
         return true;
       }
     }
     return false;
   }
 
-  onFileUpload(event:any):void{
-    this.IconFile = event.target.files[0]
+  OnFileUpload(event:any):void{
     debugger;
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.iconData = reader.result as string; // Convert file to Base64 string
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   WantToUploadIcon(): void{
     this.wantToUploadIcon = true;
     this.wantToLinkToImage = false;
-    console.log("upload image is now "+this.wantToUploadIcon);
   }
 
   WantToLinkToImage(): void{
     this.wantToLinkToImage = true;
     this.wantToUploadIcon = false;
-    console.log("link to image is now "+this.wantToLinkToImage);
   }
 
 }
