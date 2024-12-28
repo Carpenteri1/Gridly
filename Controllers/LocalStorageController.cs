@@ -9,11 +9,11 @@ namespace Gridly.Controllers;
 public class LayoutController : ControllerBase {
            
     [HttpPost("save")]
-    public async Task<IResult> Save([FromBody] ComponentModel[] newComponent) 
+    public async Task<IResult> Save([FromBody] ComponentModel newComponent) 
         => LocalComponentHandler.Save(newComponent);
 
     [HttpGet("get")]
-    public async Task<ComponentModel[]> Get() => 
+    public async Task<ComponentModel[]?> Get() => 
         await LocalComponentHandler.Get();
     
     [HttpDelete("delete/{Id}")]

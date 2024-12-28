@@ -28,7 +28,7 @@ export class SharedService{
 
   AddComponent(newComponent: ComponentModel) {
     this.flexItems.push(newComponent);
-      this.PostAddedComponentList(this.flexItems)
+    this.PostAddedComponentList(newComponent)
       .subscribe();
   }
   LoadComponentList() {
@@ -45,8 +45,8 @@ export class SharedService{
     );
   }
 
-  PostAddedComponentList(componentList: ComponentModel[]): Observable<ComponentModel[]> {
-    return this.http.post<ComponentModel[]>(this.apiUrl+"save", componentList,{
+  PostAddedComponentList(newComponent: ComponentModel): Observable<ComponentModel> {
+    return this.http.post<ComponentModel>(this.apiUrl+"save", newComponent,{
       responseType: 'json',
       headers: {'Content-Type': 'application/json'}
     }).pipe(

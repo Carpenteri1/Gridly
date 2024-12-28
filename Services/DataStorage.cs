@@ -7,7 +7,7 @@ public class DataStorage
 {
     private const string jsonComponentFileName = "componentData.json";
     private static readonly string filePath = Path.Combine(Directory.GetCurrentDirectory(),"Assets/ComponentData", jsonComponentFileName);
-    public static bool ReadToJsonFile(ComponentModel[] newComponent)
+    public static bool ReadToJsonFile(ComponentModel newComponent)
     {
         /*foreach (var component in newComponent)
         {
@@ -22,10 +22,11 @@ public class DataStorage
             var filePath = Path.Combine(uploadsFolderPath, $"{component.Name}.png"); // Save as a PNG
             System.IO.File.WriteAllBytes(filePath, fileData);
         }*/
-        
+        var componentModels = ReadFromJsonFile().Result.ToList();
+        componentModels.Add(newComponent);
         try
         {
-            string jsonString = JsonSerializer.Serialize(newComponent);
+            string jsonString = JsonSerializer.Serialize(componentModels);
             File.WriteAllText(filePath, jsonString);    
 
             return true;
@@ -37,7 +38,7 @@ public class DataStorage
         }
     }
 
-    public static async Task<ComponentModel[]> ReadFromJsonFile()
+    public static async Task<ComponentModel[]?> ReadFromJsonFile()
     {
         try
         {
@@ -48,6 +49,6 @@ public class DataStorage
         catch(JsonException e) { Console.WriteLine(e.Message); }
         catch (Exception e) { Console.WriteLine(e.Message); }
         
-        return Array.Empty<ComponentModel>();
+        return null;
     }
 }
