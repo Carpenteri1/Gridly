@@ -18,18 +18,19 @@ export class HeaderComponent{
   namePattern = /^[A-Za-z]+$/;
   wantToUploadIcon = false;
   wantToLinkToImage = false;
-  iconData: string = "";
-  name:string = "";
-  url:string = "";
+  iconData: string = '';
+  name:string = '';
+  url:string = '';
 
   constructor(public sharedService: SharedService){}
 
   AddComponent() {
     const newId = Math.floor(Math.random() * 100) + 1;
     let index = this.sharedService.GetId(newId);
-    if(index === -1 && this.name !== "" && this.url !== ""){
+    if(index === -1 && this.name !== "" && this.url !== "" && this.iconData !== ""){
       this.sharedService.AddComponent(new ComponentModel(
         newId,this.name,this.url,this.iconData));
+      this.ResetFormData();
     }
     else
       this.AddComponent();
@@ -45,13 +46,22 @@ export class HeaderComponent{
     return false;
   }
 
+  ResetFormData(): void{
+    this.name = '';
+    this.url = '';
+    this.iconData = '';
+  }
+
+  ResetIconData(){
+    this.iconData = '';
+  }
+
   OnFileUpload(event:any):void{
-    debugger;
     if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files.files[0];
+      const file = event.target.files[0];
       const reader = new FileReader();
       reader.onload = () => {
-        this.iconData = reader.result as string; // Convert file to Base64 string
+        this.iconData = reader.result as string;
       };
       reader.readAsDataURL(file);
     }
@@ -60,11 +70,13 @@ export class HeaderComponent{
   WantToUploadIcon(): void{
     this.wantToUploadIcon = true;
     this.wantToLinkToImage = false;
+    this.ResetIconData();
   }
 
   WantToLinkToImage(): void{
     this.wantToLinkToImage = true;
     this.wantToUploadIcon = false;
+    this.ResetIconData();
   }
 
 }

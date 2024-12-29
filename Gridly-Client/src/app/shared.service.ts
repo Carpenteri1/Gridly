@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ComponentModel } from './Models/Component.Model';
-import { Observable} from "rxjs";
+import {catchError, Observable, throwError} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +27,9 @@ export class SharedService{
   }
 
   AddComponent(newComponent: ComponentModel) {
+    if (!this.flexItems) {
+      this.flexItems = [];
+    }
     this.flexItems.push(newComponent);
     this.PostAddedComponentList(newComponent)
       .subscribe();
@@ -50,11 +53,13 @@ export class SharedService{
       responseType: 'json',
       headers: {'Content-Type': 'application/json'}
     }).pipe(
-        //catchError(this.handleError('addHero', hero))
-      );
-  }
+      catchError(error => {
+        console.error('Error posting save new component:', error);
+        return throwError(error);
+      }));
+  };
 
-  GetId(id: number): number{
-    return this.flexItems.findIndex(item => item.id == id);
+    GetId(id: number): number{
+    return this.flexItems === null ? -1 : this.flexItems.findIndex(item => item.id == id);
   }
 }

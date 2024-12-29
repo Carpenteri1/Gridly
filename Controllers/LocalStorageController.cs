@@ -9,7 +9,7 @@ namespace Gridly.Controllers;
 public class LayoutController : ControllerBase {
            
     [HttpPost("save")]
-    public async Task<IResult> Save([FromBody] ComponentModel newComponent) 
+    public IResult Save([FromBody] ComponentModel newComponent) 
         => LocalComponentHandler.Save(newComponent);
 
     [HttpGet("get")]

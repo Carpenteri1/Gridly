@@ -8,6 +8,9 @@ public class LocalComponentHandler
     public static IResult Save(ComponentModel newComponent)
     {
         var componentModels = DataStorage.ReadFromJsonFile().Result?.ToList();
+        if(componentModels == null) 
+            componentModels = new List<ComponentModel>();
+        
         componentModels.Add(newComponent);
         
       return DataStorage.ReadToJsonFile(componentModels) ? 

@@ -37,16 +37,16 @@
           </div>
           <div class="form-group" [hidden]="!wantToUploadIcon" >
             <label for="formFile" class="form-label">Upload Icon</label>
-            <input class="form-control" type="file" id="formFile" (change)="OnFileUpload($event)" [(ngModel)]="iconData"/>
+            <input class="form-control" type="file" id="formFile" (click)="ResetIconData()" (change)="OnFileUpload($event)"/>
           </div>
           <div [hidden]="!wantToLinkToImage" class="form-group">
             <label for="formUrl" class="form-label">Set url for icon</label>
-            <input class="form-control" type="text" id="formUrl" [(ngModel)]="iconData"/>
+            <input class="form-control" type="text" id="formUrl"/>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="ResetFormData()">Cancel</button>
         <button [disabled]="!CanAddComponent" type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="AddComponent()">Add</button>
       </div>
     </div>
