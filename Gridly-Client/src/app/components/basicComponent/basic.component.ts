@@ -18,18 +18,14 @@ export class BasicComponent implements OnInit {
   }
 
   HaveIconSet(name:string | undefined):boolean{
-    return name !== undefined && name !== "";
+    return name !== undefined && name != null && name !== "";
   }
   HaveImagUrlSet(imageUrl:string | undefined):boolean{
-    return imageUrl !== undefined && imageUrl !== "";
+    return imageUrl !== undefined && imageUrl != null && imageUrl !== "";
   }
 
   IconFilePath(name:string | undefined, fileType:string | undefined): string {
-    debugger;
-    if(name !== undefined && fileType !== undefined) {
-      return "Assets/Icons/" + name + "." + fileType;
-    }
-    return "";
+    return "Assets/Icons/" + name + "." + fileType;
   }
 
   Remove(id: number): void {

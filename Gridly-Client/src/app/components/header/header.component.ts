@@ -30,9 +30,11 @@ export class HeaderComponent{
 
     if(index === -1 && this.component.name !== "" && this.component.url !== "" )
     {
-      if((this.iconData.base64Data !== "" && this.iconData.name !== "" && this.iconData.fileType !== "") ||
-        (this.component.imageUrl !== "")){
-        this.sharedService.AddComponent(this.component);
+      if(this.iconData.base64Data !== "" && this.iconData.name !== "" && this.iconData.fileType !== ""){
+        this.sharedService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url, this.iconData, undefined));
+      }
+      if(this.component.imageUrl !== ""){
+        this.sharedService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url,undefined, this.component.imageUrl));
       }
       this.ResetFormData();
     }
@@ -43,7 +45,7 @@ export class HeaderComponent{
     if(this.component.name !== "" && this.component.url !== "" &&
       this.urlPattern.test(this.component.url) && this.namePattern.test(this.component.name) ){
 
-      if(this.iconData.base64Data !== "" || this.component.imageUrl !== ""){
+      if(this.iconData.name !== "" || this.component.imageUrl !== "" && this.component.imageUrl !== undefined){
         return true;
       }
     }

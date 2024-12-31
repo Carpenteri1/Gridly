@@ -27,19 +27,23 @@ export class SharedService{
   }
 
   AddComponent(newComponent: ComponentModel) {
-    if (!this.flexItems) {
-      this.flexItems = [];
-    }
-    this.flexItems.push(newComponent);
     this.PostAddedComponentList(newComponent)
-      .subscribe();
+      .subscribe()
+    setTimeout(() => {
+      this.LoadComponentList();
+    }, 500);
   }
   LoadComponentList() {
-    this.isLoading = true;
+    if(this.flexItems === null ||
+      this.flexItems.length === 0)
+      this.isLoading = true;
+
     this.http.get<ComponentModel[]>(`${this.apiUrl}get`).subscribe(
       (components) => {
         this.flexItems = components;
-        this.isLoading = false;
+
+        if(this.isLoading)
+          this.isLoading = false;
       },
       (error) => {
         console.error('Error fetching components:', error);

@@ -7,7 +7,8 @@ public class LocalComponentHandler
 {
     public static IResult Save(ComponentModel newComponent)
     {
-        if(!DataStorage.WriteIconToFolder(newComponent.IconData))
+        if(newComponent.IconData != null && 
+           !DataStorage.WriteIconToFolder(newComponent.IconData))
             Results.StatusCode(500);
         
         var componentModels = DataStorage.ReadFromJsonFile().Result?.ToList();
@@ -33,20 +34,21 @@ public class LocalComponentHandler
             return Results.NotFound();
         
         var component = componentModels.FirstOrDefault(x => x.Id == componentId);
+        componentModels = componentModels.Where(x => x.Id != componentId).ToList();
+
         if(component is null) 
             return Results.NotFound();
         
-        if (componentModels.Any(x =>
-                x.IconData.name == component.IconData.name &&
-                x.IconData.fileType == component.IconData.fileType))
+        if (component.IconData != null && 
+            !componentModels.Where(x => x.IconData != null && 
+                                        x.IconData.name == component.IconData.name && 
+                                       x.IconData.fileType == component.IconData.fileType).Any())
         {
             if(!DataStorage.DeleteIconFromFolder(component.IconData))
                 return Results.NotFound();
         }
         
-        componentModels = componentModels.Where(x => x.Id != componentId).ToList();
-       
-       return DataStorage.ReadToJsonFile(componentModels) ? 
+        return DataStorage.ReadToJsonFile(componentModels) ? 
            Results.Ok() : Results.StatusCode(500);
     }
 }
