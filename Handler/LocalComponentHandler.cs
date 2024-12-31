@@ -7,7 +7,7 @@ public class LocalComponentHandler
 {
     public static IResult Save(ComponentModel newComponent)
     {
-        if(!DataStorage.DecryptBase64String(newComponent.IconData))
+        if(!DataStorage.WriteIconToFolder(newComponent.IconData))
             Results.StatusCode(500);
         
         var componentModels = DataStorage.ReadFromJsonFile().Result?.ToList();
@@ -25,15 +25,28 @@ public class LocalComponentHandler
         await DataStorage.ReadFromJsonFile();
 
     public static IResult Delete(int componentId)
-    { 
-       var componentModels  = DataStorage.ReadFromJsonFile()
-           .Result?.Where(x => x.Id != componentId).ToList();
+    {
+        var componentModels = DataStorage.ReadFromJsonFile()
+            .Result?.ToList();
+        
+        if(componentModels is null || !componentModels.Any()) 
+            return Results.NotFound();
+        
+        var component = componentModels.FirstOrDefault(x => x.Id == componentId);
+        if(component is null) 
+            return Results.NotFound();
+        
+        if (!componentModels.Any(x =>
+                x.IconData.Name == component.IconData.Name &&
+                x.IconData.FileType == component.IconData.FileType))
+        {
+            if(!DataStorage.DeleteIconFromFolder(component.IconData))
+                return Results.NotFound();
+        }
+        
+        componentModels = componentModels.Where(x => x.Id != componentId).ToList();
        
-       if (componentModels.Any()) 
-           return DataStorage.ReadToJsonFile(componentModels) 
-               ? Results.Ok() : Results.StatusCode(500);
-       
-       return !DataStorage.ReadToJsonFile(componentModels) ? 
+       return DataStorage.ReadToJsonFile(componentModels) ? 
            Results.StatusCode(500) : Results.Ok();
     }
 }

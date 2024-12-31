@@ -5,9 +5,9 @@ namespace Gridly.Services;
 
 public class DataStorage
 {
-    private const string jsonComponentFileName = "componentData.json";
-    private static readonly string JsonPath = Path.Combine(Directory.GetCurrentDirectory(),"Assets/ComponentData", jsonComponentFileName);
-    private static readonly string IconPath = Path.Combine(Directory.GetCurrentDirectory(),"Assets/Icons");
+    private const string JsonComponentFileName = "componentData.json";
+    private static readonly string JsonPath = Path.Combine(Directory.GetCurrentDirectory(),"Assets/ComponentData", JsonComponentFileName);
+    private static readonly string IconPath = Path.Combine(Directory.GetCurrentDirectory(),"Assets/Icons/");
     
     public static bool ReadToJsonFile(List<ComponentModel> newComponent)
     {
@@ -39,15 +39,32 @@ public class DataStorage
         return ComponentModel.EmptyArray;
     }
 
-    public static bool DecryptBase64String(IconModel iconData)
+    public static bool WriteIconToFolder(IconModel iconData)
     {
+        string filePath = IconPath + $"{iconData.Name}.{iconData.FileType}";
+        if (File.Exists(filePath)) return true;
+        
         try
         {
-            var imageBytes = Convert.FromBase64String(iconData.Base64Data);
-            string filePath = IconPath +$"{iconData.Name}.{iconData.FileType}";                    
-            File.WriteAllBytes(filePath, imageBytes);   
-            
-        }catch(Exception e) { Console.WriteLine(e.Message); return false; }
+            File.WriteAllBytes(filePath, Convert.FromBase64String(iconData.Base64Data));
+        }
+        catch (Exception e) { Console.WriteLine(e.Message); return false; }
+
+        return true;
+    }
+    
+    public static bool DeleteIconFromFolder(IconModel iconData)
+    {
+        string filePath = IconPath + $"{iconData.Name}.{iconData.FileType}";
+        
+        if (File.Exists(filePath))
+        {
+            try
+            {
+                File.Delete(filePath);
+            }
+            catch (Exception e) { Console.WriteLine(e.Message); return false; }   
+        }
 
         return true;
     }
