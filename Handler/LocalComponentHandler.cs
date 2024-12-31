@@ -5,25 +5,50 @@ namespace Gridly.Handler;
 
 public class LocalComponentHandler
 {
-    public static IResult Save(ComponentModel[] newComponent) =>
-        DataStorage.ReadToJsonFile(newComponent) ? 
+    public static IResult Save(ComponentModel newComponent)
+    {
+        if(newComponent.IconData != null && 
+           !DataStorage.WriteIconToFolder(newComponent.IconData))
+            Results.StatusCode(500);
+        
+        var componentModels = DataStorage.ReadFromJsonFile().Result?.ToList();
+        
+        if(!componentModels.Any()) 
+            componentModels = new List<ComponentModel>();
+        
+        componentModels.Add(newComponent);
+        
+      return DataStorage.ReadToJsonFile(componentModels) ? 
             Results.Ok() : Results.StatusCode(500);
+    }
 
     public static async Task<ComponentModel[]> Get() => 
         await DataStorage.ReadFromJsonFile();
 
     public static IResult Delete(int componentId)
-    { 
-       var componentModels  = DataStorage.ReadFromJsonFile()
-           .Result.Where(x => x.Id != componentId).ToArray();
-       
-       if (!componentModels.Any()) 
-           return DataStorage.ReadToJsonFile(componentModels) 
-               ? Results.Ok() : Results.StatusCode(500);
-       
-       if(!DataStorage.ReadToJsonFile(componentModels))
-           return Results.StatusCode(500);
-       
-       return Results.Ok();
+    {
+        var componentModels = DataStorage.ReadFromJsonFile()
+            .Result?.ToList();
+        
+        if(componentModels is null || !componentModels.Any()) 
+            return Results.NotFound();
+        
+        var component = componentModels.FirstOrDefault(x => x.Id == componentId);
+        componentModels = componentModels.Where(x => x.Id != componentId).ToList();
+
+        if(component is null) 
+            return Results.NotFound();
+        
+        if (component.IconData != null && 
+            !componentModels.Where(x => x.IconData != null && 
+                                        x.IconData.name == component.IconData.name && 
+                                       x.IconData.fileType == component.IconData.fileType).Any())
+        {
+            if(!DataStorage.DeleteIconFromFolder(component.IconData))
+                return Results.NotFound();
+        }
+        
+        return DataStorage.ReadToJsonFile(componentModels) ? 
+           Results.Ok() : Results.StatusCode(500);
     }
 }

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ComponentModel } from './Models/Component.Model';
-import { Observable} from "rxjs";
+import {catchError, Observable, throwError} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -27,16 +27,23 @@ export class SharedService{
   }
 
   AddComponent(newComponent: ComponentModel) {
-    this.flexItems.push(newComponent);
-      this.PostAddedComponentList(this.flexItems)
-      .subscribe();
+    this.PostAddedComponentList(newComponent)
+      .subscribe()
+    setTimeout(() => {
+      this.LoadComponentList();
+    }, 500);
   }
   LoadComponentList() {
-    this.isLoading = true;
+    if(this.flexItems === null ||
+      this.flexItems.length === 0)
+      this.isLoading = true;
+
     this.http.get<ComponentModel[]>(`${this.apiUrl}get`).subscribe(
       (components) => {
-        this.flexItems = components; // Update the flexItems array with the fetched components
-        this.isLoading = false;
+        this.flexItems = components;
+
+        if(this.isLoading)
+          this.isLoading = false;
       },
       (error) => {
         console.error('Error fetching components:', error);
@@ -45,16 +52,18 @@ export class SharedService{
     );
   }
 
-  PostAddedComponentList(componentList: ComponentModel[]): Observable<ComponentModel[]> {
-    return this.http.post<ComponentModel[]>(this.apiUrl+"save", componentList,{
+  PostAddedComponentList(newComponent: ComponentModel): Observable<ComponentModel> {
+    return this.http.post<ComponentModel>(this.apiUrl+"save", newComponent,{
       responseType: 'json',
       headers: {'Content-Type': 'application/json'}
     }).pipe(
-        //catchError(this.handleError('addHero', hero))
-      );
-  }
+      catchError(error => {
+        console.error('Error posting save new component:', error);
+        return throwError(error);
+      }));
+  };
 
-  GetId(id: number): number{
-    return this.flexItems.findIndex(item => item.id == id);
+    GetId(id: number): number{
+    return this.flexItems === null ? -1 : this.flexItems.findIndex(item => item.id == id);
   }
 }
