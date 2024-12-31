@@ -28,12 +28,12 @@ export class HeaderComponent{
     const newId = Math.floor(Math.random() * 100) + 1;
     let index = this.sharedService.GetId(newId);
 
-    if(index === -1 && this.component.name !== "" &&
-      this.component.url !== "" && this.iconData.base64Data !== "" &&
-      this.iconData.Name !== "" && this.iconData.fileType !== "")
+    if(index === -1 && this.component.name !== "" && this.component.url !== "" )
     {
-      this.sharedService.AddComponent(new ComponentModel(
-        newId,this.component.name,this.component.url,this.iconData));
+      if((this.iconData.base64Data !== "" && this.iconData.name !== "" && this.iconData.fileType !== "") ||
+        (this.component.imageUrl !== "")){
+        this.sharedService.AddComponent(this.component);
+      }
       this.ResetFormData();
     }
     else
@@ -43,7 +43,7 @@ export class HeaderComponent{
     if(this.component.name !== "" && this.component.url !== "" &&
       this.urlPattern.test(this.component.url) && this.namePattern.test(this.component.name) ){
 
-      if(this.iconData.base64Data !== ""){
+      if(this.iconData.base64Data !== "" || this.component.imageUrl !== ""){
         return true;
       }
     }
@@ -59,8 +59,9 @@ export class HeaderComponent{
 
   ResetIconData(){
     this.iconData.base64Data = "";
-    this.iconData.Name = "";
+    this.iconData.name = "";
     this.iconData.fileType = "";
+    this.component.imageUrl = "";
   }
 
   OnFileUpload(event:any):void{
@@ -86,7 +87,7 @@ export class HeaderComponent{
 
   private SetFileNameAndType(inputName: string){
     let result = inputName.split('.');
-    this.iconData.Name = result[0];
+    this.iconData.name = result[0];
     this.iconData.fileType = result[1];
   }
 

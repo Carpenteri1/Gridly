@@ -41,12 +41,12 @@ public class DataStorage
 
     public static bool WriteIconToFolder(IconModel iconData)
     {
-        string filePath = IconPath + $"{iconData.Name}.{iconData.FileType}";
+        string filePath = IconPath + $"{iconData.name}.{iconData.fileType}";
         if (File.Exists(filePath)) return true;
         
         try
         {
-            File.WriteAllBytes(filePath, Convert.FromBase64String(iconData.Base64Data));
+            File.WriteAllBytes(filePath, Convert.FromBase64String(iconData.base64Data));
         }
         catch (Exception e) { Console.WriteLine(e.Message); return false; }
 
@@ -55,7 +55,7 @@ public class DataStorage
     
     public static bool DeleteIconFromFolder(IconModel iconData)
     {
-        string filePath = IconPath + $"{iconData.Name}.{iconData.FileType}";
+        string filePath = IconPath + $"{iconData.name}.{iconData.fileType}";
         
         if (File.Exists(filePath))
         {

@@ -36,9 +36,9 @@ public class LocalComponentHandler
         if(component is null) 
             return Results.NotFound();
         
-        if (!componentModels.Any(x =>
-                x.IconData.Name == component.IconData.Name &&
-                x.IconData.FileType == component.IconData.FileType))
+        if (componentModels.Any(x =>
+                x.IconData.name == component.IconData.name &&
+                x.IconData.fileType == component.IconData.fileType))
         {
             if(!DataStorage.DeleteIconFromFolder(component.IconData))
                 return Results.NotFound();
@@ -47,6 +47,6 @@ public class LocalComponentHandler
         componentModels = componentModels.Where(x => x.Id != componentId).ToList();
        
        return DataStorage.ReadToJsonFile(componentModels) ? 
-           Results.StatusCode(500) : Results.Ok();
+           Results.Ok() : Results.StatusCode(500);
     }
 }

@@ -1,3 +1,5 @@
+using Microsoft.Extensions.FileProviders;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -7,6 +9,12 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 var app = builder.Build();
 
 app.UseStaticFiles();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Assets/Icons")),
+    RequestPath = "/Assets/Icons"
+});
 
 app.MapControllerRoute(
     name: "default",

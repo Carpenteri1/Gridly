@@ -38,7 +38,7 @@ export class SharedService{
     this.isLoading = true;
     this.http.get<ComponentModel[]>(`${this.apiUrl}get`).subscribe(
       (components) => {
-        this.flexItems = components; // Update the flexItems array with the fetched components
+        this.flexItems = components;
         this.isLoading = false;
       },
       (error) => {
