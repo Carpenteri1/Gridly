@@ -19,11 +19,11 @@
         <form>
           <div class="form-group pb-2">
             <label class="form-label">App name</label>
-            <input type="text" class="form-control" placeholder="App name" [(ngModel)]="name" name="name">
+            <input type="text" class="form-control" placeholder="Name" [(ngModel)]="component.name" name="name">
           </div>
           <div class="form-group pb-2">
             <label class="form-label">Service Url</label>
-            <input type="text" class="form-control" placeholder="Url" [(ngModel)]="url" name="url">
+            <input type="text" class="form-control" placeholder="http://127.0.0.1" [(ngModel)]="component.url" name="url">
           </div>
           <div>
             <label class="form-label"></label>
@@ -37,11 +37,11 @@
           </div>
           <div class="form-group" [hidden]="!wantToUploadIcon" >
             <label for="formFile" class="form-label">Upload Icon</label>
-            <input class="form-control" type="file" id="formFile" (click)="ResetIconData()" (change)="OnFileUpload($event)"/>
+            <input class="form-control" placeholder="Icon" type="file" id="formFile" (click)="ResetIconData()" (change)="OnFileUpload($event)"/>
           </div>
           <div [hidden]="!wantToLinkToImage" class="form-group">
             <label for="formUrl" class="form-label">Set url for icon</label>
-            <input class="form-control" type="text" id="formUrl"/>
+            <input class="form-control" type="url" id="formUrl" placeholder="Icon url" [(ngModel)]="iconData"/>
           </div>
         </form>
       </div>

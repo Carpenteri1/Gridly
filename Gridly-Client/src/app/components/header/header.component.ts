@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { SharedService } from '../../shared.service';
 import { ComponentModel } from '../../Models/Component.Model'
 import { FormsModule } from '@angular/forms';
+import {IconModel} from "../../Models/Icon.Model";
 
 @Component({
     selector: 'header-component',
@@ -18,28 +19,31 @@ export class HeaderComponent{
   namePattern = /^[A-Za-z]+$/;
   wantToUploadIcon = false;
   wantToLinkToImage = false;
-  iconData: string = '';
-  name:string = '';
-  url:string = '';
+  iconData: IconModel = new IconModel("","","");
+  component: ComponentModel = new ComponentModel(0,"","", this.iconData);
 
   constructor(public sharedService: SharedService){}
 
   AddComponent() {
     const newId = Math.floor(Math.random() * 100) + 1;
     let index = this.sharedService.GetId(newId);
-    if(index === -1 && this.name !== "" && this.url !== "" && this.iconData !== ""){
+
+    if(index === -1 && this.component.name !== "" &&
+      this.component.url !== "" && this.iconData.base64Data !== "" &&
+      this.iconData.Name !== "" && this.iconData.fileType !== "")
+    {
       this.sharedService.AddComponent(new ComponentModel(
-        newId,this.name,this.url,this.iconData));
+        newId,this.component.name,this.component.url,this.iconData));
       this.ResetFormData();
     }
     else
       this.AddComponent();
   }
   get CanAddComponent(): boolean{
-    if(this.name !== "" && this.url !== "" &&
-      this.urlPattern.test(this.url) && this.namePattern.test(this.name) ){
+    if(this.component.name !== "" && this.component.url !== "" &&
+      this.urlPattern.test(this.component.url) && this.namePattern.test(this.component.name) ){
 
-      if(this.iconData !== null && this.iconData !== ""){
+      if(this.iconData.base64Data !== ""){
         return true;
       }
     }
@@ -47,24 +51,43 @@ export class HeaderComponent{
   }
 
   ResetFormData(): void{
-    this.name = '';
-    this.url = '';
-    this.iconData = '';
+    this.component.id = 0;
+    this.component.name = "";
+    this.component.url = "";
+    this.ResetIconData();
   }
 
   ResetIconData(){
-    this.iconData = '';
+    this.iconData.base64Data = "";
+    this.iconData.Name = "";
+    this.iconData.fileType = "";
   }
 
   OnFileUpload(event:any):void{
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
+      this.SetFileNameAndType(file.name);
+
+      if(this.iconData.fileType === 'svg' ||
+        this.iconData.fileType === 'png' ||
+        this.iconData.fileType === 'jpg' ||
+        this.iconData.fileType === 'jpeg' ||
+        this.iconData.fileType === 'ico')
+      {
       const reader = new FileReader();
       reader.onload = () => {
-        this.iconData = reader.result as string;
+        this.iconData.base64Data = reader.result as string;
+        this.iconData.base64Data =  this.iconData.base64Data.split(',')[1];
       };
       reader.readAsDataURL(file);
+      }
     }
+  }
+
+  private SetFileNameAndType(inputName: string){
+    let result = inputName.split('.');
+    this.iconData.Name = result[0];
+    this.iconData.fileType = result[1];
   }
 
   WantToUploadIcon(): void{

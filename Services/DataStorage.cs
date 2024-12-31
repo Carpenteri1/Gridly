@@ -6,26 +6,15 @@ namespace Gridly.Services;
 public class DataStorage
 {
     private const string jsonComponentFileName = "componentData.json";
-    private static readonly string filePath = Path.Combine(Directory.GetCurrentDirectory(),"Assets/ComponentData", jsonComponentFileName);
+    private static readonly string JsonPath = Path.Combine(Directory.GetCurrentDirectory(),"Assets/ComponentData", jsonComponentFileName);
+    private static readonly string IconPath = Path.Combine(Directory.GetCurrentDirectory(),"Assets/Icons");
+    
     public static bool ReadToJsonFile(List<ComponentModel> newComponent)
     {
-        /*foreach (var component in newComponent)
-        {
-            
-            var fileData = Convert.FromBase64String(component.IconData.Split(',')[1]); // Decode Base64
-            var uploadsFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
-            if (!Directory.Exists(uploadsFolderPath))
-            {
-                Directory.CreateDirectory(uploadsFolderPath);
-            }
-
-            var filePath = Path.Combine(uploadsFolderPath, $"{component.Name}.png"); // Save as a PNG
-            System.IO.File.WriteAllBytes(filePath, fileData);
-        }*/
         try
         {
             string jsonString = JsonSerializer.Serialize(newComponent);
-            File.WriteAllText(filePath, jsonString);    
+            File.WriteAllText(JsonPath, jsonString);    
 
             return true;
         }
@@ -40,13 +29,26 @@ public class DataStorage
     {
         try
         {
-            string jsonString = await File.ReadAllTextAsync(filePath);
+            string jsonString = await File.ReadAllTextAsync(JsonPath);
             return JsonSerializer.Deserialize<ComponentModel[]>(jsonString);
         }
         catch (NullReferenceException e) { Console.WriteLine(e.Message); }
         catch(JsonException e) { Console.WriteLine(e.Message); }
         catch (Exception e) { Console.WriteLine(e.Message); }
         
-        return null;
+        return ComponentModel.EmptyArray;
+    }
+
+    public static bool DecryptBase64String(IconModel iconData)
+    {
+        try
+        {
+            var imageBytes = Convert.FromBase64String(iconData.Base64Data);
+            string filePath = IconPath +$"{iconData.Name}.{iconData.FileType}";                    
+            File.WriteAllBytes(filePath, imageBytes);   
+            
+        }catch(Exception e) { Console.WriteLine(e.Message); return false; }
+
+        return true;
     }
 }
