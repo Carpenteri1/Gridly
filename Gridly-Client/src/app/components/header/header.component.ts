@@ -15,7 +15,7 @@ import {IconModel} from "../../Models/Icon.Model";
 
 export class HeaderComponent{
 
-  urlPattern = /^(https?:\/\/)?(www\.)?(?!www\.)[A-Za-z]+(\.|\:)([a-zA-Z]{2,}|[0-9]+)$/;
+  urlPattern = /^(https?:\/\/)(www\.)?(?!www\.)[A-Za-z0-9.]+(\.|\:)[a-zA-Z0-9]{2,}$/;
   namePattern = /^[A-Za-z]+$/;
   wantToUploadIcon = false;
   wantToLinkToImage = false;
