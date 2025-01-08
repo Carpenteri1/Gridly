@@ -7,12 +7,10 @@
       <div class="d-flex justify-content-end p-1">
         <button (click)="Remove(item.id)" style="border-radius:8px;">X</button>
       </div>
-      <a [href]="item.url" class="h-100 text-black-50 text-decoration-none" target="_blank">
-        <div class="d-flex flex-grow-1 justify-content-center" style="background: darkgrey;border-radius: 20px;">
-          <h4 class="pt-1" >{{item.name}}</h4>
-          <img [hidden]="!HaveIconSet(item.iconData?.name)" [src]="IconFilePath(item.iconData?.name,item.iconData?.fileType)" class="img-fluid" style="height: 100px; width: 100px;" alt="icon not found">
-          <img [hidden]="!HaveImagUrlSet(item.imageUrl)" [src]="item.imageUrl" class="img-fluid" style="max-height: 100px; max-width: 100px;" alt="">
-      </div>
+      <a [href]="item.url" class="d-flex flex-column text-decoration-none justify-content-center text-black-50 h-100" target="_blank">
+          <h4 class="text-center" >{{item.name}}</h4>
+          <img [hidden]="!HaveIconSet(item.iconData?.name)" [src]="IconFilePath(item.iconData?.name,item.iconData?.fileType)" class="p-1 img-fluid component-icon-center" alt="icon not found">
+          <img [hidden]="!HaveImagUrlSet(item.imageUrl)" [src]="item.imageUrl" class="p-1 img-fluid icon-size component-icon-center" alt="icon not found">
       </a>
     </div>
 </div>
