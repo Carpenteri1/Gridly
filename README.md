@@ -9,7 +9,7 @@ Gridly implements a lightweight, minimal grid system tailored for modern web, le
 By enabling the seamless implementation of applications, websites, and services on local networks. This makes it an ideal solution for managing interconnected systems and hosting centralized dashboards. Gridly aims to include support for creating intuitive, customizable shortcuts to locally or remotely hosted applications, services, and websites, empowering users to navigate and manage their network ecosystem efficiently.
 
 ### Why Gridly
-Gridly is built using .NET Core and ASP.NET Core MVC, allowing it to function as a self-contained application. This eliminates the need for additional frameworks like Angular or external dependencies on runtime environments. Users can run Gridly on supported systems without requiring pre-installed .NET or Angular, ensuring a streamlined deployment and setup process.
+Gridly is built using .NET Core and ASP.NET Core MVC, allowing it to function as a self-contained application. This elimina tes the need for additional frameworks like Angular or external dependencies on runtime environments. Users can run Gridly on supported systems without requiring pre-installed .NET or Angular, ensuring a streamlined deployment and setup process.
 
 
 ### Technologies Used
@@ -23,3 +23,9 @@ Gridly is built using .NET Core and ASP.NET Core MVC, allowing it to function as
  ![Bootstrap](https://img.shields.io/badge/-Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
  ![NPM](https://img.shields.io/badge/NPM-F7DF1E?style=for-the-badge&logo=npm&logoColor=white)
  ![Yaml](https://img.shields.io/badge/Yaml-FF6C37?style=for-the-badge&logo=yaml&logoColor=white)
+
+ #### Supported systems
+  ![Linux](https://img.shields.io/badge/Linux-FFFFFF?style=for-the-badge&logo=linux&logoColor=black)
+  ![Windows](https://img.shields.io/badge/Windows-357EC7?style=for-the-badge&logo=windows&logoColor=white)
+
+ 
