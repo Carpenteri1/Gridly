@@ -30,13 +30,20 @@ jobs:
       run: |
         dotnet publish -r win-x64 -c Release --self-contained -p:PublishSingleFile=true
         dotnet publish -r linux-x64 -c Release --self-contained -p:PublishSingleFile=true
+        dotnet publish -r linux-arm -c Release --self-contained -p:PublishSingleFile=true
+        dotnet publish -r linux-arm64 -c Release --self-contained -p:PublishSingleFile=true
 
     - name: Copy wwwroot and remove unnecessary files
       run: |
             cp -r bin/Release/net8.0/win-x64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net8.0/win-x64/
             cp -r bin/Release/net8.0/linux-x64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-x64/
+            cp -r bin/Release/net8.0/linux-arm/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-arm/
+            cp -r bin/Release/net8.0/linux-arm64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-arm64/
+
             rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/win-x64/publish
             rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-x64/publish
+            rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-arm/publish
+            rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-arm64/publish
    
     - name: Install zip tool
       run: | 
@@ -57,11 +64,22 @@ jobs:
           cd bin/Release/net8.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_NAME linux-x64
           echo "ZIP_Linux_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
-    #- name: Create Git tag with package version
-    #  run: |
-    #    git tag $TAG_VERSION
-    #    git push origin $TAG_VERSION 
-    #    echo "new tag $TAG_VERSION created and pushed"
+
+    - name: Package Linux arm build into ZIP
+      run: |
+          echo "TAG_VERSION=${{ env.TAG_VERSION }}"
+          ZIP_Linux_arm_NAME="Gridly-Linux-arm-$TAG_VERSION.zip"
+          cd bin/Release/net8.0/
+          zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_arm_NAME linux-arm
+          echo "ZIP_Linux_arm_NAME=$ZIP_Linux_arm_NAME" >> $GITHUB_ENV
+
+    - name: Package Linux arm x64 build into ZIP
+      run: |
+          echo "TAG_VERSION=${{ env.TAG_VERSION }}"
+          ZIP_Linux_arm64_NAME="Gridly-Linux-arm64-$TAG_VERSION.zip"
+          cd bin/Release/net8.0/
+          zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_arm64_NAME linux-arm64
+          echo "ZIP_Linux_arm64_NAME=$ZIP_Linux_arm64_NAME" >> $GITHUB_ENV
         
     - name: Upload tarball to GitHub Releases    
       uses: softprops/action-gh-release@v1
@@ -69,6 +87,8 @@ jobs:
         files: | 
           /home/runner/work/Gridly/Gridly/${{ env.ZIP_WINDOWS_NAME }}
           /home/runner/work/Gridly/Gridly/${{ env.ZIP_Linux_NAME }}
+          /home/runner/work/Gridly/Gridly/${{ env.ZIP_Linux_arm_NAME }}
+          /home/runner/work/Gridly/Gridly/${{ env.ZIP_Linux_arm64_NAME }}
         # Upload the tarball as a release asset
         
         tag_name: ${{ env.TAG_VERSION }}
