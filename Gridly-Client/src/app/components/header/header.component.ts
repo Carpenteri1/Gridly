@@ -16,7 +16,9 @@ import {IconModel} from "../../Models/Icon.Model";
 export class HeaderComponent{
 
   urlPattern = /^(https?:\/\/)(www\.)?(?!www\.)[A-Za-z0-9.]+(\.|\:)[a-zA-Z0-9]{2,}$/;
+  imageUrlPattern = /^(data:image\/)(png|svg|jpeg|jpg|ico)(;base64,).*/;
   namePattern = /^[A-Za-z]+$/;
+
   wantToUploadIcon = false;
   wantToLinkToImage = false;
   iconData: IconModel = new IconModel("","","");
@@ -45,7 +47,8 @@ export class HeaderComponent{
     if(this.component.name !== "" && this.component.url !== "" &&
       this.urlPattern.test(this.component.url) && this.namePattern.test(this.component.name) ){
 
-      if(this.iconData.name !== "" || this.component.imageUrl !== "" && this.component.imageUrl !== undefined){
+      if(this.iconData.name !== "" || this.component.imageUrl !== "" && this.component.imageUrl !== undefined &&
+      this.imageUrlPattern.test(this.component.imageUrl)){
         return true;
       }
     }
