@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SharedService } from '../../shared.service';
+import {ComponentModel} from "../../Models/Component.Model";
+import {AddComponent} from "../Modals/AddComponent/add.component";
 
 @Component({
   selector: 'basic-component',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, AddComponent],
   templateUrl: './basic.component.html',
   styleUrls: ['./basic.component.css'],
 })
@@ -30,5 +31,8 @@ export class BasicComponent implements OnInit {
 
   Remove(id: number): void {
     this.sharedService.RemoveComponent(id);
+  }
+  Edit(component:ComponentModel): void {
+    this.sharedService.EditComponent(component);
   }
 }

@@ -4,12 +4,13 @@
     <div *ngFor="let item of sharedService.flexItems"
       class="d-flex m-2 flex-column"
       style="height: 180px; flex: 0 180px; background:darkgrey;border-bottom: 20px;">
-      <div class="d-flex justify-content-end p-1">
+      <div class="d-flex justify-content-end p-1 gap-1">
+        <add-component-modal [windowTitle]="'Edit'" [btnTheme]="'btn btn-secondary'" [btnIcon]="'bi bi-three-dots'"></add-component-modal>
         <button (click)="Remove(item.id)" style="border-radius:8px;">X</button>
       </div>
       <a [href]="item.url" class="d-flex flex-column text-decoration-none justify-content-center text-black-50 h-100" target="_blank">
           <h4 class="text-center" >{{item.name}}</h4>
-          <img [hidden]="!HaveIconSet(item.iconData?.name)" [src]="IconFilePath(item.iconData?.name,item.iconData?.fileType)" class="p-1 component-icon-center" alt="icon not found">
+          <img [hidden]="!HaveIconSet(item.iconData?.name)" [src]="IconFilePath(item.iconData?.name,item.iconData?.fileType)" class="p-1 icon-size component-icon-center" alt="icon not found">
           <img [hidden]="!HaveImagUrlSet(item.imageUrl)" [src]="item.imageUrl" class="p-1 icon-size component-icon-center" alt="icon not found">
       </a>
     </div>

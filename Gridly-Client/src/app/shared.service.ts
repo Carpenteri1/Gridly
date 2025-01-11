@@ -26,6 +26,11 @@ export class SharedService{
         });
   }
 
+  EditComponent(component:ComponentModel){
+    this.RemoveComponent(component.id);
+    this.AddComponent(component);
+  }
+
   AddComponent(newComponent: ComponentModel) {
     this.PostAddedComponentList(newComponent)
       .subscribe()
