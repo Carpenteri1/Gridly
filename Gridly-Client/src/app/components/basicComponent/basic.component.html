@@ -9,7 +9,7 @@
       </div>
       <a [href]="item.url" class="d-flex flex-column text-decoration-none justify-content-center text-black-50 h-100" target="_blank">
           <h4 class="text-center" >{{item.name}}</h4>
-          <img [hidden]="!HaveIconSet(item.iconData?.name)" [src]="IconFilePath(item.iconData?.name,item.iconData?.fileType)" class="p-1 component-icon-center" alt="icon not found">
+          <img [hidden]="!HaveIconSet(item.iconData?.name)" [src]="IconFilePath(item.iconData?.name,item.iconData?.fileType)" class="p-1 icon-size component-icon-center" alt="icon not found">
           <img [hidden]="!HaveImagUrlSet(item.imageUrl)" [src]="item.imageUrl" class="p-1 icon-size component-icon-center" alt="icon not found">
       </a>
     </div>

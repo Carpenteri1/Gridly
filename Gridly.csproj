@@ -39,9 +39,6 @@
     <None Update="Assets\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\index.html" />
     <None Include="wwwroot\main.js" />
     <None Include="wwwroot\media\bootstrap-icons.woff" />
