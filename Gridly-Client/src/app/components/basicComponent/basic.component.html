@@ -6,7 +6,7 @@
       style="height: 180px; flex: 0 180px; background:darkgrey;border-bottom: 20px;">
       <div class="d-flex justify-content-end p-1 gap-1">
         <add-component-modal [windowTitle]="'Edit'" [btnTheme]="'btn btn-secondary'" [btnIcon]="'bi bi-three-dots'"></add-component-modal>
-        <button (click)="Remove(item.id)" style="border-radius:8px;">X</button>
+        <button (click)="Remove(item.id)" class="btn btn-secondary "><i class="bi bi-x-lg"></i></button>
       </div>
       <a [href]="item.url" class="d-flex flex-column text-decoration-none justify-content-center text-black-50 h-100" target="_blank">
           <h4 class="text-center" >{{item.name}}</h4>
