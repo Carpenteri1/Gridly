@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import {AddComponent} from "../Modals/AddComponent/add.component";
+import {Component, Injectable} from "@angular/core";
+import {HandleComponent} from "../modals/handleComponent/handle.component";
 
 @Component({
   selector: 'header-component',
@@ -7,11 +7,18 @@ import {AddComponent} from "../Modals/AddComponent/add.component";
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   imports: [
-    AddComponent
+    HandleComponent
   ]
 })
 
+@Injectable({ providedIn: 'root' })
 export class HeaderComponent{
+  modalTitle = "Add";
+  modalButtonTheme ="btn btn-primary";
+  modalButtonIcon = "bi bi-plus";
+  modelBindId = "addComponentModalLabel";
+  modalDropDownId = "addComponentModal";
 
-  protected readonly AddComponent = AddComponent;
+  constructor(public handleComponent: HandleComponent) {}
+
 }

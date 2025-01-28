@@ -5,7 +5,15 @@
       class="d-flex m-2 flex-column"
       style="height: 180px; flex: 0 180px; background:darkgrey;border-bottom: 20px;">
       <div class="d-flex justify-content-end p-1 gap-1">
-        <add-component-modal [windowTitle]="'Edit'" [btnTheme]="'btn btn-secondary'" [btnIcon]="'bi bi-three-dots'"></add-component-modal>
+        <handle-component-modal
+          [windowTitle]="modalTitle"
+          [btnTheme]="modalButtonTheme"
+          [btnIcon]="modalButtonIcon"
+          [btnTitle]="modalTitle"
+          [modalLabelId]="modelBindId"
+          [modalBindDropdownId]="modalDropDownId"
+          [acceptButton]="handleComponent.EditComponent">
+        </handle-component-modal>
         <button (click)="Remove(item.id)" class="btn btn-secondary "><i class="bi bi-x-lg"></i></button>
       </div>
       <a [href]="item.url" class="d-flex flex-column text-decoration-none justify-content-center text-black-50 h-100" target="_blank">

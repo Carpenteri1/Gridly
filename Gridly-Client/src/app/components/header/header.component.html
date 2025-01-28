@@ -1,8 +1,11 @@
 <div class="flex-wrap d-flex flex-row-reverse">
-  <add-component-modal
-    [windowTitle]="'Add Component'"
-    [btnTheme]="'btn btn-primary'"
-    [btnIcon]="'bi bi-plus'">
-  </add-component-modal>
+  <handle-component-modal
+    [windowTitle]="modalTitle"
+    [btnTheme]="modalButtonTheme"
+    [btnIcon]="modalButtonIcon"
+    [btnTitle]="modalTitle"
+    [modalLabelId]="modelBindId"
+    [modalBindDropdownId]="modalDropDownId"
+    [acceptButton]="handleComponent.AddComponent">
+  </handle-component-modal>
 </div>
-

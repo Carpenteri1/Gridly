@@ -1,34 +1,47 @@
-import {Component, Input} from "@angular/core";
+import {Component, Injectable, Input} from "@angular/core";
 import {IconModel} from "../../../Models/Icon.Model";
 import {ComponentModel} from "../../../Models/Component.Model";
 import {SharedService} from "../../../shared.service";
 import {FormsModule} from "@angular/forms";
 
 @Component({
-  selector: 'add-component-modal',
+  selector: 'handle-component-modal',
   standalone: true,
-  templateUrl: './add.component.html',
+  templateUrl: './handle.component.html',
   imports: [
     FormsModule
   ],
 })
-export class AddComponent{
+
+@Injectable({ providedIn: 'root' })
+export class HandleComponent {
   urlPattern = /^(https?:\/\/)(www\.)?(?!www\.)[A-Za-z0-9.]+(\.|\:)[a-zA-Z0-9]{2,}$/;
   imageUrlPattern = /^(data:image\/)(png|svg|jpeg|jpg|ico)(;base64,).*/;
   namePattern = /^[A-Za-z]+$/;
-  @Input() btnIcon: string ="";
-  @Input() btnTheme: string ="";
-  @Input() windowTitle: string ="";
-
 
   wantToUploadIcon = false;
   wantToLinkToImage = false;
   iconData: IconModel = new IconModel("","","");
-  component: ComponentModel = new ComponentModel(0,"","", this.iconData);
+
+  @Input() btnIcon: string ="";
+  @Input() btnTheme: string ="";
+  @Input() btnTitle: string ="";
+  @Input() windowTitle: string ="";
+  @Input() modalLabelId: string = "";
+  @Input() modalBindDropdownId: string = "";
+  @Input() component: ComponentModel = new ComponentModel(0,"","", this.iconData);
+
+  @Input() acceptButton!: () => void;
+
+  triggerAccept() {
+    if (this.acceptButton) {
+      this.acceptButton();
+    }
+  }
 
   constructor(public sharedService: SharedService){}
 
-  AddComponent() {
+  public AddComponent() {
     const newId = Math.floor(Math.random() * 100) + 1;
     let index = this.sharedService.GetId(newId);
 
@@ -45,6 +58,11 @@ export class AddComponent{
     else
       this.AddComponent();
   }
+
+  public EditComponent() {
+
+  }
+
   get CanAddComponent(): boolean{
     if(this.component.name !== "" && this.component.url !== "" &&
       this.urlPattern.test(this.component.url) && this.namePattern.test(this.component.name) ){

@@ -1,16 +1,14 @@
 <div class="dropdown">
-  <button type="button" [class]="btnTheme" data-bs-toggle="modal" data-bs-target="#addComponentModal">
+  <button type="button" [class]="btnTheme" data-bs-toggle="modal" [attr.data-bs-target]="'#'+modalBindDropdownId">
     <i [class]="btnIcon"></i>
   </button>
 </div>
 
-<div class="modal fade" id="addComponentModal" tabindex="-1" aria-labelledby="addComponentModalLabel" aria-hidden="true">
+<div class="modal fade" [id]="modalBindDropdownId" tabindex="-1" [attr.aria-labelledby]="modalLabelId" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addComponentModalLabel">
-          {{windowTitle}}
-        </h5>
+        <h5 class="modal-title" [id]="modalLabelId" [title]="windowTitle">{{windowTitle}}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -45,7 +43,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="ResetFormData()">Cancel</button>
-        <button [disabled]="!CanAddComponent" type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="AddComponent()">Add</button>
+        <button [disabled]="!CanAddComponent" type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="triggerAccept()" [attr.data-title]="btnTitle">{{btnTitle}}</button>
       </div>
     </div>
   </div>
