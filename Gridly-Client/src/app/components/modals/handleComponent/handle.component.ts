@@ -30,8 +30,8 @@ export class HandleComponent {
   wantToUploadIcon = false;
   wantToLinkToImage = false;
 
-  iconData: IconModel = new IconModel("","","");
-  @Input() component: ComponentModel | ComponentModel = new ComponentModel(0,"","", this.iconData,"");
+  iconData= new IconModel("","","");
+  @Input() component = new ComponentModel(0,"","", this.iconData,"");
   @Input() acceptButton!: () => void;
 
   triggerAccept() {
@@ -42,10 +42,6 @@ export class HandleComponent {
   constructor(public sharedService: SharedService){
   }
 
-  public LoadData(id:number)
-  {
-    this.component = this.sharedService.GetComponentById(id);
-  }
   public AddComponent() {
     const newId = Math.floor(Math.random() * 100) + 1;
     let index = this.sharedService.GetId(newId);

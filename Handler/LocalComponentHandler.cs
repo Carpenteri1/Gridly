@@ -11,7 +11,8 @@ public class LocalComponentHandler
            !DataStorage.WriteIconToFolder(newComponent.IconData))
             Results.StatusCode(500);
         
-        var componentModels = DataStorage.ReadFromJsonFile().Result?.ToList();
+        var componentModels = 
+            DataStorage.ReadAllFromJsonFile().Result?.ToList();
         
         if(!componentModels.Any()) 
             componentModels = new List<ComponentModel>();
@@ -28,7 +29,7 @@ public class LocalComponentHandler
             Results.StatusCode(500);
 
         var componentModels = 
-            DataStorage.ReadFromJsonFile().Result?.ToList();
+            DataStorage.ReadAllFromJsonFile().Result?.ToList();
 
         if (!componentModels.Any())
             componentModels = new List<ComponentModel>();
@@ -47,12 +48,15 @@ public class LocalComponentHandler
         return DataStorage.ReadToJsonFile(componentModels) ? 
             Results.Ok() : Results.StatusCode(500);
     }
-    public static async Task<ComponentModel[]> Get() => 
-        await DataStorage.ReadFromJsonFile();
+    public static async Task<ComponentModel[]?> Get() => 
+        await DataStorage.ReadAllFromJsonFile();
+    
+    public static async Task<ComponentModel?> GetById(int Id) => 
+        await DataStorage.ReadByIdFromJsonFile(Id);
 
     public static IResult Delete(int componentId)
     {
-        var componentModels = DataStorage.ReadFromJsonFile()
+        var componentModels = DataStorage.ReadAllFromJsonFile()
             .Result?.ToList();
         
         if(componentModels is null || !componentModels.Any()) 

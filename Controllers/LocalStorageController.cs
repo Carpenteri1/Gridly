@@ -16,6 +16,10 @@ public class LayoutController : ControllerBase {
     public async Task<ComponentModel[]?> Get() => 
         await LocalComponentHandler.Get();
     
+    [HttpGet("getbyid/{Id}")]
+    public async Task<ComponentModel?> GetById(int Id) => 
+        await LocalComponentHandler.GetById(Id);
+    
     [HttpPost("edit")]
     public IResult Edit([FromBody] ComponentModel component) => 
         LocalComponentHandler.Edit(component);

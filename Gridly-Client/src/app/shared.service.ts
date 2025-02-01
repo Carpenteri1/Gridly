@@ -86,7 +86,26 @@ export class SharedService{
     return this.flexItems === null ? -1 : this.flexItems.findIndex(item => item.id == id);
   }
   GetComponentById(id: number): ComponentModel{
-      this.LoadComponentList();
-    return this.flexItems.find(item => item.id == id) as ComponentModel;
+    let component = this.flexItems.find(item => item.id == id) as ComponentModel;
+    if(component === undefined || component === null){
+      if(this.flexItems === null ||
+        this.flexItems.length === 0)
+        this.isLoading = true;
+
+      this.http.get<ComponentModel>(`${this.apiUrl}getbyid/${id}`).subscribe(
+        (returnData) => {
+
+          if(this.isLoading)
+            this.isLoading = false;
+
+          component = returnData;
+        },
+        (error) => {
+          console.error('Error fetching component:', error);
+          this.isLoading = false;
+        }
+      );
+    }
+    return component;
   }
 }

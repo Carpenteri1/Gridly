@@ -1,7 +1,6 @@
 import {Component, Injectable, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedService } from '../../shared.service';
-import {ComponentModel} from "../../Models/Component.Model";
 import {HandleComponent} from "../modals/handleComponent/handle.component";
 import {AppComponent} from "../../app.component";
 
@@ -41,7 +40,5 @@ export class BasicComponent implements OnInit {
   Remove(id: number): void {
     this.sharedService.RemoveComponent(id);
   }
-
-  protected readonly ComponentModel = ComponentModel;
   protected readonly AppComponent = AppComponent;
 }
