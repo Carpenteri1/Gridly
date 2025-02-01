@@ -19,18 +19,19 @@ export class HandleComponent {
   imageUrlPattern = /^(data:image\/)(png|svg|jpeg|jpg|ico)(;base64,).*/;
   namePattern = /^[A-Za-z]+$/;
 
-  wantToUploadIcon = false;
-  wantToLinkToImage = false;
-  iconData: IconModel = new IconModel("","","");
-
   @Input() btnIcon: string ="";
   @Input() btnTheme: string ="";
   @Input() btnTitle: string ="";
   @Input() windowTitle: string ="";
   @Input() modalLabelId: string = "";
   @Input() modalBindDropdownId: string = "";
-  @Input() component: ComponentModel = new ComponentModel(0,"","", this.iconData);
+  @Input() editMode: boolean = false;
 
+  wantToUploadIcon = false;
+  wantToLinkToImage = false;
+
+  iconData: IconModel = new IconModel("","","");
+  @Input() component: ComponentModel | ComponentModel = new ComponentModel(0,"","", this.iconData,"");
   @Input() acceptButton!: () => void;
 
   triggerAccept() {
@@ -38,9 +39,13 @@ export class HandleComponent {
       this.acceptButton();
     }
   }
+  constructor(public sharedService: SharedService){
+  }
 
-  constructor(public sharedService: SharedService){}
-
+  public LoadData(id:number)
+  {
+    this.component = this.sharedService.GetComponentById(id);
+  }
   public AddComponent() {
     const newId = Math.floor(Math.random() * 100) + 1;
     let index = this.sharedService.GetId(newId);
@@ -59,11 +64,33 @@ export class HandleComponent {
       this.AddComponent();
   }
 
-  public EditComponent() {
+  public EditComponent(){
 
+    //TODO dont think we need, we already check this in CanEditCompoent below
+    //TODO check logic in AddComponent also
+    /*
+    if(this.NoEmptyInputFields){
+      let storedComponent = this.sharedService.GetComponentById(this.component.id);
+      let objectChanged: boolean = false;
+      if(this.component.name !== storedComponent.name ||
+        this.component.url !== storedComponent.url ||
+        this.component.iconData?.name !== storedComponent.iconData?.name){
+        objectChanged = true;
+      }
+      if(objectChanged)*/
+        this.sharedService.EditComponent(this.component);
+  }
+  public CanEditComponent() {
+    return
+      this.editMode &&
+      this.NoEmptyInputFields
+      && JSON.stringify(this.sharedService.GetComponentById(this.component.id)) !== JSON.stringify(this.component);
   }
 
-  get CanAddComponent(): boolean{
+  get CanAddComponent() :boolean{
+    return this.NoEmptyInputFields;
+  }
+  get NoEmptyInputFields(): boolean{
     if(this.component.name !== "" && this.component.url !== "" &&
       this.urlPattern.test(this.component.url) && this.namePattern.test(this.component.name) ){
 

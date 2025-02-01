@@ -27,8 +27,11 @@ export class SharedService{
   }
 
   EditComponent(component:ComponentModel){
-    this.RemoveComponent(component.id);
-    this.AddComponent(component);
+    this.PostEditComponentList(component)
+      .subscribe()
+    setTimeout(() => {
+      this.LoadComponentList();
+    }, 500);
   }
 
   AddComponent(newComponent: ComponentModel) {
@@ -68,7 +71,22 @@ export class SharedService{
       }));
   };
 
+  PostEditComponentList(component: ComponentModel): Observable<ComponentModel> {
+    return this.http.post<ComponentModel>(this.apiUrl+"edit", component,{
+      responseType: 'json',
+      headers: {'Content-Type': 'application/json'}
+    }).pipe(
+      catchError(error => {
+        console.error('Error posting edit component:', error);
+        return throwError(error);
+      }));
+  };
+
     GetId(id: number): number{
     return this.flexItems === null ? -1 : this.flexItems.findIndex(item => item.id == id);
+  }
+  GetComponentById(id: number): ComponentModel{
+      this.LoadComponentList();
+    return this.flexItems.find(item => item.id == id) as ComponentModel;
   }
 }

@@ -16,6 +16,10 @@ public class LayoutController : ControllerBase {
     public async Task<ComponentModel[]?> Get() => 
         await LocalComponentHandler.Get();
     
+    [HttpPost("edit")]
+    public IResult Edit([FromBody] ComponentModel component) => 
+        LocalComponentHandler.Edit(component);
+    
     [HttpDelete("delete/{Id}")]
     public IResult Delete(int Id) 
         => LocalComponentHandler.Delete(Id);

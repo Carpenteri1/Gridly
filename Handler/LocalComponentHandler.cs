@@ -21,7 +21,32 @@ public class LocalComponentHandler
       return DataStorage.ReadToJsonFile(componentModels) ? 
             Results.Ok() : Results.StatusCode(500);
     }
+    public static IResult Edit(ComponentModel component)
+    {
+        if (component.IconData != null &&
+            !DataStorage.WriteIconToFolder(component.IconData))
+            Results.StatusCode(500);
 
+        var componentModels = 
+            DataStorage.ReadFromJsonFile().Result?.ToList();
+
+        if (!componentModels.Any())
+            componentModels = new List<ComponentModel>();
+
+        componentModels.Select(x => x.Id == component.Id
+            ? new ComponentModel
+            {
+                Id = component.Id,
+                Name = component.Name,
+                Url = component.Url,
+                IconData = component.IconData,
+                ImageUrl = component.ImageUrl
+            }
+            : component).ToList();
+        
+        return DataStorage.ReadToJsonFile(componentModels) ? 
+            Results.Ok() : Results.StatusCode(500);
+    }
     public static async Task<ComponentModel[]> Get() => 
         await DataStorage.ReadFromJsonFile();
 

@@ -12,6 +12,8 @@
           [btnTitle]="modalTitle"
           [modalLabelId]="modelBindId"
           [modalBindDropdownId]="modalDropDownId"
+          [editMode]="true"
+          [component]="item"
           [acceptButton]="handleComponent.EditComponent">
         </handle-component-modal>
         <button (click)="Remove(item.id)" class="btn btn-secondary "><i class="bi bi-x-lg"></i></button>
