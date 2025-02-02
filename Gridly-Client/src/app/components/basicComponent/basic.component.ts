@@ -1,17 +1,26 @@
-import {Component, OnInit} from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {Component, Injectable, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedService } from '../../shared.service';
+import {HandleComponent} from "../modals/handleComponent/handle.component";
+import {AppComponent} from "../../app.component";
 
 @Component({
   selector: 'basic-component',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, HandleComponent],
   templateUrl: './basic.component.html',
   styleUrls: ['./basic.component.css'],
 })
+
+@Injectable({ providedIn: 'root' })
 export class BasicComponent implements OnInit {
-  constructor(public sharedService: SharedService) {}
+  modalTitle = "Edit";
+  modalButtonTheme ="btn btn-secondary";
+  modalButtonIcon = "bi bi-three-dots";
+  modelBindId = "editComponentModalLabel";
+  modalDropDownId = "editComponentModal";
+
+  constructor(public sharedService: SharedService, public handleComponent: HandleComponent) {}
 
   ngOnInit() {
     this.sharedService.LoadComponentList();
@@ -31,4 +40,5 @@ export class BasicComponent implements OnInit {
   Remove(id: number): void {
     this.sharedService.RemoveComponent(id);
   }
+  protected readonly AppComponent = AppComponent;
 }

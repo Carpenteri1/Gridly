@@ -1,3 +1,4 @@
+using Gridly.DTOs;
 using Gridly.Models;
 using Gridly.Services;
 
@@ -11,9 +12,10 @@ public class LocalComponentHandler
            !DataStorage.WriteIconToFolder(newComponent.IconData))
             Results.StatusCode(500);
         
-        var componentModels = DataStorage.ReadFromJsonFile().Result?.ToList();
+        var componentModels = 
+            DataStorage.ReadAllFromJsonFile().Result?.ToList();
         
-        if(!componentModels.Any()) 
+        if(componentModels is null || !componentModels.Any()) 
             componentModels = new List<ComponentModel>();
         
         componentModels.Add(newComponent);
@@ -21,13 +23,37 @@ public class LocalComponentHandler
       return DataStorage.ReadToJsonFile(componentModels) ? 
             Results.Ok() : Results.StatusCode(500);
     }
+    public static IResult Edit(EditComponentDto editedComponentData)
+    {
+        var componentModels = 
+            DataStorage.ReadAllFromJsonFile().Result?.ToList();
 
-    public static async Task<ComponentModel[]> Get() => 
-        await DataStorage.ReadFromJsonFile();
+        if (componentModels is null || !componentModels.Any())
+            return Results.NotFound();
+        
+        if (componentModels.Count == 1 ||
+            DataStorage.IconExcistOnOtherComponent(componentModels, editedComponentData.EditedIconData))
+            DataStorage.DeleteIconFromFolder(editedComponentData.EditedComponent.IconData);
+            
+        editedComponentData.EditedComponent.IconData = editedComponentData.EditedIconData;
+        for(int i = 0;i<componentModels.Count;i++)
+            if (componentModels[i].Id == editedComponentData.EditedComponent.Id) 
+                componentModels[i] = editedComponentData.EditedComponent;
+        
+        DataStorage.WriteIconToFolder(editedComponentData.EditedIconData);
+        
+        return DataStorage.ReadToJsonFile(componentModels) ? 
+            Results.Ok() : Results.StatusCode(500);
+    }
+    public static async Task<ComponentModel[]?> Get() => 
+        await DataStorage.ReadAllFromJsonFile();
+    
+    public static async Task<ComponentModel?> GetById(int Id) => 
+        await DataStorage.ReadByIdFromJsonFile(Id);
 
     public static IResult Delete(int componentId)
     {
-        var componentModels = DataStorage.ReadFromJsonFile()
+        var componentModels = DataStorage.ReadAllFromJsonFile()
             .Result?.ToList();
         
         if(componentModels is null || !componentModels.Any()) 
@@ -40,9 +66,7 @@ public class LocalComponentHandler
             return Results.NotFound();
         
         if (component.IconData != null && 
-            !componentModels.Where(x => x.IconData != null && 
-                                        x.IconData.name == component.IconData.name && 
-                                       x.IconData.fileType == component.IconData.fileType).Any())
+            DataStorage.IconExcistOnOtherComponent(componentModels,component.IconData))
         {
             if(!DataStorage.DeleteIconFromFolder(component.IconData))
                 return Results.NotFound();

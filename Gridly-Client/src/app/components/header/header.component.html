@@ -1,56 +1,11 @@
 <div class="flex-wrap d-flex flex-row-reverse">
-
-  <div class="dropdown">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      <i class="bi bi-plus"></i>
-    </button>
+  <handle-component-modal
+    [windowTitle]="modalTitle"
+    [btnTheme]="modalButtonTheme"
+    [btnIcon]="modalButtonIcon"
+    [btnTitle]="modalTitle"
+    [modalLabelId]="modelBindId"
+    [modalBindDropdownId]="modalDropDownId"
+    [acceptButton]="handleComponent.AddComponent">
+  </handle-component-modal>
 </div>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">
-          Add component
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="form-group pb-2">
-            <label class="form-label">App name</label>
-            <input type="text" class="form-control" placeholder="Name" [(ngModel)]="component.name" name="name">
-          </div>
-          <div class="form-group pb-2">
-            <label class="form-label">Service Url</label>
-            <input type="text" class="form-control" placeholder="http://127.0.0.1" [(ngModel)]="component.url" name="url">
-          </div>
-          <div>
-            <label class="form-label"></label>
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="iconOptions" data-bs-toggle="dropdown" aria-expanded="false">
-              Icon
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="iconOptions">
-              <li><a class="dropdown-item" (click)="WantToUploadIcon()">Upload</a></li>
-              <li><a class="dropdown-item" (click)="WantToLinkToImage()">Link to image</a></li>
-            </ul>
-          </div>
-          <div class="form-group" [hidden]="!wantToUploadIcon" >
-            <label for="formFile" class="form-label p-1">Upload Icon</label>
-            <input class="form-control" placeholder="Icon" type="file" id="formFile" (change)="OnFileUpload($event)"/>
-          </div>
-          <div [hidden]="!wantToLinkToImage" class="form-group">
-            <label for="formUrl" class="form-label p-1">Set url for icon</label>
-            <input class="form-control" type="url" id="formUrl" placeholder="data:image,base64" [(ngModel)]="component.imageUrl"/>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="ResetFormData()">Cancel</button>
-        <button [disabled]="!CanAddComponent" type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="AddComponent()">Add</button>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-
