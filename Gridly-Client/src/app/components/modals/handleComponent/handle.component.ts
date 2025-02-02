@@ -16,7 +16,7 @@ import {FormsModule} from "@angular/forms";
 @Injectable({ providedIn: 'root' })
 export class HandleComponent {
   urlPattern = /^(https?:\/\/)(www\.)?(?!www\.)[A-Za-z0-9.]+(\.|\:)[a-zA-Z0-9]{2,}$/;
-  imageUrlPattern = /^(data:image\/)(png|svg|jpeg|jpg|ico)(;base64,).*/;
+  imageUrlPattern = /^(https?:\/\/)(www\.)?(?!www\.)[A-Za-z0-9-.]+(\.|\:)[a-zA-Z0-9?=:\/&]{2,}$|^(data:image\/)(png|svg|jpeg|jpg|ico)(;base64,).*/;
   namePattern = /^[A-Za-z]+$/;
 
   @Input() btnIcon: string ="";
@@ -67,8 +67,8 @@ export class HandleComponent {
   public CanEditComponent() {
     return
       this.editMode &&
-      this.NoEmptyInputFields
-      && JSON.stringify(this.sharedService.GetComponentById(this.component.id)) !== JSON.stringify(this.component);
+      this.NoEmptyInputFields &&
+      JSON.stringify(this.sharedService.GetComponentById) !== JSON.stringify(this.component);
   }
 
   get CanAddComponent() :boolean{

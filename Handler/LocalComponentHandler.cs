@@ -37,7 +37,8 @@ public class LocalComponentHandler
             
         editedComponentData.EditedComponent.IconData = editedComponentData.EditedIconData;
         for(int i = 0;i<componentModels.Count;i++)
-            if (componentModels[i].Id == editedComponentData.EditedComponent.Id) componentModels[i] = editedComponentData.EditedComponent;
+            if (componentModels[i].Id == editedComponentData.EditedComponent.Id) 
+                componentModels[i] = editedComponentData.EditedComponent;
         
         DataStorage.WriteIconToFolder(editedComponentData.EditedIconData);
         
