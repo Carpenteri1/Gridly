@@ -1,3 +1,4 @@
+using Gridly.DTOs;
 using Gridly.Handler;
 using Gridly.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -21,8 +22,8 @@ public class LayoutController : ControllerBase {
         await LocalComponentHandler.GetById(Id);
     
     [HttpPost("edit")]
-    public IResult Edit([FromBody] ComponentModel component) => 
-        LocalComponentHandler.Edit(component);
+    public IResult Edit([FromBody] EditComponentDto editData) => 
+        LocalComponentHandler.Edit(editData);
     
     [HttpDelete("delete/{Id}")]
     public IResult Delete(int Id) 

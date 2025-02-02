@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ComponentModel } from './Models/Component.Model';
 import {catchError, Observable, throwError} from "rxjs";
+import {IconModel} from "./Models/Icon.Model";
 
 @Injectable({
   providedIn: 'root'
@@ -26,11 +27,12 @@ export class SharedService{
         });
   }
 
-  EditComponent(component:ComponentModel){
-    this.PostEditComponentList(component)
+  EditComponent(editedComponent:ComponentModel, editedIconData?: IconModel) {
+    this.PostEditComponentList(editedComponent, editedIconData)
       .subscribe()
     setTimeout(() => {
       this.LoadComponentList();
+      this.ReloadPage();
     }, 500);
   }
 
@@ -39,8 +41,14 @@ export class SharedService{
       .subscribe()
     setTimeout(() => {
       this.LoadComponentList();
+      this.ReloadPage();
     }, 500);
   }
+
+  ReloadPage() {
+    window.location.reload();
+  }
+
   LoadComponentList() {
     if(this.flexItems === null ||
       this.flexItems.length === 0)
@@ -71,8 +79,12 @@ export class SharedService{
       }));
   };
 
-  PostEditComponentList(component: ComponentModel): Observable<ComponentModel> {
-    return this.http.post<ComponentModel>(this.apiUrl+"edit", component,{
+  PostEditComponentList(editedComponent: ComponentModel, editedIconData?: IconModel): Observable<ComponentModel> {
+    return this.http.post<ComponentModel>(this.apiUrl+"edit",
+      {
+          editedComponent:editedComponent,
+          editedIconData:editedIconData,
+        },{
       responseType: 'json',
       headers: {'Content-Type': 'application/json'}
     }).pipe(

@@ -44,7 +44,7 @@ public class DataStorage
         try
         {
             string jsonString = await File.ReadAllTextAsync(JsonPath);
-            return DataConverter.DeserializeJsonString(jsonString).ToList().First(x => x.Id == Id);
+            return DataConverter.DeserializeJsonString(jsonString)?.ToList().First(x => x.Id == Id);
         }
         catch (NullReferenceException e) { Console.WriteLine(e.Message); }
         catch(JsonException e) { Console.WriteLine(e.Message); }
@@ -82,4 +82,10 @@ public class DataStorage
 
         return true;
     }
+
+    public static bool IconExcistOnOtherComponent(List<ComponentModel>componentModels, IconModel iconData) =>
+        !componentModels.Where(x => x.IconData != null &&
+                                    x.IconData.name == iconData.name &&
+                                    x.IconData.fileType == iconData.fileType).Any();
+    
 }

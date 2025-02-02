@@ -61,21 +61,9 @@ export class HandleComponent {
   }
 
   public EditComponent(){
-
-    //TODO dont think we need, we already check this in CanEditCompoent below
-    //TODO check logic in AddComponent also
-    /*
-    if(this.NoEmptyInputFields){
-      let storedComponent = this.sharedService.GetComponentById(this.component.id);
-      let objectChanged: boolean = false;
-      if(this.component.name !== storedComponent.name ||
-        this.component.url !== storedComponent.url ||
-        this.component.iconData?.name !== storedComponent.iconData?.name){
-        objectChanged = true;
-      }
-      if(objectChanged)*/
-        this.sharedService.EditComponent(this.component);
+        this.sharedService.EditComponent(this.component, this.iconData);
   }
+
   public CanEditComponent() {
     return
       this.editMode &&
@@ -86,6 +74,7 @@ export class HandleComponent {
   get CanAddComponent() :boolean{
     return this.NoEmptyInputFields;
   }
+
   get NoEmptyInputFields(): boolean{
     if(this.component.name !== "" && this.component.url !== "" &&
       this.urlPattern.test(this.component.url) && this.namePattern.test(this.component.name) ){
