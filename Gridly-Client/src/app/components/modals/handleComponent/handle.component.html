@@ -16,13 +16,13 @@
           @if(editMode){
             <div class="form-group p-2">
               <div class="form-check form-switch form-check-inline">
-                <input class="form-check-input" type="checkbox" (click)="HideTitle()">
+                <input class="form-check-input" type="checkbox" [(ngModel)]="component.titleHidden" (click)="HideTitle()">
                 <label class="form-check-label">
                   Hide show Title
                 </label>
               </div>
               <div class="form-check form-switch form-check-inline" id="switchForImage">
-                <input class="form-check-input" type="checkbox" (click)="HideImage()">
+                <input class="form-check-input" type="checkbox" [(ngModel)]="component.imageHidden" (click)="HideImage()">
                 <label class="form-check-label">
                   Hide show Image
                 </label>
