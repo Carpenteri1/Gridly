@@ -3,6 +3,7 @@ import {IconModel} from "../../../Models/Icon.Model";
 import {ComponentModel} from "../../../Models/Component.Model";
 import {SharedService} from "../../../shared.service";
 import {FormsModule} from "@angular/forms";
+import {BasicComponent} from "../../basicComponent/basic.component";
 
 @Component({
   selector: 'handle-component-modal',
@@ -49,10 +50,10 @@ export class HandleComponent {
     if(index === -1 && this.component.name !== "" && this.component.url !== "" )
     {
       if(this.iconData.base64Data !== "" && this.iconData.name !== "" && this.iconData.fileType !== ""){
-        this.sharedService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url, this.iconData, undefined));
+        this.sharedService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url, this.iconData, undefined, false,false));
       }
       if(this.component.imageUrl !== ""){
-        this.sharedService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url,undefined, this.component.imageUrl));
+        this.sharedService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url,undefined, this.component.imageUrl, false, false,));
       }
       this.ResetFormData();
     }
@@ -138,5 +139,12 @@ export class HandleComponent {
     this.wantToLinkToImage = true;
     this.wantToUploadIcon = false;
     this.ResetIconData();
+  }
+
+  HideTitle(): void {
+    this.component.titleHidden = !this.component.titleHidden;
+  }
+  HideImage(): void {
+    this.component.imageHidden = !this.component.imageHidden
   }
 }
