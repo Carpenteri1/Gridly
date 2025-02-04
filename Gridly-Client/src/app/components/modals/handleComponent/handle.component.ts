@@ -3,7 +3,6 @@ import {IconModel} from "../../../Models/Icon.Model";
 import {ComponentModel} from "../../../Models/Component.Model";
 import {SharedService} from "../../../shared.service";
 import {FormsModule} from "@angular/forms";
-import {BasicComponent} from "../../basicComponent/basic.component";
 
 @Component({
   selector: 'handle-component-modal',
@@ -32,7 +31,7 @@ export class HandleComponent {
   wantToLinkToImage = false;
 
   iconData= new IconModel("","","");
-  @Input() component = new ComponentModel(0,"","", this.iconData,"");
+  @Input() component = new ComponentModel(0,"","", this.iconData,"",false,false);
   @Input() acceptButton!: () => void;
 
   triggerAccept() {
@@ -80,8 +79,9 @@ export class HandleComponent {
     if(this.component.name !== "" && this.component.url !== "" &&
       this.urlPattern.test(this.component.url) && this.namePattern.test(this.component.name) ){
 
-      if(this.iconData.name !== "" || this.component.imageUrl !== "" && this.component.imageUrl !== undefined &&
-        this.imageUrlPattern.test(this.component.imageUrl)){
+      if((this.iconData.name !== "" || this.editMode) || (this.component.imageUrl !== "" &&
+        this.component.imageUrl !== undefined &&
+        this.imageUrlPattern.test(this.component.imageUrl))){
         return true;
       }
     }
@@ -92,6 +92,8 @@ export class HandleComponent {
     this.component.id = 0;
     this.component.name = "";
     this.component.url = "";
+    this.component.titleHidden = false;
+    this.component.imageHidden = false;
     this.ResetIconData();
   }
 
@@ -141,10 +143,11 @@ export class HandleComponent {
     this.ResetIconData();
   }
 
-  HideTitle(): void {
-    this.component.titleHidden = !this.component.titleHidden;
+  HideTitle(event: Event) {
+    this.component.titleHidden = (event.target as HTMLInputElement).checked;
   }
-  HideImage(): void {
-    this.component.imageHidden = !this.component.imageHidden
+
+  HideImage(event: Event) {
+    this.component.imageHidden = (event.target as HTMLInputElement).checked;
   }
 }
