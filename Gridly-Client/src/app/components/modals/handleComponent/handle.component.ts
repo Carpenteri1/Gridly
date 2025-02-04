@@ -31,7 +31,7 @@ export class HandleComponent {
   wantToLinkToImage = false;
 
   iconData= new IconModel("","","");
-  @Input() component = new ComponentModel(0,"","", this.iconData,"");
+  @Input() component = new ComponentModel(0,"","", this.iconData,"",false,false);
   @Input() acceptButton!: () => void;
 
   triggerAccept() {
@@ -49,10 +49,10 @@ export class HandleComponent {
     if(index === -1 && this.component.name !== "" && this.component.url !== "" )
     {
       if(this.iconData.base64Data !== "" && this.iconData.name !== "" && this.iconData.fileType !== ""){
-        this.sharedService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url, this.iconData, undefined));
+        this.sharedService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url, this.iconData, undefined, false,false));
       }
       if(this.component.imageUrl !== ""){
-        this.sharedService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url,undefined, this.component.imageUrl));
+        this.sharedService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url,undefined, this.component.imageUrl, false, false,));
       }
       this.ResetFormData();
     }
@@ -79,8 +79,9 @@ export class HandleComponent {
     if(this.component.name !== "" && this.component.url !== "" &&
       this.urlPattern.test(this.component.url) && this.namePattern.test(this.component.name) ){
 
-      if(this.iconData.name !== "" || this.component.imageUrl !== "" && this.component.imageUrl !== undefined &&
-        this.imageUrlPattern.test(this.component.imageUrl)){
+      if((this.iconData.name !== "" || this.editMode) || (this.component.imageUrl !== "" &&
+        this.component.imageUrl !== undefined &&
+        this.imageUrlPattern.test(this.component.imageUrl))){
         return true;
       }
     }
@@ -91,6 +92,8 @@ export class HandleComponent {
     this.component.id = 0;
     this.component.name = "";
     this.component.url = "";
+    this.component.titleHidden = false;
+    this.component.imageHidden = false;
     this.ResetIconData();
   }
 
@@ -138,5 +141,13 @@ export class HandleComponent {
     this.wantToLinkToImage = true;
     this.wantToUploadIcon = false;
     this.ResetIconData();
+  }
+
+  HideTitle(event: Event) {
+    this.component.titleHidden = (event.target as HTMLInputElement).checked;
+  }
+
+  HideImage(event: Event) {
+    this.component.imageHidden = (event.target as HTMLInputElement).checked;
   }
 }
