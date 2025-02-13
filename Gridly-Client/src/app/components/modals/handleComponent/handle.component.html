@@ -1,19 +1,20 @@
 <div class="dropdown">
-  <button type="button" [class]="btnTheme" data-bs-toggle="modal" [attr.data-bs-target]="'#'+modalBindDropdownId+'_'+component.id">
+  <button type="button" [class]="btnTheme" data-bs-toggle="modal" [attr.data-bs-target]="'#'+modalBindDropdownId">
     <i [class]="btnIcon"></i>
   </button>
 </div>
 
-<div class="modal fade" [id]="modalBindDropdownId+'_'+component.id" tabindex="-1" [attr.aria-labelledby]="modalLabelId" aria-hidden="true">
+<div class="modal fade" #modalElement [id]="modalBindDropdownId" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" [id]="modalLabelId" [title]="windowTitle">{{windowTitle}}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="ResetFormData()"></button>
       </div>
       <div class="modal-body">
         <form>
-          @if(editMode){
+          @if (editMode)
+          {
             <div class="form-group p-2">
               <div class="form-check form-switch form-check-inline">
                 <input class="form-check-input" type="checkbox" [checked]="component.titleHidden" (change)="HideTitle($event)">

@@ -1,4 +1,4 @@
-import {Component, Injectable, Input} from "@angular/core";
+import {AfterViewInit, Component, ElementRef, Injectable, Input, ViewChild} from "@angular/core";
 import {IconModel} from "../../../Models/Icon.Model";
 import {ComponentModel} from "../../../Models/Component.Model";
 import {SharedService} from "../../../shared.service";
@@ -14,7 +14,7 @@ import {FormsModule} from "@angular/forms";
 })
 
 @Injectable({ providedIn: 'root' })
-export class HandleComponent {
+export class HandleComponent implements AfterViewInit{
   urlPattern = /^(https?:\/\/)(www\.)?(?!www\.)[A-Za-z0-9.]+(\.|\:)[a-zA-Z0-9]{2,}$/;
   imageUrlPattern = /^(https?:\/\/)(www\.)?(?!www\.)[A-Za-z0-9-.]+(\.|\:)[a-zA-Z0-9?=:\/&]{2,}$|^(data:image\/)(png|svg|jpeg|jpg|ico)(;base64,).*/;
   namePattern = /^[A-Za-z]+$/;
@@ -26,13 +26,17 @@ export class HandleComponent {
   @Input() modalLabelId: string = "";
   @Input() modalBindDropdownId: string = "";
   @Input() editMode: boolean = false;
-
   wantToUploadIcon = false;
   wantToLinkToImage = false;
 
   iconData= new IconModel("","","");
   @Input() component = new ComponentModel(0,"","", this.iconData,"",false,false);
   @Input() acceptButton!: () => void;
+  @ViewChild('modalElement') modalRef!: ElementRef;
+
+  ngAfterViewInit() {
+    this.listenHideModal();
+  }
 
   triggerAccept() {
     if (this.acceptButton) {
@@ -149,5 +153,11 @@ export class HandleComponent {
 
   HideImage(event: Event) {
     this.component.imageHidden = (event.target as HTMLInputElement).checked;
+  }
+
+  listenHideModal() {
+    this.modalRef.nativeElement.addEventListener('blur', () => {
+      this.ResetFormData();
+    });
   }
 }
