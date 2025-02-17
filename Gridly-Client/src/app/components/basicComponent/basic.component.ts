@@ -24,6 +24,7 @@ export class BasicComponent implements OnInit {
 
   ngOnInit() {
     this.sharedService.LoadComponentList();
+    this.sharedService.CheckForNewRelease();
   }
 
   HaveIconSet(name:string | undefined):boolean{

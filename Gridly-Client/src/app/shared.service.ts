@@ -12,10 +12,11 @@ export class SharedService{
   flexItems: ComponentModel[] = [];
   isLoading = true;
 
-  private apiUrl = '/api/layout/';
+  private componentUrl = '/api/component/';
+  private versionUrl = '/api/version/';
   constructor(private http: HttpClient) {}
   RemoveComponent(id: number) {
-    this.http.delete<ComponentModel[]>(`${this.apiUrl}delete/${id}`)
+    this.http.delete<ComponentModel[]>(`${this.componentUrl}delete/${id}`)
       .subscribe(() => {
           let index = this.GetId(id);
           if(index > -1){
@@ -54,7 +55,7 @@ export class SharedService{
       this.flexItems.length === 0)
       this.isLoading = true;
 
-    this.http.get<ComponentModel[]>(`${this.apiUrl}get`).subscribe(
+    this.http.get<ComponentModel[]>(`${this.componentUrl}get`).subscribe(
       (components) => {
         this.flexItems = components;
 
@@ -68,8 +69,19 @@ export class SharedService{
     );
   }
 
+  CheckForNewRelease() {
+    this.http.get<boolean>(`${this.versionUrl}latest`).subscribe(
+      () => {
+        this.ReloadPage();
+      },
+      error => {
+        console.error('Error checking for new release:', error);
+      }
+    );
+  }
+
   PostAddedComponentList(newComponent: ComponentModel): Observable<ComponentModel> {
-    return this.http.post<ComponentModel>(this.apiUrl+"save", newComponent,{
+    return this.http.post<ComponentModel>(this.componentUrl+"save", newComponent,{
       responseType: 'json',
       headers: {'Content-Type': 'application/json'}
     }).pipe(
@@ -80,7 +92,7 @@ export class SharedService{
   };
 
   PostEditComponentList(editedComponent: ComponentModel, editedIconData?: IconModel): Observable<ComponentModel> {
-    return this.http.post<ComponentModel>(this.apiUrl+"edit",
+    return this.http.post<ComponentModel>(this.componentUrl+"edit",
       {
           editedComponent:editedComponent,
           editedIconData:editedIconData,
@@ -104,7 +116,7 @@ export class SharedService{
         this.flexItems.length === 0)
         this.isLoading = true;
 
-      this.http.get<ComponentModel>(`${this.apiUrl}getbyid/${id}`).subscribe(
+      this.http.get<ComponentModel>(`${this.componentUrl}getbyid/${id}`).subscribe(
         (returnData) => {
 
           if(this.isLoading)
