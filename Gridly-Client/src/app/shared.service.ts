@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ComponentModel } from './Models/Component.Model';
 import {catchError, Observable, throwError} from "rxjs";
 import {IconModel} from "./Models/Icon.Model";
+import {VersionModel} from "./Models/Version.Model";
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import {IconModel} from "./Models/Icon.Model";
 
 export class SharedService{
   flexItems: ComponentModel[] = [];
+  version: VersionModel = new VersionModel();
   isLoading = true;
 
   private componentUrl = '/api/component/';
@@ -70,9 +72,11 @@ export class SharedService{
   }
 
   CheckForNewRelease() {
-    this.http.get<boolean>(`${this.versionUrl}latest`).subscribe(
-      () => {
+    return this.http.get<VersionModel>(`${this.versionUrl}latest`).subscribe(
+      (returnData) => {
+
         this.ReloadPage();
+        this.version = returnData;
       },
       error => {
         console.error('Error checking for new release:', error);
