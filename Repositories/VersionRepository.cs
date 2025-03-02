@@ -15,13 +15,11 @@ public class VersionRepository(IDataConverter<VersionModel> dataConverter, IFile
         if (fileService.FileExcist(FilePath) && success)
         {
             var jsonFile = await fileService.ReadAllFromFileAsync(FilePath);
-            var localVersionModel = dataConverter.DeserializeJsonString(jsonFile);
-            
-            if(localVersionModel is not null && model is not null)
+            if (!string.IsNullOrEmpty(jsonFile))
             {
+                var localVersionModel = dataConverter.DeserializeJsonString(jsonFile);
                 localVersionModel.newRelease = int.Parse(localVersionModel.tag_name.Trim('v').Trim('.')) <
                                                int.Parse(model.tag_name.Trim('v').Trim('.'));
-                return localVersionModel;
             }
         }
         else
@@ -32,5 +30,10 @@ public class VersionRepository(IDataConverter<VersionModel> dataConverter, IFile
         }
 
         return model;
+    }
+
+    public async Task<VersionModel> SaveVersionAsync()
+    {
+        return null;
     }
 }

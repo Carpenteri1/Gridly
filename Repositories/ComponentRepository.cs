@@ -29,8 +29,7 @@ public class ComponentRepository(IDataConverter<ComponentModel> dataConverter, I
     public bool WriteIconToFolder(IconModel iconData)
     {
         string filePath = IconPath + $"{iconData.name}.{iconData.fileType}";
-        if(!fileService.FileExcist(filePath)) return false;
-        return fileService.FileExcist(filePath) && fileService.WriteAllBites(filePath, iconData.base64Data);
+        return fileService.WriteAllBites(filePath, iconData.base64Data);
     }
     
     public bool DeleteIconFromFolder(IconModel iconData)

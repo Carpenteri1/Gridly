@@ -1,34 +1,32 @@
-using System.Threading.RateLimiting;
 using Gridly.EndPoints;
-using Gridly.Handlers;
 using Gridly.Repositories;
 using Gridly.Services;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
-
 builder.Services.AddSingleton<IVersionEndPoint, VersionEndPoint>();
 
 builder.Services.AddSingleton<IComponentRepository,ComponentRepository>();
 builder.Services.AddSingleton<IVersionRepository, VersionRepository>();
 
-builder.Services.AddSingleton<IVersionHandler, VersionHandler>();
-builder.Services.AddSingleton<IComponentHandler, ComponentHandler>();
-
 builder.Services.AddSingleton<IFileService, FileService>();
 builder.Services.AddSingleton(typeof(IDataConverter<>), typeof(DataConverter<>));
 
+builder.Services.AddMediatR(cfg => 
+    cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+
+/* TODO
+var rateLimit = new FixedRateLimitOptionsModel();
 builder.Services.AddRateLimiter(_ => _
-    .AddFixedWindowLimiter(policyName: "fixed", options =>
+    .AddFixedWindowLimiter(policyName: rateLimit.Policy, options =>
     {
-        options.PermitLimit = 10;
-        options.Window = TimeSpan.FromHours(1);
+        options.PermitLimit = rateLimit.Limit;
+        options.Window = rateLimit.Window;
         options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        options.QueueLimit = 2;
-    }));
+        options.QueueLimit = rateLimit.QueueLimit;
+    }));*/
 
 var app = builder.Build();
 app.UseStaticFiles();
@@ -46,7 +44,7 @@ app.MapControllerRoute(
     pattern: "{controller=Main}/{action=Index}");
 
 app.UseRouting();
-app.UseRateLimiter();
+//app.UseRateLimiter();
 
 app.UseEndpoints(endpoints =>
 {

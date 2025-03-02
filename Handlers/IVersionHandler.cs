@@ -1,9 +1,6 @@
-
-using Gridly.Models;
-
 namespace Gridly.Handlers;
 
-public interface IVersionHandler
+public interface IVersionHandler<T>
 {
-    public Task<VersionModel> GetVersionAsync();
+    public Task<T> Handler();
 }

@@ -3,7 +3,12 @@ using Gridly.Repositories;
 
 namespace Gridly.Handlers;
 
-public class VersionHandler(IVersionRepository versionRepository) : IVersionHandler
+public class VersionHandler(IVersionRepository versionRepository) : 
+    IVersionHandler<VersionModel>
 {
-    public async Task<VersionModel> GetVersionAsync() => await versionRepository.GetVersionAsync();
+    public async Task<VersionModel> Handler()
+    {
+        var version = await versionRepository.GetVersionAsync();
+        return version;
+    }
 }

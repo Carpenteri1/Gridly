@@ -48,4 +48,9 @@
     <None Include="wwwroot\styles.css" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0-preview.1.25080.5" />
+  </ItemGroup>
+
 </Project>
