@@ -46,9 +46,14 @@ testem.log
 # Changes I wanna hide
 Assets/ComponentData/componentData.json
 !Assets/ComponentData/componentData.json
+!Assets/ComponentData/*
+Assets/ComponentData/*
 Assets/Icons/*
 !Assets/Icons/*
-
+Assets/RateLimiterData/rateLimiterData.json
+!Assets/RateLimiterData/rateLimiterData.json
+Assets/RateLimiterData/*
+!Assets/RateLimiterData/*
 
 # System files
 .DS_Store
