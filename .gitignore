@@ -44,16 +44,19 @@ testem.log
 /typings
 
 # Changes I wanna hide
-Assets/ComponentData/componentData.json
-!Assets/ComponentData/componentData.json
-!Assets/ComponentData/*
-Assets/ComponentData/*
-Assets/Icons/*
-!Assets/Icons/*
-Assets/RateLimiterData/rateLimiterData.json
-!Assets/RateLimiterData/rateLimiterData.json
-Assets/RateLimiterData/*
-!Assets/RateLimiterData/*
+#Assets/ComponentData/componentData.json
+#!Assets/ComponentData/componentData.json
+#!Assets/ComponentData/*
+#Assets/ComponentData/*
+#Assets/Icons/*
+#!Assets/Icons/*
+#Assets/RateLimiterData/rateLimiterData.json
+#!Assets/RateLimiterData/rateLimiterData.json
+#Assets/RateLimiterData/*
+#!Assets/RateLimiterData/*
+Assets/*
+#Assets/*
+
 
 # System files
 .DS_Store
