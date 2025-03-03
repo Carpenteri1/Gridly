@@ -1,8 +1,13 @@
+using System.Text.Json.Serialization;
+
 namespace Gridly.Models;
 
 public class VersionModel
 {
-    public string tag_name { get; set; }
-    public string created_at { get; set; }
-    public bool newRelease { get; set; }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
+    [JsonPropertyName("newRelease")]
+    public bool NewRelease { get; set; }
+    [JsonPropertyName("created_at")]
+    public DateTime CreatedAt { get; set; }
 }

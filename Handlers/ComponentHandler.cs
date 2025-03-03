@@ -1,19 +1,20 @@
+using Gridly.Command;
 using Gridly.Models;
 using Gridly.Services;
 using MediatR;
 
 namespace Gridly.Handlers;
 public class ComponentHandler(IComponentRepository componentRepository) : 
-    IRequestHandler<SaveCommand, ComponentModel[]>,
-    IRequestHandler<GetAllCommand, ComponentModel[]>,
-    IRequestHandler<GetByIdCommand, ComponentModel>,
-    IRequestHandler<DeleteCommand, IResult>,
-    IRequestHandler<EditCommand, IResult>
+    IRequestHandler<SaveComponentCommand, ComponentModel[]>,
+    IRequestHandler<GetAllComponentCommand,ComponentModel[]>,
+    IRequestHandler<GetByIdComponentCommands, ComponentModel>,
+    IRequestHandler<DeleteComponentCommand, IResult>,
+    IRequestHandler<EditComponentCommand, IResult>
 {
-    public Task<ComponentModel[]> Handle(SaveCommand command, CancellationToken cancellationToken)
+    public Task<ComponentModel[]> Handle(SaveComponentCommand commands, CancellationToken cancellationToken)
     {
-        if (command.IconData != null &&
-            !componentRepository.WriteIconToFolder(command.IconData))
+        if (commands.IconData != null &&
+            !componentRepository.WriteIconToFolder(commands.IconData))
             return Task.FromResult<ComponentModel[]>(null);
 
         var componentModels = 
@@ -22,12 +23,12 @@ public class ComponentHandler(IComponentRepository componentRepository) :
         if(componentModels is null || !componentModels.Any()) 
             componentModels = new List<ComponentModel>();
         
-        componentModels.Add(command);
+        componentModels.Add(commands);
         componentRepository.ReadToJsonFile(componentModels);
         return Task.FromResult(componentModels.ToArray());
     }
     
-    public Task<IResult> Handle(DeleteCommand command, CancellationToken cancellationToken)
+    public Task<IResult> Handle(DeleteComponentCommand commands, CancellationToken cancellationToken)
     {
         var componentModels = 
             componentRepository
@@ -38,8 +39,8 @@ public class ComponentHandler(IComponentRepository componentRepository) :
         if(componentModels is null || !componentModels.Any()) 
             return Task.FromResult(Results.NotFound());
         
-        var component = componentModels.FirstOrDefault(x => x.Id == command.Id);
-        componentModels = componentModels.Where(x => x.Id != command.Id).ToList();
+        var component = componentModels.FirstOrDefault(x => x.Id == commands.Id);
+        componentModels = componentModels.Where(x => x.Id != commands.Id).ToList();
 
         if (component is null) 
             return Task.FromResult(Results.NotFound());
@@ -55,7 +56,7 @@ public class ComponentHandler(IComponentRepository componentRepository) :
             Results.Ok() : Results.StatusCode(500));
     }
     
-    public Task<IResult> Handle(EditCommand command, CancellationToken cancellationToken)
+    public Task<IResult> Handle(EditComponentCommand command, CancellationToken cancellationToken)
     {
         var componentModels = 
             componentRepository.ReadAllFromJsonFile().Result?.ToList();
@@ -77,8 +78,8 @@ public class ComponentHandler(IComponentRepository componentRepository) :
             Results.Ok() : Results.StatusCode(500));
     }
     
-    public async Task<ComponentModel[]?> Handle(GetAllCommand command, CancellationToken cancellationToken) =>
+    public async Task<ComponentModel[]?> Handle(GetAllComponentCommand command, CancellationToken cancellationToken) =>
         await componentRepository.ReadAllFromJsonFile();
-    public async Task<ComponentModel> Handle(GetByIdCommand request, CancellationToken cancellationToken) => 
+    public async Task<ComponentModel> Handle(GetByIdComponentCommands request, CancellationToken cancellationToken) => 
         await componentRepository.ReadByIdFromJsonFile(request.Id);
 }

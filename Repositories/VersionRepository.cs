@@ -1,3 +1,4 @@
+using Gridly.Configuration;
 using Gridly.EndPoints;
 using Gridly.Models;
 using Gridly.Services;
@@ -6,29 +7,29 @@ namespace Gridly.Repositories;
 
 public class VersionRepository(IDataConverter<VersionModel> dataConverter, IFileService fileService, IVersionEndPoint versionEndPoint) : IVersionRepository
 {
-    private const string JsonComponentFileName = "rateLimiterData.json";
-    private readonly string FilePath = Path.Combine(Directory.GetCurrentDirectory(),"Assets/RateLimiterData", JsonComponentFileName);
     public async Task<VersionModel> GetVersionAsync()
     {
         var (success,model) = await versionEndPoint.GetLatestVersion();
-        
-        if (fileService.FileExcist(FilePath) && success)
+        if (success)
         {
-            var jsonFile = await fileService.ReadAllFromFileAsync(FilePath);
-            if (!string.IsNullOrEmpty(jsonFile))
+            var jsonFileString = await fileService.ReadAllFromFileAsync(FilePaths.RateLimitFilePath);
+            if (string.IsNullOrEmpty(jsonFileString) || jsonFileString.Equals("{}"))
             {
-                var localVersionModel = dataConverter.DeserializeJsonString(jsonFile);
-                localVersionModel.newRelease = int.Parse(localVersionModel.tag_name.Trim('v').Trim('.')) <
-                                               int.Parse(model.tag_name.Trim('v').Trim('.'));
+                model.CreatedAt = DateTime.Now;
+                string jsonString = dataConverter.SerializerToJsonString(model);
+                fileService.WriteToJson(FilePaths.RateLimitFilePath, jsonString);
+                return model;
+            }
+
+            var storedModel = dataConverter.DeserializeJsonString(jsonFileString);
+            if (dataConverter.ToInt(storedModel.Name) > dataConverter.ToInt(model.Name))
+            {
+                model.CreatedAt = DateTime.Now;
+                string jsonString = dataConverter.SerializerToJsonString(model);
+                fileService.WriteToJson(FilePaths.RateLimitFilePath, jsonString);
+                return model;
             }
         }
-        else
-        {
-            string jsonString = dataConverter.SerializerToJsonString(model);
-            fileService.WriteToJson(FilePath, jsonString);
-            return model;
-        }
-
         return model;
     }
 }

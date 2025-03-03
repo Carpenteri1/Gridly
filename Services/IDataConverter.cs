@@ -6,4 +6,5 @@ public interface IDataConverter<T>
     public T? DeserializeJsonString(string jsonString);
     public string? SerializerToJsonString(T data);
     public string? SerializerToJsonString(List<T> data);
+    public int? ToInt(string data);
 }        

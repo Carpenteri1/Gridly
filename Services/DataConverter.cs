@@ -1,4 +1,6 @@
 using System.Text.Json;
+using System.Text.RegularExpressions;
+
 namespace Gridly.Services;
 
 public class DataConverter<T> : IDataConverter<T>
@@ -10,5 +12,7 @@ public class DataConverter<T> : IDataConverter<T>
     public string? SerializerToJsonString(T data) => 
         JsonSerializer.Serialize(data);
     public string? SerializerToJsonString(List<T> data) => 
-        JsonSerializer.Serialize(data); 
+        JsonSerializer.Serialize(data);
+    public int? ToInt(string data) => 
+        int.Parse(Regex.Replace(data, @"[^0-9]", ""));
 }
