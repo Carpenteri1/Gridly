@@ -54,8 +54,8 @@ testem.log
 #!Assets/RateLimiterData/rateLimiterData.json
 #Assets/RateLimiterData/*
 #!Assets/RateLimiterData/*
-Assets/*
 #Assets/*
+!Assets/*
 
 
 # System files
