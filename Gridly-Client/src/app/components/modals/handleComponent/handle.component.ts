@@ -35,7 +35,7 @@ export class HandleComponent implements AfterViewInit{
   @ViewChild('modalElement') modalRef!: ElementRef;
 
   ngAfterViewInit() {
-    this.listenHideModal();
+    //this.listenHideModal();
   }
 
   triggerAccept() {
@@ -155,9 +155,9 @@ export class HandleComponent implements AfterViewInit{
     this.component.imageHidden = (event.target as HTMLInputElement).checked;
   }
 
-  listenHideModal() {
+  /*listenHideModal() {
     this.modalRef.nativeElement.addEventListener('blur', () => {
       this.ResetFormData();
     });
-  }
+  }*/
 }

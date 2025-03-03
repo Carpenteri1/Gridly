@@ -1,4 +1,7 @@
 <div class="flex-wrap d-flex flex-row-reverse">
+  <div *ngIf="sharedService.version.newRelease">
+    <h1>New Release to download at.......</h1>
+  </div>
   <handle-component-modal
     [windowTitle]="modalTitle"
     [btnTheme]="modalButtonTheme"

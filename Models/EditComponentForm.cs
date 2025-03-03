@@ -1,8 +1,6 @@
-using Gridly.Models;
+namespace Gridly.Models;
 
-namespace Gridly.DTOs;
-
-public class EditComponentDto
+public class EditComponentForm
 {
     public ComponentModel EditedComponent { get; set; }
     public IconModel EditedIconData { get; set; }
