@@ -12,12 +12,12 @@ public class VersionRepository(IDataConverter<VersionModel> dataConverter, IFile
         var (success,model) = await versionEndPoint.GetLatestVersion();
         if (success)
         {
-            var jsonFileString = await fileService.ReadAllFromFileAsync(FilePaths.RateLimitFilePath);
+            var jsonFileString = await fileService.ReadAllFromFileAsync(FilePaths.VersionFilePath);
             if (string.IsNullOrEmpty(jsonFileString) || jsonFileString.Equals("{}"))
             {
                 model.CreatedAt = DateTime.Now;
                 string jsonString = dataConverter.SerializerToJsonString(model);
-                fileService.WriteToJson(FilePaths.RateLimitFilePath, jsonString);
+                fileService.WriteToJson(FilePaths.VersionFilePath, jsonString);
                 return model;
             }
 
@@ -26,7 +26,7 @@ public class VersionRepository(IDataConverter<VersionModel> dataConverter, IFile
             {
                 model.CreatedAt = DateTime.Now;
                 string jsonString = dataConverter.SerializerToJsonString(model);
-                fileService.WriteToJson(FilePaths.RateLimitFilePath, jsonString);
+                fileService.WriteToJson(FilePaths.VersionFilePath, jsonString);
                 return model;
             }
         }
