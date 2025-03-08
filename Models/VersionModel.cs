@@ -8,6 +8,4 @@ public class VersionModel
     public string Name { get; set; }
     [JsonPropertyName("newRelease")]
     public bool NewRelease { get; set; }
-    [JsonPropertyName("created_at")]
-    public DateTime CreatedAt { get; set; }
 }

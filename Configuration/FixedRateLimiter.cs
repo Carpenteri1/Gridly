@@ -1,6 +1,7 @@
 using Gridly.Models;
 using Gridly.Services;
 using Microsoft.AspNetCore.RateLimiting;
+using DateTime = System.DateTime;
 
 namespace Gridly.Configuration;
 
@@ -25,24 +26,49 @@ public static class RequestRateLimiterExtensions
     public static IServiceCollection AddFixedRateLimiter(
         this IServiceCollection services, 
         IFileService fileService,
-        IDataConverter<FixedRateLimiterModel> dataConverter)
-    {
-        var savedTime = fileService.ReadAllFromFileAsync(FilePaths.RateLimitFilePath).Result;
-        int limit = 1;
-        int queueLimit = 1;
-       // TimeSpan window =
-            
-        services.AddRateLimiter(options =>
+        IDataConverter<DateTime> dataConverter,
+        FixedRateLimiterModel fixedRate) {
+        
+        services.AddRateLimiter( options =>
         {
+            fixedRate.Window = GetFixedWindowData(fileService, dataConverter).Result; 
             options.AddFixedWindowLimiter(Policy, opt =>
             {
-                opt.PermitLimit = limit;
-                opt.Window = TimeSpan.FromHours(3);
-                opt.QueueLimit = queueLimit;
+                opt.PermitLimit = fixedRate.Limit;
+                opt.Window = fixedRate.Window;
+                opt.QueueLimit = fixedRate.QueueLimit;
             });
         });
 
         return services;
+    }
+    
+    private static async Task<TimeSpan> GetFixedWindowData(
+        IFileService fileService, 
+        IDataConverter<DateTime> dataConverter)
+    {
+        DateTime lastStoreRunTime;    
+        if (!fileService.FileExcist(FilePaths.FixedRateLimitFilePath))
+        {
+            lastStoreRunTime = DateTime.Now;
+            fileService.WriteToJson(dataConverter.SerializerToJsonString(lastStoreRunTime), 
+                FilePaths.FixedRateLimitFilePath);
+            return TimeSpan.FromHours(8);
+        }
+        
+        var jsonString = await fileService.ReadAllFromFileAsync(FilePaths.FixedRateLimitFilePath);
+        lastStoreRunTime = dataConverter.DeserializeJsonString(jsonString);
+        
+        var currentDateTime = DateTime.Now;
+        var elapsedTime = DateTime.Now - lastStoreRunTime;
+        if (elapsedTime >= TimeSpan.FromHours(8))
+        {
+            jsonString = dataConverter.SerializerToJsonString(currentDateTime);
+            fileService.WriteToJson(FilePaths.FixedRateLimitFilePath, jsonString);
+            return elapsedTime;
+        }   
+        
+        return elapsedTime;
     }
 
     public static IApplicationBuilder UseFixedRateLimiter(this IApplicationBuilder app)

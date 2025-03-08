@@ -35,7 +35,7 @@ export class HandleComponent implements AfterViewInit{
   @ViewChild('modalElement') modalRef!: ElementRef;
 
   ngAfterViewInit() {
-    //this.listenHideModal();
+    //this.listenHideModal();//TODO bug fix
   }
 
   triggerAccept() {

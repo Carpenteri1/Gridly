@@ -20,8 +20,6 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 
 var app = builder.Build();
-builder.Services.AddFixedRateLimiter(app.Services.GetRequiredService<IFileService>(), 
-    app.Services.GetRequiredService<IDataConverter<FixedRateLimiterModel>>());
 
 app.UseStaticFiles();
 
@@ -30,6 +28,10 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Assets/Icons")),
     RequestPath = "/Assets/Icons"
 });
+
+builder.Services.AddFixedRateLimiter(app.Services.GetRequiredService<IFileService>(), 
+    app.Services.GetRequiredService<IDataConverter<DateTime>>(),
+    new FixedRateLimiterModel());
 
 app.MapDefaultControllerRoute().RequireRateLimiting("fixed");
 

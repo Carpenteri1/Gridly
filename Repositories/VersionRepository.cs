@@ -15,16 +15,15 @@ public class VersionRepository(IDataConverter<VersionModel> dataConverter, IFile
             var jsonFileString = await fileService.ReadAllFromFileAsync(FilePaths.VersionFilePath);
             if (string.IsNullOrEmpty(jsonFileString) || jsonFileString.Equals("{}"))
             {
-                model.CreatedAt = DateTime.Now;
                 string jsonString = dataConverter.SerializerToJsonString(model);
                 fileService.WriteToJson(FilePaths.VersionFilePath, jsonString);
                 return model;
             }
 
             var storedModel = dataConverter.DeserializeJsonString(jsonFileString);
-            if (dataConverter.ToInt(storedModel.Name) > dataConverter.ToInt(model.Name))
+            storedModel.NewRelease = dataConverter.ToInt(storedModel.Name) > dataConverter.ToInt(model.Name);
+            if (storedModel.NewRelease)
             {
-                model.CreatedAt = DateTime.Now;
                 string jsonString = dataConverter.SerializerToJsonString(model);
                 fileService.WriteToJson(FilePaths.VersionFilePath, jsonString);
                 return model;
