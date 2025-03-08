@@ -1,5 +1,9 @@
 export class VersionModel{
-  tag_name:string = "";
-  created_at:string = "";
-  newRelease:boolean = false;
+  name:string;
+  newRelease:boolean;
+
+  constructor(name:string, newRelease:boolean){
+    this.name = name;
+    this.newRelease = newRelease;
+  }
 }

@@ -1,14 +1,16 @@
 <div class="flex-wrap d-flex flex-row-reverse">
-  <div *ngIf="sharedService.version.newRelease">
-    <h1>New Release to download at.......</h1>
+  <div class="p-2 bd-highlight">
+    <handle-component-modal
+      [windowTitle]="modalTitle"
+      [btnTheme]="modalButtonTheme"
+      [btnIcon]="modalButtonIcon"
+      [btnTitle]="modalTitle"
+      [modalLabelId]="modelBindId"
+      [modalBindDropdownId]="modalDropDownId"
+      [acceptButton]="handleComponent.AddComponent">
+    </handle-component-modal>
   </div>
-  <handle-component-modal
-    [windowTitle]="modalTitle"
-    [btnTheme]="modalButtonTheme"
-    [btnIcon]="modalButtonIcon"
-    [btnTitle]="modalTitle"
-    [modalLabelId]="modelBindId"
-    [modalBindDropdownId]="modalDropDownId"
-    [acceptButton]="handleComponent.AddComponent">
-  </handle-component-modal>
+  <div class="bd-highlight center" *ngIf="sharedService.version.newRelease">
+    <p>There is a new version available!  <a target="_blank" href="https://github.com/Carpenteri1/Gridly/releases/tag/{{sharedService.version.name}}"> {{sharedService.version.name}} </a></p>
+  </div>
 </div>

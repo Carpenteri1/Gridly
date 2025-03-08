@@ -6,3 +6,13 @@
     padding-top: 0.5em;
     padding-bottom: 0.5em;
 }
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 40px;
+  font-size: 13px;
+  color: #e63930;
+  padding-top: 20px;
+}

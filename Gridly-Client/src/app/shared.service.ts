@@ -11,7 +11,7 @@ import {VersionModel} from "./Models/Version.Model";
 
 export class SharedService{
   flexItems: ComponentModel[] = [];
-  version: VersionModel = new VersionModel();
+  version: VersionModel = {name: '', newRelease: false};
   isLoading = true;
 
   private componentUrl = '/api/component/';
@@ -72,14 +72,25 @@ export class SharedService{
   }
 
   CheckForNewRelease() {
-    return this.http.get<VersionModel>(`${this.versionUrl}latest`).subscribe(
-      (returnData) => {
-
-        this.ReloadPage();
-        this.version = returnData;
+    this.http.get<VersionModel>(`${this.versionUrl}latest`).subscribe(
+      (versionData) => {
+        this.version.name = versionData.name;
+        this.version.newRelease = versionData.newRelease;
       },
       error => {
         console.error('Error checking for new release:', error);
+      }
+    );
+  }
+
+  CheckForCurrentRelease() {
+    this.http.get<VersionModel>(`${this.versionUrl}current`).subscribe(
+      (versionData) => {
+        this.version.name = versionData.name;
+        this.version.newRelease = versionData.newRelease;
+      },
+      error => {
+        console.error('Error checking for current release:', error);
       }
     );
   }

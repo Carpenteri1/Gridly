@@ -7,26 +7,25 @@ namespace Gridly.Repositories;
 
 public class VersionRepository(IDataConverter<VersionModel> dataConverter, IFileService fileService, IVersionEndPoint versionEndPoint) : IVersionRepository
 {
-    public async Task<VersionModel> GetVersionAsync()
+    public async Task<VersionModel> GetLatestVersionAsync()
     {
         var (success,model) = await versionEndPoint.GetLatestVersion();
         if (success)
         {
-            var jsonFileString = await fileService.ReadAllFromFileAsync(FilePaths.RateLimitFilePath);
+            var jsonFileString = await fileService.ReadAllFromFileAsync(FilePaths.VersionFilePath);
             if (string.IsNullOrEmpty(jsonFileString) || jsonFileString.Equals("{}"))
             {
-                model.CreatedAt = DateTime.Now;
                 string jsonString = dataConverter.SerializerToJsonString(model);
-                fileService.WriteToJson(FilePaths.RateLimitFilePath, jsonString);
+                fileService.WriteToJson(FilePaths.VersionFilePath, jsonString);
                 return model;
             }
 
             var storedModel = dataConverter.DeserializeJsonString(jsonFileString);
-            if (dataConverter.ToInt(storedModel.Name) > dataConverter.ToInt(model.Name))
+            storedModel.NewRelease = dataConverter.ToInt(storedModel.Name) > dataConverter.ToInt(model.Name);
+            if (storedModel.NewRelease)
             {
-                model.CreatedAt = DateTime.Now;
                 string jsonString = dataConverter.SerializerToJsonString(model);
-                fileService.WriteToJson(FilePaths.RateLimitFilePath, jsonString);
+                fileService.WriteToJson(FilePaths.VersionFilePath, jsonString);
                 return model;
             }
         }
