@@ -43,8 +43,6 @@ Gridly-Client/.angular/cache
 testem.log
 /typings
 
-# Changes I wanna hide
-Assets/
 
 # System files
 .DS_Store
