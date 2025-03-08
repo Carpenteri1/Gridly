@@ -7,7 +7,7 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
-await builder.Services.AddFixedRateLimiter();
+await builder.Services.AddTokenBucketRateLimiter();
 
 builder.Services.AddSingleton<IVersionEndPoint, VersionEndPoint>();
 
@@ -37,7 +37,7 @@ app.MapControllerRoute(
     pattern: "{controller=Main}/{action=Index}");
 
 app.UseRouting();
-app.UseFixedRateLimiter();
+app.UseTokenBucketRateLimiter();
 
 app.UseEndpoints(endpoints =>
 {

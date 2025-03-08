@@ -7,7 +7,7 @@ namespace Gridly.Repositories;
 
 public class VersionRepository(IDataConverter<VersionModel> dataConverter, IFileService fileService, IVersionEndPoint versionEndPoint) : IVersionRepository
 {
-    public async Task<VersionModel> GetVersionAsync()
+    public async Task<VersionModel> GetLatestVersionAsync()
     {
         var (success,model) = await versionEndPoint.GetLatestVersion();
         if (success)

@@ -21,10 +21,12 @@ export class HeaderComponent implements OnInit{
   modalButtonIcon = "bi bi-plus";
   modelBindId = "addComponentModalLabel";
   modalDropDownId = "addComponentModal";
-
   constructor(public handleComponent: HandleComponent, public sharedService: SharedService) {}
 
   ngOnInit() {
     this.sharedService.CheckForNewRelease();
+    if(this.sharedService.version.name === ''){
+      this.sharedService.CheckForCurrentRelease();
+    }
   }
 }

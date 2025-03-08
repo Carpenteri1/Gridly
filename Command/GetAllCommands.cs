@@ -6,6 +6,10 @@ namespace Gridly.Command;
 public class GetAllComponentCommand : IRequest<ComponentModel[]>
 {
 }
-public class GetAllVersionCommand : IRequest<VersionModel>
+public class GetAllLatestVersionCommand : IRequest<VersionModel>
+{
+}
+
+public class GetAllCurrentVersionCommand : IRequest<VersionModel>
 {
 }
