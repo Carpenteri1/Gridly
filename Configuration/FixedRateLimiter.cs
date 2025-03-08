@@ -23,22 +23,20 @@ public class FixedRateLimiterMiddleware
 public static class RequestRateLimiterExtensions 
 {
     static readonly string Policy = "fixed"; 
-    public static IServiceCollection AddFixedRateLimiter(
-        this IServiceCollection services, 
-        IFileService fileService,
-        IDataConverter<DateTime> dataConverter,
-        FixedRateLimiterModel fixedRate) {
+    public static async Task<IServiceCollection> AddFixedRateLimiter(this IServiceCollection services) {
         
-        services.AddRateLimiter( options =>
-        {
-            fixedRate.Window = GetFixedWindowData(fileService, dataConverter).Result; 
-            options.AddFixedWindowLimiter(Policy, opt =>
+        var fileService = new FileService();
+        var dataConverter = new DataConverter<DateTime>();
+        var fixedRate = new FixedRateLimiterModel();
+        
+        fixedRate.Window = await GetFixedWindowData(fileService, dataConverter); 
+        services.AddRateLimiter( _ => _
+            .AddFixedWindowLimiter(Policy, opt =>
             {
                 opt.PermitLimit = fixedRate.Limit;
                 opt.Window = fixedRate.Window;
                 opt.QueueLimit = fixedRate.QueueLimit;
-            });
-        });
+            }));
 
         return services;
     }
@@ -47,28 +45,37 @@ public static class RequestRateLimiterExtensions
         IFileService fileService, 
         IDataConverter<DateTime> dataConverter)
     {
+        
         DateTime lastStoreRunTime;    
-        if (!fileService.FileExcist(FilePaths.FixedRateLimitFilePath))
+        if (fileService.FileExcist(FilePaths.FixedRateLimitFilePath))
         {
-            lastStoreRunTime = DateTime.Now;
-            fileService.WriteToJson(dataConverter.SerializerToJsonString(lastStoreRunTime), 
-                FilePaths.FixedRateLimitFilePath);
+            var jsonString = await fileService.ReadAllFromFileAsync(FilePaths.FixedRateLimitFilePath);
+            if (string.IsNullOrEmpty(jsonString) || jsonString == "{}")
+            {
+                fileService.WriteToJson(FilePaths.FixedRateLimitFilePath, 
+                    dataConverter.SerializerToJsonString(DateTime.Now));
+                return TimeSpan.FromHours(8);
+            }
+            lastStoreRunTime = dataConverter.DeserializeJsonString(jsonString);
+        }
+        else
+        {
+            fileService.WriteToJson(FilePaths.FixedRateLimitFilePath, 
+                dataConverter.SerializerToJsonString(DateTime.Now));
             return TimeSpan.FromHours(8);
         }
         
-        var jsonString = await fileService.ReadAllFromFileAsync(FilePaths.FixedRateLimitFilePath);
-        lastStoreRunTime = dataConverter.DeserializeJsonString(jsonString);
-        
         var currentDateTime = DateTime.Now;
-        var elapsedTime = DateTime.Now - lastStoreRunTime;
+        var elapsedTime = lastStoreRunTime - currentDateTime;
+        
         if (elapsedTime >= TimeSpan.FromHours(8))
         {
-            jsonString = dataConverter.SerializerToJsonString(currentDateTime);
-            fileService.WriteToJson(FilePaths.FixedRateLimitFilePath, jsonString);
-            return elapsedTime;
-        }   
+            fileService.WriteToJson(FilePaths.FixedRateLimitFilePath, 
+                dataConverter.SerializerToJsonString(currentDateTime));
+            return TimeSpan.FromHours(8);
+        } 
         
-        return elapsedTime;
+        return TimeSpan.Zero;
     }
 
     public static IApplicationBuilder UseFixedRateLimiter(this IApplicationBuilder app)

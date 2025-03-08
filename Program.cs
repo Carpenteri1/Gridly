@@ -1,6 +1,5 @@
 using Gridly.Configuration;
 using Gridly.EndPoints;
-using Gridly.Models;
 using Gridly.Repositories;
 using Gridly.Services;
 using Microsoft.Extensions.FileProviders;
@@ -8,6 +7,8 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
+await builder.Services.AddFixedRateLimiter();
+
 builder.Services.AddSingleton<IVersionEndPoint, VersionEndPoint>();
 
 builder.Services.AddSingleton<IComponentRepository,ComponentRepository>();
@@ -29,10 +30,6 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/Assets/Icons"
 });
 
-builder.Services.AddFixedRateLimiter(app.Services.GetRequiredService<IFileService>(), 
-    app.Services.GetRequiredService<IDataConverter<DateTime>>(),
-    new FixedRateLimiterModel());
-
 app.MapDefaultControllerRoute().RequireRateLimiting("fixed");
 
 app.MapControllerRoute(
@@ -40,7 +37,7 @@ app.MapControllerRoute(
     pattern: "{controller=Main}/{action=Index}");
 
 app.UseRouting();
-app.UseRateLimiter();
+app.UseFixedRateLimiter();
 
 app.UseEndpoints(endpoints =>
 {
