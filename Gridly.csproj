@@ -31,14 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\ComponentData\" />
-    <Folder Include="Assets\Icons\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Assets\**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="wwwroot\index.html" />
     <None Include="wwwroot\main.js" />
     <None Include="wwwroot\media\bootstrap-icons.woff" />
