@@ -44,9 +44,10 @@ testem.log
 /typings
 
 # Files I wanna ignore
-Assets/ComponentData/componentData.json
-Assets/VersionData/versionData.json
+Assets/ComponentData/*.json
+Assets/VersionData/*.json
 Assets/Icons/*
+!Assets/Icons/.gitkeep
 !Assets/Icons/favicon.ico
 
 # System files

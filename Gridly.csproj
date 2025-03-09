@@ -31,12 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\Icons\" />
-    <Folder Include="Assets\ComponentData\" />
-    <Folder Include="Assets\VersionData\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\index.html" />
     <None Include="wwwroot\main.js" />
     <None Include="wwwroot\media\bootstrap-icons.woff" />
