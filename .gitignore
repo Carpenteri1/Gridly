@@ -43,6 +43,11 @@ Gridly-Client/.angular/cache
 testem.log
 /typings
 
+# Files I wanna ignore
+Assets/VersionData/versionData.json
+Assets/ComponentData/componentData.json
+Assets/Icons/*
+!Assets/Icons/favicon.ico
 
 # System files
 .DS_Store
