@@ -31,9 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\Icons\*" />
-    <Folder Include="Assets\ComponentData\*" />
-    <Folder Include="Assets\VersionData\*" />
+    <Folder Include="Assets\Icons\" />
+    <Folder Include="Assets\ComponentData\" />
+    <Folder Include="Assets\VersionData\" />
   </ItemGroup>
 
   <ItemGroup>
