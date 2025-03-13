@@ -14,8 +14,15 @@ public class ComponentRepository(IDataConverter<ComponentModel> dataConverter, I
 
     public async Task<ComponentModel[]?> ReadAllFromJsonFile()
     {
-        string jsonString = await fileService.ReadAllFromFileAsync(FilePaths.ComponentPath);
-        return dataConverter.DeserializeJsonStringArray(jsonString);
+        var jsonFileString = "[]";
+        if (!fileService.FileExcist(FilePaths.ComponentPath))
+        {
+            fileService.WriteToJson(FilePaths.ComponentPath,jsonFileString);
+            return dataConverter.DeserializeJsonStringArray(jsonFileString);
+        }
+        
+        jsonFileString = await fileService.ReadAllFromFileAsync(FilePaths.ComponentPath);
+        return dataConverter.DeserializeJsonStringArray(jsonFileString);
     }
     
     public async Task<ComponentModel?> ReadByIdFromJsonFile(int Id)
