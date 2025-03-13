@@ -24,6 +24,7 @@ Gridly is built using .NET Core and ASP.NET Core MVC, allowing it to function as
  ![Bootstrap](https://img.shields.io/badge/-Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
  ![NPM](https://img.shields.io/badge/NPM-F7DF1E?style=for-the-badge&logo=npm&logoColor=white)
  ![Yaml](https://img.shields.io/badge/Yaml-FF6C37?style=for-the-badge&logo=yaml&logoColor=white)
+ ![Yaml](https://img.shields.io/badge/Gulp-ff7b7b?style=for-the-badge&logo=gulp&logoColor=white)
 
  #### Supported systems
   ![Linux](https://img.shields.io/badge/Linux-FFFFFF?style=for-the-badge&logo=linux&logoColor=black)
