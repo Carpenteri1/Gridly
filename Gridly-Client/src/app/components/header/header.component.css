@@ -1,5 +1,5 @@
 .d-flex{
-    background-color: antiquewhite;
+    background-color: #141517;
 }
 .flex-row-reverse{
     padding-right: 1em;
@@ -13,6 +13,5 @@
   align-items: center;
   padding-right: 40px;
   font-size: 13px;
-  color: #e63930;
   padding-top: 20px;
 }
