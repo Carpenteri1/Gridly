@@ -15,7 +15,7 @@ import {AppComponent} from "../../app.component";
 @Injectable({ providedIn: 'root' })
 export class BasicComponent implements OnInit {
   modalTitle = "Edit";
-  modalButtonTheme ="btn btn-secondary";
+  modalButtonTheme ="btn btn-modal";
   modalButtonIcon = "bi bi-three-dots";
   modelBindId = "editComponentModalLabel";
   modalDropDownId = "editComponentModal";

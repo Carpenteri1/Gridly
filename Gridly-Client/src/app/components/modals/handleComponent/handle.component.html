@@ -1,15 +1,21 @@
 <div class="dropdown">
-  <button type="button" [class]="btnTheme" data-bs-toggle="modal" [attr.data-bs-target]="'#'+modalBindDropdownId">
+  <button type="button" [class]="btnTheme" data-bs-toggle="modal" [attr.data-bs-target]="'#modalBindDropdownId_'+component.id">
     <i [class]="btnIcon"></i>
   </button>
 </div>
 
-<div class="modal fade" #modalElement [id]="modalBindDropdownId" tabindex="-1">
+<div class="modal fade" #modalElement [id]="'modalBindDropdownId_'+component.id" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" [id]="modalLabelId" [title]="windowTitle">{{windowTitle}}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="ResetFormData()"></button>
+        @if (editMode)
+          {
+            <button type="button" class="btn-close" data-bs-dismiss="modal" ></button>
+          }
+        @else {
+          <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="ResetFormData()"></button>
+        }
       </div>
       <div class="modal-body">
         <form>
@@ -59,7 +65,14 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="ResetFormData()">Cancel</button>
+        @if (editMode)
+        {
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        }
+        @else
+        {
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="ResetFormData()">Cancel</button>
+        }
         <button [disabled]="!CanAddComponent || !CanEditComponent" type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="triggerAccept()" [attr.data-title]="btnTitle">{{btnTitle}}</button>
       </div>
     </div>

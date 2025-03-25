@@ -1,6 +1,20 @@
 .icon-size{
   max-height: 100px;
 }
+
 .component-icon-center{
   margin:auto;
+}
+
+.component-style{
+  height: 200px;
+  flex: 0 160px;
+  background-color: #141517;
+  border-bottom: 20px;
+  border-radius: 10px;
+  color: white;
+}
+
+.space-left{
+  margin-left: 10px;
 }
