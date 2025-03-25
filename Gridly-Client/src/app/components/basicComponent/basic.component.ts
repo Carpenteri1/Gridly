@@ -6,10 +6,10 @@ import {AppComponent} from "../../app.component";
 
 @Component({
   selector: 'basic-component',
-  standalone: true,
   imports: [CommonModule, HandleComponent],
   templateUrl: './basic.component.html',
-  styleUrls: ['./basic.component.css'],
+  standalone: true,
+  styleUrls: ['./basic.component.css']
 })
 
 @Injectable({ providedIn: 'root' })
