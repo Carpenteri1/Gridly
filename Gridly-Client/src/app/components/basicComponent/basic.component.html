@@ -1,10 +1,9 @@
 <div *ngIf="sharedService.isLoading">Loading components...</div>
 
-<div *ngIf="!sharedService.isLoading" class="d-flex">
+<div *ngIf="!sharedService.isLoading" class="d-flex gap-3 space-left">
     <div *ngFor="let item of sharedService.flexItems"
-      class="d-flex m-2 flex-column"
-      style="height: 240px; flex: 0 240px; background:darkgrey;border-bottom: 20px;">
-      <div class="d-flex justify-content-end p-1 gap-1">
+      class="d-flex m-2 flex-column component-style shadow">
+      <div class="d-flex justify-content-end">
         <handle-component-modal
           [windowTitle]="modalTitle"
           [btnTheme]="modalButtonTheme"
@@ -16,14 +15,14 @@
           [component]="item"
           [acceptButton]="handleComponent.EditComponent">
         </handle-component-modal>
-        <button data-bs-toggle="modal" [attr.data-bs-target]="'#DeleteModal_'+item.id" class="btn btn-secondary "><i class="bi bi-x-lg"></i></button>
+        <button data-bs-toggle="modal" [attr.data-bs-target]="'#DeleteModal_'+item.id" class="btn btn-modal"><i class="bi bi-x-lg"></i></button>
       </div>
-      <a [href]="item.url" class="d-flex flex-column text-decoration-none justify-content-center text-black-50 h-100" target="_blank">
-          <h4 [hidden]="item.titleHidden" class="text-center" >{{item.name}}</h4>
+      <a [href]="item.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-100" target="_blank">
           <img [hidden]="!HaveIconSet(item.iconData?.name) || item.imageHidden" [src]="IconFilePath(item.iconData?.name,item.iconData?.fileType)" class="p-1 icon-size component-icon-center" alt="icon not found">
           <img [hidden]="!HaveImagUrlSet(item.imageUrl) || item.imageHidden" [src]="item.imageUrl" class="p-1 icon-size component-icon-center" alt="icon not found">
+          <p [hidden]="item.titleHidden" class="text-center" >{{item.name}}</p>
       </a>
-  <div class="modal fade" [id]="'DeleteModal_'+item.id" tabindex="-1" [attr.aria-labelledby]="item.id" aria-hidden="true">
+      <div class="modal fade" [id]="'DeleteModal_'+item.id" tabindex="-1" [attr.aria-labelledby]="item.id" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">

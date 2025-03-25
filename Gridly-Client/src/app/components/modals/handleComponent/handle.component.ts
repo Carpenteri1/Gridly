@@ -8,6 +8,7 @@ import {FormsModule} from "@angular/forms";
   selector: 'handle-component-modal',
   standalone: true,
   templateUrl: './handle.component.html',
+  styleUrl: './handle.component.css',
   imports: [
     FormsModule
   ],
