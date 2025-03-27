@@ -21,8 +21,8 @@ public class VersionRepository(IDataConverter<VersionModel> dataConverter, IFile
             }
 
             var storedModel = dataConverter.DeserializeJson(jsonFileString);
-            storedModel.NewRelease = dataConverter.ToInt(storedModel.Name) > dataConverter.ToInt(model.Name);
-            if (storedModel.NewRelease)
+            model.NewRelease = dataConverter.ToInt(model.Name) > dataConverter.ToInt(storedModel.Name);
+            if (model.NewRelease)
             {
                 string jsonString = dataConverter.SerializerToJsonString(model);
                 fileService.WriteToFile(FilePaths.VersionFilePath, jsonString);

@@ -7,11 +7,10 @@
     padding-bottom: 0.5em;
 }
 
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-right: 40px;
+:is(.version-text, .text-center) {
   font-size: 13px;
-  padding-top: 20px;
+}
+
+.space{
+  padding-left: 20px;
 }
