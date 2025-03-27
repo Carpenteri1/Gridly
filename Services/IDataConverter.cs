@@ -2,9 +2,9 @@ namespace Gridly.Services;
 
 public interface IDataConverter<T>
 {
-    public T[]? DeserializeJsonStringArray(string jsonString);
-    public T? DeserializeJsonString(string jsonString);
+    public T[]? DeserializeJsonToArray(string jsonString);
+    public T? DeserializeJson(string jsonString);
     public string? SerializerToJsonString(T data);
-    public string? SerializerToJsonString(List<T> data);
+    public string? SerializerToJsonString(IEnumerable<T> data);
     public int? ToInt(string data);
 }        

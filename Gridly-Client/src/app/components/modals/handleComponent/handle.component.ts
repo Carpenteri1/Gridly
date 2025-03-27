@@ -5,13 +5,13 @@ import {SharedService} from "../../../shared.service";
 import {FormsModule} from "@angular/forms";
 
 @Component({
-  selector: 'handle-component-modal',
-  standalone: true,
-  templateUrl: './handle.component.html',
-  styleUrl: './handle.component.css',
-  imports: [
-    FormsModule
-  ],
+    selector: 'handle-component-modal',
+    templateUrl: './handle.component.html',
+    styleUrl: './handle.component.css',
+    standalone: true,
+    imports: [
+        FormsModule
+    ]
 })
 
 @Injectable({ providedIn: 'root' })

@@ -5,9 +5,9 @@ import {CommonModule} from "@angular/common";
 
 @Component({
   selector: 'header-component',
-  standalone: true,
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
+  standalone: true,
   imports: [
     HandleComponent,
     CommonModule

@@ -4,10 +4,10 @@ namespace Gridly.Services;
 
 public interface IComponentRepository
 {
-    public bool ReadToJsonFile(List<ComponentModel> newComponent);
-    public Task<ComponentModel[]?> ReadAllFromJsonFile();
-    public Task<ComponentModel?> ReadByIdFromJsonFile(int id);
-    public bool WriteIconToFolder(IconModel iconData);
-    public bool DeleteIconFromFolder(IconModel iconData);
-    public bool IconExcistOnOtherComponent(List<ComponentModel> componentModels, IconModel iconData);
+    public bool Save(IEnumerable<ComponentModel> newComponent);
+    public Task<IEnumerable<ComponentModel>?> Get();
+    public Task<ComponentModel?> GetById(int id);
+    public bool UploadIcon(IconModel iconData);
+    public bool DeleteIcon(IconModel iconData);
+    public bool IconDuplicate(IEnumerable<ComponentModel> componentModels, IconModel iconData);
 }

@@ -2,7 +2,7 @@ namespace Gridly.Services;
 
 public class FileService : IFileService
 {
-    public bool FileExcist(string filePath) =>  File.Exists(filePath);
+    public bool FileExist(string filePath) =>  File.Exists(filePath);
 
     public bool DeletedFile(string filePath)
     {
@@ -15,7 +15,7 @@ public class FileService : IFileService
         return true;
     }
 
-    public bool WriteAllBites(string filePath, string base64Data)
+    public bool WriteAllBitesToFile(string filePath, string base64Data)
     {
         try
         {
@@ -26,7 +26,7 @@ public class FileService : IFileService
         return true;
     }
     
-    public bool WriteToJson(string filePath, string content)
+    public bool WriteToFile(string filePath, string content)
     {
         try
         {

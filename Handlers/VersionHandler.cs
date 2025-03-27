@@ -22,16 +22,16 @@ public class VersionHandler(
     public async Task<VersionModel> Handle(GetAllCurrentVersionCommand request, CancellationToken cancellationToken)
     {
         var jsonFileString = "{}";
-        if (!fileService.FileExcist(FilePaths.VersionFilePath))
+        if (!fileService.FileExist(FilePaths.VersionFilePath))
         {
-            fileService.WriteToJson(FilePaths.VersionFilePath,jsonFileString);
-            return dataConverter.DeserializeJsonString(jsonFileString);
+            fileService.WriteToFile(FilePaths.VersionFilePath,jsonFileString);
+            return dataConverter.DeserializeJson(jsonFileString);
         }
         
         jsonFileString = await fileService.ReadAllFromFileAsync(FilePaths.VersionFilePath);
         
         return !string.IsNullOrEmpty(jsonFileString) || !jsonFileString.Equals("{}") ?
-            dataConverter.DeserializeJsonString(jsonFileString) : 
+            dataConverter.DeserializeJson(jsonFileString) : 
             new VersionModel{Name = "", NewRelease = false};
     }
 }

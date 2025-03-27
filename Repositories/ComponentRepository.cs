@@ -6,45 +6,45 @@ namespace Gridly.Repositories;
 
 public class ComponentRepository(IDataConverter<ComponentModel> dataConverter, IFileService fileService) : IComponentRepository
 {
-    public bool ReadToJsonFile(List<ComponentModel> newComponent)
+    public bool Save(IEnumerable<ComponentModel> newComponent)
     {
         string jsonString = dataConverter.SerializerToJsonString(newComponent);
-        return fileService.WriteToJson(FilePaths.ComponentPath, jsonString);
+        return fileService.WriteToFile(FilePaths.ComponentPath, jsonString);
     }
 
-    public async Task<ComponentModel[]?> ReadAllFromJsonFile()
+    public async Task<IEnumerable<ComponentModel>?> Get()
     {
         var jsonFileString = "[]";
-        if (!fileService.FileExcist(FilePaths.ComponentPath))
+        if (!fileService.FileExist(FilePaths.ComponentPath))
         {
-            fileService.WriteToJson(FilePaths.ComponentPath,jsonFileString);
-            return dataConverter.DeserializeJsonStringArray(jsonFileString);
+            fileService.WriteToFile(FilePaths.ComponentPath,jsonFileString);
+            return dataConverter.DeserializeJsonToArray(jsonFileString);
         }
         
         jsonFileString = await fileService.ReadAllFromFileAsync(FilePaths.ComponentPath);
-        return dataConverter.DeserializeJsonStringArray(jsonFileString);
+        return dataConverter.DeserializeJsonToArray(jsonFileString);
     }
     
-    public async Task<ComponentModel?> ReadByIdFromJsonFile(int Id)
+    public async Task<ComponentModel?> GetById(int Id)
     {
         string jsonString = await fileService.ReadAllFromFileAsync(FilePaths.ComponentPath);
-        return dataConverter.DeserializeJsonStringArray(jsonString)?.ToList().First(x => x.Id == Id);
+        return dataConverter.DeserializeJsonToArray(jsonString)?.ToList().First(x => x.Id == Id);
     }
 
-    public bool WriteIconToFolder(IconModel iconData)
+    public bool UploadIcon(IconModel iconData)
     {
         string filePath = FilePaths.IconPath + $"{iconData.name}.{iconData.fileType}";
-        return fileService.WriteAllBites(filePath, iconData.base64Data);
+        return fileService.WriteAllBitesToFile(filePath, iconData.base64Data);
     }
     
-    public bool DeleteIconFromFolder(IconModel iconData)
+    public bool DeleteIcon(IconModel iconData)
     {
         string filePath = FilePaths.IconPath + $"{iconData.name}.{iconData.fileType}";
-        return fileService.FileExcist(filePath) && fileService.DeletedFile(filePath);
+        return fileService.FileExist(filePath) && fileService.DeletedFile(filePath);
     }
 
-    public bool IconExcistOnOtherComponent(List<ComponentModel>componentModels, IconModel iconData) =>
-        !componentModels.Where(x => x.IconData != null &&
+    public bool IconDuplicate(IEnumerable<ComponentModel>componentModels, IconModel iconData) =>
+        componentModels.Where(x => x.IconData != null &&
                                     x.IconData.name == iconData.name &&
                                     x.IconData.fileType == iconData.fileType).Any();
     

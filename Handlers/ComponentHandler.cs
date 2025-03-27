@@ -6,7 +6,7 @@ using MediatR;
 namespace Gridly.Handlers;
 public class ComponentHandler(IComponentRepository componentRepository) : 
     IRequestHandler<SaveComponentCommand, ComponentModel[]>,
-    IRequestHandler<GetAllComponentCommand,ComponentModel[]>,
+    IRequestHandler<GetAllComponentCommand, ComponentModel[]>,
     IRequestHandler<GetByIdComponentCommands, ComponentModel>,
     IRequestHandler<DeleteComponentCommand, IResult>,
     IRequestHandler<EditComponentCommand, IResult>
@@ -14,72 +14,66 @@ public class ComponentHandler(IComponentRepository componentRepository) :
     public Task<ComponentModel[]> Handle(SaveComponentCommand commands, CancellationToken cancellationToken)
     {
         if (commands.IconData != null &&
-            !componentRepository.WriteIconToFolder(commands.IconData))
+            !componentRepository.UploadIcon(commands.IconData))
             return Task.FromResult<ComponentModel[]>(null);
 
         var componentModels = 
-            componentRepository.ReadAllFromJsonFile().Result?.ToList();
+            componentRepository.Get().Result?.ToList();
         
         if(componentModels is null || !componentModels.Any()) 
             componentModels = new List<ComponentModel>();
         
         componentModels.Add(commands);
-        componentRepository.ReadToJsonFile(componentModels);
+        componentRepository.Save(componentModels);
         return Task.FromResult(componentModels.ToArray());
     }
     
-    public Task<IResult> Handle(DeleteComponentCommand commands, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(DeleteComponentCommand commands, CancellationToken cancellationToken)
     {
-        var componentModels = 
+        var componentModels = await
             componentRepository
-                .ReadAllFromJsonFile()
-                .Result?
-                .ToList();
+                .Get();
         
         if(componentModels is null || !componentModels.Any()) 
-            return Task.FromResult(Results.NotFound());
+            return Results.NotFound();
         
         var component = componentModels.FirstOrDefault(x => x.Id == commands.Id);
         componentModels = componentModels.Where(x => x.Id != commands.Id).ToList();
 
         if (component is null) 
-            return Task.FromResult(Results.NotFound());
+            return Results.NotFound();
         
         if (component.IconData != null && 
-            componentRepository.IconExcistOnOtherComponent(componentModels,component.IconData))
+            !componentRepository.IconDuplicate(componentModels,component.IconData))
         {
-            if(!componentRepository.DeleteIconFromFolder(component.IconData))
-                return Task.FromResult(Results.NotFound());
+            if(!componentRepository.DeleteIcon(component.IconData))
+                return Results.NotFound();
         }
         
-        return Task.FromResult(componentRepository.ReadToJsonFile(componentModels) ? 
-            Results.Ok() : Results.StatusCode(500));
+        return componentRepository.Save(componentModels) ? 
+            Results.Ok() : Results.StatusCode(500);
     }
     
-    public Task<IResult> Handle(EditComponentCommand command, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(EditComponentCommand command, CancellationToken cancellationToken)
     {
-        var componentModels = 
-            componentRepository.ReadAllFromJsonFile().Result?.ToList();
-
-        if (componentModels is null || !componentModels.Any())
-            return Task.FromResult(Results.NotFound());
+        var componentModels = (await componentRepository.Get()).ToArray();
         
-        if (componentModels.Count == 1 ||
-            componentRepository.IconExcistOnOtherComponent(componentModels, command.EditedIconData))
-            componentRepository.DeleteIconFromFolder(command.EditedComponent.IconData);
-            
-        command.EditedComponent.IconData = command.EditedIconData;
-        for(int i = 0;i<componentModels.Count;i++)
+        if (componentModels is null || !componentModels.Any())
+            return Results.NotFound();
+
+        if (!componentRepository.IconDuplicate(componentModels,command.EditedComponent.IconData))
+            componentRepository.UploadIcon(command.EditedComponent.IconData);
+        
+        for(int i = 0;i<componentModels.Length;i++)
             if (componentModels[i].Id == command.EditedComponent.Id) 
                 componentModels[i] =  command.EditedComponent;
         
-        componentRepository.WriteIconToFolder(command.EditedIconData);
-        return Task.FromResult(componentRepository.ReadToJsonFile(componentModels) ? 
-            Results.Ok() : Results.StatusCode(500));
+        return componentRepository.Save(componentModels) ? 
+            Results.Ok() : Results.StatusCode(500);
     }
     
-    public async Task<ComponentModel[]?> Handle(GetAllComponentCommand command, CancellationToken cancellationToken) =>
-        await componentRepository.ReadAllFromJsonFile();
-    public async Task<ComponentModel> Handle(GetByIdComponentCommands request, CancellationToken cancellationToken) => 
-        await componentRepository.ReadByIdFromJsonFile(request.Id);
+    public async Task<ComponentModel[]> Handle(GetAllComponentCommand command, CancellationToken cancellationToken) =>
+        (await componentRepository.Get()).ToArray();
+    public async Task<ComponentModel?> Handle(GetByIdComponentCommands request, CancellationToken cancellationToken) => 
+        await componentRepository.GetById(request.Id);
 }
