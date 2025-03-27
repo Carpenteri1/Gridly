@@ -16,16 +16,16 @@ public class VersionRepository(IDataConverter<VersionModel> dataConverter, IFile
             if (string.IsNullOrEmpty(jsonFileString) || jsonFileString.Equals("{}"))
             {
                 string jsonString = dataConverter.SerializerToJsonString(model);
-                fileService.WriteToJson(FilePaths.VersionFilePath, jsonString);
+                fileService.WriteToFile(FilePaths.VersionFilePath, jsonString);
                 return model;
             }
 
-            var storedModel = dataConverter.DeserializeJsonString(jsonFileString);
+            var storedModel = dataConverter.DeserializeJson(jsonFileString);
             storedModel.NewRelease = dataConverter.ToInt(storedModel.Name) > dataConverter.ToInt(model.Name);
             if (storedModel.NewRelease)
             {
                 string jsonString = dataConverter.SerializerToJsonString(model);
-                fileService.WriteToJson(FilePaths.VersionFilePath, jsonString);
+                fileService.WriteToFile(FilePaths.VersionFilePath, jsonString);
                 return model;
             }
         }

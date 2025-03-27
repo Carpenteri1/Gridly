@@ -14,7 +14,7 @@ public class VersionEndPoint(IDataConverter<VersionModel> dataConverter) : IVers
             return 
             (
                 response.IsSuccessStatusCode, 
-                dataConverter.DeserializeJsonString(await response.Content.ReadAsStringAsync())
+                dataConverter.DeserializeJson(await response.Content.ReadAsStringAsync())
             );
         }
     }
