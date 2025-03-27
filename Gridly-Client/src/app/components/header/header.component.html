@@ -1,16 +1,18 @@
-<div class="flex-wrap d-flex flex-row-reverse mb-4">
-  <div class="p-2 bd-highlight">
-    <handle-component-modal
-      [windowTitle]="modalTitle"
-      [btnTheme]="modalButtonTheme"
-      [btnIcon]="modalButtonIcon"
-      [btnTitle]="modalTitle"
-      [modalLabelId]="modelBindId"
-      [modalBindDropdownId]="modalDropDownId"
-      [acceptButton]="handleComponent.AddComponent">
-    </handle-component-modal>
-  </div>
-  <div class="bd-highlight center" *ngIf="sharedService.version.newRelease">
-    <p>There is a new version available!  <a target="_blank" href="https://github.com/Carpenteri1/Gridly/releases/tag/{{sharedService.version.name}}"> {{sharedService.version.name}} </a></p>
+<div class="d-flex gap-3 justify-content-end">
+  <div class="d-flex m-2 flex-row">
+    <div class="version-text text-white-50 m-2" *ngIf="sharedService.version.newRelease">
+      <strong>There is a new version available!&nbsp;&nbsp;<a target="_blank" href="https://github.com/Carpenteri1/Gridly/releases/tag/{{sharedService.version.name}}"> {{sharedService.version.name}} </a></strong>
+    </div>
+    <div class="space">
+      <handle-component-modal
+        [windowTitle]="modalTitle"
+        [btnTheme]="modalButtonTheme"
+        [btnIcon]="modalButtonIcon"
+        [btnTitle]="modalTitle"
+        [modalLabelId]="modelBindId"
+        [modalBindDropdownId]="modalDropDownId"
+        [acceptButton]="handleComponent.AddComponent">
+      </handle-component-modal>
+    </div>
   </div>
 </div>
