@@ -2,7 +2,6 @@
 
 [![Build Test](https://github.com/Carpenteri1/Gridly/actions/workflows/Build_Test_Branches.yml/badge.svg?branch=main)](https://github.com/Carpenteri1/Gridly/actions/workflows/Build_Test_Branches.yml)
 [![CodeQL Advanced](https://github.com/Carpenteri1/Gridly/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/Carpenteri1/Gridly/actions/workflows/codeql.yml)<br>
-[![Dependabot Updates](https://github.com/Carpenteri1/Gridly/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/Carpenteri1/Gridly/actions/workflows/dependabot/dependabot-updates)
 ![Release Badge](https://img.shields.io/github/v/release/Carpenteri1/Gridly.svg)
 
 ### Description
