@@ -6,44 +6,60 @@ import {Directive, ElementRef, HostListener, Renderer2, OnInit, Input} from '@an
 })
 
 export class ResizableDirective implements OnInit {
+  private canResize!: boolean;
   private isResizing!: boolean;
   @Input() itemResizing!: any;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {}
 
   ngOnInit() {
+    this.canResize = false;
     this.isResizing = false;
   }
 
   @HostListener('pointerdown', ['$event'])
   OnLeftMouseClickPress(): void {
-    this.isResizing = true;
+    this.canResize = true;
   }
 
-  @HostListener('pointerup', ['$event'])
+  @HostListener('document:pointerup', ['$event'])
   OnLeftMouseClickRelease(): void {
-    this.isResizing = false;
+    this.canResize = false;
   }
 
   @HostListener('document:pointermove', ['$event'])
   OnMouseMoveDown(event: MouseEvent): void {
-    setTimeout(() => {
-    if(this.isResizing){
-        this.ResizeComponent(event.offsetX, event.offsetY);
-      }
-    },400);
+    if(this.canResize && !this.isResizing){
+      this.isResizing = true;
+      this.ResizeComponent(event.offsetX, event.offsetY);
+      setTimeout(() => {
+        this.isResizing = false;
+      },200);
+    }
   }
 
   private ResizeComponent(x: number,y: number): void {
-    let snappedWidth = Math.round(x / 10) * 10;
-    let snappedHeight = Math.round(y / 10) * 10;
+    let snappedWidth = this.AdjustComponentSize(Math.round(x / 10) * 10);
+    let snappedHeight = this.AdjustComponentSize(Math.round(y / 10) * 10);
 
-    if (snappedWidth < 200 && snappedHeight < 250){
-      snappedWidth = 160;
-      snappedHeight = 200;
-    }
-
-    this.renderer.setStyle(this.el.nativeElement, 'flex', '0 0' + snappedWidth + 'px');
     this.renderer.setStyle(this.el.nativeElement, 'height', snappedHeight + 'px');
+    this.renderer.setStyle(this.el.nativeElement, 'flex', '0 0 '+ snappedWidth + 'px');
+  }
+
+  private AdjustComponentSize(value: number): number {
+    switch(true){
+      case value > 200 && value <= 400:
+        return 300;
+      case value > 400 && value <= 600:
+        return 500;
+      case value > 600 && value <= 800:
+        return 700;
+      case value > 800 && value <= 800:
+        return 800;
+      case value > 800:
+        return 800;
+      default:
+        return 200;
+    }
   }
 }
