@@ -1,8 +1,7 @@
-import {Component, Injectable, OnInit} from '@angular/core';
+import {Component, ElementRef, Injectable, OnInit, Renderer2} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedService } from '../../Services/shared.service';
 import {HandleComponent} from "../modals/handleComponent/handle.component";
-import {AppComponent} from "../../app.component";
 import {ResizableDirective} from "../../Directives/resizable.directive";
 
 @Component({
@@ -21,16 +20,29 @@ export class BasicComponent implements OnInit {
   modelBindId = "editComponentModalLabel";
   modalDropDownId = "editComponentModal";
   public resizableActive = false;
+  public resizingItem!: any;
 
-  ToggleResizeStatus(status: boolean) {
-    this.resizableActive = status;
-  }
-
-  constructor(public sharedService: SharedService, public handleComponent: HandleComponent) {}
+  constructor(
+    public sharedService: SharedService,
+    public handleComponent: HandleComponent,
+    private render: Renderer2,
+    private el: ElementRef) {}
 
   ngOnInit() {
     this.sharedService.LoadComponentList();
+    //this.SetComponentLayout();  TODO fix
+    this.resizableActive = false;
   }
+
+   ActivateResizeStatus(item: any): void {
+    this.resizableActive = true;
+    this.resizingItem = item;
+   }
+
+    DisableResizeStatus(): void {
+     this.resizableActive = false;
+     this.sharedService.EditComponent(this.resizingItem);
+    }
 
   HaveIconSet(name:string | undefined):boolean{
     return name !== undefined && name != null && name !== "";
@@ -46,5 +58,9 @@ export class BasicComponent implements OnInit {
   Remove(id: number): void {
     this.sharedService.RemoveComponent(id);
   }
-  protected readonly AppComponent = AppComponent;
+
+  /*private SetComponentLayout(){
+     this.render.setStyle(this.el.nativeElement, 'height', this.resizingItem.componentSettings.height + 'px');
+     this.resizingItem.setStyle(this.el.nativeElement, 'flex', '0 0 '+ this.resizingItem.componentSettings.width  + 'px');
+  }*/
 }

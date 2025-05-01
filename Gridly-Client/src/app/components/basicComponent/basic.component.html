@@ -2,7 +2,7 @@
 
 <div *ngIf="!sharedService.isLoading" class="d-flex gap-3 space-left">
     <div *ngFor="let item of sharedService.flexItems"
-      class="d-flex m-2 flex-column component-style shadow" makeResizable [canResize]="resizableActive" [itemResizing]="item">
+      class="d-flex m-2 flex-column component-style shadow" makeResizable [canResize]="resizableActive && resizingItem === item" [itemResizing]="item">
       <div class="d-flex justify-content-end">
         <handle-component-modal
           [windowTitle]="modalTitle"
@@ -22,7 +22,7 @@
           <img [hidden]="!HaveImagUrlSet(item.imageUrl) || item.imageHidden" [src]="item.imageUrl" class="p-1 icon-size component-icon-center" alt="icon not found">
           <p [hidden]="item.titleHidden" class="text-center" >{{item.name}}</p>
         </a>
-        <button style="border:2px solid;" class="text-center justify-content-end" (pointerdown)="ToggleResizeStatus(true)" (document:pointerup)="ToggleResizeStatus(false)"> drag </button>
+        <button style="border:2px solid;" class="text-center justify-content-end" (pointerdown)="ActivateResizeStatus(item)" (document:pointerup)="DisableResizeStatus()"> drag </button>
       <div class="modal fade" [id]="'DeleteModal_'+item.id" tabindex="-1" [attr.aria-labelledby]="item.id" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
