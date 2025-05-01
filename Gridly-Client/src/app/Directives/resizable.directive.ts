@@ -28,7 +28,7 @@ export class ResizableDirective implements OnInit {
   }
 
   @HostListener('document:pointermove', ['$event'])
-  OnMouseMoveDown(event: MouseEvent): void {
+  OnMouseMove(event: MouseEvent): void {
     if(this.canResize && !this.isResizing){
       this.isResizing = true;
       this.ResizeComponent(event.offsetX, event.offsetY);
