@@ -14,4 +14,4 @@ public class ComponentModel
     [JsonPropertyName("componentSettings")] public ComponentSettingsModel ComponentSettings { get; set; }
 }
 public record IconModel(string name, string fileType, string base64Data);
-public record ComponentSettingsModel(int Width, int Height);
+public record ComponentSettingsModel(int width, int height);

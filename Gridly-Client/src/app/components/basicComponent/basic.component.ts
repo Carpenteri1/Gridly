@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { SharedService } from '../../shared.service';
 import {HandleComponent} from "../modals/handleComponent/handle.component";
 import {AppComponent} from "../../app.component";
+import {ResizableDirective} from "../../Directives/resizable.directive";
 
 @Component({
   selector: 'basic-component',
-  imports: [CommonModule, HandleComponent],
+  imports: [CommonModule, HandleComponent, ResizableDirective],
   templateUrl: './basic.component.html',
   standalone: true,
   styleUrls: ['./basic.component.css']

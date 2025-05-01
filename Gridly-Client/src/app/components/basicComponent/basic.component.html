@@ -2,7 +2,7 @@
 
 <div *ngIf="!sharedService.isLoading" class="d-flex gap-3 space-left">
     <div *ngFor="let item of sharedService.flexItems"
-      class="d-flex m-2 flex-column component-style shadow">
+      class="d-flex m-2 flex-column component-style shadow" makeResizable [itemResizing]="item">
       <div class="d-flex justify-content-end">
         <handle-component-modal
           [windowTitle]="modalTitle"
