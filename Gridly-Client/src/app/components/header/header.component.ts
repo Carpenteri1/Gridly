@@ -1,6 +1,6 @@
 import {Component, Injectable, OnInit} from "@angular/core";
 import {HandleComponent} from "../modals/handleComponent/handle.component";
-import {SharedService} from "../../shared.service";
+import {SharedService} from '../../Services/shared.service';
 import {CommonModule} from "@angular/common";
 
 @Component({

@@ -6,25 +6,14 @@ import {Directive, ElementRef, HostListener, Renderer2, OnInit, Input} from '@an
 })
 
 export class ResizableDirective implements OnInit {
-  private canResize!: boolean;
   private isResizing!: boolean;
   @Input() itemResizing!: any;
+  @Input() canResize!: boolean;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {}
 
   ngOnInit() {
-    this.canResize = false;
     this.isResizing = false;
-  }
-
-  @HostListener('pointerdown', ['$event'])
-  OnLeftMouseClickPress(): void {
-    this.canResize = true;
-  }
-
-  @HostListener('document:pointerup', ['$event'])
-  OnLeftMouseClickRelease(): void {
-    this.canResize = false;
   }
 
   @HostListener('document:pointermove', ['$event'])

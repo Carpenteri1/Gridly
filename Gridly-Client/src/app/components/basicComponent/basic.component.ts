@@ -1,6 +1,6 @@
 import {Component, Injectable, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedService } from '../../shared.service';
+import { SharedService } from '../../Services/shared.service';
 import {HandleComponent} from "../modals/handleComponent/handle.component";
 import {AppComponent} from "../../app.component";
 import {ResizableDirective} from "../../Directives/resizable.directive";
@@ -20,6 +20,11 @@ export class BasicComponent implements OnInit {
   modalButtonIcon = "bi bi-three-dots";
   modelBindId = "editComponentModalLabel";
   modalDropDownId = "editComponentModal";
+  public resizableActive = false;
+
+  ToggleResizeStatus(status: boolean) {
+    this.resizableActive = status;
+  }
 
   constructor(public sharedService: SharedService, public handleComponent: HandleComponent) {}
 
