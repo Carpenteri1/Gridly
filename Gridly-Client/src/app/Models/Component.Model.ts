@@ -9,7 +9,7 @@ export class ComponentModel {
   imageUrl?: string;
   imageHidden?: boolean;
   titleHidden?: boolean;
-  componentSettings?: ComponentSettingsModel;
+  componentSettings? : ComponentSettingsModel;
 
   constructor(
     id: number,
@@ -27,5 +27,6 @@ export class ComponentModel {
     this.imageUrl = imageUrl;
     this.imageHidden = imageHidden;
     this.titleHidden = titleHidden;
+    this.componentSettings = componentSettings;
   }
 }

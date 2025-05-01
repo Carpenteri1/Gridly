@@ -17,8 +17,8 @@ public class ComponentHandler(IComponentRepository componentRepository) :
             !componentRepository.UploadIcon(commands.IconData))
             return Task.FromResult<ComponentModel[]>(null);
 
-        /*if (commands.ComponentSettings == null)
-            commands.ComponentSettings = new ComponentSettingsModel(100, 200);*/
+        if (commands.ComponentSettings == null)
+            commands.ComponentSettings = new ComponentSettingsModel(200, 200);
 
         var componentModels = 
             componentRepository.Get().Result?.ToList();
