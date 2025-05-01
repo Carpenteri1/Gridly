@@ -22,7 +22,9 @@
           <img [hidden]="!HaveImagUrlSet(item.imageUrl) || item.imageHidden" [src]="item.imageUrl" class="p-1 icon-size component-icon-center" alt="icon not found">
           <p [hidden]="item.titleHidden" class="text-center" >{{item.name}}</p>
         </a>
-        <button style="border:2px solid;" class="text-center justify-content-end" (pointerdown)="ActivateResizeStatus(item)" (document:pointerup)="DisableResizeStatus()"> drag </button>
+        <span class="component-resize-button" (pointerdown)="ActivateResizeStatus(item)" (document:pointerup)="DisableResizeStatus()">
+          <i class="bi-arrows-move"></i>
+        </span>
       <div class="modal fade" [id]="'DeleteModal_'+item.id" tabindex="-1" [attr.aria-labelledby]="item.id" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
