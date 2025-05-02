@@ -18,7 +18,7 @@ export class ResizableDirective {
     this.ResizeComponent(event.clientX, event.clientY);
   }
 
-  @HostListener('document:pointerdown', ['$event'])
+  @HostListener('pointerdown', ['$event'])
   OnLeftMouseButtonPress(){
     this.HideCursor();
   }
