@@ -1,4 +1,4 @@
-import {Directive, ElementRef, HostListener, Renderer2, OnInit, Input} from '@angular/core';
+import {Directive, ElementRef, HostListener, Renderer2, Input} from '@angular/core';
 import {ComponentSettingsModel} from "../Models/ComponentSettings.Model";
 
 @Directive({
@@ -6,28 +6,16 @@ import {ComponentSettingsModel} from "../Models/ComponentSettings.Model";
   selector: '[makeResizable]'
 })
 
-export class ResizableDirective implements OnInit {
-  private isResizing!: boolean;
+export class ResizableDirective {
   @Input() itemResizing!: any;
   @Input() canResize!: boolean;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {}
 
-  ngOnInit() {
-    this.isResizing = false;
-  }
-
   @HostListener('document:pointermove', ['$event'])
   OnMouseMove(event: MouseEvent): void {
     if(!this.canResize) return;
-
-    if(!this.isResizing){
-      this.isResizing = true;
-      this.ResizeComponent(event.offsetX, event.offsetY);
-      setTimeout(() => {
-        this.isResizing = false;
-      },200);
-    }
+    this.ResizeComponent(event.clientX, event.clientY);
   }
 
   @HostListener('document:pointerdown', ['$event'])
@@ -50,26 +38,37 @@ export class ResizableDirective implements OnInit {
   }
 
   private HideCursor(): void {
-      this.renderer.setStyle(document.body, 'user-select', 'none');
-      this.renderer.setStyle(document.body, '-webkit-user-select', 'none');
-      this.renderer.setStyle(document.body, '-moz-user-select', 'none');
-      this.renderer.setStyle(document.body, '-ms-user-select', 'none');
-      this.renderer.setStyle(document.body, 'cursor', 'none');
+    let body = document.body;
+    this.renderer.setStyle(body, 'user-select', 'none');
+    this.renderer.setStyle(body, '-webkit-user-select', 'none');
+    this.renderer.setStyle(body, '-moz-user-select', 'none');
+    this.renderer.setStyle(body, '-ms-user-select', 'none');
+    this.renderer.setStyle(body, 'cursor', 'none');
   }
 
   private ShowCursor(): void {
-    this.renderer.setStyle(document.body, 'user-select', 'auto');
-    this.renderer.setStyle(document.body, '-webkit-user-select', 'auto');
-    this.renderer.setStyle(document.body, '-moz-user-select', 'auto');
-    this.renderer.setStyle(document.body, '-ms-user-select', 'auto');
-    this.renderer.setStyle(document.body, 'cursor', 'auto');
+    let body = document.body;
+    this.renderer.setStyle(body, 'user-select', 'auto');
+    this.renderer.setStyle(body, '-webkit-user-select', 'auto');
+    this.renderer.setStyle(body, '-moz-user-select', 'auto');
+    this.renderer.setStyle(body, '-ms-user-select', 'auto');
+    this.renderer.setStyle(body, 'cursor', 'auto');
   }
 
   private AdjustComponentSize(value: number): number {
-    if (value <= 200) return 200;
-    if (value <= 400) return 300;
-    if (value <= 600) return 500;
-    if (value <= 800) return 700;
-    return 800;
+    switch(true){
+      case value > 200 && value <= 400:
+        return 300;
+      case value > 400 && value <= 600:
+        return 500;
+      case value > 600 && value <= 800:
+        return 700;
+      case value > 800 && value <= 800:
+        return 800;
+      case value > 800:
+        return 800;
+      default:
+        return 250;
+    }
   }
 }

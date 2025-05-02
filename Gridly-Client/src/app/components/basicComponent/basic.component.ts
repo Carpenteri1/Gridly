@@ -1,4 +1,4 @@
-import {Component, ElementRef, Injectable, OnInit, Renderer2} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Injectable, OnInit, Renderer2} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedService } from '../../Services/shared.service';
 import {HandleComponent} from "../modals/handleComponent/handle.component";
@@ -13,7 +13,7 @@ import {ResizableDirective} from "../../Directives/resizable.directive";
 })
 
 @Injectable({ providedIn: 'root' })
-export class BasicComponent implements OnInit {
+export class BasicComponent implements OnInit, AfterViewChecked {
   modalTitle = "Edit";
   modalButtonTheme ="btn btn-modal";
   modalButtonIcon = "bi bi-three-dots";
@@ -30,8 +30,11 @@ export class BasicComponent implements OnInit {
 
   ngOnInit() {
     this.sharedService.LoadComponentList();
-    //this.SetComponentLayout();  TODO fix
     this.resizableActive = false;
+  }
+
+  ngAfterViewChecked() {
+    this.SetComponentLayout();
   }
 
    ActivateResizeStatus(item: any): void {
@@ -41,7 +44,7 @@ export class BasicComponent implements OnInit {
 
     DisableResizeStatus(): void {
      this.resizableActive = false;
-     this.sharedService.EditComponent(this.resizingItem);
+     //this.sharedService.EditComponent(this.resizingItem); TODO add later
     }
 
   HaveIconSet(name:string | undefined):boolean{
@@ -59,8 +62,12 @@ export class BasicComponent implements OnInit {
     this.sharedService.RemoveComponent(id);
   }
 
-  /*private SetComponentLayout(){
-     this.render.setStyle(this.el.nativeElement, 'height', this.resizingItem.componentSettings.height + 'px');
-     this.resizingItem.setStyle(this.el.nativeElement, 'flex', '0 0 '+ this.resizingItem.componentSettings.width  + 'px');
-  }*/
+  SetComponentLayout() {
+    for (let index in this.sharedService.flexItems) {
+      let item = this.sharedService.flexItems[index];
+      let el = document.getElementById(item.id.toString()) == null ? this.el.nativeElement : document.getElementById(item.id.toString());
+      this.render.setStyle(el, 'height', item.componentSettings?.height + 'px');
+      this.render.setStyle(el, 'flex', '0 0 ' + item.componentSettings?.width + 'px');
+    }
+  }
 }

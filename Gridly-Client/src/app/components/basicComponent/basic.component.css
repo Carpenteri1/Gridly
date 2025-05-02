@@ -7,8 +7,6 @@
 }
 
 .component-style{
-  height: 200px;
-  flex: 0 0 160px;
   background-color: #141517;
   border-bottom: 20px;
   border-radius: 10px;
@@ -16,8 +14,9 @@
 }
 
 .component-resize-button{
-  text-align: right;
-  padding: 0 15px;
+  align-self: end;
+  padding: 15px 25px;
+  height: 60px;
 }
 
 .space-left{
