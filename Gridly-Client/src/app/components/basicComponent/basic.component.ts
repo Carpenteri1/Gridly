@@ -37,12 +37,12 @@ export class BasicComponent implements OnInit, AfterViewChecked {
     this.SetComponentLayout();
   }
 
-   ActivateResizeStatus(item: any): void {
+   ActivateResize(item: any): void {
     this.resizableActive = true;
     this.resizingItem = item;
    }
 
-    DisableResizeStatus(): void {
+    DisableResize(): void {
      this.resizableActive = false;
      //this.sharedService.EditComponent(this.resizingItem); TODO add later
     }
