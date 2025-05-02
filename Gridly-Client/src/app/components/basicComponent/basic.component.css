@@ -15,8 +15,10 @@
 
 .component-resize-button{
   align-self: end;
-  padding: 15px 25px;
-  height: 60px;
+  padding: 5px 5px;
+  height: 30px;
+  transform: rotate(90deg);
+  font-size: 12px;
 }
 
 .space-left{

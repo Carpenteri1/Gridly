@@ -23,7 +23,7 @@
           <p [hidden]="item.titleHidden" class="text-center" >{{item.name}}</p>
         </a>
         <span class="component-resize-button" (pointerdown)="ActivateResizeStatus(item)" (document:pointerup)="DisableResizeStatus()">
-          <i class="bi-arrows-move"></i>
+          <i class="bi bi-arrows-angle-expand"></i>
         </span>
       <div class="modal fade" [id]="'DeleteModal_'+item.id" tabindex="-1" [attr.aria-labelledby]="item.id" aria-hidden="true">
     <div class="modal-dialog">
