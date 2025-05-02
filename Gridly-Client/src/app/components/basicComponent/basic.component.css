@@ -7,12 +7,18 @@
 }
 
 .component-style{
-  height: 200px;
-  flex: 0 160px;
   background-color: #141517;
   border-bottom: 20px;
   border-radius: 10px;
   color: white;
+}
+
+.component-resize-button{
+  align-self: end;
+  padding: 5px 5px;
+  height: 30px;
+  transform: rotate(90deg);
+  font-size: 12px;
 }
 
 .space-left{

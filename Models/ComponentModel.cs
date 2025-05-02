@@ -11,5 +11,7 @@ public class ComponentModel
     [JsonPropertyName("imageUrl")] public string? ImageUrl { get; set; }
     [JsonPropertyName("titleHidden")] public bool? TitleHidden { get; set; }
     [JsonPropertyName("imageHidden")] public bool? ImageHidden { get; set; }
+    [JsonPropertyName("componentSettings")] public ComponentSettingsModel? ComponentSettings { get; set; }
 }
 public record IconModel(string name, string fileType, string base64Data);
+public record ComponentSettingsModel(int width, int height);

@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, Injectable, Input, ViewChild} from "@angular/core";
 import {IconModel} from "../../../Models/Icon.Model";
 import {ComponentModel} from "../../../Models/Component.Model";
-import {SharedService} from "../../../shared.service";
+import {SharedService} from '../../../Services/shared.service';
 import {FormsModule} from "@angular/forms";
 
 @Component({

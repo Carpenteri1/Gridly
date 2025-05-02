@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ComponentModel } from './Models/Component.Model';
+import { ComponentModel } from '../Models/Component.Model';
 import {catchError, Observable, throwError} from "rxjs";
-import {IconModel} from "./Models/Icon.Model";
-import {VersionModel} from "./Models/Version.Model";
+import {IconModel} from "../Models/Icon.Model";
+import {VersionModel} from "../Models/Version.Model";
 
 @Injectable({
   providedIn: 'root'

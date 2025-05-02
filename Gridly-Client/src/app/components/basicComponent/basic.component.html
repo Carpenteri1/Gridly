@@ -2,7 +2,7 @@
 
 <div *ngIf="!sharedService.isLoading" class="d-flex gap-3 space-left">
     <div *ngFor="let item of sharedService.flexItems"
-      class="d-flex m-2 flex-column component-style shadow">
+      class="d-flex m-2 flex-column component-style shadow" makeResizable [canResize]="resizableActive && resizingItem === item" [itemResizing]="item" [id]="item.id">
       <div class="d-flex justify-content-end">
         <handle-component-modal
           [windowTitle]="modalTitle"
@@ -17,11 +17,14 @@
         </handle-component-modal>
         <button data-bs-toggle="modal" [attr.data-bs-target]="'#DeleteModal_'+item.id" class="btn btn-modal"><i class="bi bi-x-lg"></i></button>
       </div>
-      <a [href]="item.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-100" target="_blank">
+        <a [style]="resizableActive ? 'cursor:none;':'cursor:auto;'" [href]="resizableActive ? null : item.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-100" target="_blank">
           <img [hidden]="!HaveIconSet(item.iconData?.name) || item.imageHidden" [src]="IconFilePath(item.iconData?.name,item.iconData?.fileType)" class="p-1 icon-size component-icon-center" alt="icon not found">
           <img [hidden]="!HaveImagUrlSet(item.imageUrl) || item.imageHidden" [src]="item.imageUrl" class="p-1 icon-size component-icon-center" alt="icon not found">
           <p [hidden]="item.titleHidden" class="text-center" >{{item.name}}</p>
-      </a>
+        </a>
+        <span class="component-resize-button" (pointerdown)="ActivateResize(item)" (document:pointerup)="DisableResize()">
+          <i class="bi bi-arrows-angle-expand"></i>
+        </span>
       <div class="modal fade" [id]="'DeleteModal_'+item.id" tabindex="-1" [attr.aria-labelledby]="item.id" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
