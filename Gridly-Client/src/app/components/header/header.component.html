@@ -4,11 +4,23 @@
       <strong>There is a new version available!&nbsp;&nbsp;<a target="_blank" href="https://github.com/Carpenteri1/Gridly/releases/tag/{{sharedService.version.name}}"> {{sharedService.version.name}} </a></strong>
     </div>
     <div class="space">
-        <mat-form-field color="accent">
-          <mat-label>Select</mat-label>
+        <mat-form-field>
+          <mat-label><mat-icon>menu</mat-icon></mat-label>
           <mat-select>
-            <mat-option value="one">First option</mat-option>
-            <mat-option value="two">Second option</mat-option>
+            <mat-option value="one">
+              <handle-component-modal
+                [windowTitle]="StringUtil.ModalAddTitle"
+                [btnTheme]="StringUtil.ModalAddButtonTheme"
+                [btnIcon]="StringUtil.ModalAddButtonIcon"
+                [btnTitle]="StringUtil.ModalAddTitle"
+                [modalLabelId]="StringUtil.ModalAddBindId"
+                [modalBindDropdownId]="StringUtil.ModalAddDropDownId"
+                [acceptButton]="AddComponent">
+              </handle-component-modal>
+            </mat-option>
+            <mat-option value="two">Edit</mat-option>x
+            <mat-option value="three">Drag</mat-option>
+            <mat-option value="Four">Resize</mat-option>
           </mat-select>
         </mat-form-field>
       <!--<handle-component-modal

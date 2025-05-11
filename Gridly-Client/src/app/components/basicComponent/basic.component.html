@@ -2,19 +2,19 @@
 <div *ngIf="!sharedService.isLoading" class="d-flex gap-3 space-left" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
   @for (item of sharedService.flexItems; track item)
   {
-  <div cdkDrag makeResizable [canResize]="resizableActive && itemComponent === item" [itemResizing]="item" [id]="item.id"
+  <div cdkDrag [cdkDragDisabled]="!canDrag" makeResizable [canResize]="resizableActive && itemComponent === item" [itemResizing]="item" [id]="item.id"
       class="d-flex m-2 flex-column shadow-sm component-style" >
       <div class="d-flex justify-content-end">
         <handle-component-modal
-          [windowTitle]="modalTitle"
-          [btnTheme]="modalButtonTheme"
-          [btnIcon]="modalButtonIcon"
-          [btnTitle]="modalTitle"
-          [modalLabelId]="modelBindId"
-          [modalBindDropdownId]="modalDropDownId"
+          [windowTitle]="StringUtil.ModalEditTitle"
+          [btnTheme]="StringUtil.ModalEditButtonTheme"
+          [btnIcon]="StringUtil.ModalEditButtonIcon"
+          [btnTitle]="StringUtil.ModalEditTitle"
+          [modalLabelId]="StringUtil.ModalEditBindId"
+          [modalBindDropdownId]="StringUtil.ModalEditDropDownId"
           [editMode]="true"
           [component]="item"
-          [acceptButton]="handleComponent.EditComponent">
+          [acceptButton]="EditComponent">
         </handle-component-modal>
         <button data-bs-toggle="modal" [attr.data-bs-target]="'#DeleteModal_'+item.id" class="btn btn-modal"><i class="bi bi-x-lg"></i></button>
       </div>
@@ -23,7 +23,7 @@
           <img [hidden]="!HaveImagUrlSet(item.imageUrl) || item.imageHidden" [src]="item.imageUrl" class="p-1 icon-size component-icon-center" alt="icon not found">
           <p [hidden]="item.titleHidden" class="text-center" >{{item.name}}</p>
         </a>
-        <span class="component-resize-button" (pointerdown)="ActivateResize(item)" (document:pointerup)="DisableResize()">
+        <span [hidden]="!canResize"  class="component-resize-button" (pointerdown)="ActivateResize(item)" (document:pointerup)="DisableResize()">
           <i class="bi bi-arrows-angle-expand"></i>
         </span>
       <div class="modal fade" [id]="'DeleteModal_'+item.id" tabindex="-1" [attr.aria-labelledby]="item.id" aria-hidden="true">

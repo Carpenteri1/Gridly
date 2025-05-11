@@ -1,39 +1,36 @@
 import { AfterViewChecked, Component, ElementRef, Injectable, OnInit, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedService } from '../../Services/shared.service';
-import { HandleComponent } from "../modals/handleComponent/handle.component";
 import { ResizableDirective } from "../../Directives/resizable.directive";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { HandleComponent } from "../modals/handleComponent/handle.component";
+import {StringUtil} from "../../Utils/string.util";
 
 @Component({
   selector: 'basic-component',
-  imports: [CdkDrag, CdkDropList, CommonModule, HandleComponent, ResizableDirective],
+  imports: [CdkDrag, CdkDropList, CommonModule, ResizableDirective, HandleComponent],
   templateUrl: './basic.component.html',
   standalone: true,
   styleUrls: ['./basic.component.css']
 })
 
-@Injectable({ providedIn: 'root' })
 export class BasicComponent implements OnInit, AfterViewChecked {
-  modalTitle = "Edit";
-  modalButtonTheme ="btn btn-modal";
-  modalButtonIcon = "bi bi-three-dots";
-  modelBindId = "editComponentModalLabel";
-  modalDropDownId = "editComponentModal";
-  public resizableActive = false;
-  public canMove = false;
-  public itemComponent!: any;
+  resizableActive!: boolean;
+  canResize!: boolean;
+  canDrag!: boolean;
+  itemComponent!: any;
 
   constructor(
     public sharedService: SharedService,
-    public handleComponent: HandleComponent,
     private render: Renderer2,
     private el: ElementRef) {}
 
   ngOnInit() {
     this.sharedService.LoadComponentList();
     this.resizableActive = false;// disabled for now
-    this.canMove = true; // enabled for now
+
+    this.canDrag = false; // enabled for now
+    this.canResize = false; // enabled for now
   }
 
   ngAfterViewChecked() {
@@ -41,7 +38,7 @@ export class BasicComponent implements OnInit, AfterViewChecked {
   }
 
    ActivateResize(item: any): void {
-   // this.resizableActive = true;
+    this.resizableActive = true;
     this.itemComponent = item;
    }
 
@@ -50,10 +47,9 @@ export class BasicComponent implements OnInit, AfterViewChecked {
      //this.sharedService.EditComponent(this.resizingItem); TODO add later
     }
 
-  ActivateMove(item: any): void {
-    //this.canMove = !this.canMove;
-    if(this.canMove) this.itemComponent = item;
-  }
+    EditComponent() {
+      this.sharedService.EditComponent(this.itemComponent,this.itemComponent.iconData);
+    }
 
   HaveIconSet(name:string | undefined):boolean{
     return name !== undefined && name != null && name !== "";
@@ -80,8 +76,9 @@ export class BasicComponent implements OnInit, AfterViewChecked {
   }
 
   Drop(event: CdkDragDrop<any[]>): void {
-    if (!this.canMove) return;
+    if (!this.canDrag) return;
     moveItemInArray(this.sharedService.flexItems, event.previousIndex, event.currentIndex);
   }
 
+  protected readonly StringUtil = StringUtil;
 }

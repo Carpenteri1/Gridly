@@ -1,17 +1,16 @@
-import {AfterViewInit, Component, ElementRef, Injectable, Input, ViewChild} from "@angular/core";
-import {IconModel} from "../../../Models/Icon.Model";
-import {ComponentModel} from "../../../Models/Component.Model";
-import {SharedService} from '../../../Services/shared.service';
-import {FormsModule} from "@angular/forms";
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
+import { IconModel } from "../../../Models/Icon.Model";
+import { ComponentModel } from "../../../Models/Component.Model";
+import { SharedService } from '../../../Services/shared.service';
+import { FormsModule } from "@angular/forms";
+import { RegexUtil } from "../../../Utils/regex.util";
 
 @Component({
     selector: 'handle-component-modal',
     templateUrl: './handle.component.html',
     styleUrl: './handle.component.css',
     standalone: true,
-    imports: [
-        FormsModule
-    ]
+    imports: [FormsModule]
 })
 
 @Injectable({ providedIn: 'root' })
@@ -20,31 +19,36 @@ export class HandleComponent implements AfterViewInit{
   imageUrlPattern = /^(https?:\/\/)(www\.)?(?!www\.)[A-Za-z0-9-.]+(\.|\:)[a-zA-Z0-9?=:\/&]{2,}$|^(data:image\/)(png|svg|jpeg|jpg|ico)(;base64,).*/;
   namePattern = /^[A-Za-z]+$/;
 
-  @Input() btnIcon: string ="";
-  @Input() btnTheme: string ="";
-  @Input() btnTitle: string ="";
-  @Input() windowTitle: string ="";
-  @Input() modalLabelId: string = "";
-  @Input() modalBindDropdownId: string = "";
-  @Input() editMode: boolean = false;
-  wantToUploadIcon = false;
-  wantToLinkToImage = false;
+  @Input() btnIcon!:string;
+  @Input() btnTheme!: string;
+  @Input() btnTitle!: string;
+  @Input() windowTitle!: string;
+  @Input() modalLabelId!: string;
+  @Input() modalBindDropdownId!: string;
+  @Input() editMode!: boolean;
+  wantToUploadIcon!: boolean;
+  wantToLinkToImage!: boolean;
 
-  iconData= new IconModel("","","");
-  @Input() component = new ComponentModel(0,"","", this.iconData,"",false,false);
+  iconData!: IconModel;
+  @Input() component!: ComponentModel;
   @Input() acceptButton!: () => void;
   @ViewChild('modalElement') modalRef!: ElementRef;
 
+  constructor(public sharedService: SharedService){}
+
   ngAfterViewInit() {
     //this.listenHideModal();//TODO bug fix
+  }
+
+  ngOnInit() {
+    this.wantToUploadIcon = false;
+    this.wantToLinkToImage = false;
   }
 
   triggerAccept() {
     if (this.acceptButton) {
       this.acceptButton();
     }
-  }
-  constructor(public sharedService: SharedService){
   }
 
   public AddComponent() {
@@ -82,11 +86,11 @@ export class HandleComponent implements AfterViewInit{
 
   get NoEmptyInputFields(): boolean{
     if(this.component.name !== "" && this.component.url !== "" &&
-      this.urlPattern.test(this.component.url) && this.namePattern.test(this.component.name) ){
+      RegexUtil.urlPattern.test(this.component.url) && RegexUtil.namePattern.test(this.component.name) ){
 
       if((this.iconData.name !== "" || this.editMode) || (this.component.imageUrl !== "" &&
         this.component.imageUrl !== undefined &&
-        this.imageUrlPattern.test(this.component.imageUrl))){
+        RegexUtil.imageUrlPattern.test(this.component.imageUrl))){
         return true;
       }
     }
