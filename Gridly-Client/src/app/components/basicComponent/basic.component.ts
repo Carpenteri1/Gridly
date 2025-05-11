@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SharedService } from '../../Services/shared.service';
 import { HandleComponent } from "../modals/handleComponent/handle.component";
 import { ResizableDirective } from "../../Directives/resizable.directive";
-import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'basic-component',
@@ -32,8 +32,8 @@ export class BasicComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.sharedService.LoadComponentList();
-    this.resizableActive = false;
-    this.canMove = true;
+    this.resizableActive = false;// disabled for now
+    this.canMove = true; // enabled for now
   }
 
   ngAfterViewChecked() {
