@@ -4,7 +4,14 @@
       <strong>There is a new version available!&nbsp;&nbsp;<a target="_blank" href="https://github.com/Carpenteri1/Gridly/releases/tag/{{sharedService.version.name}}"> {{sharedService.version.name}} </a></strong>
     </div>
     <div class="space">
-      <handle-component-modal
+        <mat-form-field color="accent">
+          <mat-label>Select</mat-label>
+          <mat-select>
+            <mat-option value="one">First option</mat-option>
+            <mat-option value="two">Second option</mat-option>
+          </mat-select>
+        </mat-form-field>
+      <!--<handle-component-modal
         [windowTitle]="modalTitle"
         [btnTheme]="modalButtonTheme"
         [btnIcon]="modalButtonIcon"
@@ -12,7 +19,7 @@
         [modalLabelId]="modelBindId"
         [modalBindDropdownId]="modalDropDownId"
         [acceptButton]="handleComponent.AddComponent">
-      </handle-component-modal>
+      </handle-component-modal>-->
     </div>
   </div>
 </div>
