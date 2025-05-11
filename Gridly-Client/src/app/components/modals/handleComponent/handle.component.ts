@@ -13,11 +13,7 @@ import { RegexUtil } from "../../../Utils/regex.util";
     imports: [FormsModule]
 })
 
-@Injectable({ providedIn: 'root' })
-export class HandleComponent implements AfterViewInit{
-  urlPattern = /^(https?:\/\/)(www\.)?(?!www\.)[A-Za-z0-9.]+(\.|\:)[a-zA-Z0-9]{2,}$/;
-  imageUrlPattern = /^(https?:\/\/)(www\.)?(?!www\.)[A-Za-z0-9-.]+(\.|\:)[a-zA-Z0-9?=:\/&]{2,}$|^(data:image\/)(png|svg|jpeg|jpg|ico)(;base64,).*/;
-  namePattern = /^[A-Za-z]+$/;
+export class HandleComponent implements AfterViewInit, OnInit {
 
   @Input() btnIcon!:string;
   @Input() btnTheme!: string;
