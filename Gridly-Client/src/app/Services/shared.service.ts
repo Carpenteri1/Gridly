@@ -20,7 +20,7 @@ export class SharedService{
   RemoveComponent(id: number) {
     this.http.delete<ComponentModel[]>(`${this.componentUrl}delete/${id}`)
       .subscribe(() => {
-          let index = this.GetId(id);
+          let index = this.GetIndex(id);
           if(index > -1){
             this.flexItems.splice(index, 1);
           }
@@ -121,7 +121,7 @@ export class SharedService{
       }));
   };
 
-    GetId(id: number): number{
+    GetIndex(id: number): number{
     return this.flexItems === null ? -1 : this.flexItems.findIndex(item => item.id == id);
   }
   GetComponentById(id: number): ComponentModel{

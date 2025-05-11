@@ -1,8 +1,9 @@
 <div *ngIf="sharedService.isLoading">Loading components...</div>
-
-<div *ngIf="!sharedService.isLoading" class="d-flex gap-3 space-left">
-    <div *ngFor="let item of sharedService.flexItems"
-      class="d-flex m-2 flex-column component-style shadow" makeResizable [canResize]="resizableActive && resizingItem === item" [itemResizing]="item" [id]="item.id">
+<div *ngIf="!sharedService.isLoading" class="d-flex gap-3 space-left" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
+  @for (item of sharedService.flexItems; track item)
+  {
+  <div cdkDrag makeResizable [canResize]="resizableActive && itemComponent === item" [itemResizing]="item" [id]="item.id"
+      class="d-flex m-2 flex-column shadow-sm component-style" >
       <div class="d-flex justify-content-end">
         <handle-component-modal
           [windowTitle]="modalTitle"
@@ -47,4 +48,5 @@
     </div>
   </div>
   </div>
+  }
 </div>

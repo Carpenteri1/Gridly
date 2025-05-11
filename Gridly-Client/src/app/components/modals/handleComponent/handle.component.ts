@@ -49,7 +49,7 @@ export class HandleComponent implements AfterViewInit{
 
   public AddComponent() {
     const newId = Math.floor(Math.random() * 100) + 1;
-    let index = this.sharedService.GetId(newId);
+    let index = this.sharedService.GetIndex(newId);
 
     if(index === -1 && this.component.name !== "" && this.component.url !== "" )
     {
