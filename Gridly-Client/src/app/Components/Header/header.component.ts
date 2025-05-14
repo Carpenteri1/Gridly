@@ -1,12 +1,13 @@
 import { Component, OnInit } from "@angular/core";
-import { SharedService } from '../../Services/shared.service';
 import { CommonModule } from "@angular/common";
 import { MatFormField, MatLabel } from "@angular/material/input";
 import { MatOption } from "@angular/material/core";
 import { MatSelect } from "@angular/material/select";
 import { MatIcon } from "@angular/material/icon";
-import { HandleComponent } from "../modals/handleComponent/handle.component";
-import { StringUtil } from "../../Utils/string.util";
+import { HandleComponent } from "../Modals/HandleComponents/handle.component"
+import { TextStringsUtil } from "../../Utils/text.strings.util";
+import { VersionEndpointService } from "../../Services/version.endpoint.service";
+import { UrlStringsUtil } from "../../Utils/url.strings.util";
 
 @Component({
   selector: 'header-component',
@@ -17,17 +18,15 @@ import { StringUtil } from "../../Utils/string.util";
 })
 
 export class HeaderComponent implements OnInit{
-  protected readonly StringUtil = StringUtil;
-  constructor(public sharedService: SharedService) {}
+  protected readonly StringUtil = TextStringsUtil;
+  constructor(public versionEndpointService: VersionEndpointService) {}
 
   ngOnInit() {
-    this.sharedService.CheckForNewRelease();
-    if(this.sharedService.version.name === ''){
-      this.sharedService.CheckForCurrentRelease();
+    this.versionEndpointService.CheckForNewRelease();
+    if(this.versionEndpointService.GetVersionName() === ''){
+      this.versionEndpointService.CheckForCurrentRelease();
     }
   }
 
-  AddComponent() {
-    this.sharedService.AddComponent(this.sharedService.flexItems[0]);
-  }
+  protected readonly UrlStringsUtil = UrlStringsUtil;
 }

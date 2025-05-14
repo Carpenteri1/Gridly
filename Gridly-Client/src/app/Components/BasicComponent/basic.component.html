@@ -1,6 +1,6 @@
-<div *ngIf="sharedService.isLoading">Loading components...</div>
-<div *ngIf="!sharedService.isLoading" class="d-flex gap-3 space-left" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
-  @for (item of sharedService.flexItems; track item)
+<div *ngIf="endpointService.isLoading">Loading components...</div>
+<div *ngIf="!endpointService.isLoading" class="d-flex gap-3 space-left" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
+  @for (item of itemComponents; track item)
   {
   <div cdkDrag [cdkDragDisabled]="!canDrag" makeResizable [canResize]="resizableActive && itemComponent === item" [itemResizing]="item" [id]="item.id"
       class="d-flex m-2 flex-column shadow-sm component-style" >

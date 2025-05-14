@@ -1,10 +1,12 @@
-import { AfterViewChecked, Component, ElementRef, Injectable, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedService } from '../../Services/shared.service';
+import { ComponentEndpointService } from '../../Services/component.endpoint.service';
 import { ResizableDirective } from "../../Directives/resizable.directive";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { HandleComponent } from "../modals/handleComponent/handle.component";
-import {StringUtil} from "../../Utils/string.util";
+import { HandleComponent } from "../Modals/HandleComponents/handle.component";
+import { TextStringsUtil } from "../../Utils/text.strings.util";
+import { ComponentModel } from "../../Models/Component.Model";
+import { Observable } from "rxjs";
 
 @Component({
   selector: 'basic-component',
@@ -18,17 +20,20 @@ export class BasicComponent implements OnInit, AfterViewChecked {
   resizableActive!: boolean;
   canResize!: boolean;
   canDrag!: boolean;
-  itemComponent!: any;
+  itemComponent!: ComponentModel;
+  itemComponents$!: Observable<ComponentModel[]>;
+  itemComponents!: ComponentModel[];
 
   constructor(
-    public sharedService: SharedService,
+    public endpointService: ComponentEndpointService,
     private render: Renderer2,
     private el: ElementRef) {}
 
   ngOnInit() {
-    this.sharedService.LoadComponentList();
-    this.resizableActive = false;// disabled for now
+    this.itemComponents$ = this.endpointService.GetComponents();
+    this.itemComponents$.subscribe(data => this.itemComponents = data);
 
+    this.resizableActive = false;// disabled for now
     this.canDrag = false; // enabled for now
     this.canResize = false; // enabled for now
   }
@@ -48,7 +53,7 @@ export class BasicComponent implements OnInit, AfterViewChecked {
     }
 
     EditComponent() {
-      this.sharedService.EditComponent(this.itemComponent,this.itemComponent.iconData);
+      this.endpointService.EditComponent(this.itemComponent,this.itemComponent.iconData);
     }
 
   HaveIconSet(name:string | undefined):boolean{
@@ -63,12 +68,12 @@ export class BasicComponent implements OnInit, AfterViewChecked {
   }
 
   Remove(id: number): void {
-    this.sharedService.RemoveComponent(id);
+    this.endpointService.RemoveComponent(id);
   }
 
   SetComponentLayout() {
-    for (let index in this.sharedService.flexItems) {
-      let item = this.sharedService.flexItems[index];
+    for (let index in this.itemComponents) {
+      let item = this.itemComponents[index];
       let el = document.getElementById(item.id.toString()) == null ? this.el.nativeElement : document.getElementById(item.id.toString());
       this.render.setStyle(el, 'height', item.componentSettings?.height + 'px');
       this.render.setStyle(el, 'flex', '0 0 ' + item.componentSettings?.width + 'px');
@@ -77,8 +82,8 @@ export class BasicComponent implements OnInit, AfterViewChecked {
 
   Drop(event: CdkDragDrop<any[]>): void {
     if (!this.canDrag) return;
-    moveItemInArray(this.sharedService.flexItems, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.itemComponents, event.previousIndex, event.currentIndex);
   }
 
-  protected readonly StringUtil = StringUtil;
+  protected readonly StringUtil = TextStringsUtil;
 }

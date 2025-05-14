@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
 import { IconModel } from "../../../Models/Icon.Model";
 import { ComponentModel } from "../../../Models/Component.Model";
-import { SharedService } from '../../../Services/shared.service';
 import { FormsModule } from "@angular/forms";
-import { RegexUtil } from "../../../Utils/regex.util";
+import { RegexStringsUtil } from "../../../Utils/regex.strings.util";
+import { ComponentEndpointService } from "../../../Services/component.endpoint.service";
 
 @Component({
     selector: 'handle-component-modal',
@@ -30,7 +30,7 @@ export class HandleComponent implements AfterViewInit, OnInit {
   @Input() acceptButton!: () => void;
   @ViewChild('modalElement') modalRef!: ElementRef;
 
-  constructor(public sharedService: SharedService){}
+  constructor(public endpointService: ComponentEndpointService){}
 
   ngAfterViewInit() {
     //this.listenHideModal();//TODO bug fix
@@ -39,6 +39,7 @@ export class HandleComponent implements AfterViewInit, OnInit {
   ngOnInit() {
     this.wantToUploadIcon = false;
     this.wantToLinkToImage = false;
+    this.component = new ComponentModel(0,"","")
   }
 
   triggerAccept() {
@@ -49,15 +50,15 @@ export class HandleComponent implements AfterViewInit, OnInit {
 
   public AddComponent() {
     const newId = Math.floor(Math.random() * 100) + 1;
-    let index = this.sharedService.GetIndex(newId);
+    let index = this.endpointService.GetIndex(newId);
 
-    if(index === -1 && this.component.name !== "" && this.component.url !== "" )
+    if(index === -1 && this.component.name !== "" && this.component.url !== "")
     {
       if(this.iconData.base64Data !== "" && this.iconData.name !== "" && this.iconData.fileType !== ""){
-        this.sharedService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url, this.iconData, undefined, false,false));
+        this.endpointService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url, this.iconData, undefined, false,false));
       }
       if(this.component.imageUrl !== ""){
-        this.sharedService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url,undefined, this.component.imageUrl, false, false,));
+        this.endpointService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url,undefined, this.component.imageUrl, false, false,));
       }
       this.ResetFormData();
     }
@@ -66,14 +67,14 @@ export class HandleComponent implements AfterViewInit, OnInit {
   }
 
   public EditComponent(){
-        this.sharedService.EditComponent(this.component, this.iconData);
+        this.endpointService.EditComponent(this.component, this.iconData);
   }
 
   public CanEditComponent() {
     return
       this.editMode &&
       this.NoEmptyInputFields &&
-      JSON.stringify(this.sharedService.GetComponentById) !== JSON.stringify(this.component);
+      JSON.stringify(this.endpointService.GetComponentById) !== JSON.stringify(this.component);
   }
 
   get CanAddComponent() :boolean{
@@ -82,11 +83,11 @@ export class HandleComponent implements AfterViewInit, OnInit {
 
   get NoEmptyInputFields(): boolean{
     if(this.component.name !== "" && this.component.url !== "" &&
-      RegexUtil.urlPattern.test(this.component.url) && RegexUtil.namePattern.test(this.component.name) ){
+      RegexStringsUtil.urlPattern.test(this.component.url) && RegexStringsUtil.namePattern.test(this.component.name) ){
 
       if((this.iconData.name !== "" || this.editMode) || (this.component.imageUrl !== "" &&
         this.component.imageUrl !== undefined &&
-        RegexUtil.imageUrlPattern.test(this.component.imageUrl))){
+        RegexStringsUtil.imageUrlPattern.test(this.component.imageUrl))){
         return true;
       }
     }

@@ -1,7 +1,7 @@
 <div class="d-flex gap-3 justify-content-end">
   <div class="d-flex m-2 flex-row">
-    <div class="version-text text-white-50 m-2" *ngIf="sharedService.version.newRelease">
-      <strong>There is a new version available!&nbsp;&nbsp;<a target="_blank" href="https://github.com/Carpenteri1/Gridly/releases/tag/{{sharedService.version.name}}"> {{sharedService.version.name}} </a></strong>
+    <div class="version-text text-white-50 m-2" *ngIf="versionEndpointService.HasNewRelease()">
+      <strong>There is a new version available!&nbsp;&nbsp;<a target="_blank" href="{{UrlStringsUtil.GitHubReleaseURL+versionEndpointService.GetVersionName()}}"> {{versionEndpointService.GetVersionName()}} </a></strong>
     </div>
     <div class="space">
         <mat-form-field>
@@ -14,13 +14,12 @@
                 [btnIcon]="StringUtil.ModalAddButtonIcon"
                 [btnTitle]="StringUtil.ModalAddTitle"
                 [modalLabelId]="StringUtil.ModalAddBindId"
-                [modalBindDropdownId]="StringUtil.ModalAddDropDownId"
-                [acceptButton]="AddComponent">
+                [modalBindDropdownId]="StringUtil.ModalAddDropDownId">
               </handle-component-modal>
             </mat-option>
-            <mat-option value="two">Edit</mat-option>x
-            <mat-option value="three">Drag</mat-option>
-            <mat-option value="Four">Resize</mat-option>
+            <mat-option value="two">{{ StringUtil.MenuDropDownEditTitle }}</mat-option>x
+            <mat-option value="three">{{ StringUtil.MenuDropDownDragTitle }}</mat-option>
+            <mat-option value="Four">{{ StringUtil.MenuDropDownResizeTitle }}</mat-option>
           </mat-select>
         </mat-form-field>
     </div>

@@ -1,9 +1,8 @@
-<div class="dropdown">
-  <button type="button" [class]="btnTheme" data-bs-toggle="modal" [attr.data-bs-target]="'#modalBindDropdownId_'+component.id">
-    <i [class]="btnIcon"></i>
-  </button>
-</div>
-
+  <div class="dropdown">
+    <button type="button" [class]="btnTheme" data-bs-toggle="modal" [attr.data-bs-target]="'#modalBindDropdownId_'+component.id">
+      <i [class]="btnIcon"></i>
+    </button>
+  </div>
 <div class="modal fade" #modalElement [id]="'modalBindDropdownId_'+component.id" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
