@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { VersionModel } from "../Models/Version.Model";
-import { UrlStringsUtil } from "../Utils/url.strings.util";
+import { VersionModel } from "../../Models/Version.Model";
+import { UrlStringsUtil } from "../../Constants/url.strings.util";
 
 @Injectable({
   providedIn: 'root'

@@ -5,17 +5,6 @@
   <div cdkDrag [cdkDragDisabled]="!canDrag" makeResizable [canResize]="resizableActive && itemComponent === item" [itemResizing]="item" [id]="item.id"
       class="d-flex m-2 flex-column shadow-sm component-style" >
       <div class="d-flex justify-content-end">
-        <handle-component-modal
-          [windowTitle]="StringUtil.ModalEditTitle"
-          [btnTheme]="StringUtil.ModalEditButtonTheme"
-          [btnIcon]="StringUtil.ModalEditButtonIcon"
-          [btnTitle]="StringUtil.ModalEditTitle"
-          [modalLabelId]="StringUtil.ModalEditBindId"
-          [modalBindDropdownId]="StringUtil.ModalEditDropDownId"
-          [editMode]="true"
-          [component]="item"
-          [acceptButton]="EditComponent">
-        </handle-component-modal>
         <button data-bs-toggle="modal" [attr.data-bs-target]="'#DeleteModal_'+item.id" class="btn btn-modal"><i class="bi bi-x-lg"></i></button>
       </div>
         <a [style]="resizableActive ? 'cursor:none;':'cursor:auto;'" [href]="resizableActive ? null : item.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-100" target="_blank">

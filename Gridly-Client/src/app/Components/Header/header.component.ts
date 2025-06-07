@@ -4,29 +4,37 @@ import { MatFormField, MatLabel } from "@angular/material/input";
 import { MatOption } from "@angular/material/core";
 import { MatSelect } from "@angular/material/select";
 import { MatIcon } from "@angular/material/icon";
-import { HandleComponent } from "../Modals/HandleComponents/handle.component"
-import { TextStringsUtil } from "../../Utils/text.strings.util";
-import { VersionEndpointService } from "../../Services/version.endpoint.service";
-import { UrlStringsUtil } from "../../Utils/url.strings.util";
+import { TextStringsUtil } from "../../Constants/text.strings.util";
+import { VersionEndpointService } from "../../Services/endpoints/version.endpoint.service";
+import { UrlStringsUtil } from "../../Constants/url.strings.util";
+import { ModalService } from "../../Services/modal.service";
+import { FormType } from "../../Types/form.types.enum";
 
 @Component({
   selector: 'header-component',
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   standalone: true,
-  imports: [CommonModule, HandleComponent, MatFormField, MatOption, MatSelect, MatLabel, MatIcon]
+  imports: [CommonModule, MatFormField, MatOption, MatSelect, MatLabel, MatIcon]
 })
 
-export class HeaderComponent implements OnInit{
+export class HeaderComponent implements OnInit {
   protected readonly StringUtil = TextStringsUtil;
-  constructor(public versionEndpointService: VersionEndpointService) {}
+  type!: FormType;
+  constructor(public versionEndpointService: VersionEndpointService, public modalService: ModalService) {
+  }
 
   ngOnInit() {
     this.versionEndpointService.CheckForNewRelease();
-    if(this.versionEndpointService.GetVersionName() === ''){
+    if (this.versionEndpointService.GetVersionName() === '') {
       this.versionEndpointService.CheckForCurrentRelease();
     }
   }
+  SetFromType(type: FormType): void {
+    this.type = type;
+    this.modalService.GetModalType(type);
+ }
 
   protected readonly UrlStringsUtil = UrlStringsUtil;
+  protected readonly FormType = FormType;
 }

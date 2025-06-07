@@ -2,8 +2,9 @@ import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from "
 import { IconModel } from "../../../Models/Icon.Model";
 import { ComponentModel } from "../../../Models/Component.Model";
 import { FormsModule } from "@angular/forms";
-import { RegexStringsUtil } from "../../../Utils/regex.strings.util";
-import { ComponentEndpointService } from "../../../Services/component.endpoint.service";
+import { RegexStringsUtil } from "../../../Constants/regex.strings.util";
+import { ComponentEndpointService } from "../../../Services/endpoints/component.endpoint.service";
+import {FormType} from "../../../Types/form.types.enum";
 
 @Component({
     selector: 'handle-component-modal',
@@ -15,13 +16,13 @@ import { ComponentEndpointService } from "../../../Services/component.endpoint.s
 
 export class HandleComponent implements AfterViewInit, OnInit {
 
-  @Input() btnIcon!:string;
+  @Input() buttonTitle!:string;
   @Input() btnTheme!: string;
   @Input() btnTitle!: string;
   @Input() windowTitle!: string;
   @Input() modalLabelId!: string;
   @Input() modalBindDropdownId!: string;
-  @Input() editMode!: boolean;
+  @Input() type!: FormType;
   wantToUploadIcon!: boolean;
   wantToLinkToImage!: boolean;
 
@@ -55,10 +56,10 @@ export class HandleComponent implements AfterViewInit, OnInit {
     if(index === -1 && this.component.name !== "" && this.component.url !== "")
     {
       if(this.iconData.base64Data !== "" && this.iconData.name !== "" && this.iconData.fileType !== ""){
-        this.endpointService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url, this.iconData, undefined, false,false));
+        this.endpointService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url, undefined, false,false, this.iconData));
       }
       if(this.component.imageUrl !== ""){
-        this.endpointService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url,undefined, this.component.imageUrl, false, false,));
+        this.endpointService.AddComponent(new ComponentModel(newId, this.component.name, this.component.url, this.component.imageUrl, false, false,));
       }
       this.ResetFormData();
     }
@@ -72,7 +73,7 @@ export class HandleComponent implements AfterViewInit, OnInit {
 
   public CanEditComponent() {
     return
-      this.editMode &&
+      this.type == FormType.Edit &&
       this.NoEmptyInputFields &&
       JSON.stringify(this.endpointService.GetComponentById) !== JSON.stringify(this.component);
   }
@@ -82,10 +83,12 @@ export class HandleComponent implements AfterViewInit, OnInit {
   }
 
   get NoEmptyInputFields(): boolean{
-    if(this.component.name !== "" && this.component.url !== "" &&
-      RegexStringsUtil.urlPattern.test(this.component.url) && RegexStringsUtil.namePattern.test(this.component.name) ){
+    if(this.component.name !== "" && this.component.url !== ""
+      //&&
+     // RegexStringsUtil.urlPattern.test(this.component.url) && RegexStringsUtil.namePattern.test(this.component.name)
+  ){
 
-      if((this.iconData.name !== "" || this.editMode) || (this.component.imageUrl !== "" &&
+      if((this.iconData.name !== "" || this.type == FormType.Edit) || (this.component.imageUrl !== "" &&
         this.component.imageUrl !== undefined &&
         RegexStringsUtil.imageUrlPattern.test(this.component.imageUrl))){
         return true;
@@ -162,4 +165,5 @@ export class HandleComponent implements AfterViewInit, OnInit {
       this.ResetFormData();
     });
   }*/
+  protected readonly FormType = FormType;
 }

@@ -1,6 +1,6 @@
   <div class="dropdown">
     <button type="button" [class]="btnTheme" data-bs-toggle="modal" [attr.data-bs-target]="'#modalBindDropdownId_'+component.id">
-      <i [class]="btnIcon"></i>
+      {{btnTitle}}
     </button>
   </div>
 <div class="modal fade" #modalElement [id]="'modalBindDropdownId_'+component.id" tabindex="-1">
@@ -8,7 +8,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" [id]="modalLabelId" [title]="windowTitle">{{windowTitle}}</h5>
-        @if (editMode)
+        @if (type == FormType.Edit)
           {
             <button type="button" class="btn-close" data-bs-dismiss="modal" ></button>
           }
@@ -18,7 +18,7 @@
       </div>
       <div class="modal-body">
         <form>
-          @if (editMode)
+          @if (type == FormType.Edit)
           {
             <div class="form-group p-2">
               <div class="form-check form-switch form-check-inline">
@@ -64,7 +64,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        @if (editMode)
+        @if (type == FormType.Edit)
         {
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         }

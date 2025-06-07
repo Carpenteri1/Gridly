@@ -1,5 +1,5 @@
 .d-flex{
-    background-color: #141517;
+    /*background-color: #141517;*/
 }
 .flex-row-reverse{
     padding-right: 1em;
@@ -13,4 +13,9 @@
 
 .space{
   padding-left: 20px;
+}
+
+.modal-dropdown-btn-theme{
+  border:none;
+  background: none;
 }

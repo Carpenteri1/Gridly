@@ -7,19 +7,10 @@
         <mat-form-field>
           <mat-label><mat-icon>menu</mat-icon></mat-label>
           <mat-select>
-            <mat-option value="one">
-              <handle-component-modal
-                [windowTitle]="StringUtil.ModalAddTitle"
-                [btnTheme]="StringUtil.ModalAddButtonTheme"
-                [btnIcon]="StringUtil.ModalAddButtonIcon"
-                [btnTitle]="StringUtil.ModalAddTitle"
-                [modalLabelId]="StringUtil.ModalAddBindId"
-                [modalBindDropdownId]="StringUtil.ModalAddDropDownId">
-              </handle-component-modal>
-            </mat-option>
-            <mat-option value="two">{{ StringUtil.MenuDropDownEditTitle }}</mat-option>x
-            <mat-option value="three">{{ StringUtil.MenuDropDownDragTitle }}</mat-option>
-            <mat-option value="Four">{{ StringUtil.MenuDropDownResizeTitle }}</mat-option>
+            <mat-option value="one" (click)="SetFromType(FormType.Add)">{{ StringUtil.MenuDropDownAddTitle }}</mat-option>
+            <mat-option value="two" (click)="SetFromType(FormType.Edit)">{{ StringUtil.MenuDropDownEditTitle }}</mat-option>
+            <mat-option value="three" (click)="SetFromType(FormType.Drag)">{{ StringUtil.MenuDropDownDragTitle }}</mat-option>
+            <mat-option value="Four" (click)="SetFromType(FormType.Resize)">{{ StringUtil.MenuDropDownResizeTitle }}</mat-option>
           </mat-select>
         </mat-form-field>
     </div>

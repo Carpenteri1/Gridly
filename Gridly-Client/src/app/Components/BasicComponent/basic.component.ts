@@ -1,22 +1,23 @@
 import { AfterViewChecked, Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ComponentEndpointService } from '../../Services/component.endpoint.service';
+import { ComponentEndpointService } from '../../Services/endpoints/component.endpoint.service';
 import { ResizableDirective } from "../../Directives/resizable.directive";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { HandleComponent } from "../Modals/HandleComponents/handle.component";
-import { TextStringsUtil } from "../../Utils/text.strings.util";
+import { TextStringsUtil } from "../../Constants/text.strings.util";
 import { ComponentModel } from "../../Models/Component.Model";
 import { Observable } from "rxjs";
+import {FormType} from "../../Types/form.types.enum";
 
 @Component({
   selector: 'basic-component',
-  imports: [CdkDrag, CdkDropList, CommonModule, ResizableDirective, HandleComponent],
+  imports: [CdkDrag, CdkDropList, CommonModule, ResizableDirective],
   templateUrl: './basic.component.html',
   standalone: true,
   styleUrls: ['./basic.component.css']
 })
 
 export class BasicComponent implements OnInit, AfterViewChecked {
+  type!: FormType;
   resizableActive!: boolean;
   canResize!: boolean;
   canDrag!: boolean;
