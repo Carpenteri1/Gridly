@@ -1,20 +1,22 @@
 export class TextStringsUtil {
 
-  static readonly ModalEditTitle = "Edit";
-  static readonly ModalEditAcceptBtnTitle = "Edit";
-  static readonly ModalEditCloseBtnTitle = "Cancel";
+  static readonly ModalEditComponentTitle = "Edit";
+  static readonly ModalEditComponentAcceptBtnTitle = "Edit";
+  static readonly ModalEditComponentCloseBtnTitle = "Cancel";
+  static readonly ModalEditComponentInputNameTitle = "Edit Title";
+  static readonly ModalEditComponentInputUrlTitle = "Edit http://127.0.0.1";
+  static readonly ModalEditComponentDropDownOptionTitleOne = "Upload image";
+  static readonly ModalEditComponentDropDownOptionTitleTwo = "Link to image";
+  static readonly ModalEditComponentLinkToImageTitle = "Link to image"
 
-  static readonly ModalEditButtonTheme ="modal-dropdown-btn-theme";
-  static readonly ModalEditBindId = "editComponentModalLabel";
-  static readonly ModalEditDropDownId = "editComponentModal";
-
-  static readonly ModalAddButtonTheme ="modal-dropdown-btn-theme";
-  static readonly ModalAddBindId = "addComponentModalLabel";
-  static readonly ModalAddDropDownId = "addComponentModal";
-
-  static readonly ModalAddTitle = "Add";
-  static readonly ModalAddAcceptBtnTitle = "Add";
-  static readonly ModalAddCloseBtnTitle = "Cancel";
+  static readonly ModalAddComponentTitle = "Add";
+  static readonly ModalAddComponentAcceptBtnTitle = "Add";
+  static readonly ModalAddComponentCloseBtnTitle = "Cancel";
+  static readonly ModalAddComponentInputNameTitle = "Title";
+  static readonly ModalAddComponentInputUrlTitle = "http://127.0.0.1";
+  static readonly ModalAddComponentDropDownOptionTitleOne = "Upload image";
+  static readonly ModalAddComponentDropDownOptionTitleTwo = "Link to image";
+  static readonly ModalAddComponenLinkToImageTitle = "Link to image"
 
   static readonly MenuDropDownAddTitle = "Add";
   static readonly MenuDropDownEditTitle = "Edit";

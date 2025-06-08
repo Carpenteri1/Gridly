@@ -1,10 +1,10 @@
-<div *ngIf="endpointService.isLoading">Loading components...</div>
-<div *ngIf="!endpointService.isLoading" class="d-flex gap-3 space-left" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
-  @for (item of itemComponents; track item)
+<div class="d-flex gap-3 space-left" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
+  @for (item of this.componentService.components; track item)
   {
-  <div cdkDrag [cdkDragDisabled]="!canDrag" makeResizable [canResize]="resizableActive && itemComponent === item" [itemResizing]="item" [id]="item.id"
-      class="d-flex m-2 flex-column shadow-sm component-style" >
+  <div cdkDrag [cdkDragDisabled]="!item.dragMode" makeResizable [canResize]="resizableActive && component === item" [itemResizing]="item" [id]="item.id"
+       class="d-flex m-2 flex-column shadow-sm component-style" >
       <div class="d-flex justify-content-end">
+        <button [hidden]="!componentService.editMode" (click)="this.modalService.GetModalType(FormType.Edit,item)">...</button>
         <button data-bs-toggle="modal" [attr.data-bs-target]="'#DeleteModal_'+item.id" class="btn btn-modal"><i class="bi bi-x-lg"></i></button>
       </div>
         <a [style]="resizableActive ? 'cursor:none;':'cursor:auto;'" [href]="resizableActive ? null : item.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-100" target="_blank">
@@ -12,7 +12,7 @@
           <img [hidden]="!HaveImagUrlSet(item.imageUrl) || item.imageHidden" [src]="item.imageUrl" class="p-1 icon-size component-icon-center" alt="icon not found">
           <p [hidden]="item.titleHidden" class="text-center" >{{item.name}}</p>
         </a>
-        <span [hidden]="!canResize"  class="component-resize-button" (pointerdown)="ActivateResize(item)" (document:pointerup)="DisableResize()">
+        <span [hidden]="!item.resizeMode"  class="component-resize-button" (pointerdown)="ActivateResize(item)" (document:pointerup)="DisableResize()">
           <i class="bi bi-arrows-angle-expand"></i>
         </span>
       <div class="modal fade" [id]="'DeleteModal_'+item.id" tabindex="-1" [attr.aria-labelledby]="item.id" aria-hidden="true">
@@ -30,7 +30,7 @@
           </form>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="Remove(item.id)">Confirm</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="this.componentService.Remove(item.id)">Confirm</button>
           </div>
         </div>
       </div>

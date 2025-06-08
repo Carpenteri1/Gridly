@@ -1,9 +1,9 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
-import { IconModel } from "../../../Models/Icon.Model";
-import { ComponentModel } from "../../../Models/Component.Model";
-import { FormsModule } from "@angular/forms";
-import { RegexStringsUtil } from "../../../Constants/regex.strings.util";
-import { ComponentEndpointService } from "../../../Services/endpoints/component.endpoint.service";
+/*import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
+import {IIconModel} from "../../../Models/IIcon.Model";
+import {IComponentModel} from "../../../Models/IComponent.Model";
+import {FormsModule} from "@angular/forms";
+import {RegexStringsUtil} from "../../../Constants/regex.strings.util";
+import {ComponentEndpointService} from "../../../Services/endpoints/component.endpoint.service";
 import {FormType} from "../../../Types/form.types.enum";
 
 @Component({
@@ -26,8 +26,8 @@ export class HandleComponent implements AfterViewInit, OnInit {
   wantToUploadIcon!: boolean;
   wantToLinkToImage!: boolean;
 
-  iconData!: IconModel;
-  @Input() component!: ComponentModel;
+  iconData!: IIconModel;
+  @Input() component!: IComponentModel;
   @Input() acceptButton!: () => void;
   @ViewChild('modalElement') modalRef!: ElementRef;
 
@@ -40,7 +40,7 @@ export class HandleComponent implements AfterViewInit, OnInit {
   ngOnInit() {
     this.wantToUploadIcon = false;
     this.wantToLinkToImage = false;
-    this.component = new ComponentModel(0,"","")
+    this.component = {Id: 0,"",""} as IComponentModel;
   }
 
   triggerAccept() {
@@ -164,6 +164,7 @@ export class HandleComponent implements AfterViewInit, OnInit {
     this.modalRef.nativeElement.addEventListener('blur', () => {
       this.ResetFormData();
     });
-  }*/
+  }*//*
   protected readonly FormType = FormType;
 }
+*/

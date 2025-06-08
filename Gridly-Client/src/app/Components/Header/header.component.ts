@@ -8,7 +8,8 @@ import { TextStringsUtil } from "../../Constants/text.strings.util";
 import { VersionEndpointService } from "../../Services/endpoints/version.endpoint.service";
 import { UrlStringsUtil } from "../../Constants/url.strings.util";
 import { ModalService } from "../../Services/modal.service";
-import { FormType } from "../../Types/form.types.enum";
+import { ModalFormType } from "../../Types/modalForm.types.enum";
+import {ComponentService} from "../../Services/component.service";
 
 @Component({
   selector: 'header-component',
@@ -20,9 +21,10 @@ import { FormType } from "../../Types/form.types.enum";
 
 export class HeaderComponent implements OnInit {
   protected readonly StringUtil = TextStringsUtil;
-  type!: FormType;
-  constructor(public versionEndpointService: VersionEndpointService, public modalService: ModalService) {
-  }
+  constructor(
+    public versionEndpointService: VersionEndpointService,
+    public modalService: ModalService,
+    public componentService: ComponentService) {}
 
   ngOnInit() {
     this.versionEndpointService.CheckForNewRelease();
@@ -30,11 +32,7 @@ export class HeaderComponent implements OnInit {
       this.versionEndpointService.CheckForCurrentRelease();
     }
   }
-  SetFromType(type: FormType): void {
-    this.type = type;
-    this.modalService.GetModalType(type);
- }
 
   protected readonly UrlStringsUtil = UrlStringsUtil;
-  protected readonly FormType = FormType;
+  protected readonly FormType = ModalFormType;
 }

@@ -1,38 +1,38 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { ComponentModel } from '../../Models/Component.Model';
-import { Observable } from "rxjs";
-import { IconModel } from "../../Models/Icon.Model";
-import { UrlStringsUtil } from "../../Constants/url.strings.util";
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from "rxjs";
+import {UrlStringsUtil} from "../../Constants/url.strings.util";
+import {IComponentModel} from "../../Models/IComponent.Model";
+import {IIconModel} from "../../Models/IIcon.Model";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class ComponentEndpointService{
-  private flexItems: ComponentModel[] = [];
+  private flexItems: IComponentModel[] = [];
   isLoading = false;
 
   constructor(private http: HttpClient) {}
 
   RemoveComponent(id: number) {
-    this.http.delete<ComponentModel>(UrlStringsUtil.ComponentUrlDelete+id);
+    this.http.delete<IComponentModel>(UrlStringsUtil.ComponentUrlDelete+id);
   }
 
-  GetComponents(): Observable<ComponentModel[]> {
-    return this.http.get<ComponentModel[]>(UrlStringsUtil.ComponentUrlGet);
+  GetComponents(): Observable<IComponentModel[]> {
+    return this.http.get<IComponentModel[]>(UrlStringsUtil.ComponentUrlGet);
   }
 
-  GetComponentById(id: number): Observable<ComponentModel> {
-    return this.http.get<ComponentModel>(UrlStringsUtil.ComponentUrlGetById+id);
+  GetComponentById(id: number): Observable<IComponentModel> {
+    return this.http.get<IComponentModel>(UrlStringsUtil.ComponentUrlGetById+id);
   }
 
-  AddComponent(newComponent: ComponentModel): Observable<ComponentModel> {
-    return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlSave, newComponent);
+  AddComponent(newComponent: IComponentModel): Observable<IComponentModel> {
+    return this.http.post<IComponentModel>(UrlStringsUtil.ComponentUrlSave, newComponent);
   }
 
-  EditComponent(editedComponent: ComponentModel, editIconData?: IconModel): Observable<ComponentModel> {
-    return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlEdit, {editedComponent, editIconData});
+  EditComponent(editedComponent: IComponentModel, editIconData?: IIconModel): Observable<IComponentModel> {
+    return this.http.post<IComponentModel>(UrlStringsUtil.ComponentUrlEdit, {editedComponent, editIconData});
   }
 
   GetIndex(id: number): number{

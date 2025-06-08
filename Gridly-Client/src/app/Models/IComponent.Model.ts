@@ -1,13 +1,16 @@
-import {IconModel} from "./Icon.Model";
-import {ComponentSettingsModel} from "./ComponentSettings.Model";
+import {IComponentSettingsModel} from "./IComponentSettings.Model";
+import {IIconModel} from "./IIcon.Model";
 
 export interface IComponentModel {
-  Id: number;
-  Name?: string;
-  Url?: string;
-  IconData?: IconModel;
-  ImageUrl?: string;
-  ImageHidden?: boolean;
-  TitleHidden?: boolean;
-  ComponentSettings? : ComponentSettingsModel;
+  id: number;
+  name?: string;
+  url?: string;
+  iconData?: IIconModel;
+  imageUrl?: string;
+  imageHidden?: boolean;
+  titleHidden?: boolean;
+  editMode?: boolean;
+  resizeMode?: boolean;
+  dragMode?: boolean;
+  componentSettings? : IComponentSettingsModel;
 }

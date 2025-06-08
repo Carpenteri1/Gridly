@@ -1,7 +1,7 @@
-import { Injectable, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { VersionModel } from "../../Models/Version.Model";
-import { UrlStringsUtil } from "../../Constants/url.strings.util";
+import {Injectable, OnInit} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {IVersionModel} from "../../Models/IVersion.Model";
+import {UrlStringsUtil} from "../../Constants/url.strings.util";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ import { UrlStringsUtil } from "../../Constants/url.strings.util";
 
 export class VersionEndpointService implements  OnInit{
 
-  private version!: VersionModel;
+  private version!: IVersionModel;
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
@@ -17,7 +17,7 @@ export class VersionEndpointService implements  OnInit{
   }
 
   CheckForNewRelease() {
-    this.http.get<VersionModel>(UrlStringsUtil.VersionLatestUrl).subscribe(
+    this.http.get<IVersionModel>(UrlStringsUtil.VersionLatestUrl).subscribe(
       (versionData) => {
         this.version = versionData;
       },
@@ -29,7 +29,7 @@ export class VersionEndpointService implements  OnInit{
   }
 
   CheckForCurrentRelease() {
-    this.http.get<VersionModel>(UrlStringsUtil.VersionCurrentUrl).subscribe(
+    this.http.get<IVersionModel>(UrlStringsUtil.VersionCurrentUrl).subscribe(
       (versionData) => {
         this.version = versionData;
       },

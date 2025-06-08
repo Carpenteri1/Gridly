@@ -1,5 +1,5 @@
 import {Directive, ElementRef, HostListener, Renderer2, Input} from '@angular/core';
-import {ComponentSettingsModel} from "../Models/ComponentSettings.Model";
+import {IComponentSettingsModel} from "../Models/IComponentSettings.Model";
 
 @Directive({
   standalone: true,
@@ -29,9 +29,10 @@ export class ResizableDirective {
   }
 
   private ResizeComponent(x: number,y: number): void {
-    this.itemResizing.componentSettings = new ComponentSettingsModel(
-      this.AdjustComponentSize(Math.round(x / 10) * 10),
-      this.AdjustComponentSize(Math.round(y / 10) * 10));
+    this.itemResizing.componentSettings = {
+      width: this.AdjustComponentSize(Math.round(x / 10) * 10),
+      height: this.AdjustComponentSize(Math.round(y / 10) * 10)
+    } as IComponentSettingsModel;
 
     this.renderer.setStyle(this.el.nativeElement, 'height', this.itemResizing.componentSettings.height + 'px');
     this.renderer.setStyle(this.el.nativeElement, 'flex', '0 0 '+ this.itemResizing.componentSettings.width  + 'px');

@@ -1,12 +1,11 @@
-import { AfterViewChecked, Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ComponentEndpointService } from '../../Services/endpoints/component.endpoint.service';
-import { ResizableDirective } from "../../Directives/resizable.directive";
-import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { TextStringsUtil } from "../../Constants/text.strings.util";
-import { ComponentModel } from "../../Models/Component.Model";
-import { Observable } from "rxjs";
-import {FormType} from "../../Types/form.types.enum";
+import {AfterViewChecked, Component, ElementRef, OnInit, Renderer2} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ResizableDirective} from "../../Directives/resizable.directive";
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
+import {IComponentModel} from "../../Models/IComponent.Model";
+import {ModalFormType} from "../../Types/modalForm.types.enum";
+import {ComponentService} from "../../Services/component.service";
+import {ModalService} from "../../Services/modal.service";
 
 @Component({
   selector: 'basic-component',
@@ -17,44 +16,42 @@ import {FormType} from "../../Types/form.types.enum";
 })
 
 export class BasicComponent implements OnInit, AfterViewChecked {
-  type!: FormType;
+  type!: ModalFormType;
   resizableActive!: boolean;
-  canResize!: boolean;
-  canDrag!: boolean;
-  itemComponent!: ComponentModel;
-  itemComponents$!: Observable<ComponentModel[]>;
-  itemComponents!: ComponentModel[];
+  component!: IComponentModel;
+  components!: IComponentModel[];
 
   constructor(
-    public endpointService: ComponentEndpointService,
+    public componentService: ComponentService,
+    public modalService: ModalService,
     private render: Renderer2,
     private el: ElementRef) {}
 
-  ngOnInit() {
-    this.itemComponents$ = this.endpointService.GetComponents();
-    this.itemComponents$.subscribe(data => this.itemComponents = data);
-
-    this.resizableActive = false;// disabled for now
-    this.canDrag = false; // enabled for now
-    this.canResize = false; // enabled for now
+  async ngOnInit() {
+    this.components = await this.componentService.GetComponents();
   }
 
   ngAfterViewChecked() {
     this.SetComponentLayout();
   }
 
+  SetComponentLayout() {
+    for (let index in this.components) {
+      let item = this.components[index];
+      let el = document.getElementById(item.id.toString()) == null ? this.el.nativeElement : document.getElementById(item.id.toString());
+      this.render.setStyle(el, 'height', item.componentSettings?.height + 'px');
+      this.render.setStyle(el, 'flex', '0 0 ' + item.componentSettings?.width + 'px');
+    }
+  }
+
    ActivateResize(item: any): void {
     this.resizableActive = true;
-    this.itemComponent = item;
+    this.component = item;
    }
 
     DisableResize(): void {
-     //this.resizableActive = false;
-     //this.sharedService.EditComponent(this.resizingItem); TODO add later
-    }
-
-    EditComponent() {
-      this.endpointService.EditComponent(this.itemComponent,this.itemComponent.iconData);
+     this.resizableActive = false;
+     this.componentService.EditComponent();
     }
 
   HaveIconSet(name:string | undefined):boolean{
@@ -68,23 +65,10 @@ export class BasicComponent implements OnInit, AfterViewChecked {
     return "Assets/Icons/" + name + "." + fileType;
   }
 
-  Remove(id: number): void {
-    this.endpointService.RemoveComponent(id);
-  }
-
-  SetComponentLayout() {
-    for (let index in this.itemComponents) {
-      let item = this.itemComponents[index];
-      let el = document.getElementById(item.id.toString()) == null ? this.el.nativeElement : document.getElementById(item.id.toString());
-      this.render.setStyle(el, 'height', item.componentSettings?.height + 'px');
-      this.render.setStyle(el, 'flex', '0 0 ' + item.componentSettings?.width + 'px');
-    }
-  }
-
   Drop(event: CdkDragDrop<any[]>): void {
-    if (!this.canDrag) return;
-    moveItemInArray(this.itemComponents, event.previousIndex, event.currentIndex);
+    if (!this.component.dragMode) return;
+    moveItemInArray(this.components, event.previousIndex, event.currentIndex);
   }
 
-  protected readonly StringUtil = TextStringsUtil;
+  protected readonly FormType = ModalFormType;
 }
