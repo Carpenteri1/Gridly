@@ -2,10 +2,11 @@ import {AfterViewChecked, Component, ElementRef, OnInit, Renderer2} from '@angul
 import {CommonModule} from '@angular/common';
 import {ResizableDirective} from "../../Directives/resizable.directive";
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
-import {IComponentModel} from "../../Models/IComponent.Model";
+import {ComponentModel} from "../../Models/Component.Model";
 import {ModalFormType} from "../../Types/modalForm.types.enum";
 import {ComponentService} from "../../Services/component.service";
 import {ModalService} from "../../Services/modal.service";
+import {SetComponentModalData} from "../../Utils/viewModel.factory";
 
 @Component({
   selector: 'basic-component',
@@ -16,14 +17,14 @@ import {ModalService} from "../../Services/modal.service";
 })
 
 export class BasicComponent implements OnInit, AfterViewChecked {
-  type!: ModalFormType;
-  resizableActive!: boolean;
-  component!: IComponentModel;
-  components!: IComponentModel[];
+  protected type!: ModalFormType;
+  protected resizableActive!: boolean;
+  protected component!: ComponentModel;
+  protected components!: ComponentModel[];
 
   constructor(
-    public componentService: ComponentService,
-    public modalService: ModalService,
+    protected componentService: ComponentService,
+    protected modalService: ModalService,
     private render: Renderer2,
     private el: ElementRef) {}
 
@@ -51,7 +52,7 @@ export class BasicComponent implements OnInit, AfterViewChecked {
 
     DisableResize(): void {
      this.resizableActive = false;
-     this.componentService.EditComponent();
+     //this.componentService.EditComponent();
     }
 
   HaveIconSet(name:string | undefined):boolean{
@@ -71,4 +72,5 @@ export class BasicComponent implements OnInit, AfterViewChecked {
   }
 
   protected readonly FormType = ModalFormType;
+  protected readonly CreateComponentModalData = SetComponentModalData;
 }

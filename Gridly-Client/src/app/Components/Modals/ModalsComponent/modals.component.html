@@ -1,34 +1,34 @@
 
-<h2 mat-dialog-title>{{this.viewModel.title}}</h2>
+<h2 mat-dialog-title>{{this.modalModel.title}}</h2>
 <mat-dialog-content>
   <mat-divider>
-    {{this.viewModel.description}}
+    {{this.modalModel.description}}
   </mat-divider>
   <mat-form-field style="display: block; margin-bottom: 10px;">
-    <mat-label>{{this.viewModel.inputNameTitle}}</mat-label>
-    <input matInput [(ngModel)]="this.viewModel.component.name" />
+    <mat-label>{{this.modalModel.inputNameTitle}}</mat-label>
+    <input matInput [(ngModel)]="this.modalModel.component.name" />
   </mat-form-field>
   <mat-form-field style="display: block;margin-bottom: 10px;">
-    <mat-label>{{this.viewModel.inputUrlTitle}}</mat-label>
-    <input matInput [(ngModel)]="this.viewModel.component.url" />
+    <mat-label>{{this.modalModel.inputUrlTitle}}</mat-label>
+    <input matInput [(ngModel)]="this.modalModel.component.url" />
   </mat-form-field>
   <mat-form-field style="display: block;margin-bottom: 10px;">
    <!-- <mat-label><mat-icon>menu</mat-icon></mat-label> -->
-    <mat-select [(ngModel)]="viewModel.selectedDropDownValue" placeholder="Select option">
-      <mat-option [value]="1">{{ this.viewModel.dropDownTitleOne }}</mat-option>
-      <mat-option [value]="2">{{ this.viewModel.dropDownTitleTwo }}</mat-option>
+    <mat-select [(ngModel)]="modalModel.selectedDropDownValue" placeholder="Select option">
+      <mat-option [value]="1">{{ this.modalModel.dropDownTitleOne }}</mat-option>
+      <mat-option [value]="2">{{ this.modalModel.dropDownTitleTwo }}</mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field [hidden]="this.viewModel.selectedDropDownValue != 1" style="display: block;margin-bottom: 10px;" >
-    <input matInput placeholder="Icon" type="file" id="formFile" (change)="this.modalService.OnFileUpload($event)" />
+  <mat-form-field [hidden]="this.modalModel.selectedDropDownValue != 1" style="display: block;margin-bottom: 10px;" >
+    <input matInput placeholder="Icon" type="file" id="formFile" (change)="this.OnFileUpload($event)" />
   </mat-form-field>
-  <mat-form-field [hidden]="this.viewModel.selectedDropDownValue != 2" style="display: block;margin-bottom: 10px;" >
-    <mat-label>{{this.viewModel.linkToImageTitle}}</mat-label>
-    <input matInput [(ngModel)]="this.viewModel.component.imageUrl" />
+  <mat-form-field [hidden]="this.modalModel.selectedDropDownValue != 2" style="display: block;margin-bottom: 10px;" >
+    <mat-label>{{this.modalModel.linkToImageTitle}}</mat-label>
+    <input matInput [(ngModel)]="this.modalModel.component.imageUrl" />
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close (click)="this.modalService.Submit(this.viewModel.type)">{{this.viewModel.acceptBtnTitle}}</button>
-  <button mat-button [mat-dialog-close]="true" (click)="this.modalService.Cancel()">{{this.viewModel.closeBtnTitle}}</button>
+  <button mat-button mat-dialog-close (click)="this.modalService.Submit(this.modalModel)">{{this.modalModel.acceptBtnTitle}}</button>
+  <button mat-button [mat-dialog-close]="true" (click)="this.modalService.Cancel()">{{this.modalModel.closeBtnTitle}}</button>
 </mat-dialog-actions>
 

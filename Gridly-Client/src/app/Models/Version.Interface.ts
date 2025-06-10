@@ -1,4 +1,4 @@
-export interface IVersionModel{
+export interface VersionInterface {
   name:string;
   newRelease:boolean;
 }

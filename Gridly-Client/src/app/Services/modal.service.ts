@@ -3,56 +3,59 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ModalFormType} from "../Types/modalForm.types.enum";
 import {ModalsComponent} from "../Components/Modals/ModalsComponent/modals.component";
 import {TextStringsUtil} from "../Constants/text.strings.util";
-import {IComponentModel} from "../Models/IComponent.Model";
-import {CreateComponentData} from "../Utils/componentModal.factory";
-import {IModalsModel} from "../Models/IModals.Model";
-import {CreateComponentModalData} from "../Utils/viewModel.factory";
+import {ModalViewModel} from "../Models/ModalView.Model";
+import {SetComponentModalData} from "../Utils/viewModel.factory";
 import {ComponentService} from "./component.service";
+import {SetComponentData, SetIconData} from "../Utils/componentModal.factory";
+import {IconModel} from "../Models/Icon.Model";
 
 @Injectable({providedIn: 'root'})
 export class ModalService{
 
-  constructor(private dialog: MatDialog, public componentService: ComponentService) {}
+  constructor(private dialog: MatDialog, protected componentService: ComponentService) {}
 
-  GetModalType(type:ModalFormType, component?: IComponentModel): void {
-    switch (type) {
+  SetModalType(type: ModalFormType) : ModalViewModel {
+    return new ModalViewModel({type: type})
+  }
+  GetModalType(modalType: ModalViewModel): void {
+    switch (modalType.type) {
       case ModalFormType.Add:
-        this.openModal(CreateComponentModalData(
-          TextStringsUtil.ModalAddComponentTitle,
-          TextStringsUtil.ModalAddComponentAcceptBtnTitle,
-          TextStringsUtil.ModalAddComponentCloseBtnTitle,
-          '',
-          TextStringsUtil.ModalAddComponentInputNameTitle,
-          TextStringsUtil.ModalAddComponentInputUrlTitle,
-          TextStringsUtil.ModalAddComponentDropDownOptionTitleOne,
-          TextStringsUtil.ModalAddComponentDropDownOptionTitleTwo,
-          TextStringsUtil.ModalAddComponenLinkToImageTitle,
-          type,
-          CreateComponentData()));
+        this.openModal(SetComponentModalData({
+        title: TextStringsUtil.ModalAddComponentTitle,
+        acceptBtnTitle: TextStringsUtil.ModalAddComponentAcceptBtnTitle,
+        closeBtnTitle: TextStringsUtil.ModalAddComponentCloseBtnTitle,
+        description: '',
+        inputNameTitle: TextStringsUtil.ModalAddComponentInputNameTitle,
+        inputUrlTitle: TextStringsUtil.ModalAddComponentInputUrlTitle,
+        dropDownTitleOne: TextStringsUtil.ModalAddComponentDropDownOptionTitleOne,
+        dropDownTitleTwo: TextStringsUtil.ModalAddComponentDropDownOptionTitleTwo,
+        linkToImageTitle: TextStringsUtil.ModalAddComponenLinkToImageTitle,
+        type: modalType.type,
+        component: modalType.component}));
         break;
       case ModalFormType.Edit:
-        this.openModal(CreateComponentModalData(
-          TextStringsUtil.ModalEditComponentTitle,
-          TextStringsUtil.ModalEditComponentAcceptBtnTitle,
-          TextStringsUtil.ModalEditComponentCloseBtnTitle,
-          '',
-          TextStringsUtil.ModalEditComponentInputNameTitle,
-          TextStringsUtil.ModalEditComponentInputUrlTitle,
-          TextStringsUtil.ModalEditComponentDropDownOptionTitleOne,
-          TextStringsUtil.ModalEditComponentDropDownOptionTitleTwo,
-          TextStringsUtil.ModalEditComponentLinkToImageTitle,
-          type,
-          CreateComponentData(component)));
+        this.openModal(SetComponentModalData({
+          title: TextStringsUtil.ModalEditComponentTitle,
+          acceptBtnTitle: TextStringsUtil.ModalEditComponentAcceptBtnTitle,
+          closeBtnTitle: TextStringsUtil.ModalEditComponentCloseBtnTitle,
+          description: '',
+          inputNameTitle: TextStringsUtil.ModalEditComponentInputNameTitle,
+          inputUrlTitle: TextStringsUtil.ModalEditComponentInputUrlTitle,
+          dropDownTitleOne: TextStringsUtil.ModalEditComponentDropDownOptionTitleOne,
+          dropDownTitleTwo: TextStringsUtil.ModalEditComponentDropDownOptionTitleTwo,
+          linkToImageTitle: TextStringsUtil.ModalEditComponentLinkToImageTitle,
+          type: modalType.type,
+          component: modalType.component}));
         break;
     }
   }
 
-  Submit(type: ModalFormType) {
-    switch (type) {
+  Submit(modalType: ModalViewModel) {
+    switch (modalType.type) {
       case ModalFormType.Add:
-        return this.componentService.AddComponent();
+        return this.componentService.AddComponent(modalType.component ?? SetComponentData());
       case ModalFormType.Edit:
-        return this.componentService.EditComponent();
+        return this.componentService.EditComponent(modalType.component ?? SetComponentData());
       default:
         return false;
     }
@@ -67,42 +70,45 @@ export class ModalService{
       this.componentService.SwitchDragMode();
   }
 
-  OnFileUpload(event:any):void{
-    /*if (event.target.files && event.target.files.length > 0) {
+  OnFileUpload(event:any): IconModel | undefined{
+    if (event.target.files && event.target.files.length > 0) {
+      this.componentService.iconData = SetIconData();
       const file = event.target.files[0];
       this.SetFileNameAndType(file.name);
 
-      if(this.iconData.fileType === 'svg' ||
-        this.iconData.fileType === 'png' ||
-        this.iconData.fileType === 'jpg' ||
-        this.iconData.fileType === 'jpeg' ||
-        this.iconData.fileType === 'ico')
+      if(this.componentService.iconData.fileType === 'svg' ||
+        this.componentService.iconData.fileType === 'png' ||
+        this.componentService.iconData.fileType === 'jpg' ||
+        this.componentService.iconData.fileType === 'jpeg' ||
+        this.componentService.iconData.fileType === 'ico')
       {
         const reader = new FileReader();
         reader.onload = () => {
-          this.iconData.base64Data = reader.result as string;
-          this.iconData.base64Data =  this.iconData.base64Data.split(',')[1];
+          this.componentService.iconData.base64Data = reader.result as string;
+          this.componentService.iconData.base64Data =  this.componentService.iconData.base64Data.split(',')[1];
         };
         reader.readAsDataURL(file);
+        return this.componentService.iconData;
       }
-    }*/
+    }
+    return undefined;
   }
 
 
 
-  private openModal(data: IModalsModel): MatDialogRef<ModalsComponent> {
+  private openModal(data: ModalViewModel): MatDialogRef<ModalsComponent> {
     const ref = this.dialog.open(ModalsComponent, {
       width: '600px',
       enterAnimationDuration: '500ms',
       exitAnimationDuration: '500ms',
     });
-    ref.componentInstance.viewModel = data;
+    ref.componentInstance.modalModel = data;
     return ref;
   }
 
   private SetFileNameAndType(inputName: string){
-   /* let result = inputName.split('.');
-    this.iconData.name = result[0];
-    this.iconData.fileType = result[1];*/
+   let result = inputName.split('.');
+   this.componentService.iconData.name = result[0];
+   this.componentService.iconData.fileType = result[1];
   }
 }

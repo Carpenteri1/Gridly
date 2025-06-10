@@ -4,7 +4,7 @@
   <div cdkDrag [cdkDragDisabled]="!item.dragMode" makeResizable [canResize]="resizableActive && component === item" [itemResizing]="item" [id]="item.id"
        class="d-flex m-2 flex-column shadow-sm component-style" >
       <div class="d-flex justify-content-end">
-        <button [hidden]="!componentService.editMode" (click)="this.modalService.GetModalType(FormType.Edit,item)">...</button>
+        <button [hidden]="!componentService.editMode" (click)="this.modalService.GetModalType(CreateComponentModalData({type: FormType.Edit}))">...</button>
         <button data-bs-toggle="modal" [attr.data-bs-target]="'#DeleteModal_'+item.id" class="btn btn-modal"><i class="bi bi-x-lg"></i></button>
       </div>
         <a [style]="resizableActive ? 'cursor:none;':'cursor:auto;'" [href]="resizableActive ? null : item.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-100" target="_blank">

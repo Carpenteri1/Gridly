@@ -1,22 +1,21 @@
 import {Injectable} from "@angular/core";
-import {IComponentModel} from "../Models/IComponent.Model";
-import {IIconModel} from "../Models/IIcon.Model";
-import {CreateComponentData} from "../Utils/componentModal.factory";
+import {ComponentModel} from "../Models/Component.Model";
+import {SetIconData, SetComponentData} from "../Utils/componentModal.factory";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
-import {firstValueFrom, Observable} from "rxjs";
+import {firstValueFrom, Observable, take} from "rxjs";
+import {IconModel} from "../Models/Icon.Model";
 @Injectable({providedIn: 'root'})
 export class ComponentService{
   editMode!: boolean;
   dragMode!: boolean;
   resizeMode!: boolean;
-  component!: IComponentModel;
-  components$!: Observable<IComponentModel[]>;
-  components!: IComponentModel[];
-  iconData!: IIconModel;
+  components$!: Observable<ComponentModel[]>;
+  components!: ComponentModel[];
+  iconData!: IconModel;
 
   constructor(public endpointService: ComponentEndpointService) {
     this.components$ = this.endpointService.GetComponents();
-    this.components$.subscribe(data => this.components = data);
+    this.components$.pipe(take(1)).subscribe(data => this.components = data);
     this.editMode = false;
     this.dragMode = false;
     this.resizeMode = false;
@@ -55,38 +54,47 @@ export class ComponentService{
     });
   }
 
-  AddComponent(newId?: number) : boolean {
-    this.endpointService.GetComponents()
-      .subscribe((components) => {
-        this.components = components.sort((a, b) => a.id - b.id);
-      });
-    newId = Math.max(...this.components.map(x => x.id)) + 1;
-    let index = this.endpointService.GetIndex(newId);
-    if(index === -1 && this.component.name !== "" && this.component.url !== "")
-    {
-      if(this.iconData.base64Data !== "" && this.iconData.name !== "" && this.iconData.fileType !== ""){
-        this.endpointService.AddComponent(CreateComponentData({id: newId, name: this.component.name, url: this.component.url, iconData: this.component.iconData, imageHidden: this.component.imageHidden, titleHidden: this.component.titleHidden}));
-        return true;
+  AddComponent(component: ComponentModel) : boolean {
+      this.endpointService.GetComponents().pipe(take(1))
+        .subscribe((components) => {
+          this.components = components.sort((a, b) => a.id - b.id);
+        });
+      debugger;
+      component = SetComponentData(component,{id: Math.max(...this.components.map(x => x.id)) + 1});
+
+      let index = this.endpointService.GetIndex(component.id);
+      if(index === -1 && component.name !== "" && component.url !== "")
+      {
+        if(component.iconData != null || component.iconData !== undefined){
+          component.iconData = SetIconData(component.iconData)
+          if(component.iconData?.base64Data !== "" && component.iconData?.name !== "" && component.iconData?.fileType !== ""){
+            this.endpointService.AddComponent(SetComponentData(undefined,{id: component.id, name: component.name, url: component.url, iconData: component.iconData, imageHidden: component.imageHidden, titleHidden: component.titleHidden}));
+            return true;
+          }
+          if(component.imageUrl !== ""){
+            this.endpointService.AddComponent(SetComponentData(undefined,{id: component.id, name: component.name, url: component.url, imageUrl: component.imageUrl, imageHidden: component.imageHidden, titleHidden: component.titleHidden}));
+
+          }
+          return true;
+        }
+
       }
-      if(this.component.imageUrl !== ""){
-        this.endpointService.AddComponent(CreateComponentData({id: newId, name: this.component.name, url: this.component.url, imageUrl: this.component.imageUrl, imageHidden: this.component.imageHidden, titleHidden: this.component.titleHidden}));
-        return true;
+      else{
+        this.AddComponent(component);
       }
-      this.component = CreateComponentData();
-    }
-    else
-      this.AddComponent(newId++);
 
     return false;
   }
 
-  async GetComponents(): Promise<IComponentModel[]> {
+  async GetComponents(): Promise<ComponentModel[]> {
     return await firstValueFrom(this.endpointService.GetComponents());
   }
 
-  EditComponent() {
-    this.endpointService.EditComponent(this.component,this.component.iconData);
+  EditComponent(component: ComponentModel) {
+    if(component.id !== 0)
+      this.endpointService.EditComponent(component,component.iconData);
   }
+
   Remove(id: number): void {
     this.endpointService.RemoveComponent(id);
   }

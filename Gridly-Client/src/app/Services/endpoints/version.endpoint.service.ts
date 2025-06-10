@@ -1,7 +1,8 @@
 import {Injectable, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {IVersionModel} from "../../Models/IVersion.Model";
+import {VersionInterface} from "../../Models/Version.Interface";
 import {UrlStringsUtil} from "../../Constants/url.strings.util";
+import {take} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import {UrlStringsUtil} from "../../Constants/url.strings.util";
 
 export class VersionEndpointService implements  OnInit{
 
-  private version!: IVersionModel;
+  private version!: VersionInterface;
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
@@ -17,25 +18,15 @@ export class VersionEndpointService implements  OnInit{
   }
 
   CheckForNewRelease() {
-    this.http.get<IVersionModel>(UrlStringsUtil.VersionLatestUrl).subscribe(
-      (versionData) => {
-        this.version = versionData;
-      },
-      error => {
-        console.error('Error checking for new release:', error);
-      }
+    this.http.get<VersionInterface>(UrlStringsUtil.VersionLatestUrl).pipe(take(1)).subscribe(
+      data => this.version = data
     );
     return this.version;
   }
 
   CheckForCurrentRelease() {
-    this.http.get<IVersionModel>(UrlStringsUtil.VersionCurrentUrl).subscribe(
-      (versionData) => {
-        this.version = versionData;
-      },
-      error => {
-        console.error('Error checking for current release:', error);
-      }
+    this.http.get<VersionInterface>(UrlStringsUtil.VersionCurrentUrl).pipe(take(1)).subscribe(
+      data => this.version = data
     );
     return this.version;
   }

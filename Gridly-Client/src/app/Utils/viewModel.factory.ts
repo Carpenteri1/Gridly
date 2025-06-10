@@ -1,41 +1,20 @@
-import {IModalsModel} from "../Models/IModals.Model";
+import {ModalViewModel} from "../Models/ModalView.Model";
 import {ModalFormType} from "../Types/modalForm.types.enum";
-import {IComponentModel} from "../Models/IComponent.Model";
-import {IIconModel} from "../Models/IIcon.Model";
-export function CreateComponentModalData(
-  overrideTitle: string,
-  overrideAcceptBtnTitle: string,
-  overrideCloseBtnTitle: string,
-  overrideDescripton: string,
-  overrideInputTitle: string,
-  overrideInputUrl: string,
-  overrideDropDownTitleOne: string,
-  overrideDropDownTitleTwo: string,
-  overrideLinkToImageTitle: string,
-  overrideType: ModalFormType,
-  overrideComponent: IComponentModel,
-  overrideSelectedDropDownValue?: number) : IModalsModel{
+import {SetComponentData} from "./componentModal.factory";
+
+export function SetComponentModalData(override: Partial<ModalViewModel> = {}) : ModalViewModel{
   return {
-    title: overrideTitle || "",
-    acceptBtnTitle: overrideAcceptBtnTitle || "",
-    closeBtnTitle: overrideCloseBtnTitle || "",
-    description: overrideDescripton || "",
-    inputNameTitle: overrideInputTitle || "",
-    inputUrlTitle: overrideInputUrl || "",
-    dropDownTitleOne: overrideDropDownTitleOne || "",
-    dropDownTitleTwo: overrideDropDownTitleTwo || "",
-    linkToImageTitle: overrideLinkToImageTitle || "",
-    type: overrideType || ModalFormType.None,
-    component: overrideComponent || {
-      id: 0,
-      name: "",
-      url: "",
-      imageUrl: "",
-      imageHidden: false,
-      titleHidden: false,
-      iconData: {fileType: "", name: "", base64Data: ""} as IIconModel,
-      componentSettings: {width: 0, height: 0}
-    },
-    selectedDropDownValue: overrideSelectedDropDownValue || 0
-  } as IModalsModel;
+    title: override.title ?? "",
+    acceptBtnTitle: override.acceptBtnTitle ?? "",
+    closeBtnTitle: override.closeBtnTitle ?? "",
+    description: override.description ?? "",
+    inputNameTitle: override.inputNameTitle ?? "",
+    inputUrlTitle: override.inputUrlTitle ?? "",
+    dropDownTitleOne: override.dropDownTitleOne ?? "",
+    dropDownTitleTwo: override.dropDownTitleTwo ?? "",
+    linkToImageTitle: override.linkToImageTitle ?? "",
+    type: override.type ?? ModalFormType.None,
+    component: override.component ?? SetComponentData(),
+    selectedDropDownValue: override.selectedDropDownValue ?? 0
+  } as ModalViewModel;
 }

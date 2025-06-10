@@ -22,9 +22,9 @@ import {ComponentService} from "../../Services/component.service";
 export class HeaderComponent implements OnInit {
   protected readonly StringUtil = TextStringsUtil;
   constructor(
-    public versionEndpointService: VersionEndpointService,
-    public modalService: ModalService,
-    public componentService: ComponentService) {}
+    protected versionEndpointService: VersionEndpointService,
+    protected modalService: ModalService,
+    protected componentService: ComponentService) {}
 
   ngOnInit() {
     this.versionEndpointService.CheckForNewRelease();
