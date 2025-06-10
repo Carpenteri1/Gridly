@@ -4,20 +4,22 @@ import {ModalFormType} from "../Types/modalForm.types.enum";
 import {ModalsComponent} from "../Components/Modals/ModalsComponent/modals.component";
 import {TextStringsUtil} from "../Constants/text.strings.util";
 import {ModalViewModel} from "../Models/ModalView.Model";
-import {SetComponentModalData} from "../Utils/viewModel.factory";
 import {ComponentService} from "./component.service";
-import {SetComponentData, SetIconData} from "../Utils/componentModal.factory";
 import {IconModel} from "../Models/Icon.Model";
+import {SetComponentModalData} from "../Utils/viewModel.factory";
+import {SetComponentData, SetIconData} from "../Utils/componentModal.factory";
 
 @Injectable({providedIn: 'root'})
 export class ModalService{
 
   constructor(private dialog: MatDialog, protected componentService: ComponentService) {}
 
-  SetModalType(type: ModalFormType) : ModalViewModel {
-    return new ModalViewModel({type: type})
+  GetModalType(type: ModalFormType ){
+      let viewData = this.SetModalType(type);
+      this.BuildModalType(viewData);
   }
-  GetModalType(modalType: ModalViewModel): void {
+
+  private BuildModalType(modalType: ModalViewModel): void {
     switch (modalType.type) {
       case ModalFormType.Add:
         this.openModal(SetComponentModalData({
@@ -94,10 +96,13 @@ export class ModalService{
     return undefined;
   }
 
-
+  private SetModalType(type: ModalFormType) : ModalViewModel {
+    return SetComponentModalData({type:type});
+  }
 
   private openModal(data: ModalViewModel): MatDialogRef<ModalsComponent> {
-    const ref = this.dialog.open(ModalsComponent, {
+    const ref =
+      this.dialog.open(ModalsComponent, {
       width: '600px',
       enterAnimationDuration: '500ms',
       exitAnimationDuration: '500ms',

@@ -13,7 +13,4 @@ export class ComponentModel {
   resizeMode!: boolean;
   dragMode!: boolean;
   componentSettings! : ComponentSettingsModel;
-  constructor(init?: Partial<ComponentModel>) {
-    Object.assign(this, init);
-  }
 }

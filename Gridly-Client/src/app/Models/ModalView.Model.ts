@@ -13,7 +13,4 @@ export class ModalViewModel {
   type!: ModalFormType;
   component!: ComponentModel
   selectedDropDownValue!: number;
-  constructor(init?: Partial<ModalViewModel>) {
-    Object.assign(this, init);
-  }
 }
