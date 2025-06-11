@@ -5,12 +5,12 @@ export class ComponentModel {
   id!: number;
   name!: string;
   url!: string;
-  iconData!: IconModel | undefined;
+  iconData?: IconModel | undefined;
   imageUrl!: string;
   imageHidden!: boolean;
   titleHidden!: boolean;
   editMode!: boolean;
   resizeMode!: boolean;
   dragMode!: boolean;
-  componentSettings! : ComponentSettingsModel;
+  componentSettings? : ComponentSettingsModel | undefined;
 }

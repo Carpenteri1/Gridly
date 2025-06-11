@@ -1,9 +1,8 @@
 import {Injectable} from "@angular/core";
 import {ComponentModel} from "../Models/Component.Model";
-import {SetIconData, SetComponentData} from "../Utils/componentModal.factory";
+import {SetComponentData} from "../Utils/componentModal.factory";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
 import {firstValueFrom, Observable, take} from "rxjs";
-import {IconModel} from "../Models/Icon.Model";
 @Injectable({providedIn: 'root'})
 export class ComponentService{
   editMode!: boolean;
@@ -11,10 +10,9 @@ export class ComponentService{
   resizeMode!: boolean;
   components$!: Observable<ComponentModel[]>;
   components!: ComponentModel[];
-  iconData!: IconModel;
-
-  constructor(public endpointService: ComponentEndpointService) {
-    this.components$ = this.endpointService.GetComponents();
+  component!: ComponentModel;
+  constructor(public componentEndpointService: ComponentEndpointService) {
+    this.components$ = this.componentEndpointService.GetComponents();
     this.components$.pipe(take(1)).subscribe(data => this.components = data);
     this.editMode = false;
     this.dragMode = false;
@@ -55,27 +53,30 @@ export class ComponentService{
   }
 
   AddComponent(component: ComponentModel) : boolean {
-      this.endpointService.GetComponents().pipe(take(1))
+      this.componentEndpointService.GetComponents().pipe(take(1))
         .subscribe((components) => {
           this.components = components.sort((a, b) => a.id - b.id);
         });
-      debugger;
       component = SetComponentData(component,{id: Math.max(...this.components.map(x => x.id)) + 1});
 
-      let index = this.endpointService.GetIndex(component.id);
+      let index = this.componentEndpointService.GetIndex(component.id);
       if(index === -1 && component.name !== "" && component.url !== "")
       {
         if(component.iconData != null || component.iconData !== undefined){
-          component.iconData = SetIconData(component.iconData)
           if(component.iconData?.base64Data !== "" && component.iconData?.name !== "" && component.iconData?.fileType !== ""){
-            this.endpointService.AddComponent(SetComponentData(undefined,{id: component.id, name: component.name, url: component.url, iconData: component.iconData, imageHidden: component.imageHidden, titleHidden: component.titleHidden}));
+            this.componentEndpointService.AddComponent(SetComponentData(component)).pipe(take(1)).subscribe({
+              next: (res) => console.log('Component saved!', res),
+              error: (err) => console.error('Save failed:', err)
+            });
             return true;
           }
           if(component.imageUrl !== ""){
-            this.endpointService.AddComponent(SetComponentData(undefined,{id: component.id, name: component.name, url: component.url, imageUrl: component.imageUrl, imageHidden: component.imageHidden, titleHidden: component.titleHidden}));
-
+            this.componentEndpointService.AddComponent(SetComponentData(component)).pipe(take(1)).subscribe({
+              next: (res) => console.log('Component saved!', res),
+              error: (err) => console.error('Save failed:', err)
+            });
+            return true;
           }
-          return true;
         }
 
       }
@@ -87,15 +88,18 @@ export class ComponentService{
   }
 
   async GetComponents(): Promise<ComponentModel[]> {
-    return await firstValueFrom(this.endpointService.GetComponents());
+    return await firstValueFrom(this.componentEndpointService.GetComponents());
   }
 
   EditComponent(component: ComponentModel) {
     if(component.id !== 0)
-      this.endpointService.EditComponent(component,component.iconData);
+      this.componentEndpointService.EditComponent(component,component.iconData);
   }
 
-  Remove(id: number): void {
-    this.endpointService.RemoveComponent(id);
+  DeleteComponent(id: number): void {
+    this.componentEndpointService.Delete(id).pipe(take(1)).subscribe({
+      next: (res) => console.log('Component deleted!', res),
+      error: (err) => console.error('Delete failed:', err)
+    });
   }
 }

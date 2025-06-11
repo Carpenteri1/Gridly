@@ -7,7 +7,7 @@
         <mat-form-field>
           <mat-label><mat-icon>menu</mat-icon></mat-label>
           <mat-select>
-            <mat-option value="one" (click)="this.modalService.GetModalType(FormType.Add)"> {{ StringUtil.MenuDropDownAddTitle }}</mat-option>
+            <mat-option value="one" (click)="this.modalService.GetModalType(SetModalComponentFormData({type: FormType.Add}))"> {{ StringUtil.MenuDropDownAddTitle }}</mat-option>
             <mat-option value="two" (click)="this.componentService.SwitchEditMode()">{{ StringUtil.MenuDropDownEditTitle }}</mat-option>
             <mat-option value="three" (click)="this.componentService.SwitchDragMode()">{{ StringUtil.MenuDropDownDragTitle }}</mat-option>
             <mat-option value="Four" (click)="this.componentService.SwitchResizeMode()">{{ StringUtil.MenuDropDownResizeTitle }}</mat-option>

@@ -6,7 +6,8 @@ import {ComponentModel} from "../../Models/Component.Model";
 import {ModalFormType} from "../../Types/modalForm.types.enum";
 import {ComponentService} from "../../Services/component.service";
 import {ModalService} from "../../Services/modal.service";
-import {SetComponentModalData} from "../../Utils/viewModel.factory";
+import {ModalViewModel} from "../../Models/ModalView.Model";
+import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
 
 @Component({
   selector: 'basic-component',
@@ -17,10 +18,10 @@ import {SetComponentModalData} from "../../Utils/viewModel.factory";
 })
 
 export class BasicComponent implements OnInit, AfterViewChecked {
-  protected type!: ModalFormType;
   protected resizableActive!: boolean;
   protected component!: ComponentModel;
   protected components!: ComponentModel[];
+  protected modalModel!: ModalViewModel;
 
   constructor(
     protected componentService: ComponentService,
@@ -52,7 +53,7 @@ export class BasicComponent implements OnInit, AfterViewChecked {
 
     DisableResize(): void {
      this.resizableActive = false;
-     //this.componentService.EditComponent();
+    //this.componentService.EditComponent();
     }
 
   HaveIconSet(name:string | undefined):boolean{
@@ -72,5 +73,5 @@ export class BasicComponent implements OnInit, AfterViewChecked {
   }
 
   protected readonly FormType = ModalFormType;
-  protected readonly CreateComponentModalData = SetComponentModalData;
+  protected readonly SetModalComponentFormData = SetModalComponentFormData;
 }

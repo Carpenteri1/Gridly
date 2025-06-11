@@ -1,17 +1,16 @@
 import {Component} from "@angular/core";
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
-import {ModalViewModel} from "../../../Models/ModalView.Model";
+import {ModalViewModel} from "../../../../Models/ModalView.Model";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatDivider} from "@angular/material/divider";
-import {ModalService} from "../../../Services/modal.service";
+import {ModalService} from "../../../../Services/modal.service";
 import {MatSelect} from "@angular/material/select";
 import {MatOption} from "@angular/material/core";
 
 @Component({
-  selector: 'modals-component',
-  templateUrl: './modals.component.html',
+  templateUrl: './modal.component-form.html',
   standalone: true,
   imports:
     [MatDialogClose,
@@ -30,7 +29,7 @@ import {MatOption} from "@angular/material/core";
     MatOption,
     MatSelect]
 })
-export class ModalsComponent {
+export class ModalComponentForm {
   public modalModel!: ModalViewModel;
   constructor(protected modalService: ModalService){}
 

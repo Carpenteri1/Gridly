@@ -15,8 +15,8 @@ export class ComponentEndpointService{
 
   constructor(private http: HttpClient) {}
 
-  RemoveComponent(id: number) {
-    this.http.delete<ComponentModel>(UrlStringsUtil.ComponentUrlDelete+id);
+  Delete(id: number): Observable<ComponentModel> {
+    return this.http.delete<ComponentModel>(UrlStringsUtil.ComponentUrlDelete+id);
   }
 
   GetComponents(): Observable<ComponentModel[]> {

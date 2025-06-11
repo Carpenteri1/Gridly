@@ -10,6 +10,7 @@ import { UrlStringsUtil } from "../../Constants/url.strings.util";
 import { ModalService } from "../../Services/modal.service";
 import { ModalFormType } from "../../Types/modalForm.types.enum";
 import {ComponentService} from "../../Services/component.service";
+import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
 
 @Component({
   selector: 'header-component',
@@ -35,4 +36,5 @@ export class HeaderComponent implements OnInit {
 
   protected readonly UrlStringsUtil = UrlStringsUtil;
   protected readonly FormType = ModalFormType;
+  protected readonly SetModalComponentFormData = SetModalComponentFormData;
 }
