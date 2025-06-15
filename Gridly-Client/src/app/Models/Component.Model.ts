@@ -6,11 +6,8 @@ export class ComponentModel {
   name!: string;
   url!: string;
   iconData?: IconModel | undefined;
-  imageUrl!: string;
+  imageUrl?: string;
   imageHidden!: boolean;
   titleHidden!: boolean;
-  editMode!: boolean;
-  resizeMode!: boolean;
-  dragMode!: boolean;
   componentSettings? : ComponentSettingsModel | undefined;
 }

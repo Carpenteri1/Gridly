@@ -10,9 +10,6 @@ export function SetComponentData(component?: ComponentModel, overrides: Partial<
     imageUrl: overrides.imageUrl ?? component?.imageUrl ?? "",
     imageHidden: overrides.imageHidden ?? component?.imageHidden ?? false,
     titleHidden: overrides.titleHidden ?? component?.titleHidden ?? false,
-    editMode: overrides.editMode ?? component?.editMode ?? false,
-    resizeMode: overrides.resizeMode ?? component?.resizeMode ?? false,
-    dragMode: overrides.dragMode ?? component?.dragMode ?? false,
     componentSettings: overrides.componentSettings ?? component?.componentSettings ?? null
   } as ComponentModel;
 }

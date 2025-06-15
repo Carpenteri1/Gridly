@@ -21,10 +21,27 @@
   font-size: 12px;
 }
 
+.btn-dark{
+  margin:5px;
+}
+
 .space-left{
   margin-left: 10px;
 }
 
 .cdk-drag-animating {
   transition: transform 500ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.sticky-bottom {
+  background-color: #141517;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
 }

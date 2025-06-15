@@ -1,5 +1,6 @@
 .d-flex{
-    /*background-color: #141517;*/
+    background-color: #141517;
+    color:white;
 }
 .flex-row-reverse{
     padding-right: 1em;
@@ -7,12 +8,18 @@
     padding-bottom: 0.5em;
 }
 
-:is(.version-text, .text-center) {
-  font-size: 13px;
+mat-option{
+  background-color: #141517 !important;
+  color: white !important;
+  z-index: 9999 !important;
 }
 
-.space{
-  padding-left: 20px;
+mat-option:hover{
+  background-color: #383b41 !important;
+}
+
+:is(.version-text, .text-center) {
+  font-size: 13px;
 }
 
 .modal-dropdown-btn-theme{

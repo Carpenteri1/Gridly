@@ -9,8 +9,8 @@ import { VersionEndpointService } from "../../Services/endpoints/version.endpoin
 import { UrlStringsUtil } from "../../Constants/url.strings.util";
 import { ModalService } from "../../Services/modal.service";
 import { ModalFormType } from "../../Types/modalForm.types.enum";
-import {ComponentService} from "../../Services/component.service";
-import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
+import { ComponentService } from "../../Services/component.service";
+import { SetModalComponentFormData } from "../../Utils/viewModel.factory";
 
 @Component({
   selector: 'header-component',

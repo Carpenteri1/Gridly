@@ -64,8 +64,24 @@ public class ComponentHandler(IComponentRepository componentRepository) :
         if (componentModels is null || !componentModels.Any())
             return Results.NotFound();
 
-        if (!componentRepository.IconDuplicate(componentModels,command.EditedComponent.IconData))
-            componentRepository.UploadIcon(command.EditedComponent.IconData);
+        if (command.EditedComponent.ImageUrl != null || 
+            command.EditedComponent.ImageUrl != string.Empty)
+        {
+            if (command.EditedComponent.IconData != null && 
+                !componentRepository.IconDuplicate(componentModels,command.EditedComponent.IconData))
+            {
+                if(!componentRepository.DeleteIcon(command.EditedComponent.IconData))
+                    return Results.NotFound();
+            }
+        }
+        else
+        {
+            if (!componentRepository.IconDuplicate(componentModels, command.EditedComponent.IconData))
+            {
+                componentRepository.UploadIcon(command.EditedComponent.IconData);
+                command.EditedComponent.ImageUrl = string.Empty;
+            }   
+        }
         
         for(int i = 0;i<componentModels.Length;i++)
             if (componentModels[i].Id == command.EditedComponent.Id) 

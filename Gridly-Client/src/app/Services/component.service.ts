@@ -23,40 +23,31 @@ export class ComponentService{
     this.editMode = !this.editMode;
     this.resizeMode = false;
     this.dragMode = false;
-    this.components.forEach((component) => {
-      component.editMode = this.editMode;
-      component.dragMode = this.dragMode;
-      component.resizeMode = this.resizeMode;
-    });
   }
 
   SwitchResizeMode(): void {
     this.resizeMode = !this.resizeMode;
     this.dragMode = false;
     this.editMode = false;
-    this.components.forEach((component) => {
-      component.resizeMode = this.resizeMode;
-      component.editMode = this.editMode;
-      component.dragMode = this.dragMode;
-    });
   }
 
   SwitchDragMode(): void {
     this.dragMode = !this.dragMode;
     this.editMode = false;
     this.resizeMode = false;
-    this.components.forEach((component) => {
-      component.dragMode = this.dragMode;
-      component.editMode = this.editMode;
-      component.resizeMode = this.resizeMode;
-    });
+  }
+
+  DisableModes(){
+    this.editMode = false;
+    this.resizeMode = false;
+    this.dragMode = false;
   }
 
   AddComponent(component: ComponentModel) : boolean {
-      this.componentEndpointService.GetComponents().pipe(take(1))
+      /*this.componentEndpointService.GetComponents().pipe(take(1))
         .subscribe((components) => {
           this.components = components.sort((a, b) => a.id - b.id);
-        });
+        });*/
       component = SetComponentData(component,{id: Math.max(...this.components.map(x => x.id)) + 1});
 
       let index = this.componentEndpointService.GetIndex(component.id);

@@ -2,25 +2,23 @@ import {AfterViewChecked, Component, ElementRef, OnInit, Renderer2} from '@angul
 import {CommonModule} from '@angular/common';
 import {ResizableDirective} from "../../Directives/resizable.directive";
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
-import {ComponentModel} from "../../Models/Component.Model";
 import {ModalFormType} from "../../Types/modalForm.types.enum";
 import {ComponentService} from "../../Services/component.service";
 import {ModalService} from "../../Services/modal.service";
 import {ModalViewModel} from "../../Models/ModalView.Model";
 import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
+import {TextStringsUtil} from "../../Constants/text.strings.util";
 
 @Component({
   selector: 'basic-component',
-  imports: [CdkDrag, CdkDropList, CommonModule, ResizableDirective],
+  imports: [CommonModule, CdkDrag, CdkDropList, ResizableDirective],
   templateUrl: './basic.component.html',
   standalone: true,
   styleUrls: ['./basic.component.css']
 })
 
-export class BasicComponent implements OnInit, AfterViewChecked {
+export class BasicComponent implements AfterViewChecked {
   protected resizableActive!: boolean;
-  protected component!: ComponentModel;
-  protected components!: ComponentModel[];
   protected modalModel!: ModalViewModel;
 
   constructor(
@@ -29,17 +27,13 @@ export class BasicComponent implements OnInit, AfterViewChecked {
     private render: Renderer2,
     private el: ElementRef) {}
 
-  async ngOnInit() {
-    this.components = await this.componentService.GetComponents();
-  }
-
   ngAfterViewChecked() {
     this.SetComponentLayout();
   }
 
   SetComponentLayout() {
-    for (let index in this.components) {
-      let item = this.components[index];
+    for (let index in this.componentService.components) {
+      let item = this.componentService.components[index];
       let el = document.getElementById(item.id.toString()) == null ? this.el.nativeElement : document.getElementById(item.id.toString());
       this.render.setStyle(el, 'height', item.componentSettings?.height + 'px');
       this.render.setStyle(el, 'flex', '0 0 ' + item.componentSettings?.width + 'px');
@@ -48,12 +42,12 @@ export class BasicComponent implements OnInit, AfterViewChecked {
 
    ActivateResize(item: any): void {
     this.resizableActive = true;
-    this.component = item;
+    this.componentService.component = item;
    }
 
-    DisableResize(): void {
+    DisableResize(item: any): void {
      this.resizableActive = false;
-    //this.componentService.EditComponent();
+     this.componentService.EditComponent(item);
     }
 
   HaveIconSet(name:string | undefined):boolean{
@@ -68,10 +62,11 @@ export class BasicComponent implements OnInit, AfterViewChecked {
   }
 
   Drop(event: CdkDragDrop<any[]>): void {
-    if (!this.component.dragMode) return;
-    moveItemInArray(this.components, event.previousIndex, event.currentIndex);
+    if (!this.componentService.dragMode) return;
+    moveItemInArray(this.componentService.components, event.previousIndex, event.currentIndex);
   }
 
   protected readonly FormType = ModalFormType;
   protected readonly SetModalComponentFormData = SetModalComponentFormData;
+  protected readonly TextStringsUtil = TextStringsUtil;
 }
