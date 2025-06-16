@@ -21,3 +21,18 @@ html, body {
   border:none;
   border-radius: 10px;
 }
+
+#saveButton{
+    margin: 0.5em;
+    background-color: #28a744 !important;
+    color: white !important;
+    max-width: 30%;
+}
+
+#cancelButton{
+    margin: 0.5em;
+    background-color: #dd3544 !important;
+    color: white !important;
+    max-width: 30%;
+}
+

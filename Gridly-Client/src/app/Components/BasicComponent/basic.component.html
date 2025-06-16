@@ -17,5 +17,22 @@
   </div>
 </div>
 <div [hidden]="!componentService.resizeMode && !componentService.dragMode" class="sticky-bottom">
-  <button (click)="componentService.DisableModes()" class="btn btn-primary">{{TextStringsUtil.StickDisableButtonTitle}}</button>
+  <div class="container-fluid text-center">
+    <div class="row justify-content-center mb-3">
+      <div class="col-auto">
+        <h5 [hidden]="!componentService.resizeMode">Resize components</h5>
+        <h5 [hidden]="!componentService.dragMode">Move components position</h5>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-auto">
+        <button id="cancelButton" mat-button matTooltip="Cancel changes done with drag and resize" (click)="componentService.DisableModes()">
+          {{TextStringsUtil.StickCancelButtonTitle}}
+        </button>
+        <button id="saveButton" mat-button matTooltip="Save changes done with drag and resize!" (click)="componentService.EditComponents(componentService.components)">
+          {{TextStringsUtil.StickSaveButtonTitle}}
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

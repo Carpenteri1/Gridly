@@ -5,6 +5,7 @@ import {FormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {ModalService} from "../../../../Services/modal.service";
 import {MatHeaderRow} from "@angular/material/table";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   templateUrl: './modal.prompt.html',
@@ -16,7 +17,8 @@ import {MatHeaderRow} from "@angular/material/table";
       FormsModule,
       MatDialogTitle,
       MatButton,
-      MatHeaderRow]
+      MatHeaderRow,
+      MatTooltip]
 })
 export class ModalPrompt {
   public modalModel!: ModalViewModel;

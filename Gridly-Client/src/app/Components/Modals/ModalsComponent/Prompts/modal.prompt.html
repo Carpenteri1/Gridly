@@ -8,6 +8,6 @@
     {{this.modalModel.description}} {{this.modalModel.component.name}}
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close (click)="this.modalService.Submit(this.modalModel)">{{this.modalModel.acceptBtnTitle}}</button>
-  <button mat-button [mat-dialog-close]="true">{{this.modalModel.closeBtnTitle}}</button>
+  <button id="cancelButton"  mat-button matTooltip="Cancel changes" [mat-dialog-close]="true" (click)="this.modalService.Cancel()">{{this.modalModel.closeBtnTitle}}</button>
+  <button id="saveButton" mat-button matTooltip="Save changes" (click)="this.modalService.Submit(this.modalModel)">{{this.modalModel.acceptBtnTitle}}</button>
 </mat-dialog-actions>

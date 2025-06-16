@@ -1,10 +1,13 @@
 export class TextStringsUtil {
 
   static readonly NewVersionAvailableHeaderInfoText = "There is a new version available!&nbsp;&nbsp;";
-  static readonly StickDisableButtonTitle = "Disable Mode";
+
+  static readonly StickCancelButtonTitle = "Cancel";
+  static readonly StickSaveButtonTitle = "Save";
+
   static readonly ModalEditComponentTitle = "Edit";
   static readonly ModalEditComponentAcceptBtnTitle = "Edit";
-  static readonly ModalEditComponentCloseBtnTitle = "Cancel";
+  static readonly ModalEditComponentCancelBtnTitle = "Cancel";
   static readonly ModalEditComponentInputNameTitle = "Edit Component: Title";
   static readonly ModalEditComponentInputUrlTitle = "Edit Component URL: http://127.0.0.1";
   static readonly ModalEditComponentDropDownOptionTitleOne = "Upload New Image to Component";
@@ -13,7 +16,7 @@ export class TextStringsUtil {
 
   static readonly ModalAddComponentTitle = "Add";
   static readonly ModalAddComponentAcceptBtnTitle = "Add";
-  static readonly ModalAddComponentCloseBtnTitle = "Cancel";
+  static readonly ModalAddComponentCancelBtnTitle = "Cancel";
   static readonly ModalAddComponentInputNameTitle = "Enter Component: Title";
   static readonly ModalAddComponentInputUrlTitle = "Enter Component URL: http://127.0.0.1";
   static readonly ModalAddComponentDropDownOptionTitleOne = "Upload Image To Component";
@@ -23,7 +26,7 @@ export class TextStringsUtil {
   static readonly ModalDeleteComponentTitle = "Delete";
   static readonly ModalDeleteComponentHeaderTitle = "Warning";
   static readonly ModalDeleteComponentAcceptBtnTitle = "Delete";
-  static readonly ModalDeleteComponentCloseBtnTitle = "Cancel";
+  static readonly ModalDeleteComponentCancelBtnTitle = "Cancel";
   static readonly ModalDeleteComponentBtnTitle = "You sure you want to delete the component?";
 
   static readonly MenuDropDownAddTitle = "Add Component";

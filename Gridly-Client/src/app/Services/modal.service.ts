@@ -72,7 +72,7 @@ export class ModalService{
         this.openModal(SetModalComponentFormData({
           title: TextStringsUtil.ModalAddComponentTitle,
           acceptBtnTitle: TextStringsUtil.ModalAddComponentAcceptBtnTitle,
-          closeBtnTitle: TextStringsUtil.ModalAddComponentCloseBtnTitle,
+          closeBtnTitle: TextStringsUtil.ModalAddComponentCancelBtnTitle,
           description: '',
           inputNameTitle: TextStringsUtil.ModalAddComponentInputNameTitle,
           inputUrlTitle: TextStringsUtil.ModalAddComponentInputUrlTitle,
@@ -86,7 +86,7 @@ export class ModalService{
         this.openModal(SetModalComponentFormData({
           title: TextStringsUtil.ModalEditComponentTitle,
           acceptBtnTitle: TextStringsUtil.ModalEditComponentAcceptBtnTitle,
-          closeBtnTitle: TextStringsUtil.ModalEditComponentCloseBtnTitle,
+          closeBtnTitle: TextStringsUtil.ModalEditComponentCancelBtnTitle,
           description: '',
           inputNameTitle: TextStringsUtil.ModalEditComponentInputNameTitle,
           inputUrlTitle: TextStringsUtil.ModalEditComponentInputUrlTitle,
@@ -101,7 +101,7 @@ export class ModalService{
           title: TextStringsUtil.ModalDeleteComponentTitle,
           headerTitle: TextStringsUtil.ModalDeleteComponentHeaderTitle,
           acceptBtnTitle: TextStringsUtil.ModalDeleteComponentAcceptBtnTitle,
-          closeBtnTitle: TextStringsUtil.ModalDeleteComponentCloseBtnTitle,
+          closeBtnTitle: TextStringsUtil.ModalDeleteComponentCancelBtnTitle,
           description: TextStringsUtil.ModalDeleteComponentBtnTitle,
           type: modalType.type,
           component: modalType.component}));

@@ -8,10 +8,12 @@ import {ModalService} from "../../Services/modal.service";
 import {ModalViewModel} from "../../Models/ModalView.Model";
 import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
 import {TextStringsUtil} from "../../Constants/text.strings.util";
+import {MatButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'basic-component',
-  imports: [CommonModule, CdkDrag, CdkDropList, ResizableDirective],
+  imports: [CommonModule, CdkDrag, CdkDropList, ResizableDirective, MatButton, MatTooltip],
   templateUrl: './basic.component.html',
   standalone: true,
   styleUrls: ['./basic.component.css']

@@ -8,26 +8,28 @@ import {MatDivider} from "@angular/material/divider";
 import {ModalService} from "../../../../Services/modal.service";
 import {MatSelect} from "@angular/material/select";
 import {MatOption} from "@angular/material/core";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   templateUrl: './modal.component-form.html',
   standalone: true,
   imports:
     [MatDialogClose,
-    MatDialogContent,
-    MatDialogActions,
-    MatFormField,
-    MatLabel,
-    MatFormField,
-    FormsModule,
-    MatInput,
-    MatDialogTitle,
-    MatButton,
-    MatDivider,
-    MatOption,
-    MatSelect,
-    MatOption,
-    MatSelect]
+      MatDialogContent,
+      MatDialogActions,
+      MatFormField,
+      MatLabel,
+      MatFormField,
+      FormsModule,
+      MatInput,
+      MatDialogTitle,
+      MatButton,
+      MatDivider,
+      MatOption,
+      MatSelect,
+      MatOption,
+      MatSelect,
+      MatTooltip]
 })
 export class ModalComponentForm {
   public modalModel!: ModalViewModel;

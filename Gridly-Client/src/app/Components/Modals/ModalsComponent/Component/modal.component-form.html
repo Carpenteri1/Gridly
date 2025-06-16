@@ -1,6 +1,6 @@
 
 <h2 mat-dialog-title>{{this.modalModel.title}}</h2>
-<mat-dialog-content>
+<mat-dialog-content class="component-style">
   <mat-divider>
     {{this.modalModel.description}}
   </mat-divider>
@@ -28,7 +28,7 @@
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close (click)="this.modalService.Submit(this.modalModel)">{{this.modalModel.acceptBtnTitle}}</button>
-  <button mat-button [mat-dialog-close]="true" (click)="this.modalService.Cancel()">{{this.modalModel.closeBtnTitle}}</button>
+  <button id="cancelButton"  mat-button matTooltip="Cancel changes" [mat-dialog-close]="true" (click)="this.modalService.Cancel()" class="btn btn-danger">{{this.modalModel.closeBtnTitle}}</button>
+  <button id="saveButton" mat-button matTooltip="Save changes" (click)="this.modalService.Submit(this.modalModel)" class="btn btn-success">{{this.modalModel.acceptBtnTitle}}</button>
 </mat-dialog-actions>
 
