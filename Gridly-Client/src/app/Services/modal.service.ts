@@ -109,10 +109,6 @@ export class ModalService{
     }
   }
 
-  private SetModalType(type: ModalFormType) : ModalViewModel {
-    return SetModalComponentFormData({type:type});
-  }
-
   private openModal(data: ModalViewModel): MatDialogRef<any> {
     const component: ComponentType<any> =
       (data.type === ModalFormType.Delete || data.type === ModalFormType.None)
@@ -123,6 +119,8 @@ export class ModalService{
       width: '600px',
       enterAnimationDuration: '500ms',
       exitAnimationDuration: '500ms',
+      backdropClass: 'custom-backdrop',
+      panelClass: 'custom-panel',
     });
     ref.componentInstance.modalModel = data;
     return ref;

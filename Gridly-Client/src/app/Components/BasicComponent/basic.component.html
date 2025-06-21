@@ -26,10 +26,10 @@
     </div>
     <div class="row justify-content-center">
       <div class="col-auto">
-        <button id="cancelButton" mat-button matTooltip="Cancel changes done with drag and resize" (click)="componentService.DisableModes()">
+        <button mat-button matTooltip="Cancel changes done with drag and resize" class="cancelButton" (click)="componentService.DisableModes()">
           {{TextStringsUtil.StickCancelButtonTitle}}
         </button>
-        <button id="saveButton" mat-button matTooltip="Save changes done with drag and resize!" (click)="componentService.EditComponents(componentService.components)">
+        <button mat-button matTooltip="Save changes done with drag and resize!" class="saveButton" (click)="componentService.EditComponents(componentService.components)">
           {{TextStringsUtil.StickSaveButtonTitle}}
         </button>
       </div>
