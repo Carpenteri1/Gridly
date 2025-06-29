@@ -33,19 +33,19 @@ public class ComponentRepository(IDataConverter<ComponentModel> dataConverter, I
 
     public bool UploadIcon(IconModel iconData)
     {
-        string filePath = FilePaths.IconPath + $"{iconData.name}.{iconData.fileType}";
+        string filePath = FilePaths.IconPath + $"{iconData.name}.{iconData.type}";
         return fileService.WriteAllBitesToFile(filePath, iconData.base64Data);
     }
     
     public bool DeleteIcon(IconModel iconData)
     {
-        string filePath = FilePaths.IconPath + $"{iconData.name}.{iconData.fileType}";
+        string filePath = FilePaths.IconPath + $"{iconData.name}.{iconData.type}";
         return fileService.FileExist(filePath) && fileService.DeletedFile(filePath);
     }
 
     public bool IconDuplicate(IEnumerable<ComponentModel>componentModels, IconModel iconData) =>
         componentModels.Where(x => x.IconData != null &&
                                     x.IconData.name == iconData.name &&
-                                    x.IconData.fileType == iconData.fileType).Any();
+                                    x.IconData.type == iconData.type).Any();
     
 }

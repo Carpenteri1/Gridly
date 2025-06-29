@@ -1,5 +1,5 @@
 export class IconModel {
-  fileType!: string;
+  type!: string;
   name!: string;
   base64Data!: string;
 }

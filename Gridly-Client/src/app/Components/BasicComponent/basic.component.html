@@ -7,7 +7,7 @@
         <button (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Delete, component: item}))" class="btn btn-dark"><i class="bi bi-x-lg"></i></button>
       </div>
         <a [style]="resizableActive ? 'cursor:none;':'cursor:auto;'" [href]="resizableActive ? null : item.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-100" target="_blank">
-          <img [hidden]="!HaveIconSet(item.iconData?.name) || item.imageHidden" [src]="IconFilePath(item.iconData?.name,item.iconData?.fileType)" class="p-1 icon-size component-icon-center" alt="icon not found">
+          <img [hidden]="!HaveIconSet(item.iconData?.name) || item.imageHidden" [src]="IconFilePath(item.iconData?.name,item.iconData?.type)" class="p-1 icon-size component-icon-center" alt="icon not found">
           <img [hidden]="!HaveImagUrlSet(item.imageUrl) || item.imageHidden" [src]="item.imageUrl" class="p-1 icon-size component-icon-center" alt="icon not found">
           <p [hidden]="item.titleHidden" class="text-center" >{{item.name}}</p>
         </a>

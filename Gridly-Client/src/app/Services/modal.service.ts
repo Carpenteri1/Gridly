@@ -10,9 +10,11 @@ import {SetModalComponentFormData, SetModalPromptData} from "../Utils/viewModel.
 import {SetComponentData, SetIconData} from "../Utils/componentModal.factory";
 import {ModalPrompt} from "../Components/Modals/ModalsComponent/Prompts/modal.prompt";
 import {ComponentType} from "@angular/cdk/portal";
+import {RegexStringsUtil} from "../Constants/regex.strings.util";
 
 @Injectable({providedIn: 'root'})
 export class ModalService{
+  isClicked: boolean = false;
 
   constructor(private dialog: MatDialog, protected componentService: ComponentService) {}
 
@@ -23,14 +25,45 @@ export class ModalService{
   Submit(modalType: ModalViewModel) {
     switch (modalType.type) {
       case ModalFormType.Add:
-        return this.componentService.AddComponent(modalType.component ?? SetComponentData());
+        debugger;
+        this.isClicked = this.componentService.AddComponent(modalType.component ?? SetComponentData());
+        break;
       case ModalFormType.Edit:
-        return this.componentService.EditComponent(modalType.component ?? SetComponentData());
+        this.isClicked = this.componentService.EditComponent(modalType.component ?? SetComponentData());
+        break;
       case ModalFormType.Delete:
-        return this.componentService.DeleteComponent(modalType.component.id ?? SetComponentData());
+        this.isClicked = this.componentService.DeleteComponent(modalType.component.id ?? SetComponentData());
+        break;
       default:
-        return false;
+        break;
     }
+    this.ResetFormData()
+    window.location.reload();
+    return this.isClicked;
+  }
+
+  public CanEditComponent() {
+    return
+    this.NoEmptyInputFields &&
+    JSON.stringify(this.componentService.componentEndpointService.GetComponentById) !==
+    JSON.stringify(this.componentService.component);
+  }
+
+  get NoEmptyInputFields(): boolean{
+    if(this.componentService.component.name !== "" && this.componentService.component.url !== ""
+      //&&
+      // RegexStringsUtil.urlPattern.test(this.component.url) && RegexStringsUtil.namePattern.test(this.component.name)
+    ){
+
+      if(this.componentService.component.iconData?.name !== "") (
+        this.componentService.component.imageUrl !== "" &&
+        this.componentService.component.imageUrl !== undefined &&
+        RegexStringsUtil.imageUrlPattern.test(this.componentService.component.imageUrl))
+      {
+        return true;
+      }
+    }
+    return false;
   }
 
   Cancel(): void {
@@ -43,24 +76,26 @@ export class ModalService{
   }
 
   OnFileUpload(event:any): IconModel | undefined{
-    if (event.target.files && event.target.files.length > 0) {
-      this.componentService.component.iconData = SetIconData();
+    if (event.target.files.length > 0) {
       const file = event.target.files[0];
-      this.SetFileNameAndType(file.name);
 
-      if(this.componentService.component.iconData.fileType === 'svg' ||
-        this.componentService.component.iconData.fileType === 'png' ||
-        this.componentService.component.iconData.fileType === 'jpg' ||
-        this.componentService.component.iconData.fileType === 'jpeg' ||
-        this.componentService.component.iconData.fileType === 'ico')
+      if(file.type.includes('svg') ||
+        file.type.includes('png') ||
+        file.type.includes('jpg') ||
+        file.type.includes('jpeg') ||
+        file.type.includes('ico'))
       {
+        let iconData = new IconModel;
         const reader = new FileReader();
         reader.onload = () => {
-          this.componentService.component.iconData!.base64Data = reader.result as string;
-          this.componentService.component.iconData!.base64Data =  this.componentService.component.iconData!.base64Data.split(',')[1];
+          iconData.base64Data = reader.result as string;
+          iconData.base64Data = iconData.base64Data .split(',')[1];
         };
         reader.readAsDataURL(file);
-        return this.componentService.component.iconData;
+        let nameSplit = file.name.split('.');
+        iconData.name = nameSplit[0];
+        iconData.type = nameSplit[1];
+        return iconData;
       }
     }
     return undefined;
@@ -126,9 +161,17 @@ export class ModalService{
     return ref;
   }
 
-  private SetFileNameAndType(inputName: string){
-   let result = inputName.split('.');
-   this.componentService.component.iconData!.name = result[0];
-   this.componentService.component.iconData!.fileType = result[1];
+  ResetFormData(): void{
+    this.componentService.component.id = 0;
+    this.componentService.component.name = "";
+    this.componentService.component.url = "";
+    this.componentService.component.titleHidden = false;
+    this.componentService.component.imageHidden = false;
+    this.ResetIconData();
+  }
+
+  ResetIconData(){
+    this.componentService.component.iconData = undefined;
+    this.componentService.component.imageUrl = "";
   }
 }

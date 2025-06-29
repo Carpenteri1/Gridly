@@ -8,7 +8,7 @@ import {MatDivider} from "@angular/material/divider";
 import {ModalService} from "../../../../Services/modal.service";
 import {MatSelect} from "@angular/material/select";
 import {MatOption} from "@angular/material/core";
-import {MatTooltip} from "@angular/material/tooltip";
+import {NgClass} from "@angular/common";
 
 @Component({
   templateUrl: './modal.component-form.html',
@@ -29,7 +29,7 @@ import {MatTooltip} from "@angular/material/tooltip";
       MatSelect,
       MatOption,
       MatSelect,
-      MatTooltip]
+      NgClass]
 })
 export class ModalComponentForm {
   public modalModel!: ModalViewModel;

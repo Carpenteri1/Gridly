@@ -2,7 +2,8 @@ import {Injectable} from "@angular/core";
 import {ComponentModel} from "../Models/Component.Model";
 import {SetComponentData} from "../Utils/componentModal.factory";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
-import {firstValueFrom, Observable, take} from "rxjs";
+import {Observable, take} from "rxjs";
+import {IconModel} from "../Models/Icon.Model";
 @Injectable({providedIn: 'root'})
 export class ComponentService{
   editMode!: boolean;
@@ -11,6 +12,7 @@ export class ComponentService{
   components$!: Observable<ComponentModel[]>;
   components!: ComponentModel[];
   component!: ComponentModel;
+  iconData!: IconModel;
   constructor(public componentEndpointService: ComponentEndpointService) {
     this.components$ = this.componentEndpointService.GetComponents();
     this.components$.pipe(take(1)).subscribe(data => this.components = data);
@@ -44,17 +46,12 @@ export class ComponentService{
   }
 
   AddComponent(component: ComponentModel) : boolean {
-      /*this.componentEndpointService.GetComponents().pipe(take(1))
-        .subscribe((components) => {
-          this.components = components.sort((a, b) => a.id - b.id);
-        });*/
       component = SetComponentData(component,{id: Math.max(...this.components.map(x => x.id)) + 1});
-
-      let index = this.componentEndpointService.GetIndex(component.id);
+      let index = this.componentEndpointService.GetIndex(component.id);;
       if(index === -1 && component.name !== "" && component.url !== "")
       {
         if(component.iconData != null || component.iconData !== undefined){
-          if(component.iconData?.base64Data !== "" && component.iconData?.name !== "" && component.iconData?.fileType !== ""){
+          if(component.iconData?.base64Data !== "" && component.iconData?.name !== "" && component.iconData?.type !== ""){
             this.componentEndpointService.AddComponent(SetComponentData(component)).pipe(take(1)).subscribe({
               next: (res) => console.log('Component saved!', res),
               error: (err) => console.error('Save failed:', err)
@@ -69,7 +66,6 @@ export class ComponentService{
             return true;
           }
         }
-
       }
       else{
         this.AddComponent(component);
@@ -78,19 +74,43 @@ export class ComponentService{
     return false;
   }
 
-  async GetComponents(): Promise<ComponentModel[]> {
-    return await firstValueFrom(this.componentEndpointService.GetComponents());
-  }
-
-  EditComponent(component: ComponentModel) {
-    if(component.id !== 0)
+  EditComponent(component: ComponentModel): boolean {
+    if(component.id !== 0){
       this.componentEndpointService.EditComponent(component,component.iconData);
+      return true;
+    }
+    return false;
   }
 
-  DeleteComponent(id: number): void {
+  EditComponents(editedComponents: ComponentModel[]) {
+    for (let i = editedComponents.length - 1; i >= 0; i--) {
+      for (let j = editedComponents.length - 1; j >= 0; j--) {
+        if(this.components[i].componentSettings?.height != editedComponents[i].componentSettings?.height ||
+        this.components[i].componentSettings?.width != editedComponents[i].componentSettings?.width){
+          this.componentEndpointService.EditComponent(editedComponents[i],this.components[i].iconData);
+        }
+        //TODO is component index same as edited compoent index
+      }
+    }
+  }
+
+  DeleteComponent(id: number): boolean {
+    let success = true;
+
     this.componentEndpointService.Delete(id).pipe(take(1)).subscribe({
-      next: (res) => console.log('Component deleted!', res),
-      error: (err) => console.error('Delete failed:', err)
+      next: (res) => {
+        if (res == null) {  // adjust depending on your API shape
+          console.warn('Response is null or invalid:', res);
+          success = false;
+        } else {
+          console.log('Component deleted!', res);
+        }
+      },
+      error: (err) => {
+        console.error('Delete failed:', err);
+        success = false;
+      }
     });
+    return success;
   }
 }

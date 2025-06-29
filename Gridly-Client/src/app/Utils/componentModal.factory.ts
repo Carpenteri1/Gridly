@@ -14,10 +14,10 @@ export function SetComponentData(component?: ComponentModel, overrides: Partial<
   } as ComponentModel;
 }
 
-export function SetIconData(iconData?: IconModel ,overrides: Partial<IconModel> = {}): IconModel {
-  return {
-    fileType: overrides.fileType ?? iconData?.fileType ?? "",
-    name: overrides.name ?? iconData?.name ?? "",
-    base64Data: overrides.base64Data ?? iconData?.base64Data ?? "",
-  } as IconModel;
+export function SetIconData(iconData: IconModel, overrides: Partial<IconModel> = {}): IconModel {
+   return {
+     type: overrides.type ?? iconData?.type ?? "",
+     name: overrides.name ?? iconData?.name ?? "",
+     base64Data: overrides.base64Data ?? iconData?.base64Data ?? "",
+    } as IconModel;
 }
