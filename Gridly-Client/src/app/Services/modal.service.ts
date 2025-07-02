@@ -7,15 +7,14 @@ import {ModalViewModel} from "../Models/ModalView.Model";
 import {ComponentService} from "./component.service";
 import {IconModel} from "../Models/Icon.Model";
 import {SetModalComponentFormData, SetModalPromptData} from "../Utils/viewModel.factory";
-import {SetComponentData, SetIconData} from "../Utils/componentModal.factory";
+import {SetComponentData} from "../Utils/componentModal.factory";
 import {ModalPrompt} from "../Components/Modals/ModalsComponent/Prompts/modal.prompt";
 import {ComponentType} from "@angular/cdk/portal";
 import {RegexStringsUtil} from "../Constants/regex.strings.util";
 
 @Injectable({providedIn: 'root'})
 export class ModalService{
-  isClicked: boolean = false;
-
+  canSubmit:boolean = false;
   constructor(private dialog: MatDialog, protected componentService: ComponentService) {}
 
   GetModalType(modalType: ModalViewModel ){
@@ -25,43 +24,66 @@ export class ModalService{
   Submit(modalType: ModalViewModel) {
     switch (modalType.type) {
       case ModalFormType.Add:
-        debugger;
-        this.isClicked = this.componentService.AddComponent(modalType.component ?? SetComponentData());
-        break;
+        return this.componentService.AddComponent(modalType.component ?? SetComponentData());
       case ModalFormType.Edit:
-        this.isClicked = this.componentService.EditComponent(modalType.component ?? SetComponentData());
-        break;
+        return this.componentService.EditComponent(modalType.component ?? SetComponentData());
       case ModalFormType.Delete:
-        this.isClicked = this.componentService.DeleteComponent(modalType.component.id ?? SetComponentData());
-        break;
+        return this.componentService.DeleteComponent(modalType.component.id ?? SetComponentData());
       default:
-        break;
+        return false;
     }
-    this.ResetFormData()
-    window.location.reload();
-    return this.isClicked;
   }
 
-  public CanEditComponent() {
-    return
-    this.NoEmptyInputFields &&
+  private get CanEditComponent() : boolean {
+    return this.NoEmptyInputFields &&
     JSON.stringify(this.componentService.componentEndpointService.GetComponentById) !==
     JSON.stringify(this.componentService.component);
   }
 
-  get NoEmptyInputFields(): boolean{
-    if(this.componentService.component.name !== "" && this.componentService.component.url !== ""
-      //&&
-      // RegexStringsUtil.urlPattern.test(this.component.url) && RegexStringsUtil.namePattern.test(this.component.name)
-    ){
+  private get CanAddComponent() : boolean{
+    return this.NoEmptyInputFields;
+  }
 
-      if(this.componentService.component.iconData?.name !== "") (
-        this.componentService.component.imageUrl !== "" &&
-        this.componentService.component.imageUrl !== undefined &&
-        RegexStringsUtil.imageUrlPattern.test(this.componentService.component.imageUrl))
-      {
-        return true;
+  public CanSubmit(viewModel: ModalViewModel): boolean {
+      switch (viewModel.type) {
+        case ModalFormType.Add:
+          this.componentService.component = viewModel.component;
+          this.canSubmit = this.CanAddComponent;
+          break;
+        case ModalFormType.Edit:
+          this.componentService.component = viewModel.component;
+          this.canSubmit = this.CanEditComponent;
+          break;
+        default:
+          this.canSubmit = false;
+          break;
       }
+      return this.canSubmit;
+  }
+
+  private get NoEmptyInputFields(): boolean{
+    return this.CheckComponentData && this.CheckIconData;
+  }
+
+  private get CheckComponentData(): boolean {
+    return this.componentService.component !== undefined &&
+      this.componentService.component.name !== "" &&
+      this.componentService.component.url !== "" &&
+      RegexStringsUtil.urlPattern.test(this.componentService.component.url) &&
+      RegexStringsUtil.namePattern.test(this.componentService.component.name);
+  }
+
+  private get CheckIconData(): boolean {
+    if(this.componentService.component.iconData != undefined &&
+      this.componentService.component.iconData?.name !== "" &&
+      this.componentService.component.iconData?.type !== undefined &&
+      this.componentService.component.iconData?.base64Data !== ""){
+      return true;
+    }
+    else if(this.componentService.component.imageUrl !== undefined  &&
+      this.componentService.component.imageUrl !== "" &&
+      RegexStringsUtil.imageUrlPattern.test(this.componentService.component.imageUrl)){
+      return true;
     }
     return false;
   }

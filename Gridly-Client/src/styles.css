@@ -21,7 +21,7 @@ html, body {
   border-radius: 10px;
 }
 
-.saveButton{
+.enabled-save-button{
     margin: 0.5em;
     background-color: #28a744 !important;
     color: white !important;
