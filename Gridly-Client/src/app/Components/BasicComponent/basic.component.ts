@@ -48,8 +48,10 @@ export class BasicComponent implements AfterViewChecked {
    }
 
     DisableResize(item: any): void {
-     this.resizableActive = false;
-     this.componentService.EditComponent(item);
+      if(this.resizableActive){
+        this.resizableActive = false;
+        this.componentService.EditComponents(item);
+      }
     }
 
   HaveIconSet(name:string | undefined):boolean{

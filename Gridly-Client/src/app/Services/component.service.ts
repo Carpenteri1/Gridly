@@ -74,42 +74,48 @@ export class ComponentService{
     return false;
   }
 
-  EditComponent(component: ComponentModel): boolean {
+  EditComponent(component: ComponentModel) {
     if(component.id !== 0){
-      this.componentEndpointService.EditComponent(component,component.iconData);
-      return true;
+      this.componentEndpointService.EditComponent(component).pipe(take(1)).subscribe({
+        next: (res) => console.log('Component saved!', res),
+        error: (err) => console.error('Save failed:', err)
+      });
     }
-    return false;
   }
 
   EditComponents(editedComponents: ComponentModel[]) {
-    for (let i = editedComponents.length - 1; i >= 0; i--) {
-      for (let j = editedComponents.length - 1; j >= 0; j--) {
-        if(this.components[i].componentSettings?.height != editedComponents[i].componentSettings?.height ||
-        this.components[i].componentSettings?.width != editedComponents[i].componentSettings?.width){
-          this.componentEndpointService.EditComponent(editedComponents[i],this.components[i].iconData);
+      for (let i = editedComponents.length - 1; i >= 0; i--) {
+        if(this.resizeMode){
+          for(let j = this.components.length - 1; j >= 0; j--) {
+            if(this.components[j].componentSettings?.height !== editedComponents[i].componentSettings?.height ||
+              this.components[j].componentSettings?.width !== editedComponents[i].componentSettings?.width)
+            {
+              this.componentEndpointService.EditComponent(editedComponents[i]).pipe(take(1)).subscribe({
+                next: (res) => console.log('Component saved!', res),
+                error: (err) => console.error('Save failed:', err)
+              });
+              break;
+            }
+          }
         }
-        //TODO is component index same as edited compoent index
+        if(this.dragMode){
+          const originalIndex = this.components.findIndex(c => c.id === editedComponents[i].id);
+          if(originalIndex === -1){
+            this.componentEndpointService.EditComponent(editedComponents[i]).pipe(take(1)).subscribe({
+              next: (res) => console.log('Component saved!', res),
+              error: (err) => console.error('Save failed:', err)
+            });
+            break;
+          }
       }
     }
   }
 
   DeleteComponent(id: number): boolean {
     let success = true;
-
     this.componentEndpointService.Delete(id).pipe(take(1)).subscribe({
-      next: (res) => {
-        if (res == null) {  // adjust depending on your API shape
-          console.warn('Response is null or invalid:', res);
-          success = false;
-        } else {
-          console.log('Component deleted!', res);
-        }
-      },
-      error: (err) => {
-        console.error('Delete failed:', err);
-        success = false;
-      }
+      next: (res) => console.log('Component saved!', res),
+      error: (err) => console.error('Save failed:', err)
     });
     return success;
   }

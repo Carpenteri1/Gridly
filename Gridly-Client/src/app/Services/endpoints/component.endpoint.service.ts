@@ -32,7 +32,7 @@ export class ComponentEndpointService{
   }
 
   EditComponent(editedComponent: ComponentModel, editIconData?: IconModel): Observable<ComponentModel> {
-    return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlEdit, {editedComponent, editIconData});
+    return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlEdit, {editedComponent});
   }
 
   GetIndex(id: number): number{
