@@ -1,6 +1,4 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from "rxjs";
 import {UrlStringsUtil} from "../../Constants/url.strings.util";
 import {ComponentModel} from "../../Models/Component.Model";
 import {IconModel} from "../../Models/Icon.Model";
@@ -11,7 +9,6 @@ import {IconModel} from "../../Models/Icon.Model";
 
 export class ComponentEndpointService{
   private flexItems: ComponentModel[] = [];
-  isLoading = false;
 
   constructor(private http: HttpClient) {}
 
@@ -33,6 +30,10 @@ export class ComponentEndpointService{
 
   EditComponent(editedComponent: ComponentModel, editIconData?: IconModel): Observable<ComponentModel> {
     return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlEdit, {editedComponent});
+  }
+
+  EditComponents(editedComponent: ComponentModel[]): Observable<ComponentModel[]> {
+    return this.http.post<ComponentModel[]>(UrlStringsUtil.ComponentsBatchUrlEdit, editedComponent);
   }
 
   GetIndex(id: number): number{

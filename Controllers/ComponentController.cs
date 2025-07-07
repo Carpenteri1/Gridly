@@ -25,6 +25,10 @@ public class ComponentController(IMediator meditor) : ControllerBase
     [HttpPost("edit")]
     public async Task<IResult> Edit([FromBody] EditComponentCommand command) => 
         await meditor.Send(command);
+    
+    [HttpPost("batch/edit")]
+    public async Task<IResult> Edit([FromBody] BatchEditComponentCommand command) => 
+        await meditor.Send(command);
 
     [HttpDelete("delete/{id}")]
     public async Task<IResult> Delete(int id) => 

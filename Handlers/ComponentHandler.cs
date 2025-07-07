@@ -9,7 +9,8 @@ public class ComponentHandler(IComponentRepository componentRepository) :
     IRequestHandler<GetAllComponentCommand, ComponentModel[]>,
     IRequestHandler<GetByIdComponentCommands, ComponentModel>,
     IRequestHandler<DeleteComponentCommand, IResult>,
-    IRequestHandler<EditComponentCommand, IResult>
+    IRequestHandler<EditComponentCommand, IResult>,
+    IRequestHandler<BatchEditComponentCommand, IResult>
 {
     public Task<ComponentModel[]> Handle(SaveComponentCommand commands, CancellationToken cancellationToken)
     {
@@ -86,6 +87,52 @@ public class ComponentHandler(IComponentRepository componentRepository) :
         for(int i = 0;i<componentModels.Length;i++)
             if (componentModels[i].Id == command.EditedComponent.Id) 
                 componentModels[i] =  command.EditedComponent;
+        
+        return componentRepository.Save(componentModels) ? 
+            Results.Ok() : Results.StatusCode(500);
+    }
+    
+    public async Task<IResult> Handle(BatchEditComponentCommand command, CancellationToken cancellationToken)
+    {
+        var componentModels = (await componentRepository.Get()).ToArray();
+        
+        if (componentModels is null || !componentModels.Any())
+            return Results.NotFound();
+
+        foreach (var c in command)
+        {
+            if (c.ImageUrl != null || 
+                c.ImageUrl != string.Empty)
+            {
+                if (c.IconData != null && 
+                    !componentRepository.IconDuplicate(componentModels, c.IconData))
+                {
+                    if(!componentRepository.DeleteIcon(c.IconData))
+                        return Results.NotFound();
+                }
+            }
+            else
+            {
+                if (!componentRepository.IconDuplicate(componentModels, c.IconData))
+                {
+                    componentRepository.UploadIcon(c.IconData);
+                    c.ImageUrl = string.Empty;
+                }   
+            }   
+        }
+
+        for (int i = 0; i < componentModels.Length; i++)
+        {
+            var index = command.IndexOf(componentModels[i]);
+            if (index != i)
+            {
+                componentModels = command.ToArray();
+            }
+            
+            var c = command.Find(x => x.Id == componentModels[i].Id);
+            if (c != null && componentModels[i].Id == c.Id)
+                componentModels[i] = c;
+        }
         
         return componentRepository.Save(componentModels) ? 
             Results.Ok() : Results.StatusCode(500);

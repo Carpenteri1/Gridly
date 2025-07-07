@@ -21,15 +21,16 @@ export class ModalService{
       this.BuildModalTypeData(modalType);
   }
 
-  Submit(modalType: ModalViewModel) {
+  Submit(modalType: ModalViewModel) : boolean {
     switch (modalType.type) {
       case ModalFormType.Add:
         return this.componentService.AddComponent(modalType.component ?? SetComponentData());
       case ModalFormType.Edit:
-        return this.componentService.EditComponent(modalType.component ?? SetComponentData());
+        return this.componentService.EditComponentData(modalType.component ?? SetComponentData());
       case ModalFormType.Delete:
-        return this.componentService.DeleteComponent(modalType.component.id ?? SetComponentData());
+        return this.componentService.DeleteComponent(modalType.component ?? SetComponentData());
       default:
+         console.error("Unknown modal type: " + modalType.type);
         return false;
     }
   }
@@ -135,7 +136,7 @@ export class ModalService{
           inputUrlTitle: TextStringsUtil.ModalAddComponentInputUrlTitle,
           dropDownTitleOne: TextStringsUtil.ModalAddComponentDropDownOptionTitleOne,
           dropDownTitleTwo: TextStringsUtil.ModalAddComponentDropDownOptionTitleTwo,
-          linkToImageTitle: TextStringsUtil.ModalAddComponenLinkToImageTitle,
+          linkToImageTitle: TextStringsUtil.ModalAddComponentLinkToImageTitle,
           type: modalType.type,
           component: modalType.component}));
         break;

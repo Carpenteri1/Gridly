@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { BasicComponent } from './Components/BasicComponent/basic.component';
 import { HeaderComponent } from "./Components/Header/header.component";
+import {TextStringsUtil} from "./Constants/text.strings.util";
 
 @Component({
   selector: 'app-root',
@@ -10,5 +11,5 @@ import { HeaderComponent } from "./Components/Header/header.component";
   imports: [BasicComponent, HeaderComponent]
 })
 export class AppComponent {
-  title = 'Gridly';
+  title = TextStringsUtil.ClientTitle;
 }

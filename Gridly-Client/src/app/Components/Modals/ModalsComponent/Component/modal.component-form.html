@@ -28,6 +28,6 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button [mat-dialog-close]="true" (click)="this.modalService.Cancel()" class="btn btn-danger cancelButton">{{this.modalModel.closeBtnTitle}}</button>
-  <button mat-button [ngClass]="{'enabled-save-button': modalService.canSubmit}" [disabled]="!modalService.CanSubmit(modalModel)" [mat-dialog-close]="true" (click)="this.Submit(this.modalModel)" class="btn btn-success saveButton">{{this.modalModel.acceptBtnTitle}}</button>
+  <button mat-button [ngClass]="{'enabled-save-button': modalService.canSubmit}" [disabled]="!modalService.CanSubmit(modalModel)" [mat-dialog-close]="true" (click)="this.Submit(this.modalModel)" class="btn btn-success">{{this.modalModel.acceptBtnTitle}}</button>
 </mat-dialog-actions>
 

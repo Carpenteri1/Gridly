@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.versionEndpointService.CheckForNewRelease();
-    if (this.versionEndpointService.GetVersionName() === '') {
+    if (this.versionEndpointService.GetVersionName() === "") {
       this.versionEndpointService.CheckForCurrentRelease();
     }
   }

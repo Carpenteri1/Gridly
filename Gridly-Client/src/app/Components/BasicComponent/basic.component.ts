@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, ElementRef, OnInit, Renderer2} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Renderer2} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ResizableDirective} from "../../Directives/resizable.directive";
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -10,6 +10,8 @@ import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
 import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {MatButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
+import {IconModel} from "../../Models/Icon.Model";
+import {EndPointType} from "../../Types/endPoint.type.enum";
 
 @Component({
   selector: 'basic-component',
@@ -27,7 +29,9 @@ export class BasicComponent implements AfterViewChecked {
     protected componentService: ComponentService,
     protected modalService: ModalService,
     private render: Renderer2,
-    private el: ElementRef) {}
+    private el: ElementRef) {
+    componentService.CallEndpoint(EndPointType.Get)
+  }
 
   ngAfterViewChecked() {
     this.SetComponentLayout();
@@ -50,18 +54,21 @@ export class BasicComponent implements AfterViewChecked {
     DisableResize(item: any): void {
       if(this.resizableActive){
         this.resizableActive = false;
-        this.componentService.EditComponents(item);
       }
     }
 
-  HaveIconSet(name:string | undefined):boolean{
-    return name !== undefined && name != null && name !== "";
+  HaveIconSet(iconData: IconModel | undefined):boolean{
+    if(iconData === undefined){
+      return false;
+    }
+    return iconData.name !== undefined && iconData.name !== "";
   }
+
   HaveImagUrlSet(imageUrl:string | undefined):boolean{
     return imageUrl !== undefined && imageUrl != null && imageUrl !== "";
   }
 
-  IconFilePath(name:string | undefined, fileType:string | undefined): string {
+  IconFilePath(name:string, fileType:string): string {
     return "Assets/Icons/" + name + "." + fileType;
   }
 

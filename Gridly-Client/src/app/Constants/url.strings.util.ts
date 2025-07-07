@@ -9,6 +9,7 @@ export class UrlStringsUtil {
   static readonly ComponentUrlGetById = this.ComponentUrl+'getbyid/';
   static readonly ComponentUrlSave = this.ComponentUrl+'save';
   static readonly ComponentUrlEdit = this.ComponentUrl+'edit';
+  static readonly ComponentsBatchUrlEdit = this.ComponentUrl+'batch/edit';
 
   static readonly GitHubReleaseURL = 'https://github.com/Carpenteri1/Gridly/releases/tag/';
 }

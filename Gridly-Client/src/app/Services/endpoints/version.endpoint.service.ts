@@ -40,7 +40,7 @@ export class VersionEndpointService implements  OnInit{
 
   GetVersionName() {
     if(this.version === undefined || this.version === null) {
-      return '';
+      return "";
     }
     return this.version.name;
   }

@@ -7,8 +7,8 @@
         <button (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Delete, component: item}))" class="btn btn-dark"><i class="bi bi-x-lg"></i></button>
       </div>
         <a [style]="resizableActive ? 'cursor:none;':'cursor:auto;'" [href]="resizableActive ? null : item.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-100" target="_blank">
-          <img *ngIf="item.iconData && HaveIconSet(item.iconData.name) && !item.imageHidden" [src]="IconFilePath(item.iconData?.name,item.iconData?.type)" class="p-1 icon-size component-icon-center" alt="icon not found">
-          <img *ngIf="!HaveIconSet(item.iconData?.name) && item.imageHidden" [src]="item.imageUrl" class="p-1 icon-size component-icon-center" alt="icon not found">
+          <img *ngIf="item.iconData && HaveIconSet(item.iconData) && !item.imageHidden" [src]="IconFilePath(item.iconData.name,item.iconData.type)" class="p-1 icon-size component-icon-center" alt="icon not found">
+          <img *ngIf="!HaveIconSet(item.iconData) && item.imageHidden" [src]="item.imageUrl" class="p-1 icon-size component-icon-center" alt="icon not found">
           <p [hidden]="item.titleHidden" class="text-center" >{{item.name}}</p>
         </a>
         <span [hidden]="!componentService.resizeMode"  class="component-resize-button" (pointerdown)="ActivateResize(item)" (document:pointerup)="DisableResize(item)">
@@ -29,7 +29,7 @@
         <button mat-button matTooltip="Cancel changes done with drag and resize" class="cancelButton" (click)="componentService.DisableModes()">
           {{TextStringsUtil.StickCancelButtonTitle}}
         </button>
-        <button mat-button matTooltip="Save changes done with drag and resize!" class="saveButton" (click)="componentService.EditComponents(componentService.components)">
+        <button mat-button matTooltip="Save changes done with drag and resize!" class="enabled-save-button"(click)="componentService.EditComponentsData(componentService.components)">
           {{TextStringsUtil.StickSaveButtonTitle}}
         </button>
       </div>

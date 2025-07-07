@@ -21,7 +21,7 @@ export class TextStringsUtil {
   static readonly ModalAddComponentInputUrlTitle = "Enter Component URL: http://127.0.0.1";
   static readonly ModalAddComponentDropDownOptionTitleOne = "Upload Image To Component";
   static readonly ModalAddComponentDropDownOptionTitleTwo = "Link To Image";
-  static readonly ModalAddComponenLinkToImageTitle = "URL To Image"
+  static readonly ModalAddComponentLinkToImageTitle = "URL To Image"
 
   static readonly ModalDeleteComponentTitle = "Delete";
   static readonly ModalDeleteComponentHeaderTitle = "Warning";
@@ -33,4 +33,15 @@ export class TextStringsUtil {
   static readonly MenuDropDownEditTitle = "Edit Component";
   static readonly MenuDropDownDragTitle = "Move Components";
   static readonly MenuDropDownResizeTitle = "Resize Components";
+
+  static readonly ComponentSavedEndPointSuccessMessage = "Component saved";
+  static readonly ComponentSavedFailedEndPointMessage = "Component save failed";
+
+  static readonly ComponentsSavedEndPointSuccessMessage = "Components saved";
+  static readonly ComponentsFailedEndPointSuccessMessage = "Components save failed";
+
+  static readonly ComponentDeletedSuccessEndPointMessage = "Component deleted";
+  static readonly ComponentDeletionFailedEndPointMessage = "Component deletion failed";
+
+  static readonly ClientTitle = "Gridly";
 }

@@ -1,6 +1,6 @@
 namespace Gridly.Models;
 
-public class EditComponentForm
+public class EditFormModel
 {
     public ComponentModel EditedComponent { get; set; }
 }

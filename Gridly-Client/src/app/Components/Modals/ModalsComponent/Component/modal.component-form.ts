@@ -40,11 +40,8 @@ export class ModalComponentForm {
     this.modalModel.component.iconData = this.modalService.OnFileUpload(event);
   }
   protected Submit(modalViewModel: ModalViewModel) {
-    debugger;
     if(this.modalService.Submit(modalViewModel)){
       //window.location.reload();
     }
   }
-
-  protected readonly ModalFormType = ModalFormType;
 }
