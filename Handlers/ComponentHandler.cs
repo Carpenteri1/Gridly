@@ -5,34 +5,59 @@ using MediatR;
 
 namespace Gridly.Handlers;
 public class ComponentHandler(IComponentRepository componentRepository) : 
-    IRequestHandler<SaveComponentCommand, ComponentModel[]>,
+    IRequestHandler<SaveComponentCommand, IResult>,
     IRequestHandler<GetAllComponentCommand, ComponentModel[]>,
     IRequestHandler<GetByIdComponentCommands, ComponentModel>,
     IRequestHandler<DeleteComponentCommand, IResult>,
     IRequestHandler<EditComponentCommand, IResult>,
     IRequestHandler<BatchEditComponentCommand, IResult>
 {
-    public Task<ComponentModel[]> Handle(SaveComponentCommand commands, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(SaveComponentCommand commands, CancellationToken cancellationToken)
     {
-        if (commands.IconData != null &&
-            !componentRepository.UploadIcon(commands.IconData))
-            return Task.FromResult<ComponentModel[]>(null);
-
-        if (commands.ComponentSettings == null)
-            commands.ComponentSettings = new ComponentSettingsModel(200, 200);
-
         var componentModels = 
             componentRepository.Get().Result?.ToList();
+
+        if (commands.ImageUrl != null && 
+            commands.ImageUrl != string.Empty)
+        {
+            if (commands.IconData != null && 
+                componentRepository.IconDuplicate(componentModels,commands.IconData))
+            {
+                if(!componentRepository.DeleteIcon(commands.IconData))
+                    return Results.NotFound();
+                
+                commands.IconData = null;
+            }
+        }
+        else if(commands.IconData != null && 
+                commands.IconData.name != string.Empty && commands.IconData.name != null &&
+                commands.IconData.type != string.Empty && commands.IconData.type != null &&
+                commands.IconData.base64Data != string.Empty && commands.IconData.base64Data != null)
+        {
+            if (!componentRepository.IconDuplicate(componentModels, commands.IconData))
+            {
+                componentRepository.UploadIcon(commands.IconData);
+                commands.ImageUrl = string.Empty;
+            }   
+        }
+        
+        if (commands.IconData != null &&
+            !componentRepository.UploadIcon(commands.IconData))
+            return Results.NotFound();
+        
+        if (commands.ComponentSettings == null)
+            commands.ComponentSettings = new ComponentSettingsModel(200, 200);
         
         if(componentModels is null || !componentModels.Any()) 
             componentModels = new List<ComponentModel>();
         
         componentModels.Add(commands);
-        componentRepository.Save(componentModels);
-        return Task.FromResult(componentModels.ToArray());
+        
+        return componentRepository.Save(componentModels) ? 
+            Results.Ok() : Results.StatusCode(500);
     }
     
-    public async Task<IResult> Handle(DeleteComponentCommand commands, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(DeleteComponentCommand command, CancellationToken cancellationToken)
     {
         var componentModels = await
             componentRepository
@@ -41,8 +66,8 @@ public class ComponentHandler(IComponentRepository componentRepository) :
         if(componentModels is null || !componentModels.Any()) 
             return Results.NotFound();
         
-        var component = componentModels.FirstOrDefault(x => x.Id == commands.Id);
-        componentModels = componentModels.Where(x => x.Id != commands.Id).ToList();
+        var component = componentModels.FirstOrDefault(x => x.Id == command.Id);
+        componentModels = componentModels.Where(x => x.Id != command.Id).ToList();
 
         if (component is null) 
             return Results.NotFound();
@@ -65,28 +90,33 @@ public class ComponentHandler(IComponentRepository componentRepository) :
         if (componentModels is null || !componentModels.Any())
             return Results.NotFound();
 
-        if (command.EditedComponent.ImageUrl != null || 
-            command.EditedComponent.ImageUrl != string.Empty)
+        if (command.ImageUrl != null && 
+            command.ImageUrl != string.Empty)
         {
-            if (command.EditedComponent.IconData != null && 
-                !componentRepository.IconDuplicate(componentModels,command.EditedComponent.IconData))
+            if (command.IconData != null && 
+                componentRepository.IconDuplicate(componentModels,command.IconData))
             {
-                if(!componentRepository.DeleteIcon(command.EditedComponent.IconData))
+                if(!componentRepository.DeleteIcon(command.IconData))
                     return Results.NotFound();
+                
+                command.IconData = null;
             }
         }
-        else
+        else if(command.IconData != null && 
+                command.IconData.name != string.Empty && command.IconData.name != null &&
+                command.IconData.type != string.Empty && command.IconData.type != null &&
+                command.IconData.base64Data != string.Empty && command.IconData.base64Data != null)
         {
-            if (!componentRepository.IconDuplicate(componentModels, command.EditedComponent.IconData))
+            if (!componentRepository.IconDuplicate(componentModels, command.IconData))
             {
-                componentRepository.UploadIcon(command.EditedComponent.IconData);
-                command.EditedComponent.ImageUrl = string.Empty;
+                componentRepository.UploadIcon(command.IconData);
+                command.ImageUrl = string.Empty;
             }   
         }
         
         for(int i = 0;i<componentModels.Length;i++)
-            if (componentModels[i].Id == command.EditedComponent.Id) 
-                componentModels[i] =  command.EditedComponent;
+            if (componentModels[i].Id == command.Id) 
+                componentModels[i] =  command;
         
         return componentRepository.Save(componentModels) ? 
             Results.Ok() : Results.StatusCode(500);
@@ -104,21 +134,14 @@ public class ComponentHandler(IComponentRepository componentRepository) :
             if (c.ImageUrl != null || 
                 c.ImageUrl != string.Empty)
             {
-                if (c.IconData != null && 
-                    !componentRepository.IconDuplicate(componentModels, c.IconData))
+                if (c.IconData != null && !componentRepository.IconDuplicate(componentModels, c.IconData))
                 {
                     if(!componentRepository.DeleteIcon(c.IconData))
                         return Results.NotFound();
+                    if (c.IconData != null && !componentRepository.UploadIcon(c.IconData))
+                        return Results.StatusCode(500);
                 }
             }
-            else
-            {
-                if (!componentRepository.IconDuplicate(componentModels, c.IconData))
-                {
-                    componentRepository.UploadIcon(c.IconData);
-                    c.ImageUrl = string.Empty;
-                }   
-            }   
         }
 
         for (int i = 0; i < componentModels.Length; i++)

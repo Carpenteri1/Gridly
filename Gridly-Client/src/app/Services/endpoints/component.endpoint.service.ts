@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {UrlStringsUtil} from "../../Constants/url.strings.util";
 import {ComponentModel} from "../../Models/Component.Model";
-import {IconModel} from "../../Models/Icon.Model";
+import {Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -28,8 +29,8 @@ export class ComponentEndpointService{
     return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlSave, newComponent);
   }
 
-  EditComponent(editedComponent: ComponentModel, editIconData?: IconModel): Observable<ComponentModel> {
-    return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlEdit, {editedComponent});
+  EditComponent(editedComponent: ComponentModel): Observable<ComponentModel> {
+    return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlEdit, editedComponent);
   }
 
   EditComponents(editedComponent: ComponentModel[]): Observable<ComponentModel[]> {

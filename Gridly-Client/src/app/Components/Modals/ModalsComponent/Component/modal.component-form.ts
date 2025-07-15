@@ -9,7 +9,6 @@ import {ModalService} from "../../../../Services/modal.service";
 import {MatSelect} from "@angular/material/select";
 import {MatOption} from "@angular/material/core";
 import {NgClass} from "@angular/common";
-import {ModalFormType} from "../../../../Types/modalForm.types.enum";
 
 @Component({
   templateUrl: './modal.component-form.html',
@@ -40,8 +39,7 @@ export class ModalComponentForm {
     this.modalModel.component.iconData = this.modalService.OnFileUpload(event);
   }
   protected Submit(modalViewModel: ModalViewModel) {
-    if(this.modalService.Submit(modalViewModel)){
-      //window.location.reload();
-    }
+    this.modalService.Submit(modalViewModel)
+    window.location.reload();
   }
 }

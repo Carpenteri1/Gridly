@@ -3,7 +3,6 @@ import {ComponentModel} from "../Models/Component.Model";
 import {SetComponentData} from "../Utils/componentModal.factory";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
 import {take} from "rxjs";
-import {IconModel} from "../Models/Icon.Model";
 import {EndPointType} from "../Types/endPoint.type.enum";
 import {TextStringsUtil} from "../Constants/text.strings.util";
 
@@ -14,7 +13,6 @@ export class ComponentService{
   resizeMode!: boolean;
   components!: ComponentModel[];
   component!: ComponentModel;
-  iconData!: IconModel;
 
   constructor(public componentEndpointService: ComponentEndpointService) {
     this.editMode = false;
@@ -44,118 +42,102 @@ export class ComponentService{
     this.editMode = false;
     this.resizeMode = false;
     this.dragMode = false;
+    window.location.reload();
   }
 
-  AddComponent(component: ComponentModel): boolean {
+  AddComponent(component: ComponentModel) {
+    let index = -1;
+    if(this.components !== undefined && this.components.length > 0 && component !== undefined){
+      index = this.componentEndpointService.GetIndex(component.id);
       component = SetComponentData(component,{id: Math.max(...this.components.map(x => x.id)) + 1});
-      let index = this.componentEndpointService.GetIndex(component.id);
-      if(index === -1 &&
+    }
+    else if(this.components !== undefined){
+      component = SetComponentData(component,{id:1});
+    }
+
+    if(index === -1 &&
         component.name !== "" &&
         component.url !== "")
       {
-        if(component.iconData != null || component.iconData !== undefined){
+        if(component.iconData != null && component.iconData !== undefined){
           if(component.iconData?.base64Data !== "" &&
             component.iconData?.name !== "" &&
             component.iconData?.type !== ""){
             this.CallEndpoint(EndPointType.Add, component);
-            return true;
           }
-          if(component.imageUrl !== ""){
-            this.CallEndpoint(EndPointType.Add, component);
-            return true;
-          }
+        }
+        if(component.imageUrl !== ""){
+          this.CallEndpoint(EndPointType.Add, component);
         }
       }
       else{
         this.AddComponent(component);
       }
-      return false;
   }
 
-  EditComponentData(component: ComponentModel) : boolean {
+  EditComponentData(component: ComponentModel) {
     if(component.id !== 0){
       this.CallEndpoint(EndPointType.Edit, component);
       this.DisableModes();
-      return true;
     }
-    return false;
   }
 
-  EditComponentsData(components: ComponentModel[]) : boolean {
+  EditComponentsData(components: ComponentModel[]) {
     if(components !== undefined){
       this.CallEndpoint(EndPointType.BatchEdit,undefined ,components);
       this.DisableModes();
-      return true;
+      window.location.reload();
     }
-    return false;
   }
 
   CallEndpoint(type: EndPointType, componentData?: ComponentModel, componentsData?: ComponentModel[]) {
-    let callStatus = false;
     switch(type){
       case EndPointType.Get:
+        if(componentData !== undefined && componentData !== null){
         this.componentEndpointService.GetComponents().pipe(take(1)).subscribe({
           next: (data) => {
-            callStatus = true;
             console.log(TextStringsUtil.ComponentSavedEndPointSuccessMessage, data);
             this.components = data},
           error: (err) => console.error(TextStringsUtil.ComponentSavedFailedEndPointMessage, err)});
-        return callStatus;
+        }
+        break;
       case EndPointType.Add:
-        if(componentData != undefined) {
+        if(componentData !== undefined && componentData !== null){
           this.componentEndpointService.AddComponent(SetComponentData(componentData)).pipe(take(1)).subscribe({
-            next: (res) => { callStatus = true; console.log(TextStringsUtil.ComponentSavedEndPointSuccessMessage, res)},
+            next: (res) => {console.log(TextStringsUtil.ComponentSavedEndPointSuccessMessage, res)},
             error: (err) => console.error(TextStringsUtil.ComponentSavedFailedEndPointMessage, err)
           });
         }
-        else{
-          this.HandleInvalidData();
-        }
-        return callStatus;
+        break;
       case EndPointType.Edit:
-        if(componentData !== undefined) {
+        if(componentData !== undefined && componentData !== null){
         this.componentEndpointService.EditComponent(componentData).pipe(take(1)).subscribe({
-          next: (res) =>{callStatus = true; console.log(TextStringsUtil.ComponentSavedEndPointSuccessMessage, res)},
-          error: (err) => console.error(TextStringsUtil.ComponentSavedFailedEndPointMessage, err)
-        });
+          next: (res) =>{console.log(TextStringsUtil.ComponentSavedEndPointSuccessMessage, res)},
+          error: (err) => console.error(TextStringsUtil.ComponentSavedFailedEndPointMessage, err)});
         }
-        else{
-          this.HandleInvalidData();
-        }
-        return callStatus;
+        break;
       case EndPointType.BatchEdit:
-        if(componentsData !== undefined) {
+        if(componentsData !== undefined && componentsData !== null && componentsData.length > 0){
           this.componentEndpointService.EditComponents(componentsData).pipe(take(1)).subscribe({
-            next: (res) =>{callStatus = true; console.log(TextStringsUtil.ComponentsSavedEndPointSuccessMessage, res)},
+            next: (res) =>{console.log(TextStringsUtil.ComponentsSavedEndPointSuccessMessage, res)},
             error: (err) => console.error(TextStringsUtil.ComponentsFailedEndPointSuccessMessage, err)
           });
         }
-        else{
-          this.HandleInvalidData();
-        }
-        return callStatus;
+        break;
       case EndPointType.Delete:
-        if(componentData != undefined) {
+        if(componentData !== undefined && componentData !== null){
           this.componentEndpointService.Delete(componentData.id).pipe(take(1)).subscribe({
-            next: (res) =>{callStatus = true; console.log(TextStringsUtil.ComponentDeletedSuccessEndPointMessage, res)},
+            next: (res) =>{console.log(TextStringsUtil.ComponentDeletedSuccessEndPointMessage, res)},
             error: (err) => console.error(TextStringsUtil.ComponentDeletionFailedEndPointMessage, err)
           });
         }
-        else{
-          this.HandleInvalidData();
-        }
-        return callStatus;
+          break;
       default:
-        this.componentEndpointService.Throw400Error().pipe(take(1)).subscribe({next: () =>{callStatus = false;}});
-        return callStatus;
+        break;
     }
   }
 
-  private HandleInvalidData() {
-    return this.componentEndpointService.Throw404Error().pipe(take(1)).subscribe({next: () =>{ let callStatus = false;}});
-  }
-  DeleteComponent(componentData: ComponentModel) {F
+  DeleteComponent(componentData: ComponentModel) {
     this.CallEndpoint(EndPointType.Delete, componentData)
-    return true;
   }
 }

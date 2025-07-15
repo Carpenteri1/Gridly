@@ -10,8 +10,8 @@ import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
 import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {MatButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
-import {IconModel} from "../../Models/Icon.Model";
 import {EndPointType} from "../../Types/endPoint.type.enum";
+import {ComponentModel} from "../../Models/Component.Model";
 
 @Component({
   selector: 'basic-component',
@@ -54,22 +54,25 @@ export class BasicComponent implements AfterViewChecked {
     DisableResize(item: any): void {
       if(this.resizableActive){
         this.resizableActive = false;
+        this.componentService.component = item;
       }
     }
 
-  HaveIconSet(iconData: IconModel | undefined):boolean{
-    if(iconData === undefined){
-      return false;
-    }
-    return iconData.name !== undefined && iconData.name !== "";
+  HaveIconSet(item: ComponentModel):boolean{
+    return item.iconData !== undefined &&
+      item.iconData !== null &&
+      !item.imageHidden;
   }
 
-  HaveImagUrlSet(imageUrl:string | undefined):boolean{
-    return imageUrl !== undefined && imageUrl != null && imageUrl !== "";
+  HaveImageUrlSet(item: ComponentModel):boolean{
+      return item.imageUrl !== undefined  &&
+        item.imageUrl !== null &&
+        item.imageUrl !== "" &&
+        !item.imageHidden;
   }
 
-  IconFilePath(name:string, fileType:string): string {
-    return "Assets/Icons/" + name + "." + fileType;
+  IconFilePath(item: ComponentModel): string {
+      return "Assets/Icons/" + item.iconData?.name + "." + item.iconData?.type;
   }
 
   Drop(event: CdkDragDrop<any[]>): void {

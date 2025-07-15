@@ -21,17 +21,20 @@ export class ModalService{
       this.BuildModalTypeData(modalType);
   }
 
-  Submit(modalType: ModalViewModel) : boolean {
+  Submit(modalType: ModalViewModel)  {
     switch (modalType.type) {
       case ModalFormType.Add:
-        return this.componentService.AddComponent(modalType.component ?? SetComponentData());
+          this.componentService.AddComponent(modalType.component ?? SetComponentData());
+        break;
       case ModalFormType.Edit:
-        return this.componentService.EditComponentData(modalType.component ?? SetComponentData());
+          this.componentService.EditComponentData(modalType.component ?? SetComponentData());
+          break;
       case ModalFormType.Delete:
-        return this.componentService.DeleteComponent(modalType.component ?? SetComponentData());
+         this.componentService.DeleteComponent(modalType.component ?? SetComponentData());
+        break;
       default:
          console.error("Unknown modal type: " + modalType.type);
-        return false;
+        break;
     }
   }
 
@@ -96,6 +99,8 @@ export class ModalService{
       this.componentService.SwitchResizeMode();
     if (this.componentService.dragMode)
       this.componentService.SwitchDragMode();
+
+    window.location.reload();
   }
 
   OnFileUpload(event:any): IconModel | undefined{
@@ -112,7 +117,7 @@ export class ModalService{
         const reader = new FileReader();
         reader.onload = () => {
           iconData.base64Data = reader.result as string;
-          iconData.base64Data = iconData.base64Data .split(',')[1];
+          iconData.base64Data = iconData.base64Data.split(',')[1];
         };
         reader.readAsDataURL(file);
         let nameSplit = file.name.split('.');
