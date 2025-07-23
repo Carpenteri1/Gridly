@@ -44,9 +44,7 @@ public class ComponentRepository(IDataConverter<ComponentModel> dataConverter, I
     }
 
     public bool IconDuplicate(IEnumerable<ComponentModel> componentModels, IconModel iconData)
-    {
-        return componentModels.Where(x => x.IconData != null &&                     
-                                                  x.IconData.name == iconData.name &&      
-                                                  x.IconData.type == iconData.type).Any();
-    }
+        => componentModels.Where(x => x.IconData != null && 
+                                      x.IconData.name == iconData.name &&
+                                      x.IconData.type == iconData.type).Any();
 }
