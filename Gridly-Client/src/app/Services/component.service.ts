@@ -2,9 +2,9 @@ import {Injectable} from "@angular/core";
 import {ComponentModel} from "../Models/Component.Model";
 import {SetComponentData} from "../Utils/componentModal.factory";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
-import {take} from "rxjs";
 import {EndPointType} from "../Types/endPoint.type.enum";
 import {TextStringsUtil} from "../Constants/text.strings.util";
+import { take } from "rxjs";
 
 @Injectable({providedIn: 'root'})
 export class ComponentService{
@@ -42,7 +42,7 @@ export class ComponentService{
     this.editMode = false;
     this.resizeMode = false;
     this.dragMode = false;
-    window.location.reload();
+    //window.location.reload();
   }
 
   AddComponent(component: ComponentModel) {
@@ -71,7 +71,7 @@ export class ComponentService{
         }
       }
       else{
-        this.AddComponent(component);
+          this.AddComponent(component);
       }
   }
 
@@ -86,20 +86,18 @@ export class ComponentService{
     if(components !== undefined){
       this.CallEndpoint(EndPointType.BatchEdit,undefined ,components);
       this.DisableModes();
-      window.location.reload();
+      //window.location.reload();
     }
   }
 
   CallEndpoint(type: EndPointType, componentData?: ComponentModel, componentsData?: ComponentModel[]) {
     switch(type){
       case EndPointType.Get:
-        if(componentData !== undefined && componentData !== null){
         this.componentEndpointService.GetComponents().pipe(take(1)).subscribe({
           next: (data) => {
             console.log(TextStringsUtil.ComponentSavedEndPointSuccessMessage, data);
             this.components = data},
           error: (err) => console.error(TextStringsUtil.ComponentSavedFailedEndPointMessage, err)});
-        }
         break;
       case EndPointType.Add:
         if(componentData !== undefined && componentData !== null){

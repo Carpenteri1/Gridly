@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {ElementRef, Injectable, ViewChild} from "@angular/core";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ModalFormType} from "../Types/modalForm.types.enum";
 import {ModalComponentForm} from "../Components/Modals/ModalsComponent/Component/modal.component-form";
@@ -11,10 +11,14 @@ import {SetComponentData} from "../Utils/componentModal.factory";
 import {ModalPrompt} from "../Components/Modals/ModalsComponent/Prompts/modal.prompt";
 import {ComponentType} from "@angular/cdk/portal";
 import {RegexStringsUtil} from "../Constants/regex.strings.util";
+import {Subject} from "rxjs";
 
 @Injectable({providedIn: 'root'})
 export class ModalService{
   canSubmit:boolean = false;
+  @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
+  public resetFile$ = new Subject<void>();
+
   constructor(private dialog: MatDialog, protected componentService: ComponentService) {}
 
   GetModalType(modalType: ModalViewModel ){
@@ -46,6 +50,16 @@ export class ModalService{
 
   private get CanAddComponent() : boolean{
     return this.NoEmptyInputFields;
+  }
+
+  public ResetImageInput(modalViewModel : ModalViewModel): void {
+    if (modalViewModel.selectedDropDownValue === 1) {
+      modalViewModel.component.imageUrl = "";
+    }
+    if(modalViewModel.selectedDropDownValue === 2){
+      modalViewModel.component.iconData = undefined;
+      this.resetFile$.next(); // Notify component to reset the DOM file input
+    }
   }
 
   public CanSubmit(viewModel: ModalViewModel): boolean {

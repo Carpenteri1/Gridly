@@ -16,7 +16,6 @@ builder.Services.AddSingleton<IVersionRepository, VersionRepository>();
 
 builder.Services.AddSingleton<IFileService, FileService>();
 builder.Services.AddSingleton(typeof(IDataConverter<>), typeof(DataConverter<>));
-builder.Services.AddSingleton<ICommandHandlerService, CommandHandlerService>();
 
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));

@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, ElementRef, ViewChild} from "@angular/core";
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {ModalViewModel} from "../../../../Models/ModalView.Model";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
@@ -33,13 +33,22 @@ import {NgClass} from "@angular/common";
 })
 export class ModalComponentForm {
   public modalModel!: ModalViewModel;
+  @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
+
   constructor(protected modalService: ModalService){}
 
   protected OnFileUpload(event:any){
     this.modalModel.component.iconData = this.modalService.OnFileUpload(event);
   }
+  protected ResetImageInput(modalModel: ModalViewModel): void {
+    this.modalService.resetFile$.subscribe(() => {
+      this.fileInputRef.nativeElement.value = '';
+    });
+    this.modalService.ResetImageInput(modalModel);
+  }
+
   protected Submit(modalViewModel: ModalViewModel) {
     this.modalService.Submit(modalViewModel)
-    window.location.reload();
+    //window.location.reload(); Cause issues
   }
 }

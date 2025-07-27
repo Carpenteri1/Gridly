@@ -13,13 +13,13 @@
     <input matInput [(ngModel)]="this.modalModel.component.url" />
   </mat-form-field>
   <mat-form-field>
-    <mat-select [(ngModel)]="this.modalModel.selectedDropDownValue" placeholder="Select option">
+    <mat-select [(ngModel)]="this.modalModel.selectedDropDownValue" placeholder="Select option" (selectionChange)="this.ResetImageInput(this.modalModel)">
       <mat-option [value]="1">{{ this.modalModel.dropDownTitleOne }}</mat-option>
       <mat-option [value]="2">{{ this.modalModel.dropDownTitleTwo }}</mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field [hidden]="this.modalModel.selectedDropDownValue != 1">
-    <input matInput placeholder="Icon" type="file" id="formFile" (change)="this.OnFileUpload($event)" />
+    <input matInput placeholder="Icon" type="file" id="formFile" #fileInput (change)="this.OnFileUpload($event)"/>
   </mat-form-field>
   <mat-form-field [hidden]="this.modalModel.selectedDropDownValue != 2">
     <mat-label>{{this.modalModel.linkToImageTitle}}</mat-label>
