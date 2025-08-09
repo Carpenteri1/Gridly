@@ -37,10 +37,30 @@ public class ComponentRepository(IDataConverter<ComponentModel> dataConverter, I
         return fileService.WriteAllBitesToFile(filePath, iconData.base64Data);
     }
     
-    public bool DeleteIcon(IconModel iconData)
+    public bool DeleteIcon(string name, string type)
     {
-        string filePath = FilePaths.IconPath + $"{iconData.name}.{iconData.type}";
+        string filePath = FilePaths.IconPath + $"{name}.{type}";
         return fileService.FileExist(filePath) && fileService.DeletedFile(filePath);
+    }
+    
+    public bool DeleteUnusedIcons(IEnumerable<ComponentModel> componentModels)
+    {
+        var iconDeleted = true;
+        var directory = new DirectoryInfo(FilePaths.IconPath);
+        
+        foreach (var file in directory.GetFiles("*.*"))
+        {
+            if (componentModels.All(x => $"{x.IconData.name}.{x.IconData.type}" != file.Name))
+            {
+                var splitName = file.Name.Split('.');
+                if (!DeleteIcon(splitName[0],splitName[1]))
+                {
+                    iconDeleted = false;
+                }
+            }
+        }
+        
+        return iconDeleted;
     }
 
     public bool IconDuplicate(IEnumerable<ComponentModel> componentModels, IconModel iconData)

@@ -44,7 +44,7 @@ export class ModalComponentForm {
     this.modalService.resetFile$.subscribe(() => {
       this.fileInputRef.nativeElement.value = '';
     });
-    this.modalService.ResetImageInput(modalModel);
+    this.modalService.ResetImageFileInput(modalModel);
   }
 
   protected Submit(modalViewModel: ModalViewModel) {

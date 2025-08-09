@@ -2,6 +2,13 @@ export class TextStringsUtil {
 
   static readonly NewVersionAvailableHeaderInfoText = "There is a new version available!&nbsp;&nbsp;";
 
+  static readonly GridComponentResizeTitle = "Resize components";
+  static readonly GridComponentCancelToolTip = "Cancel changes done with drag and resize";
+  static readonly GridComponentMovePositionTitle = "Move components position";
+  static readonly GridComponentMovePositionSaveToolTip = "Save changes done with drag and resize!";
+
+  static readonly GridComponentIconNotFoundMessage = "Icon not found";
+
   static readonly StickCancelButtonTitle = "Cancel";
   static readonly StickSaveButtonTitle = "Save";
 

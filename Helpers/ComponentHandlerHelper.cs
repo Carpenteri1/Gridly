@@ -22,8 +22,11 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository)
     public bool DeleteIcon(ComponentModel component, IEnumerable<ComponentModel> componentModels)
     {
         if (!componentRepository.IconDuplicate(componentModels, component.IconData) || componentModels.Count() == 1)
-            return componentRepository.DeleteIcon(component.IconData);
+            return componentRepository.DeleteIcon(component.IconData.name, component.IconData.type);
         
         return true;
     }
+    
+    public bool DeleteUnusedIcons(IEnumerable<ComponentModel> componentModels) => 
+    componentRepository.DeleteUnusedIcons(componentModels);
 }

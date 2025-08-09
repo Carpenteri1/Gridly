@@ -6,7 +6,7 @@ export class ComponentModel {
   name!: string;
   url!: string;
   iconData?: IconModel | undefined;
-  imageUrl?: string;
+  iconUrl?: string;
   imageHidden!: boolean;
   titleHidden!: boolean;
   componentSettings? : ComponentSettingsModel | undefined;

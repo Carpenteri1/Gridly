@@ -1,4 +1,4 @@
-import {ElementRef, Injectable, ViewChild} from "@angular/core";
+import { ElementRef, Injectable, ViewChild} from "@angular/core";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ModalFormType} from "../Types/modalForm.types.enum";
 import {ModalComponentForm} from "../Components/Modals/ModalsComponent/Component/modal.component-form";
@@ -7,11 +7,11 @@ import {ModalViewModel} from "../Models/ModalView.Model";
 import {ComponentService} from "./component.service";
 import {IconModel} from "../Models/Icon.Model";
 import {SetModalComponentFormData, SetModalPromptData} from "../Utils/viewModel.factory";
-import {SetComponentData} from "../Utils/componentModal.factory";
 import {ModalPrompt} from "../Components/Modals/ModalsComponent/Prompts/modal.prompt";
 import {ComponentType} from "@angular/cdk/portal";
-import {RegexStringsUtil} from "../Constants/regex.strings.util";
 import {Subject} from "rxjs";
+import {EndPointType} from "../Types/endPoint.type.enum";
+import {ComponentModel} from "../Models/Component.Model";
 
 @Injectable({providedIn: 'root'})
 export class ModalService{
@@ -28,13 +28,13 @@ export class ModalService{
   Submit(modalType: ModalViewModel)  {
     switch (modalType.type) {
       case ModalFormType.Add:
-          this.componentService.AddComponent(modalType.component ?? SetComponentData());
+          this.componentService.AddNewComponent(modalType.component);
         break;
       case ModalFormType.Edit:
-          this.componentService.EditComponentData(modalType.component ?? SetComponentData());
+          this.componentService.EditComponentData(modalType.component);
           break;
       case ModalFormType.Delete:
-         this.componentService.DeleteComponent(modalType.component ?? SetComponentData());
+         this.componentService.DeleteComponent(modalType.component);
         break;
       default:
          console.error("Unknown modal type: " + modalType.type);
@@ -42,78 +42,62 @@ export class ModalService{
     }
   }
 
-  private get CanEditComponent() : boolean {
+  private CanEditComponent(modalViewModel : ModalViewModel) : boolean {
     return this.NoEmptyInputFields &&
-    JSON.stringify(this.componentService.componentEndpointService.GetComponentById) !==
-    JSON.stringify(this.componentService.component);
+    JSON.stringify(this.componentService.CallEndpoint(EndPointType.GetById, modalViewModel.component) as ComponentModel) !==
+    JSON.stringify(modalViewModel.component);
   }
 
   private get CanAddComponent() : boolean{
     return this.NoEmptyInputFields;
   }
 
-  public ResetImageInput(modalViewModel : ModalViewModel): void {
-    if (modalViewModel.selectedDropDownValue === 1) {
-      modalViewModel.component.imageUrl = "";
+  public ResetImageFileInput(modalViewModel? : ModalViewModel): void {
+    if( modalViewModel !== undefined) {
+      if (modalViewModel.selectedDropDownValue === 1) {
+        this.componentService.ResetComponentImageUrl();
+      }
+      if(modalViewModel.selectedDropDownValue === 2){
+        this.componentService.ResetComponentIconData();
+        this.NotifyComponentToResetFileInput();
+      }
     }
-    if(modalViewModel.selectedDropDownValue === 2){
-      modalViewModel.component.iconData = undefined;
-      this.resetFile$.next(); // Notify component to reset the DOM file input
+    else{
+      this.componentService.ResetComponentImageUrl();
+      this.componentService.ResetComponentIconData();
+      this.NotifyComponentToResetFileInput();
     }
+  }
+
+  private NotifyComponentToResetFileInput(): void {
+    this.resetFile$.next();
   }
 
   public CanSubmit(viewModel: ModalViewModel): boolean {
       switch (viewModel.type) {
         case ModalFormType.Add:
-          this.componentService.component = viewModel.component;
-          this.canSubmit = this.CanAddComponent;
-          break;
+          return this.CanAddComponent;
         case ModalFormType.Edit:
-          this.componentService.component = viewModel.component;
-          this.canSubmit = this.CanEditComponent;
-          break;
+          return this.CanEditComponent(viewModel);
         default:
-          this.canSubmit = false;
-          break;
+          return false;
       }
-      return this.canSubmit;
   }
 
   private get NoEmptyInputFields(): boolean{
-    return this.CheckComponentData && this.CheckIconData;
-  }
-
-  private get CheckComponentData(): boolean {
-    return this.componentService.component !== undefined &&
-      this.componentService.component.name !== "" &&
-      this.componentService.component.url !== "" &&
-      RegexStringsUtil.urlPattern.test(this.componentService.component.url) &&
-      RegexStringsUtil.namePattern.test(this.componentService.component.name);
-  }
-
-  private get CheckIconData(): boolean {
-    if(this.componentService.component.iconData != undefined &&
-      this.componentService.component.iconData?.name !== "" &&
-      this.componentService.component.iconData?.type !== undefined &&
-      this.componentService.component.iconData?.base64Data !== ""){
-      return true;
-    }
-    else if(this.componentService.component.imageUrl !== undefined  &&
-      this.componentService.component.imageUrl !== "" &&
-      RegexStringsUtil.imageUrlPattern.test(this.componentService.component.imageUrl)){
-      return true;
-    }
-    return false;
+    return this.componentService.CheckComponentData &&
+      (this.componentService.IconDataSet || this.componentService.IconUrlSet);
   }
 
   Cancel(): void {
-    if (this.componentService.editMode)
+    if (this.componentService.InEditMode)
       this.componentService.SwitchEditMode();
-    if (this.componentService.resizeMode)
+    if (this.componentService.InResizeMode)
       this.componentService.SwitchResizeMode();
-    if (this.componentService.dragMode)
+    if (this.componentService.InDragMode)
       this.componentService.SwitchDragMode();
 
+    this.ResetFormData();
     window.location.reload();
   }
 
@@ -203,17 +187,9 @@ export class ModalService{
     return ref;
   }
 
-  ResetFormData(): void{
-    this.componentService.component.id = 0;
-    this.componentService.component.name = "";
-    this.componentService.component.url = "";
-    this.componentService.component.titleHidden = false;
-    this.componentService.component.imageHidden = false;
-    this.ResetIconData();
+  private ResetFormData(): void{
+    this.componentService.ResetAllComponentData();
+    this.ResetImageFileInput();
   }
 
-  ResetIconData(){
-    this.componentService.component.iconData = undefined;
-    this.componentService.component.imageUrl = "";
-  }
 }

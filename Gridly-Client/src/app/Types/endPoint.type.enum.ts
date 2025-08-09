@@ -3,5 +3,6 @@ export enum EndPointType {
   Edit = 'EDIT',
   BatchEdit = 'BATCHEDIT',
   Delete = 'DELETE',
-  Get = 'GET'
+  Get = 'GET',
+  GetById = 'GETBYID'
 }

@@ -14,15 +14,14 @@ import {EndPointType} from "../../Types/endPoint.type.enum";
 import {ComponentModel} from "../../Models/Component.Model";
 
 @Component({
-  selector: 'basic-component',
+  selector: 'grid-component',
   imports: [CommonModule, CdkDrag, CdkDropList, ResizableDirective, MatButton, MatTooltip],
-  templateUrl: './basic.component.html',
+  templateUrl: './grid.component.html',
   standalone: true,
-  styleUrls: ['./basic.component.css']
+  styleUrls: ['./grid.component.css']
 })
 
-export class BasicComponent implements AfterViewChecked {
-  protected resizableActive!: boolean;
+export class GridComponent implements AfterViewChecked {
   protected modalModel!: ModalViewModel;
 
   constructor(
@@ -34,41 +33,16 @@ export class BasicComponent implements AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    this.SetComponentLayout();
+    this.SetLayout();
   }
 
-  SetComponentLayout() {
-    for (let index in this.componentService.components) {
-      let item = this.componentService.components[index];
+  SetLayout() {
+    for (let index in this.componentService.GetAllComponents) {
+      let item = this.componentService.GetAllComponents[index];
       let el = document.getElementById(item.id.toString()) == null ? this.el.nativeElement : document.getElementById(item.id.toString());
       this.render.setStyle(el, 'height', item.componentSettings?.height + 'px');
       this.render.setStyle(el, 'flex', '0 0 ' + item.componentSettings?.width + 'px');
     }
-  }
-
-   ActivateResize(item: any): void {
-    this.resizableActive = true;
-    this.componentService.component = item;
-   }
-
-    DisableResize(item: any): void {
-      if(this.resizableActive){
-        this.resizableActive = false;
-        this.componentService.component = item;
-      }
-    }
-
-  HaveIconSet(item: ComponentModel):boolean{
-    return item.iconData !== undefined &&
-      item.iconData !== null &&
-      !item.imageHidden;
-  }
-
-  HaveImageUrlSet(item: ComponentModel):boolean{
-      return item.imageUrl !== undefined  &&
-        item.imageUrl !== null &&
-        item.imageUrl !== "" &&
-        !item.imageHidden;
   }
 
   IconFilePath(item: ComponentModel): string {
@@ -76,8 +50,8 @@ export class BasicComponent implements AfterViewChecked {
   }
 
   Drop(event: CdkDragDrop<any[]>): void {
-    if (!this.componentService.dragMode) return;
-    moveItemInArray(this.componentService.components, event.previousIndex, event.currentIndex);
+    if (!this.componentService.InDragMode) return;
+    moveItemInArray(this.componentService.GetAllComponents, event.previousIndex, event.currentIndex);
   }
 
   protected readonly FormType = ModalFormType;

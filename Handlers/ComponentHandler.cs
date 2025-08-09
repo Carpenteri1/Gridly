@@ -57,7 +57,7 @@ public class ComponentHandler(IComponentRepository componentRepository) :
     public Task<IResult> Handle(EditComponentCommand command, CancellationToken cancellationToken)
     {
         var componentModels = 
-            componentRepository.Get().Result.ToArray();
+            componentRepository.Get().Result.ToList();
 
         if (!componentModels.Any())
             return Task.FromResult(Results.NotFound());  
@@ -69,8 +69,10 @@ public class ComponentHandler(IComponentRepository componentRepository) :
             
             handlerHelper.DeleteIcon(componentModels.FirstOrDefault(x => x.Id == command.Id), componentModels);
         }
+        else if(!handlerHelper.DeleteUnusedIcons(componentModels)) 
+            return Task.FromResult(Results.NotFound());  
         
-        for(int i = 0;i<componentModels.Length;i++)
+        for(int i = 0;i<componentModels.Count;i++)
             if (componentModels[i].Id == command.Id) 
                 componentModels[i] =  command;
         
