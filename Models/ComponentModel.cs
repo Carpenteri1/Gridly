@@ -8,7 +8,7 @@ public class ComponentModel
     [JsonPropertyName("name")] public string Name { get; set; }
     [JsonPropertyName("url")] public string Url { get; set; }
     [JsonPropertyName("iconData")] public IconModel? IconData { get; set; }
-    [JsonPropertyName("imageUrl")] public string ImageUrl { get; set; }
+    [JsonPropertyName("iconUrl")] public string IconUrl { get; set; }
     [JsonPropertyName("titleHidden")] public bool TitleHidden { get; set; }
     [JsonPropertyName("imageHidden")] public bool ImageHidden { get; set; }
     [JsonPropertyName("componentSettings")] public ComponentSettingsModel? ComponentSettings { get; set; }

@@ -1,38 +1,9 @@
 <div class="d-flex gap-3 space-left" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
-    <div *ngFor="let item of componentService.GetAllComponents" cdkDrag [cdkDragDisabled]="!componentService.InDragMode" (click)="componentService.SelectedComponent(item)"
-         makeResizable [canResize]="componentService.InResizeMode" [itemResizing]="item" [id]="item.id"
-         class="d-flex m-2 flex-column shadow-sm component-style" >
-      <div class="d-flex justify-content-end">
-        <button [hidden]="!componentService.InEditMode" (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Edit, component: item}))" class="btn btn-dark">...</button>
-        <button (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Delete, component: item}))" class="btn btn-dark"><i class="bi bi-x-lg"></i></button>
-      </div>
-        <a [style]="componentService.InResizeMode ? 'cursor:none;':'cursor:auto;'" [href]="componentService.InResizeMode ? null : item.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-100" target="_blank">
-          <img *ngIf="componentService.IconUrlSet" [src]="item.iconUrl" class="p-1 icon-size component-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
-          <img *ngIf="componentService.IconDataSet" [src]="IconFilePath(item)" class="p-1 icon-size component-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
-          <p [hidden]="item.titleHidden" class="text-center" >{{item.name}}</p>
-        </a>
-        <span [hidden]="!componentService.InResizeMode"  class="component-resize-button" (pointerdown)="componentService.ResizeModeActive" (document:pointerup)="componentService.DisableResize">
-          <i class="bi bi-arrows-angle-expand"></i>
-        </span>
+  <div *ngFor="let item of componentService.GetAllComponents" makeResizable
+       [itemResizing]="item" [canResize]="componentService.InResizeMode"
+       cdkDrag [cdkDragDisabled]="!componentService.InDragMode" [id]="item.id"
+       class="d-flex m-2 flex-column shadow-sm component-style" >
+    <item-component [item]="componentService.SelectedComponent(item)"></item-component>
   </div>
-</div>
-<div [hidden]="!componentService.InResizeMode && !componentService.InDragMode" class="sticky-bottom">
-  <div class="container-fluid text-center">
-    <div class="row justify-content-center mb-3">
-      <div class="col-auto">
-        <h5 [hidden]="!componentService.InResizeMode">{{TextStringsUtil.GridComponentResizeTitle}}</h5>
-        <h5 [hidden]="!componentService.InDragMode">{{TextStringsUtil.GridComponentMovePositionTitle}}</h5>
-      </div>
-    </div>
-    <div class="row justify-content-center">
-      <div class="col-auto">
-        <button mat-button matTooltip="{{TextStringsUtil.GridComponentCancelToolTip}}" class="cancelButton" (click)="componentService.DisableModes()">
-          {{TextStringsUtil.StickCancelButtonTitle}}
-        </button>
-        <button mat-button matTooltip="{{TextStringsUtil.GridComponentMovePositionSaveToolTip}}" class="enabled-save-button" (click)="componentService.EditComponentsData(componentService.GetAllComponents)">
-          {{TextStringsUtil.StickSaveButtonTitle}}
-        </button>
-      </div>
-    </div>
-  </div>
+  <stickyFooter-component></stickyFooter-component>
 </div>

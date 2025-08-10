@@ -1,21 +1,16 @@
 import {AfterViewChecked, Component, ElementRef, Renderer2} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ResizableDirective} from "../../Directives/resizable.directive";
-import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
-import {ModalFormType} from "../../Types/modalForm.types.enum";
 import {ComponentService} from "../../Services/component.service";
-import {ModalService} from "../../Services/modal.service";
 import {ModalViewModel} from "../../Models/ModalView.Model";
-import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
-import {TextStringsUtil} from "../../Constants/text.strings.util";
-import {MatButton} from "@angular/material/button";
-import {MatTooltip} from "@angular/material/tooltip";
 import {EndPointType} from "../../Types/endPoint.type.enum";
-import {ComponentModel} from "../../Models/Component.Model";
+import {StickyFooterComponent} from "../StickyFooter/stickyFooter.component";
+import {ItemComponent} from "../Item/item.component";
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
+import {ResizableDirective} from "../../Directives/resizable.directive";
 
 @Component({
   selector: 'grid-component',
-  imports: [CommonModule, CdkDrag, CdkDropList, ResizableDirective, MatButton, MatTooltip],
+  imports: [CommonModule, StickyFooterComponent, ItemComponent, CdkDropList, CdkDrag, ResizableDirective],
   templateUrl: './grid.component.html',
   standalone: true,
   styleUrls: ['./grid.component.css']
@@ -26,14 +21,18 @@ export class GridComponent implements AfterViewChecked {
 
   constructor(
     protected componentService: ComponentService,
-    protected modalService: ModalService,
     private render: Renderer2,
     private el: ElementRef) {
-    componentService.CallEndpoint(EndPointType.Get)
-  }
+    this.componentService.CallEndpoint(EndPointType.Get);
 
+  }
   ngAfterViewChecked() {
     this.SetLayout();
+  }
+
+  Drop(event: CdkDragDrop<any[]>): void {
+    if (!this.componentService.InDragMode) return;
+    moveItemInArray(this.componentService.GetAllComponents, event.previousIndex, event.currentIndex);
   }
 
   SetLayout() {
@@ -44,17 +43,4 @@ export class GridComponent implements AfterViewChecked {
       this.render.setStyle(el, 'flex', '0 0 ' + item.componentSettings?.width + 'px');
     }
   }
-
-  IconFilePath(item: ComponentModel): string {
-      return "Assets/Icons/" + item.iconData?.name + "." + item.iconData?.type;
-  }
-
-  Drop(event: CdkDragDrop<any[]>): void {
-    if (!this.componentService.InDragMode) return;
-    moveItemInArray(this.componentService.GetAllComponents, event.previousIndex, event.currentIndex);
-  }
-
-  protected readonly FormType = ModalFormType;
-  protected readonly SetModalComponentFormData = SetModalComponentFormData;
-  protected readonly TextStringsUtil = TextStringsUtil;
 }

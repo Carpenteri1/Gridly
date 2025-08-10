@@ -1,0 +1,15 @@
+.icon-size{
+  max-height: 100px;
+}
+
+.component-icon-center{
+  margin:auto;
+}
+
+.component-resize-button{
+  align-self: end;
+  padding: 5px 5px;
+  height: 30px;
+  transform: rotate(90deg);
+  font-size: 12px;
+}

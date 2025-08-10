@@ -42,16 +42,6 @@ export class ModalService{
     }
   }
 
-  private CanEditComponent(modalViewModel : ModalViewModel) : boolean {
-    return this.NoEmptyInputFields &&
-    JSON.stringify(this.componentService.CallEndpoint(EndPointType.GetById, modalViewModel.component) as ComponentModel) !==
-    JSON.stringify(modalViewModel.component);
-  }
-
-  private get CanAddComponent() : boolean{
-    return this.NoEmptyInputFields;
-  }
-
   public ResetImageFileInput(modalViewModel? : ModalViewModel): void {
     if( modalViewModel !== undefined) {
       if (modalViewModel.selectedDropDownValue === 1) {
@@ -76,17 +66,21 @@ export class ModalService{
   public CanSubmit(viewModel: ModalViewModel): boolean {
       switch (viewModel.type) {
         case ModalFormType.Add:
-          return this.CanAddComponent;
+          this.canSubmit = this.NoEmptyInputFields(viewModel.component);
+          return this.canSubmit;
         case ModalFormType.Edit:
-          return this.CanEditComponent(viewModel);
+          this.canSubmit = this.NoEmptyInputFields(viewModel.component) &&
+            JSON.stringify(this.componentService.CallEndpoint(EndPointType.GetById, viewModel.component) as ComponentModel) !==
+            JSON.stringify(viewModel.component);
+          return this.canSubmit;
         default:
           return false;
       }
   }
 
-  private get NoEmptyInputFields(): boolean{
-    return this.componentService.CheckComponentData &&
-      (this.componentService.IconDataSet || this.componentService.IconUrlSet);
+  private NoEmptyInputFields(component: ComponentModel): boolean{
+    return this.componentService.CheckComponentData(component) &&
+      (this.componentService.IconDataSet(component) || this.componentService.IconUrlSet(component));
   }
 
   Cancel(): void {

@@ -13,7 +13,9 @@
     <input matInput [(ngModel)]="this.modalModel.component.url" />
   </mat-form-field>
   <mat-form-field>
-    <mat-select [(ngModel)]="this.modalModel.selectedDropDownValue" placeholder="Select option" (selectionChange)="this.ResetImageInput(this.modalModel)">
+    <mat-select [(ngModel)]="this.modalModel.selectedDropDownValue"
+                placeholder="Select option"
+                (selectionChange)="this.ResetImageInput(this.modalModel)">
       <mat-option [value]="1">{{ this.modalModel.dropDownTitleOne }}</mat-option>
       <mat-option [value]="2">{{ this.modalModel.dropDownTitleTwo }}</mat-option>
     </mat-select>
@@ -27,7 +29,18 @@
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="true" (click)="this.modalService.Cancel()" class="btn btn-danger cancelButton">{{this.modalModel.closeBtnTitle}}</button>
-  <button mat-button [ngClass]="{'enabled-save-button': modalService.canSubmit}" [disabled]="!modalService.CanSubmit(modalModel)" [mat-dialog-close]="true" (click)="this.Submit(this.modalModel)" class="btn btn-success">{{this.modalModel.acceptBtnTitle}}</button>
+  <button mat-button
+          [mat-dialog-close]="true"
+          (click)="this.modalService.Cancel()"
+          class="btn btn-danger cancelButton">
+    {{this.modalModel.closeBtnTitle}}
+  </button>
+  <button mat-button
+          [ngClass]="{'enabled-save-button': this.modalService.canSubmit}"
+          [disabled]="!this.modalService.CanSubmit(this.modalModel)"
+          [mat-dialog-close]="true"
+          (click)="this.modalService.Submit(this.modalModel)"
+          class="btn btn-success">
+    {{this.modalModel.acceptBtnTitle}}
+  </button>
 </mat-dialog-actions>
-

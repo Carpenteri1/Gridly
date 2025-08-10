@@ -46,9 +46,4 @@ export class ModalComponentForm {
     });
     this.modalService.ResetImageFileInput(modalModel);
   }
-
-  protected Submit(modalViewModel: ModalViewModel) {
-    this.modalService.Submit(modalViewModel)
-    //window.location.reload(); Cause issues
-  }
 }

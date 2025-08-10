@@ -4,7 +4,7 @@ import {MapComponentData} from "../Utils/componentModal.factory";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
 import {EndPointType} from "../Types/endPoint.type.enum";
 import {TextStringsUtil} from "../Constants/text.strings.util";
-import { take } from "rxjs";
+import {take} from "rxjs";
 import {RegexStringsUtil} from "../Constants/regex.strings.util";
 
 @Injectable({providedIn: 'root'})
@@ -27,46 +27,41 @@ export class ComponentService{
     return this.components;
   }
 
-  SelectedComponent(item: ComponentModel): void {
+  SelectedComponent(item: ComponentModel) : ComponentModel {
     if(this.MatchedComponentId(item)){
-      this.component = MapComponentData(item);
+      return this.component = MapComponentData(item);
     }
-    return undefined;
+    return this.component;
   }
 
-  MatchedComponentId(item: ComponentModel): boolean {
+  private MatchedComponentId(item: ComponentModel): boolean {
     return this.GetAllComponents.some((i: ComponentModel) => i.id === item.id);
   }
 
-  set SetComponentData(component: ComponentModel) {
-    if(component !== undefined && component !== null){
-      this.component = MapComponentData(component);
-    }
-    else{
-      this.component = MapComponentData();
-    }
+  IconDataSet(item :ComponentModel) {
+    return item.iconData != undefined &&
+      item.iconData.name !== "" &&
+      item.iconData.type !== undefined &&
+      item.iconData.base64Data !== "" ;
+      //&&
+      //!this.component.imageHidden;
   }
 
-  get IconDataSet() {
-    return this.component.iconData != undefined &&
-      this.component.iconData.name !== "" &&
-      this.component.iconData.type !== undefined &&
-      this.component.iconData.base64Data !== "" &&
-      ! this.component.imageHidden
+  IconUrlSet(item :ComponentModel): boolean {
+    debugger;
+    return  item.iconUrl !== undefined  &&
+      item.iconUrl !== ""
+      //&&
+      //RegexStringsUtil.iconUrlPattern.test(item.iconUrl);
+      //&&
+     // !this.component.imageHidden;
   }
 
-  get IconUrlSet(){
-    return  this.component.iconUrl !== undefined  &&
-      this.component.iconUrl !== "" &&
-      RegexStringsUtil.iconUrlPattern.test(this.component.iconUrl) &&
-      !this.component.imageHidden
-  }
-
-  DisableResize(): void {
+  get DisableResize(): boolean {
     if(this.resizeModeActive){
       this.resizeModeActive = false;
-      this.SetComponentData = this.component;
     }
+    return this.resizeModeActive;
   }
 
   get IconIsUrlHidden(){
@@ -78,17 +73,15 @@ export class ComponentService{
   }
 
   get ResizeModeActive(): boolean {
-    this.resizeModeActive = true;
-    this.SetComponentData = this.component;
     return this.resizeModeActive;
   }
 
-  get CheckComponentData(): boolean {
-    return this.component !== undefined &&
-      this.component.name !== "" &&
-      this.component.url !== "" &&
-      RegexStringsUtil.urlPattern.test(this.component.url) &&
-      RegexStringsUtil.namePattern.test(this.component.name);
+  CheckComponentData(item:ComponentModel): boolean {
+    return item !== undefined &&
+      item.name !== "" &&
+      item.url !== "" &&
+      RegexStringsUtil.urlPattern.test(item.url) &&
+      RegexStringsUtil.namePattern.test(item.name);
   }
 
   get InEditMode(): boolean {
