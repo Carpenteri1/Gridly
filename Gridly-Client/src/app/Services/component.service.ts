@@ -28,14 +28,14 @@ export class ComponentService{
   }
 
   SelectedComponent(item: ComponentModel) : ComponentModel {
-    if(this.MatchedComponentId(item)){
+    if(this.GetComponentById(item) !== undefined){
       return this.component = MapComponentData(item);
     }
     return this.component;
   }
 
-  private MatchedComponentId(item: ComponentModel): boolean {
-    return this.GetAllComponents.some((i: ComponentModel) => i.id === item.id);
+  GetComponentById(item: ComponentModel): ComponentModel | undefined{
+    return this.GetAllComponents.find((i: ComponentModel) => i.id === item.id);
   }
 
   IconDataSet(item :ComponentModel) {
@@ -48,20 +48,12 @@ export class ComponentService{
   }
 
   IconUrlSet(item :ComponentModel): boolean {
-    debugger;
     return  item.iconUrl !== undefined  &&
       item.iconUrl !== ""
       //&&
       //RegexStringsUtil.iconUrlPattern.test(item.iconUrl);
       //&&
      // !this.component.imageHidden;
-  }
-
-  get DisableResize(): boolean {
-    if(this.resizeModeActive){
-      this.resizeModeActive = false;
-    }
-    return this.resizeModeActive;
   }
 
   get IconIsUrlHidden(){
