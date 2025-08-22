@@ -6,9 +6,9 @@ namespace Gridly.Repositories;
 
 public class ComponentRepository(IDataConverter<ComponentModel> dataConverter, IFileService fileService) : IComponentRepository
 {
-    public bool Save(IEnumerable<ComponentModel> newComponent)
+    public bool Save(IEnumerable<ComponentModel> component)
     {
-        string jsonString = dataConverter.SerializerToJsonString(newComponent);
+        string jsonString = dataConverter.SerializerToJsonString(component);
         return fileService.WriteToFile(FilePaths.ComponentPath, jsonString);
     }
 
@@ -43,28 +43,20 @@ public class ComponentRepository(IDataConverter<ComponentModel> dataConverter, I
         return fileService.FileExist(filePath) && fileService.DeletedFile(filePath);
     }
     
-    public bool DeleteUnusedIcons(IEnumerable<ComponentModel> componentModels)
+    public List<string> FindUnusedIcons(IEnumerable<ComponentModel> components)
     {
-        var iconDeleted = true;
-        var directory = new DirectoryInfo(FilePaths.IconPath);
+        var unusedIcons = new List<string>();
+        var iconFiles = fileService.GetAllIcons();
         
-        foreach (var file in directory.GetFiles("*.*"))
+        foreach (var icon in iconFiles)
         {
-            if (componentModels.All(x => $"{x.IconData.name}.{x.IconData.type}" != file.Name))
+            if (!components.Any(x => x.IconData != null 
+                && $"{x.IconData.name}.{x.IconData.type}" == icon.Name))
             {
-                var splitName = file.Name.Split('.');
-                if (!DeleteIcon(splitName[0],splitName[1]))
-                {
-                    iconDeleted = false;
-                }
+                unusedIcons.Add(icon.Name);
             }
         }
         
-        return iconDeleted;
+        return unusedIcons.Any() ? unusedIcons : new List<string>();
     }
-
-    public bool IconDuplicate(IEnumerable<ComponentModel> componentModels, IconModel iconData)
-        => componentModels.Where(x => x.IconData != null && 
-                                      x.IconData.name == iconData.name &&
-                                      x.IconData.type == iconData.type).Any();
 }

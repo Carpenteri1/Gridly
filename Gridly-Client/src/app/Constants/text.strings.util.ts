@@ -44,6 +44,9 @@ export class TextStringsUtil {
   static readonly ComponentSavedEndPointSuccessMessage = "Component saved";
   static readonly ComponentSavedFailedEndPointMessage = "Component save failed";
 
+  static readonly ComponentGetByIdSuccessEndPointMessage = "Component Get By Id success";
+  static readonly ComponentGetByIdFailedEndPointMessage = "Component Get By Id failed";
+
   static readonly ComponentsSavedEndPointSuccessMessage = "Components saved";
   static readonly ComponentsFailedEndPointSuccessMessage = "Components save failed";
 

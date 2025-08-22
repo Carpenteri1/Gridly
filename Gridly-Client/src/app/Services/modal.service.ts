@@ -16,6 +16,7 @@ import {ComponentModel} from "../Models/Component.Model";
 @Injectable({providedIn: 'root'})
 export class ModalService{
   canSubmit:boolean = false;
+  componentAsString:string = "";
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
   public resetFile$ = new Subject<void>();
 
@@ -28,13 +29,13 @@ export class ModalService{
   Submit(modalType: ModalViewModel)  {
     switch (modalType.type) {
       case ModalFormType.Add:
-          this.componentService.AddNewComponent(modalType.component);
+          this.componentService.AddNewComponent(modalType);
         break;
       case ModalFormType.Edit:
-          this.componentService.EditComponentData(modalType.component);
+          this.componentService.EditComponentData(modalType);
           break;
       case ModalFormType.Delete:
-         this.componentService.DeleteComponent(modalType.component);
+         this.componentService.DeleteComponent(modalType);
         break;
       default:
          console.error("Unknown modal type: " + modalType.type);
@@ -42,21 +43,8 @@ export class ModalService{
     }
   }
 
-  public ResetImageFileInput(modalViewModel? : ModalViewModel): void {
-    if( modalViewModel !== undefined) {
-      if (modalViewModel.selectedDropDownValue === 1) {
-        this.componentService.ResetComponentImageUrl();
-      }
-      if(modalViewModel.selectedDropDownValue === 2){
-        this.componentService.ResetComponentIconData();
-        this.NotifyComponentToResetFileInput();
-      }
-    }
-    else{
-      this.componentService.ResetComponentImageUrl();
-      this.componentService.ResetComponentIconData();
-      this.NotifyComponentToResetFileInput();
-    }
+  public ResetImageData(): void {
+    this.NotifyComponentToResetFileInput();
   }
 
   private NotifyComponentToResetFileInput(): void {
@@ -69,12 +57,15 @@ export class ModalService{
           this.canSubmit = this.NoEmptyInputFields(viewModel.component);
           return this.canSubmit;
         case ModalFormType.Edit:
-          this.canSubmit = this.NoEmptyInputFields(viewModel.component) &&
-            JSON.stringify(this.componentService.CallEndpoint(EndPointType.GetById, viewModel.component) as ComponentModel) !==
-            JSON.stringify(viewModel.component);
+          if(this.componentAsString === ""){
+           this.componentAsString = JSON.stringify(this.componentService.CallEndpoint(EndPointType.GetById, viewModel) as ComponentModel)
+          }
+          if(this.NoEmptyInputFields(viewModel.component) && this.componentAsString !== ""){
+            this.canSubmit = JSON.stringify(viewModel.component) !== this.componentAsString;
+          }
           return this.canSubmit;
         default:
-          return false;
+          return this.canSubmit;
       }
   }
 
@@ -183,7 +174,7 @@ export class ModalService{
 
   private ResetFormData(): void{
     this.componentService.ResetAllComponentData();
-    this.ResetImageFileInput();
+    this.ResetImageData();
   }
 
 }

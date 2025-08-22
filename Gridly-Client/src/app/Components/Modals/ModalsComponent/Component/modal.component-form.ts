@@ -40,10 +40,10 @@ export class ModalComponentForm {
   protected OnFileUpload(event:any){
     this.modalModel.component.iconData = this.modalService.OnFileUpload(event);
   }
-  protected ResetImageInput(modalModel: ModalViewModel): void {
+  protected ResetImageInput(): void {
     this.modalService.resetFile$.subscribe(() => {
       this.fileInputRef.nativeElement.value = '';
     });
-    this.modalService.ResetImageFileInput(modalModel);
+    this.modalService.ResetImageData();
   }
 }

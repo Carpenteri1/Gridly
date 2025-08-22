@@ -13,9 +13,8 @@
     <input matInput [(ngModel)]="this.modalModel.component.url" />
   </mat-form-field>
   <mat-form-field>
-    <mat-select [(ngModel)]="this.modalModel.selectedDropDownValue"
-                placeholder="Select option"
-                (selectionChange)="this.ResetImageInput(this.modalModel)">
+    <mat-select [(ngModel)]="this.modalModel.selectedDropDownValue" placeholder="Select option"
+                (selectionChange)="this.ResetImageInput()">
       <mat-option [value]="1">{{ this.modalModel.dropDownTitleOne }}</mat-option>
       <mat-option [value]="2">{{ this.modalModel.dropDownTitleTwo }}</mat-option>
     </mat-select>

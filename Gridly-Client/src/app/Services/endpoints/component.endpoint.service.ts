@@ -3,6 +3,7 @@ import {UrlStringsUtil} from "../../Constants/url.strings.util";
 import {ComponentModel} from "../../Models/Component.Model";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
+import {MapEditComponentData} from "../../Utils/editComponentModal.factory";
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +30,8 @@ export class ComponentEndpointService{
     return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlSave, newComponent);
   }
 
-  EditComponent(editedComponent: ComponentModel): Observable<ComponentModel> {
-    return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlEdit, editedComponent);
+  EditComponent(componentModel: ComponentModel, selected: number): Observable<ComponentModel> {
+    return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlEdit, MapEditComponentData(componentModel, selected));
   }
 
   EditComponents(editedComponent: ComponentModel[]): Observable<ComponentModel[]> {

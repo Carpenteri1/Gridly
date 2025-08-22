@@ -6,6 +6,7 @@ import {EndPointType} from "../Types/endPoint.type.enum";
 import {TextStringsUtil} from "../Constants/text.strings.util";
 import {take} from "rxjs";
 import {RegexStringsUtil} from "../Constants/regex.strings.util";
+import {ModalViewModel} from "../Models/ModalView.Model";
 
 @Injectable({providedIn: 'root'})
 export class ComponentService{
@@ -113,52 +114,52 @@ export class ComponentService{
     //window.location.reload();
   }
 
-  AddNewComponent(component: ComponentModel) {
+  AddNewComponent(modalType: ModalViewModel) {
     let index = -1;
-    if(this.components !== undefined && this.components.length > 0 && component !== undefined){
-      index = this.componentEndpointService.GetIndex(component.id);
-      component = MapComponentData(component,{id: Math.max(...this.components.map(x => x.id)) + 1});
+    if(this.components !== undefined && this.components.length > 0 && modalType.component !== undefined){
+      index = this.componentEndpointService.GetIndex(modalType.component.id);
+      modalType.component = MapComponentData(modalType.component,{id: Math.max(...this.components.map(x => x.id)) + 1});
     }
     else if(this.components !== undefined){
-      component = MapComponentData(component,{id:1});
+      modalType.component = MapComponentData(modalType.component,{id:1});
     }
 
     if(index === -1 &&
-        component.name !== "" &&
-        component.url !== "")
+      modalType.component?.name !== "" &&
+      modalType.component?.url !== "")
       {
-        if(component.iconData != null && component.iconData !== undefined){
-          if(component.iconData?.base64Data !== "" &&
-            component.iconData?.name !== "" &&
-            component.iconData?.type !== ""){
-            this.CallEndpoint(EndPointType.Add, component);
+        if(modalType.component.iconData != null && modalType.component.iconData !== undefined){
+          if(modalType.component.iconData?.base64Data !== "" &&
+            modalType.component.iconData?.name !== "" &&
+            modalType.component.iconData?.type !== ""){
+            this.CallEndpoint(EndPointType.Add, modalType);
           }
         }
-        if(component.iconUrl !== ""){
-          this.CallEndpoint(EndPointType.Add, component);
+        if(modalType.component.iconUrl !== ""){
+          this.CallEndpoint(EndPointType.Add, modalType);
         }
       }
       else{
-          this.AddNewComponent(component);
+          this.AddNewComponent(modalType);
       }
   }
 
-  EditComponentData(component: ComponentModel) {
-    if(component.id !== 0){
-      this.CallEndpoint(EndPointType.Edit, component);
+  EditComponentData(modalViewModel: ModalViewModel) {
+    if(modalViewModel.component.id !== 0){
+      this.CallEndpoint(EndPointType.Edit,modalViewModel);
       this.DisableModes();
     }
   }
 
   EditComponentsData(components: ComponentModel[]) {
     if(components !== undefined){
-      this.CallEndpoint(EndPointType.BatchEdit,undefined ,components);
+      this.CallEndpoint(EndPointType.BatchEdit,undefined, undefined ,components);
       this.DisableModes();
       //window.location.reload();
     }
   }
 
-  CallEndpoint(type: EndPointType, componentData?: ComponentModel, componentsData?: ComponentModel[]): any {
+  CallEndpoint(type: EndPointType, modalViewModel?: ModalViewModel, componentData?: ComponentModel, componentsData?: ComponentModel[]): any {
     switch(type){
       case EndPointType.Get:
         this.componentEndpointService.GetComponents().pipe(take(1)).subscribe({
@@ -168,16 +169,16 @@ export class ComponentService{
           error: (err) => console.error(TextStringsUtil.ComponentSavedFailedEndPointMessage, err)});
         return this.components;
       case EndPointType.Add:
-        if(componentData !== undefined && componentData !== null){
-          this.componentEndpointService.AddComponent(MapComponentData(componentData)).pipe(take(1)).subscribe({
+        if(modalViewModel !== undefined && modalViewModel !== null && modalViewModel.component !== undefined){
+          this.componentEndpointService.AddComponent(MapComponentData(modalViewModel.component)).pipe(take(1)).subscribe({
             next: (res) => {console.log(TextStringsUtil.ComponentSavedEndPointSuccessMessage, res)},
             error: (err) => console.error(TextStringsUtil.ComponentSavedFailedEndPointMessage, err)
           });
         }
         break;
       case EndPointType.Edit:
-        if(componentData !== undefined && componentData !== null){
-        this.componentEndpointService.EditComponent(componentData).pipe(take(1)).subscribe({
+        if(modalViewModel !== undefined && modalViewModel !== null && modalViewModel.component !== undefined){
+        this.componentEndpointService.EditComponent(modalViewModel.component, modalViewModel.selectedDropDownValue!).pipe(take(1)).subscribe({
           next: (res) =>{console.log(TextStringsUtil.ComponentSavedEndPointSuccessMessage, res)},
           error: (err) => console.error(TextStringsUtil.ComponentSavedFailedEndPointMessage, err)});
         }
@@ -191,19 +192,26 @@ export class ComponentService{
         }
         break;
       case EndPointType.Delete:
-        if(componentData !== undefined && componentData !== null){
-          this.componentEndpointService.Delete(componentData.id).pipe(take(1)).subscribe({
+        if(modalViewModel !== undefined && modalViewModel !== null && modalViewModel.component !== undefined){
+          this.componentEndpointService.Delete(modalViewModel.component.id).pipe(take(1)).subscribe({
             next: (res) =>{console.log(TextStringsUtil.ComponentDeletedSuccessEndPointMessage, res)},
             error: (err) => console.error(TextStringsUtil.ComponentDeletionFailedEndPointMessage, err)
           });
         }
           break
       case EndPointType.GetById:
-        if(componentData !== undefined && componentData !== null){
-          this.componentEndpointService.GetComponentById(componentData.id).pipe(take(1)).subscribe({
-            next: (res) =>{console.log(TextStringsUtil.ComponentDeletedSuccessEndPointMessage, res);
+        let component!: ComponentModel;
+
+        if(componentData !== undefined && componentData !== null && componentsData)
+          component = MapComponentData(componentData);
+        else if(modalViewModel !== undefined && modalViewModel !== null && modalViewModel.component !== undefined)
+          component = MapComponentData(modalViewModel.component);
+
+        if(component !== undefined ) {
+          this.componentEndpointService.GetComponentById(component.id).pipe(take(1)).subscribe({
+            next: (res) =>{console.log(TextStringsUtil.ComponentGetByIdSuccessEndPointMessage, res);
               this.component = res},
-            error: (err) => console.error(TextStringsUtil.ComponentDeletionFailedEndPointMessage, err)
+            error: (err) => console.error(TextStringsUtil.ComponentGetByIdFailedEndPointMessage, err)
           });
         }
         return this.component;
@@ -212,8 +220,8 @@ export class ComponentService{
     }
   }
 
-  DeleteComponent(componentData: ComponentModel) {
-    this.CallEndpoint(EndPointType.Delete, componentData)
+  DeleteComponent(modalType: ModalViewModel) {
+    this.CallEndpoint(EndPointType.Delete, modalType);
   }
 
   public ResetAllComponentData(): void{
@@ -221,17 +229,8 @@ export class ComponentService{
     this.component.name = "";
     this.component.url = "";
     this.component.titleHidden = false;
-    this.component.imageHidden = false
-    this.ResetComponentImageUrl();
-    this.ResetComponentIconData();
-  }
-
-  public ResetComponentImageUrl(){
+    this.component.imageHidden = false;
+    this.component.iconData = undefined;
     this.component.iconUrl = "";
   }
-
-  public ResetComponentIconData(){
-    this.component.iconData = undefined;
-  }
-
 }

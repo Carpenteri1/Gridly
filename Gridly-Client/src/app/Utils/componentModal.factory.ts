@@ -1,5 +1,4 @@
 import {ComponentModel} from "../Models/Component.Model";
-import {IconModel} from "../Models/Icon.Model";
 
 export function MapComponentData(component?: ComponentModel, overrides: Partial<ComponentModel> = {}): ComponentModel {
   return {
@@ -12,12 +11,4 @@ export function MapComponentData(component?: ComponentModel, overrides: Partial<
     titleHidden: overrides.titleHidden ?? component?.titleHidden ?? false,
     componentSettings: overrides.componentSettings ?? component?.componentSettings ?? null
   } as ComponentModel;
-}
-
-export function SetIconData(iconData: IconModel, overrides: Partial<IconModel> = {}): IconModel {
-   return {
-     type: overrides.type ?? iconData?.type ?? "",
-     name: overrides.name ?? iconData?.name ?? "",
-     base64Data: overrides.base64Data ?? iconData?.base64Data ?? "",
-    } as IconModel;
 }

@@ -7,4 +7,5 @@ public interface IFileService
     public bool WriteAllBitesToFile(string filePath, string content);
     public bool WriteToFile(string filePath, string content);
     public Task<string> ReadAllFromFileAsync(string filePath);
+    public IEnumerable<FileInfo> GetAllIcons();
 }

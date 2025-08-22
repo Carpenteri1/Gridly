@@ -1,5 +1,9 @@
-import {Directive, ElementRef, HostListener, Renderer2, Input} from '@angular/core';
+import {Directive, ElementRef, HostListener, Input, Renderer2} from '@angular/core';
 import {ComponentSettingsModel} from "../Models/ComponentSettings.Model";
+import {ComponentModel} from "../Models/Component.Model";
+import {ComponentService} from "../Services/component.service";
+import {EndPointType} from "../Types/endPoint.type.enum";
+import {MapComponentData} from "../Utils/componentModal.factory";
 
 @Directive({
   standalone: true,
@@ -7,25 +11,38 @@ import {ComponentSettingsModel} from "../Models/ComponentSettings.Model";
 })
 
 export class ResizableDirective {
-  @Input() itemResizing!: any;
+  @Input() itemResizing!: ComponentModel;
   @Input() canResize!: boolean;
+  private itemId!: string;
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  constructor(private el: ElementRef,
+              private renderer: Renderer2,
+              private componentService: ComponentService) {}
 
   @HostListener('document:pointermove', ['$event'])
   OnMouseMove(event: MouseEvent): void {
     if(!this.canResize) return;
-    this.ResizeComponent(event.clientX, event.clientY);
+    if(this.itemId !== "") {
+      this.itemResizing = MapComponentData(this.itemResizing,{id: Number(this.itemId)});
+      this.itemResizing = this.componentService.CallEndpoint(EndPointType.GetById,undefined, this.itemResizing) as ComponentModel;
+      this.ResizeComponent(event.clientX, event.clientY);
+    }
   }
 
   @HostListener('pointerdown', ['$event'])
-  OnLeftMouseButtonPress(){
+  OnLeftMouseButtonPress(event: MouseEvent): void {
     this.HideCursor();
+    const target = event.target as HTMLElement;
+    this.itemId = target.id;
+    if(this.itemId === ""){
+      this.itemId = target.id;
+    }
   }
 
   @HostListener('document:pointerup', ['$event'])
   OnLeftMouseButtonRelease(){
     this.ShowCursor();
+    this.itemId = "";
   }
 
   private ResizeComponent(x: number,y: number): void {

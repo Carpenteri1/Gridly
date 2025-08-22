@@ -3,6 +3,4 @@ using MediatR;
 
 namespace Gridly.Command;
 
-public class EditComponentCommand : ComponentModel, IRequest<IResult>
-{
-}
+public class EditComponentCommand : EditComponentModel, IRequest<IResult> {}
