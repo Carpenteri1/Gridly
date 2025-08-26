@@ -1,9 +1,9 @@
 <div class="d-flex gap-3 space-left" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
-  <div *ngFor="let item of componentService.GetAllComponents" makeResizable
+  <div *ngFor="let component of components" makeResizable
        [canResize]="componentService.InResizeMode"
-       cdkDrag [cdkDragDisabled]="!componentService.InDragMode" [id]="item.id"
+       cdkDrag [cdkDragDisabled]="!componentService.InDragMode" [id]="component.id"
        class="d-flex m-2 flex-column shadow-sm component-style" >
-    <item-component [item]="componentService.SelectedComponent(item)"></item-component>
+    <item-component [id]="component.id"></item-component>
   </div>
   <stickyFooter-component></stickyFooter-component>
 </div>

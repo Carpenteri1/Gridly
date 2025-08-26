@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, ElementRef, Renderer2} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, OnInit, Renderer2} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ComponentService} from "../../Services/component.service";
 import {ModalViewModel} from "../../Models/ModalView.Model";
@@ -7,6 +7,7 @@ import {StickyFooterComponent} from "../StickyFooter/stickyFooter.component";
 import {ItemComponent} from "../Item/item.component";
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
 import {ResizableDirective} from "../../Directives/resizable.directive";
+import {ComponentModel} from "../../Models/Component.Model";
 
 @Component({
   selector: 'grid-component',
@@ -16,28 +17,35 @@ import {ResizableDirective} from "../../Directives/resizable.directive";
   styleUrls: ['./grid.component.css']
 })
 
-export class GridComponent implements AfterViewChecked {
+export class GridComponent implements AfterViewChecked, OnInit{
   protected modalModel!: ModalViewModel;
+  public components!: ComponentModel[];
 
   constructor(
     protected componentService: ComponentService,
     private render: Renderer2,
     private el: ElementRef) {
-    this.componentService.CallEndpoint(EndPointType.Get);
-
   }
+
+  async ngOnInit(): Promise<void> {
+    if(this.components === undefined){
+      this.components = await this.componentService.CallEndpoint(EndPointType.Get) as ComponentModel[];
+    }
+  }
+
   ngAfterViewChecked() {
-    this.SetLayout();
+    if(!this.componentService.InResizeMode){
+      this.SetLayout();
+    }
   }
 
-  Drop(event: CdkDragDrop<any[]>): void {
+  protected Drop(event: CdkDragDrop<any[]>): void {
     if (!this.componentService.InDragMode) return;
-    moveItemInArray(this.componentService.GetAllComponents, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.components, event.previousIndex, event.currentIndex);
   }
 
-  SetLayout() {
-    for (let index in this.componentService.GetAllComponents) {
-      let item = this.componentService.GetAllComponents[index];
+  protected SetLayout() {
+    for (const item of this.components) {
       let el = document.getElementById(item.id.toString()) == null ? this.el.nativeElement : document.getElementById(item.id.toString());
       this.render.setStyle(el, 'height', item.componentSettings?.height + 'px');
       this.render.setStyle(el, 'flex', '0 0 ' + item.componentSettings?.width + 'px');

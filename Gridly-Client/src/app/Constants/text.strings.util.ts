@@ -41,17 +41,23 @@ export class TextStringsUtil {
   static readonly MenuDropDownDragTitle = "Move Components";
   static readonly MenuDropDownResizeTitle = "Resize Components";
 
-  static readonly ComponentSavedEndPointSuccessMessage = "Component saved";
+  static readonly ComponentSavedEndPointSucceededMessage = "Component saved succeeded";
   static readonly ComponentSavedFailedEndPointMessage = "Component save failed";
 
-  static readonly ComponentGetByIdSuccessEndPointMessage = "Component Get By Id success";
+  static readonly ComponentGetByIdSucceededEndPointMessage = "Component Get By Id succeeded";
   static readonly ComponentGetByIdFailedEndPointMessage = "Component Get By Id failed";
 
-  static readonly ComponentsSavedEndPointSuccessMessage = "Components saved";
-  static readonly ComponentsFailedEndPointSuccessMessage = "Components save failed";
-
-  static readonly ComponentDeletedSuccessEndPointMessage = "Component deleted";
+  static readonly ComponentDeletedSucceededEndPointMessage = "Component deleted succeeded";
   static readonly ComponentDeletionFailedEndPointMessage = "Component deletion failed";
+
+  static readonly ComponentBatchEditSucceededEndPointMessage = "Batch edit components succeeded";
+  static readonly ComponentBatchEditFailedEndPointMessage = "Batch edit components failed";
+
+  static readonly ComponentEditSucceededEndPointMessage = "Edit components succeeded";
+  static readonly ComponentEditFailedEndPointMessage = "Edit components failed";
+
+  static readonly GetComponentsSucceededEndPointSuccessMessage = "Get components succeeded";
+  static readonly GetComponentsFailedEndPointMessage = "Get components failed";
 
   static readonly ClientTitle = "Gridly";
 }

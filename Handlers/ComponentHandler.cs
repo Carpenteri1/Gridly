@@ -72,7 +72,7 @@ public class ComponentHandler(IComponentRepository componentRepository) :
 
     public Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken)
     {
-        if (handlerHelper.BatchUpdateComponent(commands))
+        if (!handlerHelper.BatchUpdateComponent(commands))
             return Task.FromResult(Results.NotFound());
         
         return Task.FromResult(componentRepository.Save(handlerHelper.GetComponents()) 

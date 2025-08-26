@@ -1,17 +1,17 @@
-@if (item != undefined){
+@if (CurrentComponentId === id){
   <div class="d-flex justify-content-end">
-    <button [hidden]="!componentService.InEditMode" (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Edit, component: item}))" class="btn btn-dark m-1">...</button>
-    <button (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Delete, component: item}))" class="btn btn-dark m-1"><i class="bi bi-x-lg"></i></button>
+    <button [hidden]="!componentService.InEditMode" (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Edit, component: componentService.GetComponent}))" class="btn btn-dark m-1">...</button>
+    <button (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Delete, component: componentService.GetComponent}))" class="btn btn-dark m-1"><i class="bi bi-x-lg"></i></button>
   </div>
-  <a [style]="componentService.InResizeMode ? 'cursor:none;':'cursor:auto;'" [href]="componentService.InResizeMode ? null : item.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75" target="_blank">
-    <img *ngIf="componentService.IconUrlSet(item)" [src]="item.iconUrl" class="p-3 icon-size component-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
-    <img *ngIf="componentService.IconDataSet(item)" [src]="IconFilePath(item)" class="p-3 icon-size component-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
-    <p [hidden]="item.titleHidden" class="text-center" >{{item.name}}</p>
+  <a [style]="componentService.InResizeMode ? 'cursor:none;':'cursor:auto;'" [href]="componentService.InResizeMode ? null : componentService.GetComponent.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75" target="_blank">
+    <img *ngIf="componentService.IconUrlSet(componentService.GetComponent)" [src]="componentService.GetComponent.iconUrl" class="p-3 icon-size component-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
+    <img *ngIf="componentService.IconDataSet(componentService.GetComponent)" [src]="IconFilePath(componentService.GetComponent)" class="p-3 icon-size component-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
+    <p [hidden]="componentService.GetComponent.titleHidden" class="text-center" >{{componentService.GetComponent.name}}</p>
   </a>
   <div class="d-flex justify-content-end position-absolute bottom-0 end-0 p-2">
       <span [hidden]="!componentService.InResizeMode"  class="component-resize-button"
             (pointerdown)="componentService.ResizeModeActive">
-          <i class="bi bi-arrows-angle-expand"  [id]="item.id"></i>
+          <i class="bi bi-arrows-angle-expand"  [id]="componentService.GetComponent.id"></i>
       </span>
   </div>
 }

@@ -33,8 +33,10 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository)
         if (!IconDataHasValue(component.IconData))
             return true;
 
-        return !IconOnOtherComponent(component.IconData) &&
-               componentRepository.UploadIcon(component.IconData);
+        if (!IconOnOtherComponent(component.IconData))
+            return componentRepository.UploadIcon(component.IconData);
+
+        return true;
     }
     public bool DeleteIcon(ComponentModel component)
     {
@@ -79,13 +81,14 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository)
     
     public bool BatchUpdateComponent(IEnumerable<ComponentModel> editedComponents)
     {
-        Components = GetComponents();
-        Components = editedComponents;
+        var listOfComponents = GetComponents().ToList();
+        var listOfEditedComponents = editedComponents.ToList();
         
-        return Components.Count() == editedComponents.Count() &&
-            !Components.Except(editedComponents).Any() &&
-            !editedComponents.Except(Components).Any() && 
-            !Components.SequenceEqual(editedComponents);
+        if(!listOfComponents.Except(listOfEditedComponents).Any()) 
+            return false;
+        
+        Components = listOfEditedComponents.AsEnumerable();
+        return listOfEditedComponents.TrueForAll(x => x == GetComponentById(x.Id));
     }
     
     public IEnumerable<ComponentModel> GetComponents()

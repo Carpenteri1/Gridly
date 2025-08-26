@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import {Component} from "@angular/core";
 import {ComponentService} from "../../Services/component.service";
 import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {MatButton} from "@angular/material/button";

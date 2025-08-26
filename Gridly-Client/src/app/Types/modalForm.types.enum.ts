@@ -1,5 +1,5 @@
 export enum ModalFormType {
-  Add = 'ADD',
+  Save = 'SAVE',
   Edit = 'EDIT',
   Delete = 'DELETE',
   None = 'NONE',

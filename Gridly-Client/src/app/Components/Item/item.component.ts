@@ -16,10 +16,16 @@ import {NgIf} from "@angular/common";
 })
 
 export class ItemComponent {
-  @Input() item!: ComponentModel;
+  @Input() id!: number;
   constructor(public componentService: ComponentService, public modalService: ModalService) {}
-  IconFilePath(item: ComponentModel): string {
+
+  protected IconFilePath(item: ComponentModel): string {
     return "Assets/Icons/" + item.iconData?.name + "." + item.iconData?.type;
+  }
+
+  get CurrentComponentId():number {
+    this.componentService.SetComponent = this.componentService.GetComponentById(this.id)!;
+    return this.componentService.GetComponent.id;
   }
 
   protected readonly TextStringsUtil = TextStringsUtil;
