@@ -1,5 +1,5 @@
 export enum EndPointType {
-  Save = 'SAVE',
+  Add = 'ADD',
   Edit = 'EDIT',
   BatchEdit = 'BATCHEDIT',
   Delete = 'DELETE',

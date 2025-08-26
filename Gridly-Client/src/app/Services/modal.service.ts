@@ -28,7 +28,7 @@ export class ModalService{
 
   Submit(modalType: ModalViewModel)  {
     switch (modalType.type) {
-      case ModalFormType.Save:
+      case ModalFormType.Add:
           this.componentService.AddNewComponent(modalType);
         break;
       case ModalFormType.Edit:
@@ -53,7 +53,7 @@ export class ModalService{
 
   public async CanSubmit(viewModel: ModalViewModel): Promise<boolean> {
       switch (viewModel.type) {
-        case ModalFormType.Save:
+        case ModalFormType.Add:
           this.canSubmit = this.NoEmptyInputFields(viewModel.component);
           return this.canSubmit;
         case ModalFormType.Edit:
@@ -114,7 +114,7 @@ export class ModalService{
 
   private BuildModalTypeData(modalType: ModalViewModel): void {
     switch (modalType.type) {
-      case ModalFormType.Save:
+      case ModalFormType.Add:
         this.openModal(SetModalComponentFormData({
           title: TextStringsUtil.ModalAddComponentTitle,
           acceptBtnTitle: TextStringsUtil.ModalAddComponentAcceptBtnTitle,
