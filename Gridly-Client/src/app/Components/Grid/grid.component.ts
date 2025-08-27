@@ -34,7 +34,9 @@ export class GridComponent implements AfterViewChecked, OnInit{
   }
 
   ngAfterViewChecked() {
-    if(!this.componentService.InResizeMode){
+    if(!this.componentService.InAnyMode &&
+      this.componentService.GetAllComponents !== undefined)
+    {
       this.SetLayout();
     }
   }
@@ -45,7 +47,7 @@ export class GridComponent implements AfterViewChecked, OnInit{
   }
 
   protected SetLayout() {
-    for (const item of this.components) {
+    for (const item of this.componentService.GetAllComponents) {
       let el = document.getElementById(item.id.toString()) == null ? this.el.nativeElement : document.getElementById(item.id.toString());
       this.render.setStyle(el, 'height', item.componentSettings?.height + 'px');
       this.render.setStyle(el, 'flex', '0 0 ' + item.componentSettings?.width + 'px');

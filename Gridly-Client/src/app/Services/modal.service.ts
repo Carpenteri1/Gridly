@@ -26,16 +26,16 @@ export class ModalService{
       this.BuildModalTypeData(modalType);
   }
 
-  Submit(modalType: ModalViewModel)  {
+  async Submit(modalType: ModalViewModel)  {
     switch (modalType.type) {
       case ModalFormType.Add:
-          this.componentService.AddNewComponent(modalType);
+         await this.componentService.AddNewComponent(modalType);
         break;
       case ModalFormType.Edit:
-          this.componentService.EditComponentData(modalType);
+         await this.componentService.EditComponentData(modalType);
           break;
       case ModalFormType.Delete:
-         this.componentService.DeleteComponent(modalType);
+         await this.componentService.DeleteComponent(modalType);
         break;
       default:
          console.error("Unknown modal type: " + modalType.type);

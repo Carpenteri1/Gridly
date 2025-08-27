@@ -13,10 +13,12 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository)
         !string.IsNullOrEmpty(iconModel.type) &&
         !string.IsNullOrEmpty(iconModel.base64Data);
 
-    private bool IconOnOtherComponent(IconModel iconData)
+    private bool IconOnOtherComponent(ComponentModel component)
         => GetComponents().Any(x => x.IconData != null && 
-                                      x.IconData.name == iconData.name &&
-                                      x.IconData.type == iconData.type);
+                                    component.IconData != null && 
+                                    x.Id != component.Id &&
+                                    x.IconData.name == component.IconData.name && 
+                                    x.IconData.type == component.IconData.type);
     
     private (string, string) Split(string icon)
     {
@@ -33,7 +35,7 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository)
         if (!IconDataHasValue(component.IconData))
             return true;
 
-        if (!IconOnOtherComponent(component.IconData))
+        if (!IconOnOtherComponent(component))
             return componentRepository.UploadIcon(component.IconData);
 
         return true;
@@ -42,7 +44,7 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository)
     {
         if (IconDataHasValue(component.IconData))
         {
-            if (!IconOnOtherComponent(component.IconData))
+            if (!IconOnOtherComponent(component))
                 return componentRepository.DeleteIcon(component.IconData.name, component.IconData.type);   
         }
         return true;

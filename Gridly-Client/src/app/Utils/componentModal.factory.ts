@@ -1,17 +1,26 @@
 import {ComponentModel} from "../Models/Component.Model";
 
-export function MapComponentData(component?: ComponentModel, override: Partial<ComponentModel> = {}) : ComponentModel{
+export function MapComponentData(component?: ComponentModel) : ComponentModel{
   return {
-    id: component?.id ?? override.id ?? 0,
-    name: component?.name ?? override.name ?? "",
-    url: component?.url ?? override.url ?? "",
-    iconData: component?.iconData ?? override.iconData ?? null,
-    iconUrl: component?.iconUrl ?? override.iconUrl ?? "",
-    imageHidden: component?.imageHidden ?? override.imageHidden ?? false,
-    titleHidden: component?.titleHidden ?? override.titleHidden ?? false,
-    componentSettings: component?.componentSettings ?? override.componentSettings ?? null
+    id: component?.id ?? 0,
+    name: component?.name ?? "",
+    url: component?.url ?? "",
+    iconData: component?.iconData ?? null,
+    iconUrl: component?.iconUrl ?? "",
+    imageHidden: component?.imageHidden ?? false,
+    titleHidden: component?.titleHidden ?? false,
+    componentSettings: component?.componentSettings ?? null
   } as ComponentModel;
 }
-MapComponentData.Override = function(component: ComponentModel, overrides: Partial<ComponentModel>): ComponentModel {
-  return MapComponentData(component, overrides);
+MapComponentData.Override = function(override: Partial<ComponentModel>, component?: ComponentModel): ComponentModel {
+  return MapComponentData({
+    id: override.id ?? component?.id ?? 0,
+    name: override.name ??  component?.name ?? "",
+    url: override.url ??  component?.url ?? "",
+    iconData: override.iconData ?? component?.iconData ?? null,
+    iconUrl: override.iconUrl ?? component?.iconUrl ?? "",
+    imageHidden: override.imageHidden ?? component?.imageHidden ?? false,
+    titleHidden: override.titleHidden ?? component?.titleHidden ?? false,
+    componentSettings: override.componentSettings ?? component?.componentSettings ?? null
+  } as ComponentModel);
 };

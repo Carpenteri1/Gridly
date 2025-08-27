@@ -96,6 +96,10 @@ export class ComponentService{
     return this.dragMode;
   }
 
+  get InAnyMode(): boolean{
+    return this.InEditMode || this.InResizeMode || this.InResizeMode;
+  }
+
   SwitchEditMode(): void {
     this.editMode = !this.editMode;
     this.resizeModeActive = false;
@@ -120,45 +124,45 @@ export class ComponentService{
     this.dragMode = false;
   }
 
-  AddNewComponent(modalType: ModalViewModel) {
+  async AddNewComponent(modalType: ModalViewModel) {
     let index = -1;
-    if(this.components !== undefined && this.components.length > 0 && modalType.component !== undefined){
+    if(this.GetComponent !== undefined && this.GetAllComponents.length > 0 && modalType.component !== undefined){
       index = this.componentEndpointService.GetIndex(modalType.component.id);
-      modalType.component = MapComponentData(modalType.component,{id: Math.max(...this.components.map(x => x.id)) + 1});
+      modalType.component = MapComponentData.Override({id: Math.max(...this.components.map(x => x.id)) + 1}, modalType.component);
     }
     else if(this.components !== undefined){
-      modalType.component = MapComponentData(modalType.component,{id:1});
+      modalType.component = MapComponentData.Override({id:1},modalType.component);
     }
 
     if(index === -1 &&
       modalType.component?.name !== "" &&
       modalType.component?.url !== "")
       {
-        if(modalType.component.iconData != null && modalType.component.iconData !== undefined){
+        if(modalType.component.iconData != null &&
+          modalType.component.iconData !== undefined){
           if(modalType.component.iconData?.base64Data !== "" &&
             modalType.component.iconData?.name !== "" &&
             modalType.component.iconData?.type !== ""){
-            this.CallEndpoint(EndPointType.Add, modalType);
+            await this.CallEndpoint(EndPointType.Add, modalType);
           }
         }
         if(modalType.component.iconUrl !== ""){
-          this.CallEndpoint(EndPointType.Add, modalType);
+          await this.CallEndpoint(EndPointType.Add, modalType);
         }
       }
       else{
-          this.AddNewComponent(modalType);
+          await this.AddNewComponent(modalType);
       }
   }
 
-  EditComponentData(modalViewModel: ModalViewModel) {
+  async EditComponentData(modalViewModel: ModalViewModel) {
     if(modalViewModel.component.id !== 0){
-      this.CallEndpoint(EndPointType.Edit,modalViewModel);
+      await this.CallEndpoint(EndPointType.Edit,modalViewModel);
     }
   }
 
   async EditComponentsData(components: ComponentModel[]): Promise<void> {
-    debugger;
-    if(components !== undefined){;
+    if(components !== undefined){
       await this.CallEndpoint(EndPointType.BatchEdit,undefined, undefined ,components);
     }
   }
@@ -250,8 +254,8 @@ export class ComponentService{
     window.location.reload();
   }
 
-  DeleteComponent(modalType: ModalViewModel) {
-    this.CallEndpoint(EndPointType.Delete, modalType);
+  async DeleteComponent(modalType: ModalViewModel) {
+    await this.CallEndpoint(EndPointType.Delete, modalType);
   }
 
   public ResetAllComponentData(): void{

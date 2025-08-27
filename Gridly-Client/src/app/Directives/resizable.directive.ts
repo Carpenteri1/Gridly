@@ -48,11 +48,12 @@ export class ResizableDirective {
 
   private ResizeComponent(x: number,y: number): void {
     this.componentService.SetComponent = MapComponentData.Override(
-      this.componentService.GetComponent, {
-      componentSettings: {
-        width: this.AdjustComponentSize(Math.round(x / 10) * 10),
-        height: this.AdjustComponentSize(Math.round(y / 10) * 10)
-      }});
+      {
+        componentSettings: {
+          width: this.AdjustComponentSize(Math.round(x / 10) * 10),
+          height: this.AdjustComponentSize(Math.round(y / 10) * 10)}
+      },
+      this.componentService.GetComponent);
 
     this.renderer.setStyle(this.el.nativeElement, 'height', this.componentService.GetComponent.componentSettings!.height + 'px');
     this.renderer.setStyle(this.el.nativeElement, 'flex', '0 0 ' + this.componentService.GetComponent.componentSettings!.width  + 'px');
