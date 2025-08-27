@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
-import { BasicComponent } from '../app/components/basicComponent/basic.component';
-import { HeaderComponent } from "../app/components/header/header.component";
+import { GridComponent } from './Components/Grid/grid.component';
+import { HeaderComponent } from "./Components/Header/header.component";
+import {TextStringsUtil} from "./Constants/text.strings.util";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   standalone: true,
-  imports: [BasicComponent, HeaderComponent]
+  imports: [GridComponent, HeaderComponent]
 })
 export class AppComponent {
-  title = 'Gridly';
+  title = TextStringsUtil.ClientTitle;
 }

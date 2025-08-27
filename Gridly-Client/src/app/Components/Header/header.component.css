@@ -1,0 +1,28 @@
+.d-flex{
+    background-color: #141517;
+    color:white;
+}
+.flex-row-reverse{
+    padding-right: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+mat-option{
+  background-color: #141517 !important;
+  color: white !important;
+  z-index: 9999 !important;
+}
+
+mat-option:hover{
+  background-color: #383b41 !important;
+}
+
+:is(.version-text, .text-center) {
+  font-size: 13px;
+}
+
+.modal-dropdown-btn-theme{
+  border:none;
+  background: none;
+}

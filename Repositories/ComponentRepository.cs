@@ -6,9 +6,9 @@ namespace Gridly.Repositories;
 
 public class ComponentRepository(IDataConverter<ComponentModel> dataConverter, IFileService fileService) : IComponentRepository
 {
-    public bool Save(IEnumerable<ComponentModel> newComponent)
+    public bool Save(IEnumerable<ComponentModel> component)
     {
-        string jsonString = dataConverter.SerializerToJsonString(newComponent);
+        string jsonString = dataConverter.SerializerToJsonString(component);
         return fileService.WriteToFile(FilePaths.ComponentPath, jsonString);
     }
 
@@ -33,19 +33,30 @@ public class ComponentRepository(IDataConverter<ComponentModel> dataConverter, I
 
     public bool UploadIcon(IconModel iconData)
     {
-        string filePath = FilePaths.IconPath + $"{iconData.name}.{iconData.fileType}";
+        string filePath = FilePaths.IconPath + $"{iconData.name}.{iconData.type}";
         return fileService.WriteAllBitesToFile(filePath, iconData.base64Data);
     }
     
-    public bool DeleteIcon(IconModel iconData)
+    public bool DeleteIcon(string name, string type)
     {
-        string filePath = FilePaths.IconPath + $"{iconData.name}.{iconData.fileType}";
+        string filePath = FilePaths.IconPath + $"{name}.{type}";
         return fileService.FileExist(filePath) && fileService.DeletedFile(filePath);
     }
-
-    public bool IconDuplicate(IEnumerable<ComponentModel>componentModels, IconModel iconData) =>
-        componentModels.Where(x => x.IconData != null &&
-                                    x.IconData.name == iconData.name &&
-                                    x.IconData.fileType == iconData.fileType).Any();
     
+    public List<string> FindUnusedIcons(IEnumerable<ComponentModel> components)
+    {
+        var unusedIcons = new List<string>();
+        var iconFiles = fileService.GetAllIcons();
+        
+        foreach (var icon in iconFiles)
+        {
+            if (!components.Any(x => x.IconData != null 
+                && $"{x.IconData.name}.{x.IconData.type}" == icon.Name))
+            {
+                unusedIcons.Add(icon.Name);
+            }
+        }
+        
+        return unusedIcons.Any() ? unusedIcons : new List<string>();
+    }
 }

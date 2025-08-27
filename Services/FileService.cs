@@ -1,3 +1,5 @@
+using Gridly.Configuration;
+
 namespace Gridly.Services;
 
 public class FileService : IFileService
@@ -41,5 +43,14 @@ public class FileService : IFileService
         return true;
     }
 
-    public async Task<string> ReadAllFromFileAsync(string filePath) => await File.ReadAllTextAsync(filePath); 
+    public async Task<string> ReadAllFromFileAsync(string filePath) => await File.ReadAllTextAsync(filePath);
+    public IEnumerable<FileInfo> GetAllIcons()
+    {
+        string[] allowedIconTypes = new[] { ".png", ".svg" , ".jpg", ".jpeg", ".ico"};
+        var directory = new DirectoryInfo(FilePaths.IconPath);
+            
+        return directory.GetFiles()
+            .Where(file => file.Name != "favicon.ico" && 
+                           allowedIconTypes.Contains(file.Extension.ToLower()));
+    }
 }

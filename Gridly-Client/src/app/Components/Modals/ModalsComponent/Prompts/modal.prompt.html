@@ -1,0 +1,13 @@
+
+<h2 mat-dialog-title>{{this.modalModel.title}}</h2>
+<mat-dialog-content>
+  <mat-header-row>
+    <h5 class="modal-title text-center" [id]="this.modalModel.component.id">{{this.modalModel.headerTitle}}</h5>
+    <button mat-button [mat-dialog-close]="true">{{this.modalModel.closeBtnTitle}}</button>
+  </mat-header-row>
+    {{this.modalModel.description}} {{this.modalModel.component.name}}
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button class="cancelButton" [mat-dialog-close]="true" (click)="this.modalService.Cancel()">{{this.modalModel.closeBtnTitle}}</button>
+  <button mat-button class="enabled-save-button" [mat-dialog-close]="true" (click)="this.modalService.Submit(this.modalModel)">{{this.modalModel.acceptBtnTitle}}</button>
+</mat-dialog-actions>
