@@ -1,16 +1,17 @@
-import { Component, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { MatFormField, MatLabel } from "@angular/material/input";
-import { MatOption } from "@angular/material/core";
-import { MatSelect } from "@angular/material/select";
-import { MatIcon } from "@angular/material/icon";
-import { TextStringsUtil } from "../../Constants/text.strings.util";
-import { VersionEndpointService } from "../../Services/endpoints/version.endpoint.service";
-import { UrlStringsUtil } from "../../Constants/url.strings.util";
-import { ModalService } from "../../Services/modal.service";
-import { ModalFormType } from "../../Types/modalForm.types.enum";
-import { ComponentService } from "../../Services/component.service";
-import { SetModalComponentFormData } from "../../Utils/viewModel.factory";
+import {Component, OnInit} from "@angular/core";
+import {CommonModule} from "@angular/common";
+import {MatFormField, MatLabel} from "@angular/material/input";
+import {MatOption} from "@angular/material/core";
+import {MatSelect} from "@angular/material/select";
+import {MatIcon} from "@angular/material/icon";
+import {TextStringsUtil} from "../../Constants/text.strings.util";
+import {UrlStringsUtil} from "../../Constants/url.strings.util";
+import {ModalService} from "../../Services/modal.service";
+import {ModalFormType} from "../../Types/modalForm.types.enum";
+import {ComponentService} from "../../Services/component.service";
+import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
+import {VersionService} from "../../Services/version.services";
+import {VersionEndPointType} from "../../Types/endPoint.type.enum";
 
 @Component({
   selector: 'header-component',
@@ -23,15 +24,17 @@ import { SetModalComponentFormData } from "../../Utils/viewModel.factory";
 export class HeaderComponent implements OnInit {
   protected readonly StringUtil = TextStringsUtil;
   constructor(
-    protected versionEndpointService: VersionEndpointService,
+    protected versionService: VersionService,
     protected modalService: ModalService,
     protected componentService: ComponentService) {}
 
-  ngOnInit() {
-    this.versionEndpointService.CheckForNewRelease();
-    if (this.versionEndpointService.GetVersionName() === "") {
-      this.versionEndpointService.CheckForCurrentRelease();
+  async ngOnInit() {
+    //TODO endpoint isnt populated
+    await this.versionService.CallEndPoint(VersionEndPointType.GetLatestVersion);
+    if (this.versionService.Version === undefined) {//TODO might need fix Gets the stored version from database
+      await this.versionService.CallEndPoint(VersionEndPointType.GetCurrentVersion);
     }
+    await this.versionService.CallEndPoint(VersionEndPointType.AddVersion);
   }
 
   protected readonly UrlStringsUtil = UrlStringsUtil;

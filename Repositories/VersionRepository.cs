@@ -1,34 +1,34 @@
-using Gridly.Configuration;
-using Gridly.EndPoints;
+using System.Data;
+using Dapper;
 using Gridly.Models;
-using Gridly.Services;
 
 namespace Gridly.Repositories;
 
-public class VersionRepository(IDataConverter<VersionModel> dataConverter, IFileService fileService, IVersionEndPoint versionEndPoint) : IVersionRepository
+public class VersionRepository : IVersionRepository
 {
-    public async Task<VersionModel> GetLatestVersionAsync()
-    {
-        var (success,model) = await versionEndPoint.GetLatestVersion();
-        if (success)
-        {
-            var jsonFileString = await fileService.ReadAllFromFileAsync(FilePaths.VersionFilePath);
-            if (string.IsNullOrEmpty(jsonFileString) || jsonFileString.Equals("{}"))
-            {
-                string jsonString = dataConverter.SerializerToJsonString(model);
-                fileService.WriteToFile(FilePaths.VersionFilePath, jsonString);
-                return model;
-            }
+    private readonly IDbConnection _connection;
 
-            var storedModel = dataConverter.DeserializeJson(jsonFileString);
-            model.NewRelease = dataConverter.ToInt(model.Name) > dataConverter.ToInt(storedModel.Name);
-            if (model.NewRelease)
-            {
-                string jsonString = dataConverter.SerializerToJsonString(model);
-                fileService.WriteToFile(FilePaths.VersionFilePath, jsonString);
-                return model;
-            }
-        }
-        return model;
+    public VersionRepository(IDbConnection connection)
+    {
+        _connection = connection;
+    }
+    public (bool, VersionModel) GetVersion()
+    {
+        _connection.Open();
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(@"SELECT * FROM Version/**where**/"); 
+        var localVersion = _connection.QueryFirstOrDefault<VersionModel>(template.RawSql, template.Parameters);
+        _connection.Close();
+        return (localVersion != null,localVersion);
+    }
+
+    public (bool, VersionModel) SaveVersion(VersionModel version)
+    {
+        _connection.Open();
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate("INSERT INTO Version (Name, NewRelease) VALUES (@Name, @NewRelease)");
+        int rowsAffected = _connection.Execute(template.RawSql, version);
+        _connection.Close();
+        return (rowsAffected != 0, version);
     }
 }

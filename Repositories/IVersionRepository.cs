@@ -4,5 +4,6 @@ namespace Gridly.Repositories;
 
 public interface IVersionRepository
 {
-    public Task<VersionModel> GetLatestVersionAsync();
+    public (bool, VersionModel) GetVersion();
+    public (bool, VersionModel) SaveVersion(VersionModel version);
 }

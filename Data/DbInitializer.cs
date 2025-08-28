@@ -16,7 +16,7 @@ public class DbInitializer
     {
         await connection.ExecuteAsync(
             sql:@"
-                CREATE TABLE IF NOT EXISTS ComponentData(
+                CREATE TABLE IF NOT EXISTS Component(
                 ComponentId INT PRIMARY KEY,
                 Name TEXT NOT NULL,
                 URL TEXT NOT NULL,
@@ -24,22 +24,22 @@ public class DbInitializer
                 TitleHidden BOOLEAN NOT NULL,
                 ImageHidden BOOLEAN NOT NULL);
 
-                CREATE TABLE IF NOT EXISTS IconData(
+                CREATE TABLE IF NOT EXISTS Icon(
                 IconId INT PRIMARY KEY,
                 Name TEXT NOT NULL,
                 Type TEXT NOT NULL,
                 Base64 TEXT NOT NULL,
-                FOREIGN KEY(IconId) REFERENCES artist(ComponentId));
+                FOREIGN KEY(IconId) REFERENCES Component(ComponentId));
 
                 CREATE TABLE IF NOT EXISTS ComponentSettings(
-                    ComponentSettingsId INT PRIMARY KEY,
-                    Width INT NOT NULL,
-                    Height INT NOT NULL,
-                    FOREIGN KEY(ComponentSettingsId) REFERENCES artist(ComponentId));
+                ComponentSettingsId INT PRIMARY KEY,
+                Width INT NOT NULL,
+                Height INT NOT NULL,
+                FOREIGN KEY(ComponentSettingsId) REFERENCES Component(ComponentId));
 
-                CREATE TABLE IF NOT EXISTS Version (
-                    VersionId INT PRIMARY KEY,
-                    VersionName TEXT NOT NULL,
+                CREATE TABLE IF NOT EXISTS Version(
+                    VersionId INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT NOT NULL,
                     NewRelease BOOLEAN NOT NULL);",
             commandTimeout:150);
     }

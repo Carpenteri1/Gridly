@@ -8,17 +8,16 @@ using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<DbInitializer>();
-builder.Services.AddScoped<System.Data.IDbConnection>(sp =>
-    new SqliteConnection(builder.Configuration.GetConnectionString(Environment.GetEnvironmentVariable("GridlyDb"))));
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 await builder.Services.AddTokenBucketRateLimiter();
 
-builder.Services.AddSingleton<IVersionEndPoint, VersionEndPoint>();
-
-builder.Services.AddSingleton<IComponentRepository,ComponentRepository>();
-builder.Services.AddSingleton<IVersionRepository, VersionRepository>();
+builder.Services.AddScoped<DbInitializer>();
+builder.Services.AddScoped<System.Data.IDbConnection>(sp =>
+    new SqliteConnection(builder.Configuration.GetConnectionString("GridlyDb")));
+builder.Services.AddScoped<IVersionEndPoint, VersionEndPoint>();
+builder.Services.AddScoped<IVersionRepository, VersionRepository>();
+builder.Services.AddScoped<IComponentRepository,ComponentRepository>();
 
 builder.Services.AddSingleton<IFileService, FileService>();
 builder.Services.AddSingleton(typeof(IDataConverter<>), typeof(DataConverter<>));
