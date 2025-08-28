@@ -2,9 +2,15 @@ using Gridly.Configuration;
 using Gridly.EndPoints;
 using Gridly.Repositories;
 using Gridly.Services;
+using Gridly.Data;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<DbInitializer>();
+builder.Services.AddScoped<System.Data.IDbConnection>(sp =>
+    new SqliteConnection(builder.Configuration.GetConnectionString(Environment.GetEnvironmentVariable("GridlyDb"))));
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 await builder.Services.AddTokenBucketRateLimiter();
@@ -19,7 +25,6 @@ builder.Services.AddSingleton(typeof(IDataConverter<>), typeof(DataConverter<>))
 
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
-
 var app = builder.Build();
 
 app.UseStaticFiles();
@@ -38,6 +43,12 @@ app.MapControllerRoute(
 
 app.UseRouting();
 app.UseTokenBucketRateLimiter();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbInit = scope.ServiceProvider.GetRequiredService<DbInitializer>();
+    await dbInit.EnsureTablesCreatedAsync();
+}
 
 app.UseEndpoints(endpoints =>
 {
