@@ -16,7 +16,7 @@ public class VersionRepository : IVersionRepository
     {
         _connection.Open();
         var builder = new SqlBuilder();
-        var template = builder.AddTemplate(@"SELECT * FROM Version/**where**/"); 
+        var template = builder.AddTemplate(@"SELECT * FROM LatestVersion/**where**/"); 
         var localVersion = _connection.QueryFirstOrDefault<VersionModel>(template.RawSql, template.Parameters);
         _connection.Close();
         return (localVersion != null,localVersion);
@@ -26,7 +26,9 @@ public class VersionRepository : IVersionRepository
     {
         _connection.Open();
         var builder = new SqlBuilder();
-        var template = builder.AddTemplate("INSERT INTO Version (Name, NewRelease) VALUES (@Name, @NewRelease)");
+        var template = builder.AddTemplate(@"
+        DELETE FROM LatestVersion; 
+        INSERT INTO LatestVersion (Name, NewRelease) VALUES (@Name, @NewRelease)");
         int rowsAffected = _connection.Execute(template.RawSql, version);
         _connection.Close();
         return (rowsAffected != 0, version);

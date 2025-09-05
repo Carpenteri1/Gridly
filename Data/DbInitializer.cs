@@ -32,13 +32,13 @@ public class DbInitializer
                 FOREIGN KEY(IconId) REFERENCES Component(ComponentId));
 
                 CREATE TABLE IF NOT EXISTS ComponentSettings(
-                ComponentSettingsId INT PRIMARY KEY,
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Width INT NOT NULL,
                 Height INT NOT NULL,
-                FOREIGN KEY(ComponentSettingsId) REFERENCES Component(ComponentId));
+                FOREIGN KEY(Id) REFERENCES Component(ComponentId));
 
-                CREATE TABLE IF NOT EXISTS Version(
-                    VersionId INTEGER PRIMARY KEY AUTOINCREMENT,
+                CREATE TABLE IF NOT EXISTS LatestVersion(
+                    Id INTEGER PRIMARY KEY,
                     Name TEXT NOT NULL,
                     NewRelease BOOLEAN NOT NULL);",
             commandTimeout:150);

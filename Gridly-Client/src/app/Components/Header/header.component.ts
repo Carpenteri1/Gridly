@@ -11,7 +11,6 @@ import {ModalFormType} from "../../Types/modalForm.types.enum";
 import {ComponentService} from "../../Services/component.service";
 import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
 import {VersionService} from "../../Services/version.services";
-import {VersionEndPointType} from "../../Types/endPoint.type.enum";
 
 @Component({
   selector: 'header-component',
@@ -20,21 +19,17 @@ import {VersionEndPointType} from "../../Types/endPoint.type.enum";
   standalone: true,
   imports: [CommonModule, MatFormField, MatOption, MatSelect, MatLabel, MatIcon]
 })
-
 export class HeaderComponent implements OnInit {
   protected readonly StringUtil = TextStringsUtil;
+
   constructor(
     protected versionService: VersionService,
     protected modalService: ModalService,
-    protected componentService: ComponentService) {}
+    protected componentService: ComponentService) {
+  }
 
   async ngOnInit() {
-    //TODO endpoint isnt populated
-    await this.versionService.CallEndPoint(VersionEndPointType.GetLatestVersion);
-    if (this.versionService.Version === undefined) {//TODO might need fix Gets the stored version from database
-      await this.versionService.CallEndPoint(VersionEndPointType.GetCurrentVersion);
-    }
-    await this.versionService.CallEndPoint(VersionEndPointType.AddVersion);
+    await this.versionService.SetVersion();
   }
 
   protected readonly UrlStringsUtil = UrlStringsUtil;

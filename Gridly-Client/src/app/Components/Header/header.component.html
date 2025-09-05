@@ -1,6 +1,6 @@
 <div class="d-flex gap-3 justify-content-end">
   <div class="d-flex m-2 flex-row">
-    <div class="version-text text-white-50 m-2" *ngIf="versionService.Version.newRelease">
+    <div class="version-text text-white-50 m-2" *ngIf=" this.versionService.Version.newRelease">
       <strong> {{StringUtil.NewVersionAvailableHeaderInfoText}}
         <a target="_blank" href="{{UrlStringsUtil.GitHubReleaseURL+versionService.Version.name}}">
           {{versionService.Version.name}}
