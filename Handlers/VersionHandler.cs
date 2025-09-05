@@ -1,37 +1,54 @@
 using Gridly.Command;
-using Gridly.Configuration;
-using Gridly.Models;
+using Gridly.EndPoints;
 using Gridly.Repositories;
-using Gridly.Services;
 using MediatR;
 
 namespace Gridly.Handlers;
 
 public class VersionHandler(
-    IVersionRepository versionRepository, 
-    IFileService fileService, 
-    IDataConverter<VersionModel> dataConverter) : 
-    IRequestHandler<GetAllLatestVersionCommand,VersionModel>,
-    IRequestHandler<GetAllCurrentVersionCommand,VersionModel>
+    IVersionRepository versionRepository,
+    IVersionEndPoint versionEndPoint) : 
+    IRequestHandler<GetLatestVersionCommand, IResult>,
+    IRequestHandler<GetCurrentVersionCommand, IResult>,
+    IRequestHandler<SaveVersionCommand, IResult>
 {
-    public async Task<VersionModel> Handle(GetAllLatestVersionCommand request, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(GetLatestVersionCommand request, CancellationToken cancellationToken)
     {
-        var version = await versionRepository.GetLatestVersionAsync();
-        return version;
-    }
-    public async Task<VersionModel> Handle(GetAllCurrentVersionCommand request, CancellationToken cancellationToken)
-    {
-        var jsonFileString = "{}";
-        if (!fileService.FileExist(FilePaths.VersionFilePath))
+        var (remoteSuccess, remoteVersion) = await versionEndPoint.GetLatestVersion();
+        var (localSuccess, localVersion) = versionRepository.GetVersion();
+        
+        if (remoteSuccess && localSuccess)
         {
-            fileService.WriteToFile(FilePaths.VersionFilePath,jsonFileString);
-            return dataConverter.DeserializeJson(jsonFileString);
+            if (!remoteVersion.Name.Equals(localVersion.Name, 
+                    StringComparison.InvariantCultureIgnoreCase))
+            {
+                return Results.Ok(remoteVersion);
+            }
+            return Results.Ok(localVersion);
+        }
+
+        if (!remoteSuccess && localSuccess)
+        {
+            return Results.Ok(localVersion);
+        }
+
+        if (remoteSuccess && !localSuccess)
+        {
+            remoteVersion.NewRelease = true;
+            return Results.Ok(remoteVersion);
         }
         
-        jsonFileString = await fileService.ReadAllFromFileAsync(FilePaths.VersionFilePath);
-        
-        return !string.IsNullOrEmpty(jsonFileString) || !jsonFileString.Equals("{}") ?
-            dataConverter.DeserializeJson(jsonFileString) : 
-            new VersionModel{Name = "", NewRelease = false};
+        return Results.NotFound();
+    }
+    public Task<IResult> Handle(GetCurrentVersionCommand request, CancellationToken cancellationToken)
+    {
+        var (success,version) = versionRepository.GetVersion();
+        return Task.FromResult(success ? Results.Ok(version) : Results.NotFound());
+    }
+
+    public Task<IResult> Handle(SaveVersionCommand command, CancellationToken cancellationToken)
+    {
+        var (success,version) = versionRepository.SaveVersion(command);
+        return Task.FromResult(success ? Results.Ok(version) : Results.StatusCode(500));
     }
 }

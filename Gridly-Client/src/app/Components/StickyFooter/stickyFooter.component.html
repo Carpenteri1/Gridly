@@ -11,7 +11,7 @@
         <button mat-button matTooltip="{{TextStringsUtil.GridComponentCancelToolTip}}" class="cancelButton" (click)="componentService.DisableModes()">
           {{TextStringsUtil.StickCancelButtonTitle}}
         </button>
-        <button mat-button matTooltip="{{TextStringsUtil.GridComponentMovePositionSaveToolTip}}" class="enabled-save-button" (click)="componentService.EditComponentsData(componentService.GetAllComponents)">
+        <button mat-button matTooltip="{{TextStringsUtil.GridComponentMovePositionSaveToolTip}}" class="enabled-save-button" (click)="componentService.EditComponentsData(componentService.Components )">
           {{TextStringsUtil.StickSaveButtonTitle}}
         </button>
       </div>

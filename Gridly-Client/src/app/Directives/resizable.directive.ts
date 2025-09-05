@@ -21,10 +21,10 @@ export class ResizableDirective {
     if(!this.canResize) return;
     const target = event.target as HTMLElement;
     if(target.id !== "") {
-      if(this.componentService.GetComponent === undefined ||
-        this.componentService.GetComponent.id !== this.targetId)
+      if(this.componentService.Component === undefined ||
+        this.componentService.Component.id !== this.targetId)
       {
-        this.componentService.SetComponent = this.componentService.GetComponentById(this.targetId)!;
+        this.componentService.Component = this.componentService.GetComponentById(this.targetId)!;
       }
       this.ResizeComponent(event.clientX, event.clientY);
     }
@@ -37,7 +37,7 @@ export class ResizableDirective {
     if(target.id === "")
     {
       this.targetId = Number(target.id);
-      this.componentService.SetComponent = this.componentService.GetComponentById(this.targetId) as ComponentModel;
+      this.componentService.Component = this.componentService.GetComponentById(this.targetId) as ComponentModel;
     }
   }
 
@@ -47,16 +47,16 @@ export class ResizableDirective {
   }
 
   private ResizeComponent(x: number,y: number): void {
-    this.componentService.SetComponent = MapComponentData.Override(
+    this.componentService.Component = MapComponentData.Override(
       {
         componentSettings: {
           width: this.AdjustComponentSize(Math.round(x / 10) * 10),
           height: this.AdjustComponentSize(Math.round(y / 10) * 10)}
       },
-      this.componentService.GetComponent);
+      this.componentService.Component);
 
-    this.renderer.setStyle(this.el.nativeElement, 'height', this.componentService.GetComponent.componentSettings!.height + 'px');
-    this.renderer.setStyle(this.el.nativeElement, 'flex', '0 0 ' + this.componentService.GetComponent.componentSettings!.width  + 'px');
+    this.renderer.setStyle(this.el.nativeElement, 'height', this.componentService.Component.componentSettings!.height + 'px');
+    this.renderer.setStyle(this.el.nativeElement, 'flex', '0 0 ' + this.componentService.Component.componentSettings!.width  + 'px');
   }
 
   private HideCursor(): void {

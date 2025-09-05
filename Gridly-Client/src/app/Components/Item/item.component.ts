@@ -24,8 +24,8 @@ export class ItemComponent {
   }
 
   get CurrentComponentId():number {
-    this.componentService.SetComponent = this.componentService.GetComponentById(this.id)!;
-    return this.componentService.GetComponent.id;
+    this.componentService.Component = this.componentService.GetComponentById(this.id)!;
+    return this.componentService.Component.id;
   }
 
   protected readonly TextStringsUtil = TextStringsUtil;

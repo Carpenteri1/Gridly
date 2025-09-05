@@ -2,6 +2,7 @@ export class UrlStringsUtil {
   static readonly VersionUrl = '/api/version/';
   static readonly VersionLatestUrl = this.VersionUrl+'latest';
   static readonly VersionCurrentUrl = this.VersionUrl+'current';
+  static readonly VersionSaveUrl = this.VersionUrl+'save';
 
   static readonly ComponentUrl = '/api/component/';
   static readonly ComponentUrlDelete = this.ComponentUrl+'delete/';

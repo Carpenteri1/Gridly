@@ -1,6 +1,6 @@
 export class TextStringsUtil {
 
-  static readonly NewVersionAvailableHeaderInfoText = "There is a new version available!&nbsp;&nbsp;";
+  static readonly NewVersionAvailableHeaderInfoText = "There is a new version available!";
 
   static readonly GridComponentResizeTitle = "Resize components";
   static readonly GridComponentCancelToolTip = "Cancel changes done with drag and resize";
