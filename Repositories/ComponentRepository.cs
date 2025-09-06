@@ -1,36 +1,71 @@
+using Dapper;
 using Gridly.Configuration;
+using Gridly.Constants;
+using Gridly.helpers;
 using Gridly.Models;
 using Gridly.Services;
 
 namespace Gridly.Repositories;
 
-public class ComponentRepository(IDataConverter<ComponentModel> dataConverter, IFileService fileService) : IComponentRepository
+public class ComponentRepository : IComponentRepository
 {
-    public bool Save(IEnumerable<ComponentModel> component)
+    private int? RowsEffected;
+    private RepositoryHelper repositoryHelper;
+    private readonly IDataConverter<ComponentModel> dataConverter;
+    private readonly IFileService fileService;
+    
+    public bool Insert(ComponentModel component)
     {
-        string jsonString = dataConverter.SerializerToJsonString(component);
-        return fileService.WriteToFile(FilePaths.ComponentPath, jsonString);
+        if (component.IconData is not null)
+        {
+            repositoryHelper.Insert(QueryStrings.InsertToIcon,component.IconData); 
+        }
+        return repositoryHelper.Insert(QueryStrings.InsertToComponent,component);                   
+    }
+    
+    public bool Insert(IEnumerable<ComponentModel> component)
+    {
+        return true;
     }
 
     public async Task<IEnumerable<ComponentModel>?> Get()
     {
-        var jsonFileString = "[]";
-        if (!fileService.FileExist(FilePaths.ComponentPath))
-        {
-            fileService.WriteToFile(FilePaths.ComponentPath,jsonFileString);
-            return dataConverter.DeserializeJsonToArray(jsonFileString);
-        }
+        var builder = new SqlBuilder();
         
-        jsonFileString = await fileService.ReadAllFromFileAsync(FilePaths.ComponentPath);
-        return dataConverter.DeserializeJsonToArray(jsonFileString);
+        var template = builder.AddTemplate(QueryStrings.SelectComponentQuery);
+        builder.LeftJoin(QueryStrings.LeftJoinIconData);
+        
+        return await repositoryHelper.SelectMany<ComponentModel>(template.RawSql, template.Parameters);
     }
     
     public async Task<ComponentModel?> GetById(int Id)
     {
-        string jsonString = await fileService.ReadAllFromFileAsync(FilePaths.ComponentPath);
-        return dataConverter.DeserializeJsonToArray(jsonString)?.ToList().First(x => x.Id == Id);
+        var builder = new SqlBuilder();                                                       
+                                                                                       
+        var template = builder.AddTemplate(QueryStrings.SelectComponentQuery); 
+        builder.LeftJoin(QueryStrings.LeftJoinIconData);
+        builder.Where(QueryStrings.WhereIconData, new { ComponentId = Id });
+        
+        return await repositoryHelper.Select<ComponentModel>(template.RawSql, template.Parameters);
     }
 
+    public bool Delete(ComponentModel component)
+    {
+        var builder = new SqlBuilder();                                                       
+                                                                                       
+        var template = builder.AddTemplate(QueryStrings.DeleteComponentQuery); 
+        builder.Where(QueryStrings.WhereComponentData, new { ComponentId = component.Id });
+        if (component.IconData is not null)
+        {
+            builder.AddTemplate(QueryStrings.DeleteIconQuery);
+            builder.Where(QueryStrings.WhereIconData, new { ComponentId = component.Id });
+        }
+        
+        return repositoryHelper.Delete(template.RawSql, template.Parameters);   
+    }
+    
+    
+    //TODO move these below here
     public bool UploadIcon(IconModel iconData)
     {
         string filePath = FilePaths.IconPath + $"{iconData.name}.{iconData.type}";

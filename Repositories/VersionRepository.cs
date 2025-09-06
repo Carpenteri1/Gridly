@@ -16,7 +16,7 @@ public class VersionRepository : IVersionRepository
     {
         _connection.Open();
         var builder = new SqlBuilder();
-        var template = builder.AddTemplate(@"SELECT * FROM LatestVersion/**where**/"); 
+        var template = builder.AddTemplate(@"SELECT Name, NewRelease FROM LatestVersion/**where**/"); 
         var localVersion = _connection.QueryFirstOrDefault<VersionModel>(template.RawSql, template.Parameters);
         _connection.Close();
         return (localVersion != null,localVersion);

@@ -14,70 +14,66 @@ public class ComponentHandler(IComponentRepository componentRepository) :
     IRequestHandler<BatchEditComponentCommand, IResult>
 {
     private readonly ComponentHandlerHelper handlerHelper = new(componentRepository);
-    public Task<IResult> Handle(SaveComponentCommand command, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(SaveComponentCommand command, CancellationToken cancellationToken)
     {
-        if(!handlerHelper.UploadIcon(command))
-            return Task.FromResult(Results.NotFound());   
+        if(await handlerHelper.UploadIcon(command) is false)
+            return Results.NotFound();   
         
         command.ComponentSettings = new ComponentSettingsModel(200, 200);
-        return Task.FromResult(handlerHelper.AddComponent(command) && componentRepository.Save(handlerHelper.GetComponents()) ? 
-            Results.Ok() : Results.StatusCode(500));
+        return componentRepository.Insert(command) ? 
+            Results.Ok() : Results.StatusCode(500);
     }
     
-    public Task<IResult> Handle(DeleteComponentCommand command, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(DeleteComponentCommand command, CancellationToken cancellationToken)
     {
-        var component = handlerHelper.GetComponentById(command.Id);
-        if(!handlerHelper.DeleteIcon(component))
-            return Task.FromResult(Results.NotFound());
+        var component = await handlerHelper.GetComponentById(command.Id);
+        if(await handlerHelper.DeleteIcon(component) is false || 
+           !componentRepository.Delete(component))
+            return Results.NotFound();
         
-        if(!handlerHelper.DeleteComponent(component))
-            return Task.FromResult(Results.NotFound());
-        
-        return Task.FromResult(componentRepository.Save(handlerHelper.GetComponents()) ? 
-            Results.Ok() : Results.StatusCode(500));
+        return componentRepository.Insert(command) ? 
+            Results.Ok() : Results.StatusCode(500);
     }
     
-    public Task<IResult> Handle(EditComponentCommand command, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(EditComponentCommand command, CancellationToken cancellationToken)
     {
         switch (command.SelectedDropDownIconValue)
         {
             case 0:
-                if (!handlerHelper.UpdateComponent(command.EditComponent!))
-                    return Task.FromResult(Results.NotFound());  
+                if (await handlerHelper.UpdateComponent(command.EditComponent!) is false)
+                    return Results.NotFound();  
                 break;
             case 1:
-                if(!handlerHelper.UploadIcon(command.EditComponent)) 
-                    return Task.FromResult(Results.NotFound());
+                if(await handlerHelper.UploadIcon(command.EditComponent) is false) 
+                    return Results.NotFound();
                 
                 command.EditComponent.IconUrl = string.Empty;                
-                if (!handlerHelper.UpdateComponent(command.EditComponent!))  
-                    return Task.FromResult(Results.NotFound());              
+                if (await handlerHelper.UpdateComponent(command.EditComponent!) is false)  
+                    return Results.NotFound();              
                 
-                if (!handlerHelper.DeleteUnUsedIcon()) 
-                    return Task.FromResult(Results.NotFound());
+                if (await handlerHelper.DeleteUnUsedIcon() is false || 
+                    await handlerHelper.UpdateComponent(command.EditComponent!) is false) 
+                    return Results.NotFound();
                 break;
             case 2: 
                 command.EditComponent.IconData = null;                
-                if (!handlerHelper.UpdateComponent(command.EditComponent!))    
-                    return Task.FromResult(Results.NotFound());                
-                
-                if(!handlerHelper.DeleteUnUsedIcon())
-                    return Task.FromResult(Results.NotFound()); 
+                if (await handlerHelper.UpdateComponent(command.EditComponent!) is false ||
+                    await handlerHelper.DeleteUnUsedIcon() is false)    
+                    return Results.NotFound();
                 break;
         }
 
-        return Task.FromResult(componentRepository.Save(handlerHelper.GetComponents()) ? 
-            Results.Ok() : Results.StatusCode(500));
+        return componentRepository.Insert(command.EditComponent) ? 
+            Results.Ok() : Results.StatusCode(500);
     }
 
-    public Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken)
     {
-        if (!handlerHelper.BatchUpdateComponent(commands))
-            return Task.FromResult(Results.NotFound());
+        if (await handlerHelper.BatchUpdateComponent(commands) is not true)
+            return Results.NotFound();
         
-        return Task.FromResult(componentRepository.Save(handlerHelper.GetComponents()) 
-            ? Results.Ok()                                                      
-            : Results.StatusCode(500));                                         
+        return componentRepository.Insert(commands) 
+            ? Results.Ok() : Results.StatusCode(500);                                         
     }
     
     public async Task<ComponentModel[]> Handle(GetAllComponentCommand command, CancellationToken cancellationToken) =>

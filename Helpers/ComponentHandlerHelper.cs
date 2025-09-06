@@ -13,12 +13,15 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository)
         !string.IsNullOrEmpty(iconModel.type) &&
         !string.IsNullOrEmpty(iconModel.base64Data);
 
-    private bool IconOnOtherComponent(ComponentModel component)
-        => GetComponents().Any(x => x.IconData != null && 
-                                    component.IconData != null && 
-                                    x.Id != component.Id &&
-                                    x.IconData.name == component.IconData.name && 
-                                    x.IconData.type == component.IconData.type);
+    private async Task<bool> IconOnOtherComponent(ComponentModel component)
+    {
+        var components = await GetComponents();
+        return components.Any(x => x.IconData != null && 
+                                   component.IconData != null && 
+                                   x.Id != component.Id &&
+                                   x.IconData.name == component.IconData.name && 
+                                   x.IconData.type == component.IconData.type);
+    }
     
     private (string, string) Split(string icon)
     {
@@ -30,29 +33,30 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository)
         componentRepository.FindUnusedIcons(componentModels);
     private bool DeleteIcon(string name, string type) => componentRepository.DeleteIcon(name, type);
 
-    public bool UploadIcon(ComponentModel component)
+    public async Task<bool> UploadIcon(ComponentModel component)
     {
         if (!IconDataHasValue(component.IconData))
             return true;
 
-        if (!IconOnOtherComponent(component))
+        if (await IconOnOtherComponent(component) is not true)
             return componentRepository.UploadIcon(component.IconData);
 
         return true;
     }
-    public bool DeleteIcon(ComponentModel component)
+    public async Task<bool> DeleteIcon(ComponentModel component)
     {
         if (IconDataHasValue(component.IconData))
         {
-            if (!IconOnOtherComponent(component))
+            if (await IconOnOtherComponent(component) is not true)
                 return componentRepository.DeleteIcon(component.IconData.name, component.IconData.type);   
         }
         return true;
     }
     
-    public bool DeleteUnUsedIcon()
+    public async Task<bool> DeleteUnUsedIcon()
     {
-        foreach (var icon in GetUnusedIconNames(GetComponents()))                      
+        var componenets = await GetComponents();
+        foreach (var icon in GetUnusedIconNames(componenets))                      
         {                                                                                                          
             var (name,type) = Split(icon);                                                           
             if (!DeleteIcon(name,type))                                                              
@@ -61,56 +65,43 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository)
 
         return true;
     }
-    
-    public bool DeleteComponent(ComponentModel component)
-    {
-        Components = GetComponents().ToList().Where(x => x.Id != component.Id).AsEnumerable();
-        return !Components.ToList().Contains(component);
-    }
 
-    public bool UpdateComponent(ComponentModel editComponent)
+    public async Task<bool> UpdateComponent(ComponentModel editComponent)
     {
-        var componentsList = GetComponents().ToList();
+        var components = await GetComponents();
+        var componentsList = components.ToList();
         var index = componentsList.FindIndex(0, x => x.Id == editComponent.Id);
 
         if (index != -1)
         {
             componentsList[index] = editComponent;
         }
+        
         Components = componentsList.AsEnumerable();
         return Components.Contains(Components.ToList()[index]); 
     }
     
-    public bool BatchUpdateComponent(IEnumerable<ComponentModel> editedComponents)
+    public async Task<bool> BatchUpdateComponent(IEnumerable<ComponentModel> editedComponents)
     {
-        var listOfComponents = GetComponents().ToList();
+        var listOfComponents = await GetComponents();
         var listOfEditedComponents = editedComponents.ToList();
+        var exceptions = !listOfComponents.Except(listOfEditedComponents).Any();
         
-        if(!listOfComponents.Except(listOfEditedComponents).Any()) 
-            return false;
+        if(exceptions)
+            return exceptions;
         
         Components = listOfEditedComponents.AsEnumerable();
-        return listOfEditedComponents.TrueForAll(x => x == GetComponentById(x.Id));
+        return exceptions;
     }
     
-    public IEnumerable<ComponentModel> GetComponents()
+    private async Task<IEnumerable<ComponentModel>> GetComponents()
     {
         if (Components == null || !Components.Any())
         {
-            Components = componentRepository.Get().Result;            
+            Components = await componentRepository.Get();            
         }
         return Components;
     }
     
-    public ComponentModel GetComponentById(int Id) => 
-        GetComponents().First(x => x.Id == Id);
-    
-    public bool AddComponent(ComponentModel component)
-    {
-        int amountOfComponents = GetComponents().Count();
-        var components = GetComponents().ToList();
-        components.Add(component);
-        Components = components;
-        return Components.Count() == amountOfComponents + 1;
-    }
+    public async Task<ComponentModel> GetComponentById(int Id) => await componentRepository.GetById(Id);
 }
