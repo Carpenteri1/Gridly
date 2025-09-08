@@ -1,3 +1,5 @@
+using Gridly.Models;
+
 namespace Gridly.Services;
 
 public interface IFileService
@@ -8,4 +10,6 @@ public interface IFileService
     public bool WriteToFile(string filePath, string content);
     public Task<string> ReadAllFromFileAsync(string filePath);
     public IEnumerable<FileInfo> GetAllIcons();
+    public bool UploadIcon(IconModel iconData);
+    public bool DeleteIcon(string name, string type);
 }

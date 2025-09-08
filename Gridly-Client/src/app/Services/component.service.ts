@@ -4,7 +4,7 @@ import {MapComponentData} from "../Utils/componentModal.factory";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
 import {ComponentEndPointType} from "../Types/endPoint.type.enum";
 import {TextStringsUtil} from "../Constants/text.strings.util";
-import {lastValueFrom, take} from "rxjs";
+import {lastValueFrom} from "rxjs";
 import {RegexStringsUtil} from "../Constants/regex.strings.util";
 import {ModalViewModel} from "../Models/ModalView.Model";
 

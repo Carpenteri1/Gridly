@@ -41,9 +41,7 @@ export class VersionService {
           }
           break;
         case VersionEndPointType.AddVersion:
-          debugger;
           try {
-            debugger;
             this.Version = await lastValueFrom(this.endpointService.StoreVersion(this.Version));
             console.log(TextStringsUtil.ComponentAddedEndPointSucceededMessage, this.Version);
           } catch (err) {

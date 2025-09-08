@@ -27,6 +27,7 @@ export class ModalService{
   }
 
   async Submit(modalType: ModalViewModel)  {
+    console.log(modalType.type);
     switch (modalType.type) {
       case ModalFormType.Add:
          await this.componentService.AddNewComponent(modalType);

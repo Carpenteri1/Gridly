@@ -3,7 +3,7 @@ using Gridly.Services;
 
 namespace Gridly.helpers;
 
-public class ComponentHandlerHelper(IComponentRepository componentRepository)
+public class ComponentHandlerHelper(IComponentRepository componentRepository, IFileService fileService)
 {
     private IEnumerable<ComponentModel> Components { get; set; }
 
@@ -31,7 +31,7 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository)
     
     private List<string> GetUnusedIconNames(IEnumerable<ComponentModel> componentModels) => 
         componentRepository.FindUnusedIcons(componentModels);
-    private bool DeleteIcon(string name, string type) => componentRepository.DeleteIcon(name, type);
+    private bool DeleteIcon(string name, string type) => fileService.DeleteIcon(name, type);
 
     public async Task<bool> UploadIcon(ComponentModel component)
     {
@@ -39,7 +39,7 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository)
             return true;
 
         if (await IconOnOtherComponent(component) is not true)
-            return componentRepository.UploadIcon(component.IconData);
+            return fileService.UploadIcon(component.IconData);
 
         return true;
     }
@@ -48,7 +48,7 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository)
         if (IconDataHasValue(component.IconData))
         {
             if (await IconOnOtherComponent(component) is not true)
-                return componentRepository.DeleteIcon(component.IconData.name, component.IconData.type);   
+                return fileService.DeleteIcon(component.IconData.name, component.IconData.type);   
         }
         return true;
     }

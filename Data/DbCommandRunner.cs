@@ -1,31 +1,30 @@
 using System.Data;
 using Dapper;
 
-namespace Gridly.helpers;
+namespace Gridly.Data;
 
-public class RepositoryHelper
+public class DbCommandRunner
 {
-    private RepositoryHelper repositoryHelper;                   
     private readonly IDbConnection _connection;                  
+    private int _rowsEffected;                  
                                                              
-    public RepositoryHelper(IDbConnection connection)         
+    public DbCommandRunner(IDbConnection connection)         
     {                                                            
         _connection = connection;                                
     }                                                            
     
     public bool Insert<T>(string query,T item)
     {
-        int? rowsEffected;
         _connection.Open();
-        rowsEffected = _connection.Execute(query, item);     
+        _rowsEffected = _connection.Execute( query, item);
         _connection.Close();
-        return rowsEffected > 0;
+        return _rowsEffected > 0;
     }
     
     public async Task<IEnumerable<T>> SelectMany<T>(string query,object parameter)
     {
         _connection.Open();                                             
-        var items = await _connection.QueryAsync<T>(query, parameter);
+        var items = await _connection.QueryAsync<T>(query);
         _connection.Close();
         return items;
     }
@@ -41,9 +40,8 @@ public class RepositoryHelper
     public bool Delete<T>(string query,T item)
     {
         _connection.Open(); 
-        int? rowsEffected;
-        rowsEffected = _connection.Execute(query, item);
+        _rowsEffected = _connection.Execute(query, item);
         _connection.Close();
-        return rowsEffected > 0;
+        return _rowsEffected > 0;
     }
 }

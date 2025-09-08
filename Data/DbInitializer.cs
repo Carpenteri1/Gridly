@@ -17,7 +17,7 @@ public class DbInitializer
         await connection.ExecuteAsync(
             sql:@"
                 CREATE TABLE IF NOT EXISTS Component(
-                ComponentId INT PRIMARY KEY,
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Name TEXT NOT NULL,
                 URL TEXT NOT NULL,
                 IconUrl TEXT NOT NULL,
@@ -25,17 +25,19 @@ public class DbInitializer
                 ImageHidden BOOLEAN NOT NULL);
 
                 CREATE TABLE IF NOT EXISTS Icon(
-                IconId INT PRIMARY KEY,
+                IconId INTEGER PRIMARY KEY AUTOINCREMENT,
+                ComponentId INTEGER NOT NULL,
                 Name TEXT NOT NULL,
                 Type TEXT NOT NULL,
-                Base64 TEXT NOT NULL,
-                FOREIGN KEY(IconId) REFERENCES Component(ComponentId));
+                Base64Data TEXT NOT NULL,
+                FOREIGN KEY(ComponentId) REFERENCES Component(Id));
 
                 CREATE TABLE IF NOT EXISTS ComponentSettings(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ComponentId INTEGER NOT NULL,
                 Width INT NOT NULL,
                 Height INT NOT NULL,
-                FOREIGN KEY(Id) REFERENCES Component(ComponentId));
+                FOREIGN KEY(ComponentId) REFERENCES Component(Id));
 
                 CREATE TABLE IF NOT EXISTS LatestVersion(
                     Id INTEGER PRIMARY KEY,

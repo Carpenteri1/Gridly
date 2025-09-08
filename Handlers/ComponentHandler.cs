@@ -5,23 +5,20 @@ using Gridly.Services;
 using MediatR;
 
 namespace Gridly.Handlers;
-public class ComponentHandler(IComponentRepository componentRepository) : 
+public class ComponentHandler(IComponentRepository componentRepository, IFileService fileService) : 
     IRequestHandler<SaveComponentCommand, IResult>,
-    IRequestHandler<GetAllComponentCommand, ComponentModel[]>,
+    IRequestHandler<GetAllComponentCommand, IResult>,
     IRequestHandler<GetByIdComponentCommands, ComponentModel>,
     IRequestHandler<DeleteComponentCommand, IResult>,
     IRequestHandler<EditComponentCommand, IResult>,
     IRequestHandler<BatchEditComponentCommand, IResult>
 {
-    private readonly ComponentHandlerHelper handlerHelper = new(componentRepository);
+    private readonly ComponentHandlerHelper handlerHelper = new(componentRepository, fileService);
     public async Task<IResult> Handle(SaveComponentCommand command, CancellationToken cancellationToken)
     {
-        if(await handlerHelper.UploadIcon(command) is false)
-            return Results.NotFound();   
-        
-        command.ComponentSettings = new ComponentSettingsModel(200, 200);
-        return componentRepository.Insert(command) ? 
-            Results.Ok() : Results.StatusCode(500);
+        command.ComponentSettings = new ComponentSettingsModel(componentId: command.Id, width: 200, height: 200);
+        return componentRepository.Insert(command) ?
+        Results.Ok() : Results.StatusCode(500);
     }
     
     public async Task<IResult> Handle(DeleteComponentCommand command, CancellationToken cancellationToken)
@@ -30,6 +27,8 @@ public class ComponentHandler(IComponentRepository componentRepository) :
         if(await handlerHelper.DeleteIcon(component) is false || 
            !componentRepository.Delete(component))
             return Results.NotFound();
+        
+        componentRepository.Delete(component);
         
         return componentRepository.Insert(command) ? 
             Results.Ok() : Results.StatusCode(500);
@@ -75,9 +74,13 @@ public class ComponentHandler(IComponentRepository componentRepository) :
         return componentRepository.Insert(commands) 
             ? Results.Ok() : Results.StatusCode(500);                                         
     }
+
+    public async Task<IResult> Handle(GetAllComponentCommand command, CancellationToken cancellationToken)
+    {
+        var components = await componentRepository.Get();
+        return Results.Ok(components) ?? Results.Empty;
+    }
     
-    public async Task<ComponentModel[]> Handle(GetAllComponentCommand command, CancellationToken cancellationToken) =>
-        (await componentRepository.Get()).ToArray();
     public async Task<ComponentModel?> Handle(GetByIdComponentCommands command, CancellationToken cancellationToken) => 
         await componentRepository.GetById(command.Id);
 }
