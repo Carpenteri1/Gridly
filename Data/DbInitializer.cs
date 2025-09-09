@@ -25,7 +25,7 @@ public class DbInitializer
                 ImageHidden BOOLEAN NOT NULL);
 
                 CREATE TABLE IF NOT EXISTS Icon(
-                IconId INTEGER PRIMARY KEY AUTOINCREMENT,
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 ComponentId INTEGER NOT NULL,
                 Name TEXT NOT NULL,
                 Type TEXT NOT NULL,

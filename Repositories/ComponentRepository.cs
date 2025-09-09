@@ -17,12 +17,10 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
         if (_dbCommandRunner.Insert(QueryStrings.InsertToComponent, component) is not true)
             return false;
         
-        if(_dbCommandRunner.Insert(QueryStrings.InsertToComponentSettings,  
-               component.ComponentSettings) is not true)
+        if(_dbCommandRunner.Insert(QueryStrings.InsertToComponentSettings, component.ComponentSettings) is not true)
             return false;
         
-        if (component.IconData != null && _dbCommandRunner.Insert(QueryStrings.InsertToIcon,
-                component.IconData with {componentId = component.Id}) is not true)
+        if (component.IconData != null && _dbCommandRunner.Insert(QueryStrings.InsertToIcon, component.IconData with {componentId = component.Id}) is not true)
             return false;
 
         return true;
@@ -38,9 +36,23 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
         var builder = new SqlBuilder();
         
         var template = builder.AddTemplate(QueryStrings.SelectComponentQuery);
-        builder.LeftJoin(QueryStrings.LeftJoinIconData);
+        builder.LeftJoin(QueryStrings.JoinComponentSettings);
+        builder.LeftJoin(QueryStrings.JoinIconData);
         
-        return await _dbCommandRunner.SelectMany<ComponentModel>(template.RawSql, new ComponentModel());
+        var componentDtos = 
+            await _dbCommandRunner.SelectMany<ComponentDtoModel>(template.RawSql, template.Parameters);
+
+        return componentDtos.Select(dto => new ComponentModel
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Url = dto.Url,
+                IconUrl = dto.IconUrl,
+                TitleHidden = dto.TitleHidden,
+                ImageHidden = dto.ImageHidden,
+                IconData = new IconModel(componentId: dto.Id, dto.IconName, dto.Type, dto.Base64Data),
+                ComponentSettings = new ComponentSettingsModel(componentId: dto.Id, width: dto.Width, height: dto.Height)
+            });
     }
     
     public async Task<ComponentModel?> GetById(int Id)
@@ -48,7 +60,7 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
         var builder = new SqlBuilder();                                                       
                                                                                        
         var template = builder.AddTemplate(QueryStrings.SelectComponentQuery); 
-        builder.LeftJoin(QueryStrings.LeftJoinIconData);
+        builder.LeftJoin(QueryStrings.JoinIconData);
         builder.Where(QueryStrings.WhereIconData, new { ComponentId = Id });
         
         return await _dbCommandRunner.Select<ComponentModel>(template.RawSql, template.Parameters);
@@ -59,7 +71,7 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
         var builder = new SqlBuilder();                                                       
                                                                                        
         var template = builder.AddTemplate(QueryStrings.DeleteComponentQuery); 
-        builder.Where(QueryStrings.WhereComponentData, new { ComponentId = component.Id });
+        builder.Where(QueryStrings.WhereComponentSettingsData, new { ComponentId = component.Id });
         if (component.IconData is not null)
         {
             builder.AddTemplate(QueryStrings.DeleteIconQuery);
