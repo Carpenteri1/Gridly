@@ -4,10 +4,10 @@ namespace Gridly.Services;
 
 public interface IComponentRepository
 {
-    public bool Insert(ComponentModel component);
-    public bool Insert(IEnumerable<ComponentModel>? components);
+    public Task<bool> Insert(ComponentModel component);
+    public Task<bool> BatchEdit(IEnumerable<ComponentModel>? components);
     public Task<IEnumerable<ComponentModel>?> Get();
     public Task<ComponentModel> GetById(int Id);
-    public bool Delete(ComponentModel component);
+    public Task<bool> Delete(ComponentModel component);
     public List<string> FindUnusedIcons(IEnumerable<ComponentModel> components);
 }

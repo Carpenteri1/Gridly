@@ -81,19 +81,6 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository, IF
         return Components.Contains(Components.ToList()[index]); 
     }
     
-    public async Task<bool> BatchUpdateComponent(IEnumerable<ComponentModel> editedComponents)
-    {
-        var listOfComponents = await GetComponents();
-        var listOfEditedComponents = editedComponents.ToList();
-        var exceptions = !listOfComponents.Except(listOfEditedComponents).Any();
-        
-        if(exceptions)
-            return exceptions;
-        
-        Components = listOfEditedComponents.AsEnumerable();
-        return exceptions;
-    }
-    
     private async Task<IEnumerable<ComponentModel>> GetComponents()
     {
         if (Components == null || !Components.Any())

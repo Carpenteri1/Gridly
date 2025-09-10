@@ -17,21 +17,22 @@ public class ComponentHandler(IComponentRepository componentRepository, IFileSer
     public async Task<IResult> Handle(SaveComponentCommand command, CancellationToken cancellationToken)
     {
         command.ComponentSettings = new ComponentSettingsModel(componentId: command.Id, width: 200, height: 200);
-        return componentRepository.Insert(command) ?
+        return await componentRepository.Insert(command) ?
         Results.Ok() : Results.StatusCode(500);
     }
     
     public async Task<IResult> Handle(DeleteComponentCommand command, CancellationToken cancellationToken)
     {
         var component = await handlerHelper.GetComponentById(command.Id);
-        if(await handlerHelper.DeleteIcon(component) is false || 
-           !componentRepository.Delete(component))
+        if(
+            //await handlerHelper.DeleteIcon(component) is false || 
+           await componentRepository.Delete(component) is false)
             return Results.NotFound();
         
-        componentRepository.Delete(component);
+        if (!await handlerHelper.UploadIcon(command))
+            return Results.StatusCode(500);
         
-        return componentRepository.Insert(command) ? 
-            Results.Ok() : Results.StatusCode(500);
+        return Results.Ok(await componentRepository.Get());
     }
     
     public async Task<IResult> Handle(EditComponentCommand command, CancellationToken cancellationToken)
@@ -62,23 +63,18 @@ public class ComponentHandler(IComponentRepository componentRepository, IFileSer
                 break;
         }
 
-        return componentRepository.Insert(command.EditComponent) ? 
+        return await componentRepository.Insert(command.EditComponent) ? 
             Results.Ok() : Results.StatusCode(500);
     }
 
-    public async Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken)
-    {
-        if (await handlerHelper.BatchUpdateComponent(commands) is not true)
-            return Results.NotFound();
-        
-        return componentRepository.Insert(commands) 
+    public async Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken) => 
+        await componentRepository.BatchEdit(commands) 
             ? Results.Ok() : Results.StatusCode(500);                                         
-    }
 
     public async Task<IResult> Handle(GetAllComponentCommand command, CancellationToken cancellationToken)
     {
         var components = await componentRepository.Get();
-        return Results.Ok(components) ?? Results.Empty;
+        return components != null ? Results.Ok(components) : Results.NotFound();
     }
     
     public async Task<ComponentModel?> Handle(GetByIdComponentCommands command, CancellationToken cancellationToken) => 

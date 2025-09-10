@@ -12,23 +12,31 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
     private DbCommandRunner _dbCommandRunner = new (connection);
     private readonly IFileService _fileService;
     
-    public bool Insert(ComponentModel component)
+    public async Task<bool> Insert(ComponentModel component)
     {
-        if (_dbCommandRunner.Insert(QueryStrings.InsertToComponent, component) is not true)
+        
+        if (await _dbCommandRunner.Execute(QueryStrings.InsertToComponentQuery, 
+                component) is not true)
             return false;
         
-        if(_dbCommandRunner.Insert(QueryStrings.InsertToComponentSettings, component.ComponentSettings) is not true)
+        if(await _dbCommandRunner.Execute(QueryStrings.InsertToComponentSettingsQuery, 
+               component.ComponentSettings) is not true)
             return false;
         
-        if (component.IconData != null && _dbCommandRunner.Insert(QueryStrings.InsertToIcon, component.IconData with {componentId = component.Id}) is not true)
+        if (component.IconData != null && await _dbCommandRunner.Execute(QueryStrings.InsertToIconQuery,
+                component.IconData with {componentId = component.Id}) is not true)
             return false;
 
         return true;
     }
-    
-    public bool Insert(IEnumerable<ComponentModel> component)
+
+    public async Task<bool> BatchEdit(IEnumerable<ComponentModel>? components)
     {
-        return true;
+        var ctx = await Get();
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(QueryStrings.UpdateComponentQuery);
+        builder.Where(QueryStrings.WhereComponentPrimaryKeyEqualsComponentSettingsForeignKey);
+        return await _dbCommandRunner.Execute(template.RawSql, ctx.Except(components));
     }
 
     public async Task<IEnumerable<ComponentModel>?> Get()
@@ -36,49 +44,48 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
         var builder = new SqlBuilder();
         
         var template = builder.AddTemplate(QueryStrings.SelectComponentQuery);
-        builder.LeftJoin(QueryStrings.JoinComponentSettings);
-        builder.LeftJoin(QueryStrings.JoinIconData);
+        builder.LeftJoin(QueryStrings.JoinComponentSettingsQuery);
+        builder.LeftJoin(QueryStrings.JoinIconDataQuery);
         
-        var componentDtos = 
+        var Dtos = 
             await _dbCommandRunner.SelectMany<ComponentDtoModel>(template.RawSql, template.Parameters);
 
-        return componentDtos.Select(dto => new ComponentModel
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-                Url = dto.Url,
-                IconUrl = dto.IconUrl,
-                TitleHidden = dto.TitleHidden,
-                ImageHidden = dto.ImageHidden,
-                IconData = new IconModel(componentId: dto.Id, dto.IconName, dto.Type, dto.Base64Data),
-                ComponentSettings = new ComponentSettingsModel(componentId: dto.Id, width: dto.Width, height: dto.Height)
-            });
+        return Factories.ComponentFactory.CreateMany(Dtos);
     }
     
-    public async Task<ComponentModel?> GetById(int Id)
+    public async Task<ComponentModel?> GetById(int componentId)
     {
-        var builder = new SqlBuilder();                                                       
-                                                                                       
-        var template = builder.AddTemplate(QueryStrings.SelectComponentQuery); 
-        builder.LeftJoin(QueryStrings.JoinIconData);
-        builder.Where(QueryStrings.WhereIconData, new { ComponentId = Id });
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(QueryStrings.SelectComponentQuery);
+        builder.LeftJoin(QueryStrings.JoinComponentSettingsQuery);
+        builder.LeftJoin(QueryStrings.JoinIconDataQuery);
+        builder.Where(QueryStrings.WhereIconForeignKeyEqualsComponentPrimaryKey, new {Id = componentId});
         
-        return await _dbCommandRunner.Select<ComponentModel>(template.RawSql, template.Parameters);
+        var dto = await _dbCommandRunner.Select<ComponentDtoModel>(template.RawSql,template.Parameters);
+        return Factories.ComponentFactory.Create(dto);
     }
 
-    public bool Delete(ComponentModel component)
+    public async Task<bool> Delete(ComponentModel component)
     {
         var builder = new SqlBuilder();                                                       
-                                                                                       
-        var template = builder.AddTemplate(QueryStrings.DeleteComponentQuery); 
-        builder.Where(QueryStrings.WhereComponentSettingsData, new { ComponentId = component.Id });
-        if (component.IconData is not null)
+        var template = builder.AddTemplate(QueryStrings.DeleteFromComponentSettingsQuery); 
+        builder.Where(QueryStrings.WhereComponentIdForeignKeyEqualComponentObjectId, new { ComponentId = component.Id });
+        if (!await _dbCommandRunner.Execute(template.RawSql, template.Parameters))
+            return false;
+            
+        if (component.IconData != null)
         {
-            builder.AddTemplate(QueryStrings.DeleteIconQuery);
-            builder.Where(QueryStrings.WhereIconData, new { ComponentId = component.Id });
+            builder = new SqlBuilder();                                                       
+            template = builder.AddTemplate(QueryStrings.DeleteFromIconQuery); 
+            builder.Where(QueryStrings.WhereComponentIdForeignKeyEqualComponentObjectId, new { ComponentId = component.Id });
+            if(!await _dbCommandRunner.Execute(template.RawSql, template.Parameters))
+                return false;
         }
         
-        return _dbCommandRunner.Delete(template.RawSql, template.Parameters);   
+        builder = new SqlBuilder();
+        template = builder.AddTemplate(QueryStrings.DeleteFromComponentQuery);
+        builder.Where(QueryStrings.WhereComponentIdPrimaryKeyEqualComponentObjectId, component);
+        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
     }
     
     public List<string> FindUnusedIcons(IEnumerable<ComponentModel> components)
