@@ -1,11 +1,17 @@
 using Gridly.Command;
 using Gridly.helpers;
 using Gridly.Models;
+using Gridly.Repositories;
 using Gridly.Services;
 using MediatR;
 
 namespace Gridly.Handlers;
-public class ComponentHandler(IComponentRepository componentRepository, IFileService fileService) : 
+public class ComponentHandler(
+    IComponentRepository componentRepository, 
+    IComponentSettingsRepository settingsRepository,
+    IIconRepository iconRepository,
+    IIconConnectedRepository iconConnectedRepository,
+    IFileService fileService) : 
     IRequestHandler<SaveComponentCommand, IResult>,
     IRequestHandler<GetAllComponentCommand, IResult>,
     IRequestHandler<GetByIdComponentCommands, ComponentModel>,
@@ -13,63 +19,92 @@ public class ComponentHandler(IComponentRepository componentRepository, IFileSer
     IRequestHandler<EditComponentCommand, IResult>,
     IRequestHandler<BatchEditComponentCommand, IResult>
 {
-    private readonly ComponentHandlerHelper handlerHelper = new(componentRepository, fileService);
+    private readonly ComponentHandlerHelper handlerHelper = new(componentRepository,iconRepository, fileService);
     public async Task<IResult> Handle(SaveComponentCommand command, CancellationToken cancellationToken)
     {
-        command.ComponentSettings = new ComponentSettingsModel(componentId: command.Id, width: 200, height: 200);
-        return await componentRepository.Insert(command) ?
-        Results.Ok() : Results.StatusCode(500);
+        command.ComponentSettings = 
+            new ComponentSettingsModel(componentId: command.Id, width: 200, height: 200);
+        
+        if (await componentRepository.Insert(command) is false && 
+            await settingsRepository.Insert(command.ComponentSettings) is false)
+            return Results.StatusCode(500);
+
+        if (handlerHelper.IconDataHasValue(command.IconData) && 
+           string.IsNullOrEmpty(command.IconUrl))
+        {
+            var connectedModel = await iconConnectedRepository.GetById(command.Id, command.IconData.id);
+                if (connectedModel == null) 
+                {
+                    await iconConnectedRepository.Insert(connectedModel);
+                }
+            
+            return Results.Ok();
+        }
+        if (handlerHelper.IconDataHasValue(command.IconData) is false && 
+           string.IsNullOrEmpty(command.IconUrl) is false)
+        {
+            var icon = await iconRepository.GetById(command.Id);
+            if (icon != null)
+            {
+                var iconsConnected = await iconConnectedRepository.GetManyById(null,icon.id);
+                if (!iconsConnected.Any())
+                {
+                    await iconConnectedRepository.Delete(command.Id);
+                    await iconRepository.Delete(icon.id);
+                    fileService.DeleteIcon(icon.name, icon.type);
+                }   
+            }
+        }
+        return Results.Ok();
     }
     
     public async Task<IResult> Handle(DeleteComponentCommand command, CancellationToken cancellationToken)
     {
-        var component = await handlerHelper.GetComponentById(command.Id);
-        if(
-            //await handlerHelper.DeleteIcon(component) is false || 
-           await componentRepository.Delete(component) is false)
-            return Results.NotFound();
+                
+        await componentRepository.Delete(command);
+        await settingsRepository.Delete(command.IconData.id);
+
+        if (command.IconData != null)
+        {
+            await iconConnectedRepository.Delete(command.Id);
+            await iconRepository.Delete(command.IconData.id);
+            
+            var iconsConnected = 
+                await iconConnectedRepository.GetManyById(null,command.IconData.id);
+            
+            if (!iconsConnected.Any())
+            {
+                await iconRepository.Delete(command.IconData.id);
+                await iconConnectedRepository.Delete(command.Id);
+                fileService.DeleteIcon(command.IconData.name, command.IconData.type);
+            }   
+        }
         
-        if (!await handlerHelper.UploadIcon(command))
-            return Results.StatusCode(500);
-        
-        return Results.Ok(await componentRepository.Get());
+        return Results.Ok();
     }
     
     public async Task<IResult> Handle(EditComponentCommand command, CancellationToken cancellationToken)
     {
         switch (command.SelectedDropDownIconValue)
         {
-            case 0:
-                if (await handlerHelper.UpdateComponent(command.EditComponent!) is false)
-                    return Results.NotFound();  
-                break;
             case 1:
-                if(await handlerHelper.UploadIcon(command.EditComponent) is false) 
-                    return Results.NotFound();
-                
-                command.EditComponent.IconUrl = string.Empty;                
-                if (await handlerHelper.UpdateComponent(command.EditComponent!) is false)  
-                    return Results.NotFound();              
-                
-                if (await handlerHelper.DeleteUnUsedIcon() is false || 
-                    await handlerHelper.UpdateComponent(command.EditComponent!) is false) 
-                    return Results.NotFound();
+                command.EditComponent.IconUrl = string.Empty;
+                if (await handlerHelper.DeleteUnUsedIcon() &&
+                    await handlerHelper.UploadIcon(command.EditComponent) is false) 
+                    return Results.StatusCode(500);
                 break;
             case 2: 
-                command.EditComponent.IconData = null;                
-                if (await handlerHelper.UpdateComponent(command.EditComponent!) is false ||
-                    await handlerHelper.DeleteUnUsedIcon() is false)    
+                if (await handlerHelper.DeleteUnUsedIcon() is false)
                     return Results.NotFound();
                 break;
         }
-
-        return await componentRepository.Insert(command.EditComponent) ? 
+        
+        return await componentRepository.Edit(command.EditComponent) ? 
             Results.Ok() : Results.StatusCode(500);
     }
 
-    public async Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken) => 
-        await componentRepository.BatchEdit(commands) 
-            ? Results.Ok() : Results.StatusCode(500);                                         
+    public async Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken) 
+        => await componentRepository.BatchEdit(commands) ? Results.Ok() : Results.StatusCode(500);                                         
 
     public async Task<IResult> Handle(GetAllComponentCommand command, CancellationToken cancellationToken)
     {

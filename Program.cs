@@ -18,6 +18,9 @@ builder.Services.AddScoped<System.Data.IDbConnection>(sp =>
 builder.Services.AddScoped<IVersionEndPoint, VersionEndPoint>();
 builder.Services.AddScoped<IVersionRepository, VersionRepository>();
 builder.Services.AddScoped<IComponentRepository,ComponentRepository>();
+builder.Services.AddScoped<IComponentSettingsRepository,ComponentSettingsRepository>();
+builder.Services.AddScoped<IIconRepository,IconRepository>();
+builder.Services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
 
 builder.Services.AddSingleton<IFileService, FileService>();
 builder.Services.AddSingleton(typeof(IDataConverter<>), typeof(DataConverter<>));

@@ -3,11 +3,11 @@ using Gridly.Services;
 
 namespace Gridly.helpers;
 
-public class ComponentHandlerHelper(IComponentRepository componentRepository, IFileService fileService)
+public class ComponentHandlerHelper(IComponentRepository componentRepository, IIconRepository iconRepository, IFileService fileService)
 {
     private IEnumerable<ComponentModel> Components { get; set; }
 
-    private bool IconDataHasValue(IconModel iconModel) =>
+    public bool IconDataHasValue(IconModel iconModel) =>
         iconModel != null &&
         !string.IsNullOrEmpty(iconModel.name) &&
         !string.IsNullOrEmpty(iconModel.type) &&
@@ -29,25 +29,17 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository, IF
         return (split[0], split[1]);
     }
     
-    private List<string> GetUnusedIconNames(IEnumerable<ComponentModel> componentModels) => 
-        componentRepository.FindUnusedIcons(componentModels);
     private bool DeleteIcon(string name, string type) => fileService.DeleteIcon(name, type);
 
-    public async Task<bool> UploadIcon(ComponentModel component)
-    {
-        if (!IconDataHasValue(component.IconData))
-            return true;
-
-        if (await IconOnOtherComponent(component) is not true)
-            return fileService.UploadIcon(component.IconData);
-
-        return true;
-    }
+    public async Task<bool> UploadIcon(ComponentModel component) 
+        =>  fileService.UploadIcon(component.IconData);
+            //await IconOnOtherComponent(component) is false &&  
+            
     public async Task<bool> DeleteIcon(ComponentModel component)
     {
         if (IconDataHasValue(component.IconData))
         {
-            if (await IconOnOtherComponent(component) is not true)
+            if (await IconOnOtherComponent(component) is false)
                 return fileService.DeleteIcon(component.IconData.name, component.IconData.type);   
         }
         return true;
@@ -56,7 +48,7 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository, IF
     public async Task<bool> DeleteUnUsedIcon()
     {
         var componenets = await GetComponents();
-        foreach (var icon in GetUnusedIconNames(componenets))                      
+        foreach (var icon in iconRepository.FindUnusedIcons(componenets))                      
         {                                                                                                          
             var (name,type) = Split(icon);                                                           
             if (!DeleteIcon(name,type))                                                              
@@ -64,21 +56,6 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository, IF
         }
 
         return true;
-    }
-
-    public async Task<bool> UpdateComponent(ComponentModel editComponent)
-    {
-        var components = await GetComponents();
-        var componentsList = components.ToList();
-        var index = componentsList.FindIndex(0, x => x.Id == editComponent.Id);
-
-        if (index != -1)
-        {
-            componentsList[index] = editComponent;
-        }
-        
-        Components = componentsList.AsEnumerable();
-        return Components.Contains(Components.ToList()[index]); 
     }
     
     private async Task<IEnumerable<ComponentModel>> GetComponents()
@@ -89,6 +66,4 @@ public class ComponentHandlerHelper(IComponentRepository componentRepository, IF
         }
         return Components;
     }
-    
-    public async Task<ComponentModel> GetComponentById(int Id) => await componentRepository.GetById(Id);
 }

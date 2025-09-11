@@ -8,20 +8,19 @@ using Gridly.Services;
 
 namespace Gridly.Repositories;
 
-public class ComponentRepository(IDbConnection connection) : IComponentRepository
+public class ComponentSettingsRepository(IDbConnection connection) : IComponentSettingsRepository
 {
     private DbCommandRunner _dbCommandRunner = new (connection);
     
-    public async Task<bool> Insert(ComponentModel component)
+    public async Task<bool> Insert(ComponentSettingsModel settings)
     {
-        return await _dbCommandRunner.Execute(QueryStrings.InsertToComponentQuery, component);
+        return await _dbCommandRunner.Execute(QueryStrings.InsertToComponentSettingsQuery, settings);
     }
-    
-    
+
     public async Task<bool> Edit(ComponentModel component)
     {
         var builder = new SqlBuilder();
-        var template = builder.AddTemplate(QueryStrings.UpdateComponentQuery);
+        var template = builder.AddTemplate(QueryStrings.UpdateComponentSettingsQuery);
         builder.Where(QueryStrings.WhereComponentIdPrimaryKeyEqualComponentObjectId, component);
         return await _dbCommandRunner.Execute(template.RawSql,template.Parameters);
     }
@@ -45,6 +44,7 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
         
         var Dtos = 
             await _dbCommandRunner.SelectMany<ComponentDtoModel>(template.RawSql, template.Parameters);
+
         return Factories.ComponentFactory.CreateMany(Dtos);
     }
     
@@ -55,15 +55,16 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
         builder.LeftJoin(QueryStrings.JoinComponentSettingsQuery);
         builder.LeftJoin(QueryStrings.JoinIconDataQuery);
         builder.Where(QueryStrings.WhereIconForeignKeyEqualsComponentPrimaryKeyWithAlias, new {Id = componentId});
+        
         var dto = await _dbCommandRunner.Select<ComponentDtoModel>(template.RawSql,template.Parameters);
         return Factories.ComponentFactory.Create(dto);
     }
 
-    public async Task<bool> Delete(ComponentModel component)
+    public async Task<bool> Delete(int Id)
     {
-        var builder = new SqlBuilder();
-        var template = builder.AddTemplate(QueryStrings.DeleteFromComponentQuery);
-        builder.Where(QueryStrings.WhereComponentIdPrimaryKeyEqualComponentObjectId, component);
+        var builder = new SqlBuilder();                                                       
+        var template = builder.AddTemplate(QueryStrings.DeleteFromComponentSettingsQuery); 
+        builder.Where(QueryStrings.WhereComponentIdForeignKeyEqualId, new { ComponentId = Id });
         return await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
     }
 }

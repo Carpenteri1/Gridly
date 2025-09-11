@@ -1,4 +1,6 @@
-namespace Gridly.Models;
+using Gridly.Models;
+
+namespace Gridly.Dtos;
 
 public class ComponentDtoModel : ComponentModel
 {
