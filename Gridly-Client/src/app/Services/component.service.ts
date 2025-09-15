@@ -172,7 +172,6 @@ export class ComponentService{
       case ComponentEndPointType.Get:
         try {
           this.Components = await lastValueFrom(this.componentEndpointService.GetComponents());
-          console.log(TextStringsUtil.GetComponentsSucceededEndPointSuccessMessage, this.Components);
         } catch (err) {
           console.error(TextStringsUtil.GetComponentsFailedEndPointMessage, err);
         }
@@ -181,7 +180,6 @@ export class ComponentService{
         if(modalViewModel !== undefined && modalViewModel !== null && modalViewModel.component !== undefined){
           try {
             this.Component = await lastValueFrom(this.componentEndpointService.AddComponent(modalViewModel.component));
-            console.log(TextStringsUtil.ComponentAddedEndPointSucceededMessage, this.Component);
           } catch (err) {
             console.error(TextStringsUtil.ComponentAddedFailedEndPointMessage, err);
           }
@@ -193,7 +191,6 @@ export class ComponentService{
             this.Component =
               await lastValueFrom(this.componentEndpointService.EditComponent(
                 modalViewModel.component,modalViewModel.selectedDropDownValue!));
-            console.log(TextStringsUtil.ComponentEditSucceededEndPointMessage, this.Component);
           } catch (err) {
             console.error(TextStringsUtil.ComponentEditFailedEndPointMessage, err);
           }
@@ -203,7 +200,6 @@ export class ComponentService{
         if(componentsData !== undefined && componentsData !== null && componentsData.length > 0){
           try {
             this.Components = await lastValueFrom(this.componentEndpointService.EditComponents(componentsData));
-            console.log(TextStringsUtil.ComponentBatchEditSucceededEndPointMessage, this.Component);
           } catch (err) {
             console.error(TextStringsUtil.ComponentBatchEditFailedEndPointMessage, err);
           }
@@ -214,7 +210,6 @@ export class ComponentService{
           try {
             this.Component = await lastValueFrom(
               this.componentEndpointService.Delete(modalViewModel.component.id));
-              console.log(TextStringsUtil.ComponentDeletedSucceededEndPointMessage, this.Component);
             } catch (err) {
               console.error(TextStringsUtil.ComponentDeletionFailedEndPointMessage, err);
             }

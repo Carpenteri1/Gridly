@@ -57,23 +57,21 @@ public class ComponentHandler(
     
     public async Task<IResult> Handle(DeleteComponentCommand command, CancellationToken cancellationToken)
     {
-                
-        await componentRepository.Delete(command);
-        await settingsRepository.Delete(command.IconData.Id);
+        var component = await componentRepository.GetById(command.Id);
+        if(await settingsRepository.Delete(component.ComponentSettings.Id.Value) is false &&
+            await componentRepository.Delete(component) is false)
+            return Results.StatusCode(500);
 
-        if (command.IconData != null)
+        if (component.IconData != null)
         {
-            await iconConnectedRepository.Delete(command.Id);
-            await iconRepository.Delete(command.IconData.Id);
-            
             var iconsConnected = 
-                await iconConnectedRepository.GetManyById(null,command.IconData.Id);
+                await iconConnectedRepository.GetManyById(null,component.IconData.Id);
             
             if (!iconsConnected.Any())
             {
-                await iconRepository.Delete(command.IconData.Id);
+                await iconRepository.Delete(component.IconData.Id);
                 await iconConnectedRepository.Delete(command.Id);
-                fileService.DeleteIcon(command.IconData.Name, command.IconData.Type);
+                fileService.DeleteIcon(component.IconData.Name, component.IconData.Type);
             }   
         }
         
