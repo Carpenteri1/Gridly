@@ -1,6 +1,6 @@
 {
   "name": "gridly-client",
-  "version": "v1.1.5-alpha",
+  "version": "v1.1.6-alpha",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
