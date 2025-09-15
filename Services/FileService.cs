@@ -57,8 +57,8 @@ public class FileService : IFileService
     
     public bool UploadIcon(IconModel iconData)
     {
-        string filePath = FilePaths.IconPath + $"{iconData.name}.{iconData.type}";
-        return WriteAllBitesToFile(filePath, iconData.base64Data);
+        string filePath = FilePaths.IconPath + $"{iconData.Name}.{iconData.Type}";
+        return WriteAllBitesToFile(filePath, iconData.Base64Data);
     }
     
     public bool DeleteIcon(string name, string type)

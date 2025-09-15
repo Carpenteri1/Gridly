@@ -1,7 +1,7 @@
 @if (CurrentComponentId === id){
   <div class="d-flex justify-content-end">
-    <button [hidden]="!componentService.InEditMode" (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Edit, component: componentService.Component}))" class="btn btn-dark m-1">...</button>
-    <button (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Delete, component: componentService.Component}))" class="btn btn-dark m-1"><i class="bi bi-x-lg"></i></button>
+    <button [hidden]="!componentService.InEditMode" (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Edit, component: componentService.GetComponentById(id)}))" class="btn btn-dark m-1">...</button>
+    <button (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Delete, component: componentService.GetComponentById(id)}))" class="btn btn-dark m-1"><i class="bi bi-x-lg"></i></button>
   </div>
   <a [style]="componentService.InResizeMode ? 'cursor:none;':'cursor:auto;'" [href]="componentService.InResizeMode ? null : componentService.Component.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75" target="_blank">
     <img *ngIf="componentService.IconUrlSet(componentService.Component)" [src]="componentService.Component.iconUrl" class="p-3 icon-size component-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">

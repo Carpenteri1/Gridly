@@ -12,7 +12,7 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
 {
     private DbCommandRunner _dbCommandRunner = new (connection);
     
-    public async Task<bool> Insert(ComponentModel component)
+    public async Task<ComponentModel> Insert(ComponentModel component)
     {
         return await _dbCommandRunner.Execute(QueryStrings.InsertToComponentQuery, component);
     }
@@ -23,7 +23,7 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.UpdateComponentQuery);
         builder.Where(QueryStrings.WhereComponentIdPrimaryKeyEqualComponentObjectId, component);
-        return await _dbCommandRunner.Execute(template.RawSql,template.Parameters);
+        return await _dbCommandRunner.Execute(template.RawSql,template.Parameters) != null;
     }
 
     public async Task<bool> BatchEdit(IEnumerable<ComponentModel>? components)
@@ -31,16 +31,17 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
         var ctx = await Get();
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.UpdateComponentQuery);
-        builder.Where(QueryStrings.WhereComponentPrimaryKeyEqualsComponentSettingsForeignKeyWithAlias);
+        builder.Where(QueryStrings.WhereComponentForeignKeyEqualsComponentSettingsForeignKeyWithAlias);
         return await _dbCommandRunner.Execute(template.RawSql, ctx.Except(components));
     }
 
     public async Task<IEnumerable<ComponentModel>?> Get()
     {
         var builder = new SqlBuilder();
-        
         var template = builder.AddTemplate(QueryStrings.SelectComponentQuery);
+        
         builder.LeftJoin(QueryStrings.JoinComponentSettingsQuery);
+        builder.LeftJoin(QueryStrings.JoinIconsConnectedDataQuery);
         builder.LeftJoin(QueryStrings.JoinIconDataQuery);
         
         var Dtos = 
@@ -52,9 +53,11 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
     {
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.SelectComponentQuery);
+        
         builder.LeftJoin(QueryStrings.JoinComponentSettingsQuery);
+        builder.LeftJoin(QueryStrings.JoinIconsConnectedDataQuery);
         builder.LeftJoin(QueryStrings.JoinIconDataQuery);
-        builder.Where(QueryStrings.WhereIconForeignKeyEqualsComponentPrimaryKeyWithAlias, new {Id = componentId});
+        builder.Where(QueryStrings.WhereComponentIdEqualsComponentIdWithAlias, new {componentId});
         var dto = await _dbCommandRunner.Select<ComponentDtoModel>(template.RawSql,template.Parameters);
         return Factories.ComponentFactory.Create(dto);
     }
@@ -64,6 +67,6 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.DeleteFromComponentQuery);
         builder.Where(QueryStrings.WhereComponentIdPrimaryKeyEqualComponentObjectId, component);
-        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
+        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters) != null;
     }
 }

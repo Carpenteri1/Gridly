@@ -10,23 +10,26 @@ namespace Gridly.Repositories;
 public class IconRepository(IDbConnection connection, IFileService fileService) : IIconRepository
 {
     private DbCommandRunner _dbCommandRunner = new (connection);
+
+    public async Task<IconModel> Insert(IconModel icon)
+    {
+        return await _dbCommandRunner.Execute(QueryStrings.InsertToIconQuery, icon);
+    }
     
-    public async Task<bool> Insert(IconModel icon) => 
-        await _dbCommandRunner.Execute(QueryStrings.InsertToComponentSettingsQuery, icon);
-    
-    public async Task<IconModel> Edit(int Id)
+    public async Task<IconModel> GetByFullName(IconModel icon)
     {
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.SelectIconQuery);
-        builder.Where(QueryStrings.WhereIconIdForeignKeyEqualIdWithAlias, new {IconId =  Id});
-        return await _dbCommandRunner.Select<IconModel>(template.RawSql, template.Parameters);
+        builder.Where(QueryStrings.WhereIconNameEqualsNameWithAlias, icon.Name);
+        builder.Where(QueryStrings.WhereIconTypeEqualsTypeWithAlias, icon.Type);
+        return await _dbCommandRunner.Select<IconModel>(template.RawSql, icon);
     }
 
     public async Task<IconModel> GetById(int Id)
     {
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.SelectIconQuery);
-        builder.Where(QueryStrings.WhereIconIdForeignKeyEqualIdWithAlias, new {IconId =  Id});
+        builder.Where("i.Id = @Id", new {Id});
         return await _dbCommandRunner.Select<IconModel>(template.RawSql, template.Parameters);
     }
 
@@ -34,11 +37,10 @@ public class IconRepository(IDbConnection connection, IFileService fileService) 
     { 
         var builder = new SqlBuilder();                                                       
         var template = builder.AddTemplate(QueryStrings.DeleteFromIconQuery); 
-        builder.Where(QueryStrings.WhereIconIdForeignKeyEqualId, new {IconId = Id });
-        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
+        builder.Where(QueryStrings.WhereIconIdForeignKeyEqualId, new { Id});
+        var s = await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
+        return s;
     }
-    
-
     
     public List<string> FindUnusedIcons(IEnumerable<ComponentModel> components)
     {
@@ -48,7 +50,7 @@ public class IconRepository(IDbConnection connection, IFileService fileService) 
         foreach (var icon in iconFiles)
         {
             if (!components.Any(x => x.IconData != null 
-                                     && $"{x.IconData.name}.{x.IconData.type}" == icon.Name))
+                                     && $"{x.IconData.Name}.{x.IconData.Type}" == icon.Name))
             {
                 unusedIcons.Add(icon.Name);
             }

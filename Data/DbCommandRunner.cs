@@ -21,12 +21,19 @@ public class DbCommandRunner
         return _rowsEffected > 0;
     }
     
-    public async Task<bool> Execute<T>(string query,T parameters)
+    public async Task<T> Execute<T>(string query,T parameters)
     {
         _connection.Open();
-        _rowsEffected = await _connection.ExecuteAsync( query, parameters);
+        var item = await _connection.QueryFirstOrDefaultAsync<T>(query, parameters);
         _connection.Close();
-        return _rowsEffected > 0;
+        return item;
+    }
+    public async Task<bool> Execute(string query,object parameters)
+    {
+        _connection.Open();
+        var rowsEffected = await _connection.ExecuteAsync(query, parameters);
+        _connection.Close();
+        return rowsEffected > 0;
     }
     
     public async Task<IEnumerable<T>> SelectMany<T>(string query,object parameters)
@@ -40,7 +47,7 @@ public class DbCommandRunner
     public async Task<T> Select<T>(string query,object parameters)
     {
         _connection.Open();                                             
-        var items = await _connection.QueryFirstAsync<T>(query, parameters);
+        var items = await _connection.QueryFirstOrDefaultAsync<T>(query, parameters);
         _connection.Close();
         return items;
     }

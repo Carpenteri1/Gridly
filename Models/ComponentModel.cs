@@ -13,5 +13,3 @@ public class ComponentModel
     [JsonPropertyName("imageHidden")] public bool ImageHidden { get; set; }
     [JsonPropertyName("componentSettings")] public ComponentSettingsModel? ComponentSettings { get; set; }
 }
-public record IconModel(int id, int? componentId, string name, string type, string base64Data);
-public record ComponentSettingsModel(int? componentId, int width, int height);
