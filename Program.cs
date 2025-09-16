@@ -16,12 +16,13 @@ builder.Services.AddScoped<DbInitializer>();
 builder.Services.AddScoped<System.Data.IDbConnection>(sp =>
     new SqliteConnection(builder.Configuration.GetConnectionString("GridlyDb")));
 builder.Services.AddScoped<IVersionEndPoint, VersionEndPoint>();
-builder.Services.AddScoped<IVersionRepository, VersionRepository>();
 builder.Services.AddScoped<IComponentRepository,ComponentRepository>();
 builder.Services.AddScoped<IComponentSettingsRepository,ComponentSettingsRepository>();
 builder.Services.AddScoped<IIconRepository,IconRepository>();
 builder.Services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
 
+builder.Services.AddSingleton<IMemoryCashingService, MemoryCashingServices>();
+builder.Services.AddSingleton<IHttpClientServices, HttpClientServices>();
 builder.Services.AddSingleton<IFileService, FileService>();
 builder.Services.AddSingleton(typeof(IDataConverter<>), typeof(DataConverter<>));
 
