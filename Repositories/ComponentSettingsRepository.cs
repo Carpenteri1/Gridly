@@ -11,11 +11,9 @@ public class ComponentSettingsRepository(IDbConnection connection) : IComponentS
 {
     private DbCommandRunner _dbCommandRunner = new (connection);
     
-    public async Task<ComponentSettingsModel> Insert(ComponentSettingsModel settings)
-    {
-        return await _dbCommandRunner.Execute(QueryStrings.InsertToComponentSettingsQuery, settings);
-    }
-
+    public async Task<ComponentSettingsModel> Insert(ComponentSettingsModel settings) => 
+        await _dbCommandRunner.Execute(QueryStrings.InsertToComponentSettingsQuery, settings);
+    
     public async Task<ComponentSettingsModel> Edit(ComponentSettingsModel settings)
     {
         var builder = new SqlBuilder();

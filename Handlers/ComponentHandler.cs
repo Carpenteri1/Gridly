@@ -25,7 +25,7 @@ public class ComponentHandler(
     {
         var component = await componentRepository.Insert(command);
         component.ComponentSettings = await settingsRepository.Insert(
-            new ComponentSettingsModel{ComponentId = command.Id, Width = 200, Height = 200});
+            new ComponentSettingsModel{ComponentId = component.Id, Width = 200, Height = 200});
         
         if (component == null || component.ComponentSettings == null)
             return Results.StatusCode(500);
