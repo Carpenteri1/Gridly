@@ -1,62 +1,72 @@
-using Gridly.Configuration;
+using System.Data;
+using Dapper;
+using Gridly.Constants;
+using Gridly.Data;
+using Gridly.Dtos;
 using Gridly.Models;
 using Gridly.Services;
 
 namespace Gridly.Repositories;
 
-public class ComponentRepository(IDataConverter<ComponentModel> dataConverter, IFileService fileService) : IComponentRepository
+public class ComponentRepository(IDbConnection connection) : IComponentRepository
 {
-    public bool Save(IEnumerable<ComponentModel> component)
+    private DbCommandRunner _dbCommandRunner = new (connection);
+    
+    public async Task<ComponentModel> Insert(ComponentModel component)
     {
-        string jsonString = dataConverter.SerializerToJsonString(component);
-        return fileService.WriteToFile(FilePaths.ComponentPath, jsonString);
+        return await _dbCommandRunner.Execute(QueryStrings.InsertToComponentQuery, component);
+    }
+    
+    
+    public async Task<bool> Edit(ComponentModel component)
+    {
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(QueryStrings.UpdateComponentQuery);
+        builder.Where(QueryStrings.WhereComponentIdPrimaryKeyEqualComponentObjectId, component);
+        return await _dbCommandRunner.Execute(template.RawSql,template.Parameters) != null;
+    }
+
+    public async Task<bool> BatchEdit(IEnumerable<ComponentModel>? components)
+    {
+        var ctx = await Get();
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(QueryStrings.UpdateComponentQuery);
+        builder.Where(QueryStrings.WhereComponentForeignKeyEqualsComponentSettingsForeignKeyWithAlias);
+        return await _dbCommandRunner.Execute(template.RawSql, ctx.Except(components));
     }
 
     public async Task<IEnumerable<ComponentModel>?> Get()
     {
-        var jsonFileString = "[]";
-        if (!fileService.FileExist(FilePaths.ComponentPath))
-        {
-            fileService.WriteToFile(FilePaths.ComponentPath,jsonFileString);
-            return dataConverter.DeserializeJsonToArray(jsonFileString);
-        }
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(QueryStrings.SelectComponentQuery);
         
-        jsonFileString = await fileService.ReadAllFromFileAsync(FilePaths.ComponentPath);
-        return dataConverter.DeserializeJsonToArray(jsonFileString);
+        builder.LeftJoin(QueryStrings.JoinComponentSettingsQuery);
+        builder.LeftJoin(QueryStrings.JoinIconsConnectedDataQuery);
+        builder.LeftJoin(QueryStrings.JoinIconDataQuery);
+        
+        var Dtos = 
+            await _dbCommandRunner.SelectMany<ComponentDtoModel>(template.RawSql, template.Parameters);
+        return Factories.ComponentFactory.CreateMany(Dtos);
     }
     
-    public async Task<ComponentModel?> GetById(int Id)
+    public async Task<ComponentModel?> GetById(int componentId)
     {
-        string jsonString = await fileService.ReadAllFromFileAsync(FilePaths.ComponentPath);
-        return dataConverter.DeserializeJsonToArray(jsonString)?.ToList().First(x => x.Id == Id);
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(QueryStrings.SelectComponentQuery);
+        
+        builder.LeftJoin(QueryStrings.JoinComponentSettingsQuery);
+        builder.LeftJoin(QueryStrings.JoinIconsConnectedDataQuery);
+        builder.LeftJoin(QueryStrings.JoinIconDataQuery);
+        builder.Where(QueryStrings.WhereComponentIdEqualsComponentIdWithAlias, new {componentId});
+        var dto = await _dbCommandRunner.Select<ComponentDtoModel>(template.RawSql,template.Parameters);
+        return Factories.ComponentFactory.Create(dto);
     }
 
-    public bool UploadIcon(IconModel iconData)
+    public async Task<bool> Delete(ComponentModel component)
     {
-        string filePath = FilePaths.IconPath + $"{iconData.name}.{iconData.type}";
-        return fileService.WriteAllBitesToFile(filePath, iconData.base64Data);
-    }
-    
-    public bool DeleteIcon(string name, string type)
-    {
-        string filePath = FilePaths.IconPath + $"{name}.{type}";
-        return fileService.FileExist(filePath) && fileService.DeletedFile(filePath);
-    }
-    
-    public List<string> FindUnusedIcons(IEnumerable<ComponentModel> components)
-    {
-        var unusedIcons = new List<string>();
-        var iconFiles = fileService.GetAllIcons();
-        
-        foreach (var icon in iconFiles)
-        {
-            if (!components.Any(x => x.IconData != null 
-                && $"{x.IconData.name}.{x.IconData.type}" == icon.Name))
-            {
-                unusedIcons.Add(icon.Name);
-            }
-        }
-        
-        return unusedIcons.Any() ? unusedIcons : new List<string>();
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(QueryStrings.DeleteFromComponentQuery);
+        builder.Where(QueryStrings.WhereComponentIdPrimaryKeyEqualComponentObjectId, component);
+        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters) != null;
     }
 }

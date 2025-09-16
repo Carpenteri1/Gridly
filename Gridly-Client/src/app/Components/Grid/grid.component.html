@@ -1,5 +1,5 @@
 <div class="d-flex gap-3 space-left" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
-  <div *ngFor="let component of components" makeResizable
+  <div *ngFor="let component of componentService.Components" makeResizable
        [canResize]="componentService.InResizeMode"
        cdkDrag [cdkDragDisabled]="!componentService.InDragMode" [id]="component.id"
        class="d-flex m-2 flex-column shadow-sm component-style" >

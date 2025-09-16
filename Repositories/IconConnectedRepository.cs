@@ -1,0 +1,38 @@
+using System.Data;
+using Dapper;
+using Gridly.Constants;
+using Gridly.Data;
+using Gridly.Dtos;
+
+namespace Gridly.Repositories;
+
+public class IconConnectedRepository(IDbConnection connection) : IIconConnectedRepository
+{
+    private DbCommandRunner _dbCommandRunner = new (connection);
+    
+    public async Task<IconConnectedDtoModel> Insert(IconConnectedDtoModel model)
+    {
+        return await _dbCommandRunner.Execute(QueryStrings.InsertToConnectedIconQuery, model);
+    }
+
+    public async Task<IEnumerable<IconConnectedDtoModel>> GetManyById(int? componentId, int? iconId)
+    {
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(QueryStrings.SelectIconConnectedQuery);
+        
+        if(componentId != null)
+            builder.Where(QueryStrings.WhereIconConnectedComponentIdForeignKeyEqualIdWithAlias, new {ComponentId = componentId});
+        if(iconId != null)
+            builder.Where(QueryStrings.WhereIconConnectedIconIdForeignKeyEqualIdWithAlias, new {IconId = iconId});
+
+        return await _dbCommandRunner.SelectMany<IconConnectedDtoModel>(template.RawSql, template.Parameters);
+    }
+
+    public async Task<bool> Delete(int componentId)
+    {
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(QueryStrings.DeleteFromIconsConnectedQuery);
+        builder.Where(QueryStrings.WhereComponentIdForeignKeyEqualId, new {ComponentId = componentId});
+        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters) != null;
+    }
+}

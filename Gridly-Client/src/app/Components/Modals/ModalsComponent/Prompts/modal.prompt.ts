@@ -25,6 +25,6 @@ export class ModalPrompt implements OnInit{
   constructor(protected modalService: ModalService,protected componentService: ComponentService) {}
 
   ngOnInit(): void {
-    this.componentService.SetComponent = MapComponentData(this.modalModel.component)
+    this.componentService.Component = MapComponentData(this.modalModel.component)
   }
 }

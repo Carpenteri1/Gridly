@@ -10,8 +10,8 @@ import {SetModalComponentFormData, SetModalPromptData} from "../Utils/viewModel.
 import {ModalPrompt} from "../Components/Modals/ModalsComponent/Prompts/modal.prompt";
 import {ComponentType} from "@angular/cdk/portal";
 import {Subject} from "rxjs";
-import {EndPointType} from "../Types/endPoint.type.enum";
 import {ComponentModel} from "../Models/Component.Model";
+import {ComponentEndPointType} from "../Types/endPoint.type.enum";
 
 @Injectable({providedIn: 'root'})
 export class ModalService{
@@ -27,6 +27,7 @@ export class ModalService{
   }
 
   async Submit(modalType: ModalViewModel)  {
+    console.log(modalType.type);
     switch (modalType.type) {
       case ModalFormType.Add:
          await this.componentService.AddNewComponent(modalType);
@@ -58,7 +59,7 @@ export class ModalService{
           return this.canSubmit;
         case ModalFormType.Edit:
           if(this.componentAsString === ""){
-           this.componentAsString = JSON.stringify(await this.componentService.CallEndpoint(EndPointType.GetById, viewModel) as ComponentModel)
+           this.componentAsString = JSON.stringify(await this.componentService.CallEndpoint(ComponentEndPointType.GetById, viewModel) as ComponentModel)
           }
           if(this.NoEmptyInputFields(viewModel.component) && this.componentAsString !== ""){
             this.canSubmit = JSON.stringify(viewModel.component) !== this.componentAsString;

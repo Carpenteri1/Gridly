@@ -1,9 +1,9 @@
 <div class="d-flex gap-3 justify-content-end">
   <div class="d-flex m-2 flex-row">
-    <div class="version-text text-white-50 m-2" *ngIf="versionEndpointService.HasNewRelease()">
+    <div class="version-text text-white-50 m-2" *ngIf=" this.versionService.Version.newRelease">
       <strong> {{StringUtil.NewVersionAvailableHeaderInfoText}}
-        <a target="_blank" href="{{UrlStringsUtil.GitHubReleaseURL+versionEndpointService.GetVersionName()}}">
-          {{versionEndpointService.GetVersionName()}}
+        <a target="_blank" href="{{UrlStringsUtil.GitHubReleaseURL+versionService.Version.name}}">
+          {{versionService.Version.name}}
         </a>
       </strong>
     </div>
@@ -13,8 +13,8 @@
           <mat-select hideSingleSelectionIndicator>
             <mat-option value="one" (click)="this.modalService.GetModalType(SetModalComponentFormData({type: FormType.Add}))"> {{ StringUtil.MenuDropDownAddTitle }}</mat-option>
             <mat-option value="two" (click)="this.componentService.SwitchEditMode()">{{ StringUtil.MenuDropDownEditTitle }}</mat-option>
-            <mat-option value="three" (click)="this.componentService.SwitchDragMode()">{{ StringUtil.MenuDropDownDragTitle }}</mat-option>
-            <mat-option value="Four" (click)="this.componentService.SwitchResizeMode()">{{ StringUtil.MenuDropDownResizeTitle }}</mat-option>
+            <!--<mat-option value="three" (click)="this.componentService.SwitchDragMode()">{{ StringUtil.MenuDropDownDragTitle }}</mat-option>
+            <mat-option value="Four" (click)="this.componentService.SwitchResizeMode()">{{ StringUtil.MenuDropDownResizeTitle }}</mat-option>-->
           </mat-select>
         </mat-form-field>
     </div>

@@ -15,7 +15,7 @@ public class ComponentController(IMediator meditor) : ControllerBase
             Results.BadRequest() : Results.Ok();
 
     [HttpGet("get")]
-    public async Task<ComponentModel[]> Get() =>
+    public async Task<IResult> Get() =>
         await meditor.Send(new GetAllComponentCommand());
     
     [HttpGet("getbyid/{Id}")]

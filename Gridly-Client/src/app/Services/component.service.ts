@@ -2,9 +2,9 @@ import {Injectable} from "@angular/core";
 import {ComponentModel} from "../Models/Component.Model";
 import {MapComponentData} from "../Utils/componentModal.factory";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
-import {EndPointType} from "../Types/endPoint.type.enum";
+import {ComponentEndPointType} from "../Types/endPoint.type.enum";
 import {TextStringsUtil} from "../Constants/text.strings.util";
-import {lastValueFrom, take} from "rxjs";
+import {lastValueFrom} from "rxjs";
 import {RegexStringsUtil} from "../Constants/regex.strings.util";
 import {ModalViewModel} from "../Models/ModalView.Model";
 
@@ -24,25 +24,25 @@ export class ComponentService{
     this.resizeModeActive = false;
   }
 
-  get GetAllComponents(): ComponentModel[] {
+  get Components(): ComponentModel[] {
     return this.components;
   }
 
-  set SetAllComponents(components: ComponentModel[]) {
+  set Components(components: ComponentModel[]) {
     this.components = components;
   }
 
   GetComponentById(id: number): ComponentModel | undefined{
-    return this.GetAllComponents.find((i: ComponentModel) => i.id === id);
+    return this.Components.find((i: ComponentModel) => i.id === id);
   }
 
-  set SetComponent(item: ComponentModel) {
+  set Component(item: ComponentModel) {
     if (item !== undefined) {
       this.component = MapComponentData(item);
     }
   }
 
-  get GetComponent() {
+  get Component() {
     return this.component;
   }
 
@@ -126,7 +126,7 @@ export class ComponentService{
 
   async AddNewComponent(modalType: ModalViewModel) {
     let index = -1;
-    if(this.GetComponent !== undefined && this.GetAllComponents.length > 0 && modalType.component !== undefined){
+    if(this.Component !== undefined && this.Components.length > 0 && modalType.component !== undefined){
       index = this.componentEndpointService.GetIndex(modalType.component.id);
       modalType.component = MapComponentData.Override({id: Math.max(...this.components.map(x => x.id)) + 1}, modalType.component);
     }
@@ -143,11 +143,11 @@ export class ComponentService{
           if(modalType.component.iconData?.base64Data !== "" &&
             modalType.component.iconData?.name !== "" &&
             modalType.component.iconData?.type !== ""){
-            await this.CallEndpoint(EndPointType.Add, modalType);
+            await this.CallEndpoint(ComponentEndPointType.Add, modalType);
           }
         }
         if(modalType.component.iconUrl !== ""){
-          await this.CallEndpoint(EndPointType.Add, modalType);
+          await this.CallEndpoint(ComponentEndPointType.Add, modalType);
         }
       }
       else{
@@ -157,77 +157,65 @@ export class ComponentService{
 
   async EditComponentData(modalViewModel: ModalViewModel) {
     if(modalViewModel.component.id !== 0){
-      await this.CallEndpoint(EndPointType.Edit,modalViewModel);
+      await this.CallEndpoint(ComponentEndPointType.Edit,modalViewModel);
     }
   }
 
   async EditComponentsData(components: ComponentModel[]): Promise<void> {
     if(components !== undefined){
-      await this.CallEndpoint(EndPointType.BatchEdit,undefined, undefined ,components);
+      await this.CallEndpoint(ComponentEndPointType.BatchEdit,undefined, undefined ,components);
     }
   }
 
-  async CallEndpoint(type: EndPointType, modalViewModel?: ModalViewModel, componentData?: ComponentModel, componentsData?: ComponentModel[]): Promise<any> {
+  async CallEndpoint(type: ComponentEndPointType, modalViewModel?: ModalViewModel, componentData?: ComponentModel, componentsData?: ComponentModel[]): Promise<any> {
     switch(type){
-      case EndPointType.Get:
+      case ComponentEndPointType.Get:
         try {
-          this.SetAllComponents = await lastValueFrom(
-            this.componentEndpointService.GetComponents().pipe(take(1))
-          );
-          console.log(TextStringsUtil.GetComponentsSucceededEndPointSuccessMessage, this.GetAllComponents);
+          this.Components = await lastValueFrom(this.componentEndpointService.GetComponents());
         } catch (err) {
           console.error(TextStringsUtil.GetComponentsFailedEndPointMessage, err);
         }
-        return this.GetAllComponents;
-      case EndPointType.Add:
+        return this.Components;
+      case ComponentEndPointType.Add:
         if(modalViewModel !== undefined && modalViewModel !== null && modalViewModel.component !== undefined){
           try {
-            const res = await lastValueFrom(
-              this.componentEndpointService.AddComponent(modalViewModel.component).pipe(take(1))
-            );
-            console.log(TextStringsUtil.ComponentAddedEndPointSucceededMessage, res);
+            this.Component = await lastValueFrom(this.componentEndpointService.AddComponent(modalViewModel.component));
           } catch (err) {
             console.error(TextStringsUtil.ComponentAddedFailedEndPointMessage, err);
           }
         }
         break;
-      case EndPointType.Edit:
+      case ComponentEndPointType.Edit:
         if(modalViewModel !== undefined && modalViewModel !== null && modalViewModel.component !== undefined){
           try {
-            const res = await lastValueFrom(
-              this.componentEndpointService.EditComponent(modalViewModel.component,
-                modalViewModel.selectedDropDownValue!).pipe(take(1))
-            );
-            console.log(TextStringsUtil.ComponentEditSucceededEndPointMessage, res);
+            this.Component =
+              await lastValueFrom(this.componentEndpointService.EditComponent(
+                modalViewModel.component,modalViewModel.selectedDropDownValue!));
           } catch (err) {
             console.error(TextStringsUtil.ComponentEditFailedEndPointMessage, err);
           }
         }
         break;
-      case EndPointType.BatchEdit:
+      case ComponentEndPointType.BatchEdit:
         if(componentsData !== undefined && componentsData !== null && componentsData.length > 0){
           try {
-            const res = await lastValueFrom(
-              this.componentEndpointService.EditComponents(componentsData).pipe(take(1))
-            );
-            console.log(TextStringsUtil.ComponentBatchEditSucceededEndPointMessage, res);
+            this.Components = await lastValueFrom(this.componentEndpointService.EditComponents(componentsData));
           } catch (err) {
             console.error(TextStringsUtil.ComponentBatchEditFailedEndPointMessage, err);
           }
         }
         break;
-      case EndPointType.Delete:
+      case ComponentEndPointType.Delete:
         if(modalViewModel !== undefined && modalViewModel !== null && modalViewModel.component !== undefined){
           try {
-            const res = await lastValueFrom(
-              this.componentEndpointService.Delete(modalViewModel.component.id).pipe(take(1)));
-              console.log(TextStringsUtil.ComponentDeletedSucceededEndPointMessage, res);
+            this.Component = await lastValueFrom(
+              this.componentEndpointService.Delete(modalViewModel.component.id));
             } catch (err) {
               console.error(TextStringsUtil.ComponentDeletionFailedEndPointMessage, err);
             }
           }
           break
-      case EndPointType.GetById:
+      case ComponentEndPointType.GetById:
         let component!: ComponentModel;
 
         if(componentData !== undefined && componentData !== null && componentsData)
@@ -237,10 +225,8 @@ export class ComponentService{
 
         if(component !== undefined ) {
           try {
-            const res = await lastValueFrom(
-              this.componentEndpointService.GetComponentById(component.id).pipe(take(1))
-            );
-            console.log(TextStringsUtil.ComponentGetByIdSucceededEndPointMessage, res);
+            this.Component = await lastValueFrom(this.componentEndpointService.GetComponentById(component.id));
+            console.log(TextStringsUtil.ComponentGetByIdSucceededEndPointMessage, this.Component);
           } catch (err) {
             console.error(TextStringsUtil.ComponentGetByIdFailedEndPointMessage, err);
           }
@@ -255,10 +241,10 @@ export class ComponentService{
   }
 
   async DeleteComponent(modalType: ModalViewModel) {
-    await this.CallEndpoint(EndPointType.Delete, modalType);
+    await this.CallEndpoint(ComponentEndPointType.Delete, modalType);
   }
 
   public ResetAllComponentData(): void{
-    this.SetComponent = MapComponentData(undefined);
+    this.Component = MapComponentData(undefined);
   }
 }

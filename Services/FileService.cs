@@ -1,4 +1,5 @@
 using Gridly.Configuration;
+using Gridly.Models;
 
 namespace Gridly.Services;
 
@@ -52,5 +53,17 @@ public class FileService : IFileService
         return directory.GetFiles()
             .Where(file => file.Name != "favicon.ico" && 
                            allowedIconTypes.Contains(file.Extension.ToLower()));
+    }
+    
+    public bool UploadIcon(IconModel iconData)
+    {
+        string filePath = FilePaths.IconPath + $"{iconData.Name}.{iconData.Type}";
+        return WriteAllBitesToFile(filePath, iconData.Base64Data);
+    }
+    
+    public bool DeleteIcon(string name, string type)
+    {
+        string filePath = FilePaths.IconPath + $"{name}.{type}";
+        return FileExist(filePath) && DeletedFile(filePath);
     }
 }

@@ -1,48 +1,26 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {VersionInterface} from "../../Models/Version.Interface";
+import {VersionModel} from "../../Models/Version.Model";
 import {UrlStringsUtil} from "../../Constants/url.strings.util";
-import {take} from "rxjs";
+import {Observable, take} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class VersionEndpointService implements  OnInit{
-
-  private version!: VersionInterface;
+export class VersionEndpointService{
   constructor(private http: HttpClient) {}
 
-  ngOnInit() {
-    this.version = this.CheckForCurrentRelease();
+  GetVersion(): Observable<VersionModel> {
+    return this.http.get<VersionModel>(UrlStringsUtil.VersionCurrentUrl).pipe(take(1));
   }
 
-  CheckForNewRelease() {
-    this.http.get<VersionInterface>(UrlStringsUtil.VersionLatestUrl).pipe(take(1)).subscribe(
-      data => this.version = data
-    );
-    return this.version;
+  GetLatestVersion(): Observable<VersionModel> {
+    return this.http.get<VersionModel>(UrlStringsUtil.VersionLatestUrl).pipe(take(1));
   }
 
-  CheckForCurrentRelease() {
-    this.http.get<VersionInterface>(UrlStringsUtil.VersionCurrentUrl).pipe(take(1)).subscribe(
-      data => this.version = data
-    );
-    return this.version;
-  }
-
-  HasNewRelease() {
-    if(this.version === undefined || this.version === null) {
-      return false;
-    }
-    return this.version.newRelease;
-  }
-
-  GetVersionName() {
-    if(this.version === undefined || this.version === null) {
-      return "";
-    }
-    return this.version.name;
+  StoreVersion(version: VersionModel): Observable<VersionModel> {
+    return this.http.post<VersionModel>(UrlStringsUtil.VersionSaveUrl,version).pipe(take(1));
   }
 
 }
