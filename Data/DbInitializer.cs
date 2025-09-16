@@ -42,12 +42,7 @@ public class DbInitializer
                 ComponentId INTEGER NOT NULL,
                 Width INT NOT NULL,
                 Height INT NOT NULL,
-                FOREIGN KEY(ComponentId) REFERENCES Component(Id));
-
-                CREATE TABLE IF NOT EXISTS LatestVersion(
-                Id INTEGER PRIMARY KEY,
-                Name TEXT NOT NULL,
-                NewRelease BOOLEAN NOT NULL);",
+                FOREIGN KEY(ComponentId) REFERENCES Component(Id));",
             commandTimeout:150);
     }
 }

@@ -1,21 +1,26 @@
+using Gridly.Constants;
 using Gridly.Models;
 using Gridly.Services;
 
 namespace Gridly.EndPoints;
 
-public class VersionEndPoint(IDataConverter<VersionModel> dataConverter) : IVersionEndPoint
+public class VersionEndPoint(
+    IDataConverter<VersionModel> dataConverter, 
+    IHttpClientServices httpClientServices) : IVersionEndPoint
 {
     public async Task<(bool, VersionModel?)> GetLatestVersion()
     {
-        using (HttpClient client = new HttpClient())
-        {
-            client.DefaultRequestHeaders.Add("User-Agent", "Gridly");
-            var response = await client.GetAsync("https://api.github.com/repos/Carpenteri1/Gridly/releases/latest");
-            return 
-            (
-                response.IsSuccessStatusCode, 
-                dataConverter.DeserializeJson(await response.Content.ReadAsStringAsync())
-            );
-        }
+        VersionModel version = null;
+        var (success,item) = await httpClientServices.Get(EndpointStrings.GetVersionRemoteEndPoint);
+        if (success) version = dataConverter.DeserializeJson(item);
+        return (success, version);
+    }
+
+    public async Task<(bool, VersionModel?)> GetVersion()
+    {
+        VersionModel version = null;
+       var (success,item) = await httpClientServices.Get(EndpointStrings.GetVersionInternalEndPoint);
+       if (success) version = dataConverter.DeserializeJson(item);
+       return (success, version);
     }
 }

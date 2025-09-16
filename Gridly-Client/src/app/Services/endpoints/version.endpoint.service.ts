@@ -12,15 +12,6 @@ export class VersionEndpointService{
   constructor(private http: HttpClient) {}
 
   GetVersion(): Observable<VersionModel> {
-    return this.http.get<VersionModel>(UrlStringsUtil.VersionCurrentUrl).pipe(take(1));
+    return this.http.get<VersionModel>(UrlStringsUtil.GetVersionUrl).pipe(take(1));
   }
-
-  GetLatestVersion(): Observable<VersionModel> {
-    return this.http.get<VersionModel>(UrlStringsUtil.VersionLatestUrl).pipe(take(1));
-  }
-
-  StoreVersion(version: VersionModel): Observable<VersionModel> {
-    return this.http.post<VersionModel>(UrlStringsUtil.VersionSaveUrl,version).pipe(take(1));
-  }
-
 }
