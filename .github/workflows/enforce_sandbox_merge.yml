@@ -2,6 +2,8 @@ name: Enforce Sandbox Merge
 on:
   pull_request:
     branches: [ main ]
+permissions:
+  contents: read
 jobs:
   enforce-sandbox:
     runs-on: ubuntu-latest
