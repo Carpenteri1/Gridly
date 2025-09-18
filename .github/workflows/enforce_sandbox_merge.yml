@@ -1,0 +1,14 @@
+name: Enforce Sandbox Merge
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  enforce-sandbox:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check source branch
+        run: |
+          if [[ "${{ github.head_ref }}" != "sandbox" ]]; then
+            echo "❌ Pull requests to main must come from sandbox."
+            exit 1
+          fi
