@@ -50,18 +50,15 @@ export class ComponentService{
     return item.iconData != undefined &&
       item.iconData.name !== "" &&
       item.iconData.type !== undefined &&
-      item.iconData.base64Data !== "" ;
-      //&&
-      //!this.component.imageHidden;
+      item.iconData.base64Data !== "" &&
+      !item.imageHidden;
   }
 
   IconUrlSet(item :ComponentModel): boolean {
     return  item.iconUrl !== undefined  &&
-      item.iconUrl !== ""
-      //&&
-      //RegexStringsUtil.iconUrlPattern.test(item.iconUrl);
-      //&&
-     // !this.component.imageHidden;
+      item.iconUrl !== "" &&
+      RegexStringsUtil.iconUrlPattern.test(item.iconUrl) &&
+      !item.imageHidden;
   }
 
   get IconIsUrlHidden(){
