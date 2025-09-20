@@ -1,12 +1,12 @@
 .grid-layout{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, max-content));
-  gap: 1em;                 /* use a single gap, not margins on items */
-  justify-content: center;  /* center horizontally */
+  gap: 1em;
+  justify-content: center;
 }
 
 .grid-item-style {
-  margin: 0.5em;                /* 👈 remove; let `gap` handle spacing */
+  margin: 0.5em;
   background-color: #141517;
   border-bottom: 20px;
   border-radius: 10px;
