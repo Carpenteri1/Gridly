@@ -2,11 +2,10 @@
   max-height: 100px;
 }
 
-.component-icon-center{
+.item-icon-center{
   margin:auto;
 }
 
-.component-resize-button{
+.item-resize-button{
   align-self: center;
-
 }

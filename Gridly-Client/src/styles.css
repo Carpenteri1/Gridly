@@ -1,17 +1,9 @@
 @import "bootstrap/dist/css/bootstrap.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+html, body, app-root {
     font-family: Arial, sans-serif;
     background-color: #1f2123;
-}
-.flex-fill{
-    border:5px solid white;
-    height: 300px;
-    width: 300px;
-    background-color: lightgray;
+    height: 100% !important;
 }
 
 .btn-modal{

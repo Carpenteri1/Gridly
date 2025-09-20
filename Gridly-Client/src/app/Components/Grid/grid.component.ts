@@ -8,6 +8,7 @@ import {ItemComponent} from "../Item/item.component";
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
 import {ResizableDirective} from "../../Directives/resizable.directive";
 import {ComponentModel} from "../../Models/Component.Model";
+import {MapComponentData} from "../../Utils/componentModal.factory";
 
 @Component({
   selector: 'grid-component',
@@ -27,9 +28,21 @@ export class GridComponent implements AfterViewChecked, OnInit{
   }
 
   async ngOnInit(): Promise<void> {
-    if(this.componentService.Components === undefined){
+  if( this.componentService.Components === undefined ){
+    this.componentService.Components = [
+      MapComponentData.Override({id:1,componentSettings:{width:250,height:250}},new ComponentModel()),
+      MapComponentData.Override({id:2,componentSettings:{width:250,height:250}},new ComponentModel()),
+      MapComponentData.Override({id:3,componentSettings:{width:250,height:250}},new ComponentModel()),
+      MapComponentData.Override({id:4,componentSettings:{width:250,height:250}},new ComponentModel()),
+      MapComponentData.Override({id:5,componentSettings:{width:250,height:250}},new ComponentModel()),
+      MapComponentData.Override({id:5,componentSettings:{width:250,height:250}},new ComponentModel()),
+      MapComponentData.Override({id:5,componentSettings:{width:250,height:250}},new ComponentModel()),
+    ];
+  }
+
+   /* if(this.componentService.Components === undefined){
       this.componentService.Components = await this.componentService.CallEndpoint(ComponentEndPointType.Get) as ComponentModel[];
-    }
+    }*/
   }
 
   ngAfterViewChecked() {
