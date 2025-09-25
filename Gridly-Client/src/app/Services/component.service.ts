@@ -223,7 +223,6 @@ export class ComponentService{
         if(component !== undefined ) {
           try {
             this.Component = await lastValueFrom(this.componentEndpointService.GetComponentById(component.id));
-            console.log(TextStringsUtil.ComponentGetByIdSucceededEndPointMessage, this.Component);
           } catch (err) {
             console.error(TextStringsUtil.ComponentGetByIdFailedEndPointMessage, err);
           }

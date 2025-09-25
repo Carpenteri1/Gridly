@@ -1,6 +1,11 @@
-
 <h2 mat-dialog-title>{{this.modalModel.title}}</h2>
 <mat-dialog-content>
+  <mat-label>Title</mat-label>
+  <mat-slide-toggle [(ngModel)]="this.modalModel.component.componentSettings!.titleHidden">
+  </mat-slide-toggle>
+  <mat-label>Icon</mat-label>
+  <mat-slide-toggle [(ngModel)]="this.modalModel.component.componentSettings!.imageHidden">
+  </mat-slide-toggle>
   <mat-divider>
     {{this.modalModel.description}}
   </mat-divider>

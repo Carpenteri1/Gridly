@@ -9,6 +9,8 @@ import {ModalService} from "../../../../Services/modal.service";
 import {MatSelect} from "@angular/material/select";
 import {MatOption} from "@angular/material/core";
 import {NgClass} from "@angular/common";
+import {MatSlideToggle} from "@angular/material/slide-toggle";
+import {ModalFormType} from "../../../../Types/modalForm.types.enum";
 
 @Component({
   templateUrl: './modal.component-form.html',
@@ -29,7 +31,8 @@ import {NgClass} from "@angular/common";
       MatSelect,
       MatOption,
       MatSelect,
-      NgClass]
+      NgClass,
+      MatSlideToggle]
 })
 export class ModalComponentForm {
   public modalModel!: ModalViewModel;
