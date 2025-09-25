@@ -7,8 +7,6 @@ export function MapComponentData(component?: ComponentModel) : ComponentModel{
     url: component?.url ?? "",
     iconData: component?.iconData ?? null,
     iconUrl: component?.iconUrl ?? "",
-    imageHidden: component?.imageHidden ?? false,
-    titleHidden: component?.titleHidden ?? false,
     componentSettings: component?.componentSettings ?? null
   } as ComponentModel;
 }
@@ -19,8 +17,6 @@ MapComponentData.Override = function(override: Partial<ComponentModel>, componen
     url: override.url ??  component?.url ?? "",
     iconData: override.iconData ?? component?.iconData ?? null,
     iconUrl: override.iconUrl ?? component?.iconUrl ?? "",
-    imageHidden: override.imageHidden ?? component?.imageHidden ?? false,
-    titleHidden: override.titleHidden ?? component?.titleHidden ?? false,
     componentSettings: override.componentSettings ?? component?.componentSettings ?? null
   } as ComponentModel);
 };

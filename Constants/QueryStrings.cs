@@ -3,13 +3,13 @@ namespace Gridly.Constants;
 public class QueryStrings
 {
     public const string InsertToComponentQuery = @"
-    INSERT INTO Component (Name, Url, IconUrl, TitleHidden, ImageHidden) 
-    VALUES (@Name, @Url, @IconUrl, @TitleHidden, @ImageHidden);
+    INSERT INTO Component (Name, Url, IconUrl) 
+    VALUES (@Name, @Url, @IconUrl);
     SELECT * FROM Component WHERE Id = last_insert_rowid();";
     
     public const string InsertToComponentSettingsQuery = @"
-    INSERT INTO ComponentSettings (ComponentId, Width, Height) 
-    VALUES (@ComponentId, @Width, @Height);
+    INSERT INTO ComponentSettings (ComponentId, Width, Height, TitleHidden, ImageHidden) 
+    VALUES (@ComponentId, @Width, @Height, @TitleHidden, @ImageHidden);
     SELECT * FROM ComponentSettings WHERE Id = last_insert_rowid();";
     
     public const string InsertToIconQuery = @"
@@ -28,8 +28,8 @@ public class QueryStrings
         co.Name AS ComponentName, 
         co.Url, 
         co.IconUrl, 
-        co.ImageHidden, 
-        co.TitleHidden,
+        cs.ImageHidden, 
+        cs.TitleHidden,
         cs.Width AS Width,
         cs.Height AS Height,
         cs.Id AS ComponentSettingsId,
@@ -51,15 +51,16 @@ public class QueryStrings
     UPDATE Component
     SET Name = @Name, 
         Url = @Url, 
-        IconUrl = @IconUrl,
-        TitleHidden = @TitleHidden, 
-        ImageHidden = @ImageHidden /**where**/";
+        IconUrl = @IconUrl
+        /**where**/";
     
     public const string UpdateComponentSettingsQuery = @"
     UPDATE ComponentSettings
-    SET ComponentId = @Id
-        Width = @Width
-        Height = @Height /**where**/";
+    SET ComponentId = @Id,
+        Width = @Width,
+        Height = @Height,
+        TitleHidden = @TitleHidden, 
+        ImageHidden = @ImageHidden /**where**/";
     
     public const string DeleteFromComponentSettingsQuery = "DELETE FROM ComponentSettings /**where**/";
     public const string DeleteFromComponentQuery = "DELETE FROM Component /**where**/";

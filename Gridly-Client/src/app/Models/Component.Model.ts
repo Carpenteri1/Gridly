@@ -7,7 +7,5 @@ export class ComponentModel {
   url!: string;
   iconData?: IconModel | undefined;
   iconUrl?: string;
-  imageHidden!: boolean;
-  titleHidden!: boolean;
   componentSettings? : ComponentSettingsModel | undefined;
 }
