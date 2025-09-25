@@ -5,7 +5,7 @@
   grid-auto-rows: minmax(250px, max-content);
   row-gap: 1em;
   column-gap: 1em;
-  justify-content: center;
+  justify-content: left;
 }
 
 .grid-item-style {
