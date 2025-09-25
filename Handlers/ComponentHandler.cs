@@ -154,6 +154,11 @@ public class ComponentHandler(
                 } 
                 break;
         }
+
+        if (component.Name != command.EditComponent.Name)
+            component.Name = command.EditComponent.Name;
+        if (component.Url != command.EditComponent.Url)
+            component.Url = command.EditComponent.Url;
         
         return await componentRepository.Edit(component) ? 
             Results.Ok() : Results.StatusCode(500);

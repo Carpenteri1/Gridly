@@ -12,8 +12,6 @@ public static class ComponentFactory
             Name = dto.ComponentName,
             Url = dto.Url,
             IconUrl = dto.IconUrl,
-            TitleHidden = dto.TitleHidden,
-            ImageHidden = dto.ImageHidden,
             IconData = dto.IconName != null ? new IconModel
             {
                 Id = dto.IconId != null ? dto.IconId : 0,
@@ -26,7 +24,9 @@ public static class ComponentFactory
                 Id = dto.ComponentSettingsId != null ? dto.ComponentSettingsId : 0,
                 ComponentId = dto.ComponentId, 
                 Width = dto.Width, 
-                Height = dto.Height
+                Height = dto.Height,
+                TitleHidden = dto.TitleHidden,
+                ImageHidden = dto.ImageHidden
             }
         };
 

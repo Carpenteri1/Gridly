@@ -20,9 +20,7 @@ public class DbInitializer
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Name TEXT NOT NULL,
                 URL TEXT NOT NULL,
-                IconUrl TEXT NOT NULL,
-                TitleHidden BOOLEAN NOT NULL,
-                ImageHidden BOOLEAN NOT NULL);
+                IconUrl TEXT NOT NULL);
 
                 CREATE TABLE IF NOT EXISTS IconsConnected(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,6 +40,8 @@ public class DbInitializer
                 ComponentId INTEGER NOT NULL,
                 Width INT NOT NULL,
                 Height INT NOT NULL,
+                TitleHidden BOOLEAN NOT NULL,
+                ImageHidden BOOLEAN NOT NULL,
                 FOREIGN KEY(ComponentId) REFERENCES Component(Id));",
             commandTimeout:150);
     }
