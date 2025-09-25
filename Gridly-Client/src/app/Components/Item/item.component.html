@@ -1,5 +1,5 @@
 @if (CurrentComponentId === id){
-  <div class="d-flex justify-content-end">
+  <div class="item-layout">
     <button [hidden]="!componentService.InEditMode" (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Edit, component: componentService.GetComponentById(id)}))" class="btn btn-dark m-1">...</button>
     <button (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Delete, component: componentService.GetComponentById(id)}))" class="btn btn-dark m-1"><i class="bi bi-x-lg"></i></button>
   </div>

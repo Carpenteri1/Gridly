@@ -1,3 +1,12 @@
+.item-layout{
+  display: flex;
+  justify-content: end;
+  background-color: #141517;
+  border-bottom: 20px;
+  border-radius: 10px;
+  color: white;
+}
+
 .icon-size{
   max-height: 100px;
 }

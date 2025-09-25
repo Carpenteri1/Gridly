@@ -1,12 +1,14 @@
 .grid-layout{
+  padding: 1em;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, max-content));
-  gap: 1em;
+  grid-auto-rows: minmax(250px, max-content);
+  row-gap: 1em;
+  column-gap: 1em;
   justify-content: center;
 }
 
 .grid-item-style {
-  margin: 0.5em;
   background-color: #141517;
   border-bottom: 20px;
   border-radius: 10px;

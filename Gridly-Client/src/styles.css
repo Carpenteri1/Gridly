@@ -1,9 +1,10 @@
 @import "bootstrap/dist/css/bootstrap.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
-html, body, app-root {
-    font-family: Arial, sans-serif;
-    background-color: #1f2123;
-    height: 100% !important;
+
+html, body, app-root, grid-component  {
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #1f2123;
 }
 
 .btn-modal{
