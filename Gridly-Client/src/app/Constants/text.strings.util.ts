@@ -41,22 +41,11 @@ export class TextStringsUtil {
   static readonly MenuDropDownDragTitle = "Move Components";
   static readonly MenuDropDownResizeTitle = "Resize Components";
 
-  static readonly ComponentAddedEndPointSucceededMessage = "Component added succeeded";
   static readonly ComponentAddedFailedEndPointMessage = "Component added failed";
-
-  static readonly ComponentGetByIdSucceededEndPointMessage = "Component get by id succeeded";
   static readonly ComponentGetByIdFailedEndPointMessage = "Component get by id failed";
-
-  static readonly ComponentDeletedSucceededEndPointMessage = "Component deleted succeeded";
   static readonly ComponentDeletionFailedEndPointMessage = "Component deletion failed";
-
-  static readonly ComponentBatchEditSucceededEndPointMessage = "Batch edit components succeeded";
   static readonly ComponentBatchEditFailedEndPointMessage = "Batch edit components failed";
-
-  static readonly ComponentEditSucceededEndPointMessage = "Edit component succeeded";
   static readonly ComponentEditFailedEndPointMessage = "Edit component failed";
-
-  static readonly GetComponentsSucceededEndPointSuccessMessage = "Get components succeeded";
   static readonly GetComponentsFailedEndPointMessage = "Get components failed";
 
   static readonly ClientTitle = "Gridly";

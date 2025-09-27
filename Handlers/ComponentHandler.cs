@@ -155,12 +155,21 @@ public class ComponentHandler(
                 break;
         }
 
-        if (component.Name != command.EditComponent.Name)
+        if (component != command.EditComponent)
+        {
             component.Name = command.EditComponent.Name;
-        if (component.Url != command.EditComponent.Url)
             component.Url = command.EditComponent.Url;
+        }
+
+        if (component.ComponentSettings != command.EditComponent.ComponentSettings)
+        {
+            component.ComponentSettings.ImageHidden = command.EditComponent.ComponentSettings.ImageHidden;
+            component.ComponentSettings.TitleHidden = command.EditComponent.ComponentSettings.TitleHidden;
+            component.ComponentSettings.Height = command.EditComponent.ComponentSettings.Height;
+            component.ComponentSettings.Width = command.EditComponent.ComponentSettings.Width;
+        }
         
-        return await componentRepository.Edit(component) ? 
+        return await settingsRepository.Edit(component.ComponentSettings) != null && await componentRepository.Edit(component) ? 
             Results.Ok() : Results.StatusCode(500);
     }
 
