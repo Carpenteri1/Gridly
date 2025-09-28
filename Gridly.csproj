@@ -25,6 +25,7 @@
     <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
     <_ContentIncludedByDefault Remove="Gridly-Client\dist\Gridly-Client\prerendered-routes.json" />
     <_ContentIncludedByDefault Remove="Assets\ComponentData\componentData.json" />
+    <_ContentIncludedByDefault Remove="Assets\VersionData\versionData.json" />
   </ItemGroup>
 
   <ItemGroup>

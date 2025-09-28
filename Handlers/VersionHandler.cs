@@ -18,9 +18,11 @@ public class VersionHandler(
         if (cashedVersion == null)
         {
             var (success, version) = await versionEndPoint.GetVersion();
-            if(success)
+            if (success)
+            {
                 memoryCashingService.Store("version", version);
-            return success ? Results.Ok(version) : Results.NotFound();
+                cashedVersion = version;
+            }
         }
 
         return cashedVersion != null ? Results.Ok(cashedVersion) : Results.NotFound();
