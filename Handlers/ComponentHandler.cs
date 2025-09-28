@@ -20,7 +20,7 @@ public class ComponentHandler(
     IRequestHandler<EditComponentCommand, IResult>,
     IRequestHandler<BatchEditComponentCommand, IResult>
 {
-    private readonly ComponentHandlerHelper handlerHelper = new(componentRepository,iconRepository, fileService);
+    private readonly ComponentHandlerHelper handlerHelper = new(fileService);
     public async Task<IResult> Handle(SaveComponentCommand command, CancellationToken cancellationToken)
     {
         var component = await componentRepository.Insert(command);
@@ -173,8 +173,29 @@ public class ComponentHandler(
             Results.Ok() : Results.StatusCode(500);
     }
 
-    public async Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken) 
-        => await componentRepository.BatchEdit(commands) ? Results.Ok() : Results.StatusCode(500);                                         
+    public async Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken)
+    {
+        var storedComponents = await componentRepository.Get();
+        if(storedComponents == null) return Results.NoContent();
+        
+        foreach (var command in commands)
+        {
+            foreach (var component in storedComponents)
+            {
+                if (command.Id == component.Id)
+                {
+                    component.ComponentSettings = !Equals(component.ComponentSettings, command.ComponentSettings)
+                        ? command.ComponentSettings : component.ComponentSettings;
+
+                    component.Index = !Equals(component.Index, command.Index)
+                        ? command.Index : component.Index;
+                }   
+            }
+        }
+        
+        return await componentRepository.BatchEdit(commands) ? 
+            Results.Ok() : Results.StatusCode(500);                                         
+    }
 
     public async Task<IResult> Handle(GetAllComponentCommand command, CancellationToken cancellationToken)
     {

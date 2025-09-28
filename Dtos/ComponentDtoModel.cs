@@ -3,6 +3,7 @@ namespace Gridly.Dtos;
 public class ComponentDtoModel
 {
     public int ComponentId { get; set; }
+    public int Index { get; set; }
     public string ComponentName { get; set; }
     public string Url { get; set; }
     public string IconUrl { get; set; }

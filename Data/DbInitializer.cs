@@ -18,6 +18,7 @@ public class DbInitializer
             sql:@"
                 CREATE TABLE IF NOT EXISTS Component(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Index INTEGER NOT NULL,
                 Name TEXT NOT NULL,
                 URL TEXT NOT NULL,
                 IconUrl TEXT NOT NULL);

@@ -25,6 +25,7 @@ public class QueryStrings
     public const string SelectComponentQuery = @"
      SELECT 
         co.Id AS ComponentId, 
+        co.Index, 
         co.Name AS ComponentName, 
         co.Url, 
         co.IconUrl, 
@@ -50,6 +51,7 @@ public class QueryStrings
     public const string UpdateComponentQuery = @"
     UPDATE Component
     SET Name = @Name, 
+        Index = @Index,
         Url = @Url, 
         IconUrl = @IconUrl
         /**where**/";
