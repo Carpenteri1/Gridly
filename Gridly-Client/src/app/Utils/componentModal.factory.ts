@@ -1,4 +1,5 @@
 import {ComponentModel} from "../Models/Component.Model";
+import {MapComponentSettingsData} from "./componentSettingsModal.factory";
 
 export function MapComponentData(component?: ComponentModel) : ComponentModel{
   return {
@@ -7,7 +8,7 @@ export function MapComponentData(component?: ComponentModel) : ComponentModel{
     url: component?.url ?? "",
     iconData: component?.iconData ?? null,
     iconUrl: component?.iconUrl ?? "",
-    componentSettings: component?.componentSettings ?? null
+    componentSettings: component?.componentSettings ?? MapComponentSettingsData()
   } as ComponentModel;
 }
 MapComponentData.Override = function(override: Partial<ComponentModel>, component?: ComponentModel): ComponentModel {
@@ -17,6 +18,6 @@ MapComponentData.Override = function(override: Partial<ComponentModel>, componen
     url: override.url ??  component?.url ?? "",
     iconData: override.iconData ?? component?.iconData ?? null,
     iconUrl: override.iconUrl ?? component?.iconUrl ?? "",
-    componentSettings: override.componentSettings ?? component?.componentSettings ?? null
+    componentSettings: override.componentSettings ?? component?.componentSettings ?? MapComponentSettingsData()
   } as ComponentModel);
 };

@@ -20,12 +20,17 @@ public class ComponentHandler(
     IRequestHandler<EditComponentCommand, IResult>,
     IRequestHandler<BatchEditComponentCommand, IResult>
 {
-    private readonly ComponentHandlerHelper handlerHelper = new(componentRepository,iconRepository, fileService);
+    private readonly ComponentHandlerHelper handlerHelper = new(fileService);
     public async Task<IResult> Handle(SaveComponentCommand command, CancellationToken cancellationToken)
     {
+        var storedComponents = await componentRepository.Get();
+        
+        if (storedComponents == null || storedComponents.Count() == 0 ) command.IndexPosition = 1;
+        else command.IndexPosition = storedComponents.Count() + 1;
+        
         var component = await componentRepository.Insert(command);
-        component.ComponentSettings = await settingsRepository.Insert(
-            new ComponentSettingsModel{ComponentId = component.Id, Width = 200, Height = 200});
+        command.ComponentSettings.ComponentId = component.Id;
+        component.ComponentSettings = await settingsRepository.Insert(command.ComponentSettings);
         
         if (component == null || component.ComponentSettings == null)
             return Results.StatusCode(500);
@@ -57,8 +62,10 @@ public class ComponentHandler(
     
     public async Task<IResult> Handle(DeleteComponentCommand command, CancellationToken cancellationToken)
     {
-        var component = await componentRepository.GetById(command.Id);
-        if(await settingsRepository.Delete(component.ComponentSettings.Id.Value) is false &&
+        var components = await componentRepository.Get();
+        var component = components.FirstOrDefault(x => x.Id == command.Id);
+        
+        if (await settingsRepository.Delete(component.ComponentSettings.Id.Value) is false &&
             await componentRepository.Delete(component) is false)
             return Results.StatusCode(500);
 
@@ -75,13 +82,17 @@ public class ComponentHandler(
             }   
         }
         
-        return Results.Ok();
+        components = await componentRepository.Get();
+        var indexedComponents = handlerHelper.SetIndexValues(components.ToList());
+        return await componentRepository.BatchEdit(indexedComponents) == false ? Results.StatusCode(500) : Results.Ok();
     }
     
     public async Task<IResult> Handle(EditComponentCommand command, CancellationToken cancellationToken)
     {
-        var component = await componentRepository.GetById(command.EditComponent.Id);
-        if(component == null) return Results.NotFound();
+        var components = await componentRepository.Get() as List<ComponentModel>;
+        if (components == null) return Results.StatusCode(500);
+        
+        var component = components.FirstOrDefault(x => x.Id == command.EditComponent.Id);
         
         var connectionModel = new IconConnectedDtoModel { ComponentId = component.Id };
         var editHasIcon = handlerHelper.IconDataHasValue(command.EditComponent.IconData);
@@ -169,17 +180,24 @@ public class ComponentHandler(
             component.ComponentSettings.Width = command.EditComponent.ComponentSettings.Width;
         }
         
-        return await settingsRepository.Edit(component.ComponentSettings) != null && await componentRepository.Edit(component) ? 
+        return await settingsRepository.Edit(component.ComponentSettings) != null && 
+               await componentRepository.Edit(component) ? 
             Results.Ok() : Results.StatusCode(500);
     }
 
-    public async Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken) 
-        => await componentRepository.BatchEdit(commands) ? Results.Ok() : Results.StatusCode(500);                                         
+    public async Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken)
+    {
+        var sortedComponents = handlerHelper.SetIndexValues(commands);
+        if(sortedComponents == null) return Results.StatusCode(500);
+        
+        return await componentRepository.BatchEdit(sortedComponents) ? 
+            Results.Ok() : Results.StatusCode(500);                                         
+    }
 
     public async Task<IResult> Handle(GetAllComponentCommand command, CancellationToken cancellationToken)
     {
         var components = await componentRepository.Get();
-        return components != null ? Results.Ok(components) : Results.NotFound();
+        return Results.Ok(components);
     }
     
     public async Task<ComponentModel?> Handle(GetByIdComponentCommands command, CancellationToken cancellationToken) => 
