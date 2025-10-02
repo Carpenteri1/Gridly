@@ -3,10 +3,21 @@ import {IconModel} from "./Icon.Model";
 
 export class ComponentModel {
   id!: number;
-  index!: number;
+  indexPosition!: number;
   name!: string;
   url!: string;
-  iconData?: IconModel | undefined;
+  iconData?: IconModel |
+    {
+      type: "",
+      name: "",
+      base64Data: "",
+    };
   iconUrl?: string;
-  componentSettings? : ComponentSettingsModel | undefined;
+  componentSettings? : ComponentSettingsModel |
+    {
+      width:250,
+      height:250,
+      imageHidden:false,
+      titleHidden:false
+    };
 }

@@ -43,7 +43,7 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
         builder.LeftJoin(QueryStrings.JoinComponentSettingsQuery);
         builder.LeftJoin(QueryStrings.JoinIconsConnectedDataQuery);
         builder.LeftJoin(QueryStrings.JoinIconDataQuery);
-        
+        builder.OrderBy(QueryStrings.OrderByIndexWithAlias);
         var Dtos = 
             await _dbCommandRunner.SelectMany<ComponentDtoModel>(template.RawSql, template.Parameters);
         return Factories.ComponentFactory.CreateMany(Dtos);

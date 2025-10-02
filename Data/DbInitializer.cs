@@ -18,7 +18,7 @@ public class DbInitializer
             sql:@"
                 CREATE TABLE IF NOT EXISTS Component(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                Index INTEGER NOT NULL,
+                IndexPosition INTEGER NOT NULL,
                 Name TEXT NOT NULL,
                 URL TEXT NOT NULL,
                 IconUrl TEXT NOT NULL);
@@ -41,8 +41,8 @@ public class DbInitializer
                 ComponentId INTEGER NOT NULL,
                 Width INT NOT NULL,
                 Height INT NOT NULL,
-                TitleHidden BOOLEAN NOT NULL,
-                ImageHidden BOOLEAN NOT NULL,
+                TitleHidden INTEGER NOT NULL,
+                ImageHidden INTEGER NOT NULL,
                 FOREIGN KEY(ComponentId) REFERENCES Component(Id));",
             commandTimeout:150);
     }

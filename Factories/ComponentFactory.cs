@@ -9,7 +9,7 @@ public static class ComponentFactory
         => new()
         {
             Id = dto.ComponentId,
-            Index = dto.Index,
+            IndexPosition = dto. IndexPosition,
             Name = dto.ComponentName,
             Url = dto.Url,
             IconUrl = dto.IconUrl,

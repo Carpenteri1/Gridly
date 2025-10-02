@@ -3,8 +3,8 @@ namespace Gridly.Constants;
 public class QueryStrings
 {
     public const string InsertToComponentQuery = @"
-    INSERT INTO Component (Name, Url, IconUrl) 
-    VALUES (@Name, @Url, @IconUrl);
+    INSERT INTO Component (IndexPosition, Name, Url, IconUrl) 
+    VALUES (@IndexPosition, @Name, @Url, @IconUrl);
     SELECT * FROM Component WHERE Id = last_insert_rowid();";
     
     public const string InsertToComponentSettingsQuery = @"
@@ -25,12 +25,12 @@ public class QueryStrings
     public const string SelectComponentQuery = @"
      SELECT 
         co.Id AS ComponentId, 
-        co.Index, 
+        co.IndexPosition, 
         co.Name AS ComponentName, 
         co.Url, 
         co.IconUrl, 
-        cs.ImageHidden, 
-        cs.TitleHidden,
+        cs.ImageHidden AS ImageHidden, 
+        cs.TitleHidden AS TitleHidden,
         cs.Width AS Width,
         cs.Height AS Height,
         cs.Id AS ComponentSettingsId,
@@ -51,7 +51,7 @@ public class QueryStrings
     public const string UpdateComponentQuery = @"
     UPDATE Component
     SET Name = @Name, 
-        Index = @Index,
+        IndexPosition = @IndexPosition,
         Url = @Url, 
         IconUrl = @IconUrl
         /**where**/";
@@ -83,4 +83,6 @@ public class QueryStrings
     public const string WhereComponentIdEqualsComponentIdWithAlias = "co.Id = @componentId";
     public const string WhereIconNameEqualsNameWithAlias = "i.Name = @Name";
     public const string WhereIconTypeEqualsTypeWithAlias = "i.Type = @Type";
+    
+    public const string OrderByIndexWithAlias = "ORDER BY co.IndexPosition;";
 }

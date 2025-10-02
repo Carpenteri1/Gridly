@@ -20,7 +20,7 @@ public class ComponentHandlerHelper(IFileService fileService)
     public IEnumerable<ComponentModel> SetIndexValues(List<ComponentModel> components)
     {
         for (int i = 0; i < components.Count(); i++)
-            components[i].Index = i +1;
+            components[i].IndexPosition = i +1;
         
         return components;
     }
