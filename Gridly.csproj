@@ -26,20 +26,17 @@
     <_ContentIncludedByDefault Remove="Gridly-Client\dist\Gridly-Client\prerendered-routes.json" />
     <_ContentIncludedByDefault Remove="Assets\ComponentData\componentData.json" />
     <_ContentIncludedByDefault Remove="Assets\VersionData\versionData.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\index.html" />
+    <_ContentIncludedByDefault Remove="wwwroot\main.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\media\bootstrap-icons.woff" />
+    <_ContentIncludedByDefault Remove="wwwroot\media\bootstrap-icons.woff2" />
+    <_ContentIncludedByDefault Remove="wwwroot\polyfills.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Main\Index.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\index.html" />
-    <None Include="wwwroot\main.js" />
-    <None Include="wwwroot\media\bootstrap-icons.woff" />
-    <None Include="wwwroot\media\bootstrap-icons.woff2" />
-    <None Include="wwwroot\polyfills.js" />
-    <None Include="wwwroot\scripts.js" />
-    <None Include="wwwroot\styles.css" />
+      <None Include="wwwroot" />
+      <UpToDateCheckInput Remove="Views\Main\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

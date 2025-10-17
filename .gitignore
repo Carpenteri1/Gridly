@@ -48,6 +48,7 @@ Assets/ComponentData/*.json
 Assets/VersionData/*.json
 Assets/Icons/*
 Assets/Db/*
+wwwroot
 !Assets/Icons/.gitkeep
 !Assets/Icons/favicon.ico
 !Assets/Db/.gitkeep
