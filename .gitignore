@@ -47,8 +47,10 @@ testem.log
 Assets/ComponentData/*.json
 Assets/VersionData/*.json
 Assets/Icons/*
+Assets/Db/*
 !Assets/Icons/.gitkeep
 !Assets/Icons/favicon.ico
+!Assets/Db/.gitkeep
 
 # System files
 .DS_Store
