@@ -1,7 +1,6 @@
 var gulp = require("gulp");
 var exec = require("gulp-exec");
 var clean = require("gulp-clean");
-var merge = require("merge-stream");
 
 // ---- Angular ----
 gulp.task("ng-build", function () {
@@ -23,8 +22,7 @@ gulp.task("ng-clean-build", function () {
     .pipe(clean({ force: true }));
 });
 
-const DOTNET_CWD = "../";
-
+// ---- dotnet ----
 gulp.task("dotnet-restore", function () {
   return gulp
     .src(".", { allowEmpty: true })
