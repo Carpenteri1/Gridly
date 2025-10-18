@@ -1,3 +1,8 @@
 
-<header-component></header-component>
+<header-component
+  [isEditMode]="isEditMode"
+  (toggleEdit)="isEditMode = !isEditMode"
+  (addWidget)="onAddWidget()"
+  (save)="onSave()">
+</header-component>
 <grid-component></grid-component>

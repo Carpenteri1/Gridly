@@ -1,22 +1,51 @@
-<div class="d-flex gap-3 justify-content-end">
-  <div class="d-flex m-2 flex-row">
-    <div class="version-text text-white-50 m-2" *ngIf=" this.versionService.Version.newRelease">
-      <strong> {{StringUtil.NewVersionAvailableHeaderInfoText}}
-        <a target="_blank" href="{{UrlStringsUtil.GitHubReleaseURL+versionService.Version.name}}">
-          {{versionService.Version.name}}
-        </a>
-      </strong>
+<header class="sticky-top bg-body border-bottom backdrop">
+  <nav class="navbar navbar-expand-lg container py-2">
+    <div class="d-flex align-items-center me-3">
+      <div class="logo-box me-2">
+        <i class="bi bi-grid text-white fs-5"></i>
+      </div>
+      <h1 class="h4 fw-bold gradient-text m-0">Gridly</h1>
     </div>
-    <div class="space">
-        <mat-form-field>
-          <mat-label><mat-icon>menu</mat-icon></mat-label>
-          <mat-select hideSingleSelectionIndicator>
-            <mat-option value="one" (click)="this.modalService.GetModalType(SetModalComponentFormData({type: FormType.Add}))"> {{ StringUtil.MenuDropDownAddTitle }}</mat-option>
-            <mat-option value="two" (click)="this.componentService.SwitchEditMode()">{{ StringUtil.MenuDropDownEditTitle }}</mat-option>
-            <mat-option value="three" (click)="this.componentService.SwitchDragMode()">{{ StringUtil.MenuDropDownDragTitle }}</mat-option>
-            <!--<mat-option value="Four" (click)="this.componentService.SwitchResizeMode()">{{ StringUtil.MenuDropDownResizeTitle }}</mat-option>-->
-          </mat-select>
-        </mat-form-field>
+
+    <button class="navbar-toggler" type="button" (click)="onToggleMenu()" aria-controls="mainNavbar"
+            [attr.aria-expanded]="showMenu" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="navbar-collapse collapse justify-content-end" [class.show]="showMenu" id="mainNavbar">
+      <ul class="navbar-nav align-items-lg-center gap-2 ms-lg-3">
+
+        <ng-container *ngIf="isEditMode">
+          <li class="nav-item">
+            <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"
+                    (click)="onAddWidget()">
+              <i class="bi bi-plus-lg"></i>
+              <span>Add Widget</span>
+            </button>
+          </li>
+
+          <li class="nav-item">
+            <button class="btn btn-primary btn-sm d-flex align-items-center gap-1"
+                    (click)="onSave()">
+              <i class="bi bi-save"></i>
+              <span>Save</span>
+            </button>
+          </li>
+        </ng-container>
+
+        <li class="nav-item">
+          <button class="btn btn-sm d-flex align-items-center gap-1"
+                  [ngClass]="isEditMode ? 'btn-primary' : 'btn-outline-secondary'"
+                  (click)="onToggleEdit()">
+            <i class="bi bi-pencil"></i>
+            <span>{{ isEditMode ? 'Exit Edit' : 'Edit' }}</span>
+          </button>
+        </li>
+
+        <li class="nav-item">
+          <button class="btn btn-dark btn-sm" title="Toggle theme">🌓</button>
+        </li>
+      </ul>
     </div>
-  </div>
-</div>
+  </nav>
+</header>

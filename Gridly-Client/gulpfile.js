@@ -59,7 +59,9 @@ function MessageLoop(session){
         if (i === 2) console.log("✅ Up on http://localhost:7575 🚀");
       }
       if(session === "ng"){
-        if (i === 2) console.log("✅ Client up on http://localhost:4200/ 🚀");
+        if (i === 2){
+          console.log("✅ Client up on http://localhost:4200/ - With live edit 🚀");
+        }
       }
     }, i * 2000);
   }
