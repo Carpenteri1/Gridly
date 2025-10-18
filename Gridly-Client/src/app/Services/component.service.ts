@@ -97,25 +97,25 @@ export class ComponentService{
     return this.InEditMode || this.InResizeMode || this.InResizeMode;
   }
 
-  SwitchEditMode(): void {
+  ToggleEditMode(): void {
     this.editMode = !this.editMode;
     this.resizeModeActive = false;
     this.dragMode = false;
   }
 
-  SwitchResizeMode(): void {
+  ToggleResizeMode(): void {
     this.resizeModeActive = !this.resizeModeActive;
     this.dragMode = false;
     this.editMode = false;
   }
 
-  SwitchDragMode(): void {
+  ToggleDragMode(): void {
     this.dragMode = !this.dragMode;
     this.editMode = false;
     this.resizeModeActive = false;
   }
 
-  DisableModes(){
+  ResetModes(){
     this.editMode = false;
     this.resizeModeActive = false;
     this.dragMode = false;
@@ -232,7 +232,7 @@ export class ComponentService{
         break;
     }
     this.ResetAllComponentData();
-    this.DisableModes();
+    this.ResetModes();
     window.location.reload();
   }
 

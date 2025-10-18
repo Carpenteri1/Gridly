@@ -77,11 +77,11 @@ export class ModalService{
 
   Cancel(): void {
     if (this.componentService.InEditMode)
-      this.componentService.SwitchEditMode();
+      this.componentService.ToggleEditMode();
     if (this.componentService.InResizeMode)
-      this.componentService.SwitchResizeMode();
+      this.componentService.ToggleResizeMode();
     if (this.componentService.InDragMode)
-      this.componentService.SwitchDragMode();
+      this.componentService.ToggleDragMode();
 
     this.ResetFormData();
     window.location.reload();

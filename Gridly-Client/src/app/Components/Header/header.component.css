@@ -1,28 +1,49 @@
-.d-flex{
-    background-color: #141517;
-    color:white;
-}
-.flex-row-reverse{
-    padding-right: 1em;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-}
-
-mat-option{
-  background-color: #141517 !important;
-  color: white !important;
-  z-index: 9999 !important;
-}
-
-mat-option:hover{
-  background-color: #383b41 !important;
-}
-
 :is(.version-text, .text-center) {
   font-size: 13px;
 }
 
-.modal-dropdown-btn-theme{
+.btn{
+  color:white;
   border:none;
-  background: none;
+  background: linear-gradient(135deg, #0d6efd, #6610f2);
+}
+
+.backdrop {
+  background-color: #141517 !important;
+  backdrop-filter: saturate(180%) blur(8px);
+}
+
+.bg-body{
+  background-color: #141517;
+}
+
+.logo-box {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0d6efd, #6610f2);
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #0d6efd, #6610f2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.enter-animation {
+  animation: slide-fade 1000ms ease-out;
+}
+
+@keyframes slide-fade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
