@@ -2,9 +2,10 @@
   font-size: 13px;
 }
 
-.modal-dropdown-btn-theme{
+.btn{
+  color:white;
   border:none;
-  background: none;
+  background: linear-gradient(135deg, #0d6efd, #6610f2);
 }
 
 .backdrop {
@@ -14,7 +15,6 @@
 
 .bg-body{
   background-color: #141517;
-
 }
 
 .logo-box {
@@ -31,4 +31,19 @@
   background: linear-gradient(90deg, #0d6efd, #6610f2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.enter-animation {
+  animation: slide-fade 1000ms ease-out;
+}
+
+@keyframes slide-fade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

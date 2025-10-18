@@ -1,5 +1,11 @@
-import {Component, EventEmitter, Input, Output} from "@angular/core";
+import {Component, OnInit, signal} from "@angular/core";
+import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {CommonModule} from "@angular/common";
+import {VersionService} from "../../Services/version.services";
+import {ModalService} from "../../Services/modal.service";
+import {ComponentService} from "../../Services/component.service";
+import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
+import {ModalFormType} from "../../Types/modalForm.types.enum";
 
 @Component({
   selector: 'header-component',
@@ -8,26 +14,33 @@ import {CommonModule} from "@angular/common";
   standalone: true,
   imports: [CommonModule]
 })
-export class HeaderComponent {
-  @Input() isEditMode = false;
-  @Output() toggleEdit = new EventEmitter<void>();
-  @Output() addWidget = new EventEmitter<void>();
-  @Output() save = new EventEmitter<void>();
-  showMenu = false;
-
-  onToggleMenu(): void {
-    this.showMenu = !this.showMenu;
+export class HeaderComponent implements OnInit {
+  constructor(
+    protected versionService: VersionService,
+    protected modalService: ModalService,
+    protected componentService: ComponentService) {
   }
 
-  onToggleEdit(): void {
-    this.toggleEdit.emit();
+  async ngOnInit() {
+    await this.versionService.SetVersion();
   }
 
-  onAddWidget(): void {
-    this.addWidget.emit();
+  showMenu = signal(false);
+  toggleMenu(): void {
+    this.showMenu.update((showMenu) => showMenu);
   }
 
-  onSave(): void {
-    this.save.emit();
+  addWidget(){
+    if(this.componentService.InEditMode){
+      this.modalService.GetModalType(SetModalComponentFormData({type: this.FormType.Add}))
+    }
+    if(!this.componentService.InEditMode){
+      this.modalService.Cancel();
+    }
   }
+
+  protected readonly TextStringsUtil = TextStringsUtil;
+  protected readonly FormType = ModalFormType;
+
+  protected readonly SetModalComponentFormData = SetModalComponentFormData;
 }

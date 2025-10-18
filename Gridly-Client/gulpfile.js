@@ -1,12 +1,11 @@
 var gulp = require("gulp");
 var exec = require("gulp-exec");
-var clean = require("gulp-clean");
+var clean = require('gulp-clean');
 
 // ---- Angular ----
-gulp.task("ng-build", function () {
-  return gulp
-    .src(".", { allowEmpty: true })
-    .pipe(exec("ng build --output-path=dist"))
+gulp.task('ng-build', function () {
+  return gulp.src('./')
+    .pipe(exec('ng build --output-path=dist'))
     .pipe(exec.reporter());
 });
 
@@ -21,15 +20,15 @@ gulp.task("ng-serve", function () {
 });
 
 gulp.task("ng-move-build", function () {
-  return gulp
-    .src("./dist/browser/**/*", { allowEmpty: true })
-    .pipe(gulp.dest("../wwwroot/"));
+  return gulp.src(["./dist/browser/*","./dist/browser/**"],
+    {encoding: false},
+    {overwrite: true})
+    .pipe(gulp.dest("../wwwroot/"),gulp.dest("../wwwroot/media/"));
 });
 
 gulp.task("ng-clean-build", function () {
-  return gulp
-    .src(["./dist/", "../wwwroot/index.csr.html"], { allowEmpty: true })
-    .pipe(clean({ force: true }));
+  return gulp.src(["./dist/","../wwwroot/index.csr.html"],{allowEmpty: true})
+    .pipe(clean({force: true},));
 });
 
 // ---- dotnet ----
@@ -72,9 +71,9 @@ gulp.task(
   gulp.series(
     "ng-build",
     "ng-move-build",
-    "ng-clean-build",
-    "dotnet-restore",
-    "dotnet-run"
+    "ng-clean-build"
+    //"dotnet-restore",
+    //"dotnet-run"
   )
 );
 
