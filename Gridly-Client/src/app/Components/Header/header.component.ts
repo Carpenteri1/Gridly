@@ -1,8 +1,5 @@
 import {Component, OnInit} from "@angular/core";
 import {CommonModule} from "@angular/common";
-import {MatFormField, MatLabel} from "@angular/material/input";
-import {MatOption} from "@angular/material/core";
-import {MatSelect} from "@angular/material/select";
 import {MatIcon} from "@angular/material/icon";
 import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {UrlStringsUtil} from "../../Constants/url.strings.util";
@@ -17,7 +14,7 @@ import {VersionService} from "../../Services/version.services";
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   standalone: true,
-  imports: [CommonModule, MatFormField, MatOption, MatSelect, MatLabel, MatIcon]
+  imports: [CommonModule, MatIcon]
 })
 export class HeaderComponent implements OnInit {
   protected readonly StringUtil = TextStringsUtil;

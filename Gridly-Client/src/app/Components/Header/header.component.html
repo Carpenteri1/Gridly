@@ -7,16 +7,18 @@
         </a>
       </strong>
     </div>
-    <div class="space">
-        <mat-form-field>
-          <mat-label><mat-icon>menu</mat-icon></mat-label>
-          <mat-select hideSingleSelectionIndicator>
-            <mat-option value="one" (click)="this.modalService.GetModalType(SetModalComponentFormData({type: FormType.Add}))"> {{ StringUtil.MenuDropDownAddTitle }}</mat-option>
-            <mat-option value="two" (click)="this.componentService.SwitchEditMode()">{{ StringUtil.MenuDropDownEditTitle }}</mat-option>
-            <mat-option value="three" (click)="this.componentService.SwitchDragMode()">{{ StringUtil.MenuDropDownDragTitle }}</mat-option>
-            <!--<mat-option value="Four" (click)="this.componentService.SwitchResizeMode()">{{ StringUtil.MenuDropDownResizeTitle }}</mat-option>-->
-          </mat-select>
-        </mat-form-field>
+    <div>
+        <div class="dropdown dropstart">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <mat-icon>menu</mat-icon>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" (click)="this.modalService.GetModalType(SetModalComponentFormData({type: FormType.Add}))">{{ StringUtil.MenuDropDownAddTitle }}</a></li>
+            <li><a class="dropdown-item" href="#" (click)="this.componentService.SwitchEditMode()">{{ StringUtil.MenuDropDownEditTitle }}</a></li>
+            <li><a class="dropdown-item" href="#" (click)="this.componentService.SwitchDragMode()">{{ StringUtil.MenuDropDownDragTitle }}</a></li>
+            <!--<li><a class="dropdown-item" href="#" (click)="this.componentService.SwitchResizeMode()">{{ StringUtil.MenuDropDownResizeTitle }}</a></li>-->
+          </ul>
+        </div>
     </div>
   </div>
 </div>

@@ -26,3 +26,44 @@ mat-option:hover{
   border:none;
   background: none;
 }
+
+/* Bootstrap dropdown dark theme styles */
+.dropdown-menu {
+  background-color: #141517 !important;
+  border: 1px solid #383b41 !important;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.dropdown-item {
+  color: white !important;
+  padding: 8px 16px !important;
+}
+
+.dropdown-item:hover {
+  background-color: #383b41 !important;
+  color: white !important;
+}
+
+.dropdown-item:focus {
+  background-color: #383b41 !important;
+  color: white !important;
+}
+
+.btn-outline-secondary {
+  border-color: #383b41 !important;
+  color: white !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #383b41 !important;
+  border-color: #383b41 !important;
+  color: white !important;
+}
+
+.btn-outline-secondary:focus {
+  background-color: #383b41 !important;
+  border-color: #383b41 !important;
+  color: white !important;
+  box-shadow: 0 0 0 0.2rem rgba(56, 59, 65, 0.25) !important;
+}
