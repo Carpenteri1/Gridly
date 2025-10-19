@@ -1,0 +1,42 @@
+.aw-card {
+  min-width: min(92vw, 600px);
+  /*color: var(--bs-body-color, #212529);*/
+  border-radius: .75rem;
+  border: 1px solid rgba(0,0,0,.1);
+  box-shadow: 0 1rem 3rem rgba(0,0,0,.175);
+  overflow: hidden;
+}
+
+.aw-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .75rem 1rem; border-bottom: 1px solid rgba(0,0,0,.1);
+}
+.aw-body { padding: 1rem; }
+
+.option-btn:hover {
+  border-color: var(--bs-primary);
+  /*background-color: rgba(var(--bs-primary-rgb, 13,110,253), .05);*/
+}
+.option-icon { font-size: 2rem; color: var(--bs-primary); }
+
+dialog.aw-dialog {
+  border: none;
+  padding: 0;
+  max-height: 90dvh;
+  background-color: #1f2123;
+  animation: fade-in 2000ms;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+dialog.aw-dialog::backdrop {
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(2px);
+}
+
+p, h5{
+  color:white !important;
+}

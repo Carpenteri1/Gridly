@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {ComponentModel} from "../Models/Component.Model";
-import {MapComponentData} from "../Utils/componentModal.factory";
+import {MapComponentData} from "../Utils/componentDialog.factory";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
 import {ComponentEndPointType} from "../Types/endPoint.type.enum";
 import {TextStringsUtil} from "../Constants/text.strings.util";

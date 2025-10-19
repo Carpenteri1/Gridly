@@ -3,7 +3,7 @@ import {UrlStringsUtil} from "../../Constants/url.strings.util";
 import {ComponentModel} from "../../Models/Component.Model";
 import {Observable, take} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {MapEditComponentData} from "../../Utils/editComponentModal.factory";
+import {MapEditComponentData} from "../../Utils/editComponentDialog.factory";
 
 @Injectable({
   providedIn: 'root'

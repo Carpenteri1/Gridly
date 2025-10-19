@@ -1,7 +1,7 @@
 import {Directive, ElementRef, HostListener, Input, Renderer2} from '@angular/core';
 import {ComponentModel} from "../Models/Component.Model";
 import {ComponentService} from "../Services/component.service";
-import {MapComponentData} from "../Utils/componentModal.factory";
+import {MapComponentData} from "../Utils/componentDialog.factory";
 
 @Directive({
   standalone: true,

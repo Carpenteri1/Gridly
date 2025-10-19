@@ -1,5 +1,5 @@
 import {ComponentModel} from "../Models/Component.Model";
-import {MapComponentSettingsData} from "./componentSettingsModal.factory";
+import {MapComponentSettingsData} from "./componentSettingsDialog.factory";
 
 export function MapComponentData(component?: ComponentModel) : ComponentModel{
   return {
