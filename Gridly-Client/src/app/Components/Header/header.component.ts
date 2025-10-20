@@ -22,6 +22,7 @@ export class HeaderComponent implements OnInit {
     protected componentService: ComponentService) {
   }
   open = false;
+  //TODO widget options
   widgetOptions = [
     { type: 'chart', label: 'Chart', description: 'Visualize trends', icon: 'bi bi-graph-up' },
     { type: 'table', label: 'Table', description: 'Tabular data', icon: 'bi bi-table' },
@@ -32,6 +33,13 @@ export class HeaderComponent implements OnInit {
   handleSelect(t: string) {
     /* TODO
         add logic or use addWidget */
+
+    /*if(this.componentService.InEditMode){
+      this.modalService.GetModalType(SetModalComponentFormData({type: this.FormType.Add}))
+    }
+    if(!this.componentService.InEditMode){
+      this.modalService.Cancel();
+    }*/
   }
 
   async ngOnInit() {
@@ -41,15 +49,6 @@ export class HeaderComponent implements OnInit {
   showMenu = signal(false);
   toggleMenu(): void {
     this.showMenu.update((showMenu) => showMenu);
-  }
-
-  addWidget(){
-    if(this.componentService.InEditMode){
-      this.modalService.GetModalType(SetModalComponentFormData({type: this.FormType.Add}))
-    }
-    if(!this.componentService.InEditMode){
-      this.modalService.Cancel();
-    }
   }
 
   protected readonly TextStringsUtil = TextStringsUtil;

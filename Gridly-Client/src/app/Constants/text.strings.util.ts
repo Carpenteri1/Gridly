@@ -50,4 +50,7 @@ export class TextStringsUtil {
   static readonly GetComponentsFailedEndPointMessage = "Get components failed";
 
   static readonly ClientTitle = "Gridly";
+
+  static readonly AddWidgetDescription = "Choose a widget type to add to your dashboard";
+  static readonly AddWidgetTitle = "Add Widget";
 }

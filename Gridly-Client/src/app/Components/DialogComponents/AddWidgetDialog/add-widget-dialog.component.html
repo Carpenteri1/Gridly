@@ -1,12 +1,12 @@
 <dialog #dlg class="aw-dialog" (click)="onBackdropClick($event)" aria-labelledby="aw-title">
   <div class="aw-card" (click)="$event.stopPropagation()">
     <header class="aw-header">
-      <h5 id="aw-title" class="m-0">{{ title }}</h5>
+      <h5 id="aw-title" class="m-0">{{ TextStringsUtil.AddWidgetTitle }}</h5>
       <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
     </header>
 
     <div class="aw-body">
-      <p class="text-muted mb-3">{{ description }}</p>
+      <p class="text-muted mb-3">{{ TextStringsUtil.AddWidgetDescription }}</p>
 
       <div class="row row-cols-1 row-cols-sm-2 g-3 py-2">
         <div class="col" *ngFor="let w of widgetOptions">

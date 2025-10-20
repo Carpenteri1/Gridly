@@ -1,14 +1,11 @@
-import {
-  Component, Input, Output, EventEmitter,
-  ViewChild, ElementRef, OnChanges, SimpleChanges, AfterViewInit
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component, Input, Output, EventEmitter,ViewChild, ElementRef, OnChanges, SimpleChanges, AfterViewInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {TextStringsUtil} from "../../../Constants/text.strings.util";
 
 export type WidgetOption = {
   type: string;
   label: string;
   description: string;
-  /** Bootstrap Icons class, e.g. "bi bi-graph-up" */
   icon: string;
 };
 
@@ -21,8 +18,6 @@ export type WidgetOption = {
 })
 export class AddWidgetDialogComponent implements AfterViewInit, OnChanges {
   @Input() open = false;
-  @Input() title = 'Add Widget';
-  @Input() description = 'Choose a widget type to add to your dashboard';
   @Input() widgetOptions: WidgetOption[] = [];
 
   @Output() openChange = new EventEmitter<boolean>();
@@ -60,4 +55,6 @@ export class AddWidgetDialogComponent implements AfterViewInit, OnChanges {
     this.select.emit(type);
     this.close();
   }
+
+  protected readonly TextStringsUtil = TextStringsUtil;
 }
