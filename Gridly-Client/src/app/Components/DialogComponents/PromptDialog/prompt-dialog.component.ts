@@ -1,15 +1,15 @@
 import {Component, OnInit} from "@angular/core";
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
-import {ModalViewModel} from "../../../../Models/ModalView.Model";
+import {ModalViewModel} from "../../../Models/ModalView.Model";
 import {FormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
-import {ModalService} from "../../../../Services/modal.service";
+import {DialogService} from "../../../Services/dialog.service";
 import {MatHeaderRow} from "@angular/material/table";
-import {ComponentService} from "../../../../Services/component.service";
-import {MapComponentData} from "../../../../Utils/componentModal.factory";
+import {ComponentService} from "../../../Services/component.service";
+import {MapComponentData} from "../../../Utils/componentDialog.factory";
 
 @Component({
-  templateUrl: './modal.prompt.html',
+  templateUrl: './prompt-dialog.component.html',
   standalone: true,
   imports:
     [MatDialogClose,
@@ -20,9 +20,9 @@ import {MapComponentData} from "../../../../Utils/componentModal.factory";
       MatButton,
       MatHeaderRow]
 })
-export class ModalPrompt implements OnInit{
+export class PromptDialogComponent implements OnInit{
   protected modalModel!: ModalViewModel;
-  constructor(protected modalService: ModalService,protected componentService: ComponentService) {}
+  constructor(protected modalService: DialogService, protected componentService: ComponentService) {}
 
   ngOnInit(): void {
     this.componentService.Component = MapComponentData(this.modalModel.component)

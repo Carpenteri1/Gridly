@@ -14,24 +14,26 @@
     <div class="navbar-collapse collapse justify-content-end" [class.show]="showMenu" id="mainNavbar" animate.enter="enter-animation">
       <ul class="navbar-nav align-items-lg-center gap-2 ms-lg-3"  >
         @if(componentService.InEditMode){
-          <ng-container>
-            <li class="nav-item">
-              <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"
-                      (click)="addWidget()">
-                <i class="bi bi-plus-lg"></i>
-                <span>{{TextStringsUtil.MenuAddWidgetButtonTitle}}</span>
-              </button>
-            </li>
+          <li class="nav-item">
+            <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1" (click)="open = true">
+              <i class="bi bi-plus-lg me-1"></i>
+              <span>{{TextStringsUtil.MenuAddWidgetButtonTitle}}</span>
+            </button>
 
-            <!-- TODO might add later
-            <li class="nav-item">
-              <button class="btn btn-primary btn-sm d-flex align-items-center gap-1"
-                      (click)="onSave()">
-                <i class="bi bi-save"></i>
-                <span>Save</span>
-              </button>
-            </li>-->
-          </ng-container>
+            <app-add-widget-dialog
+              [(open)]="open"
+              [widgetOptions]="widgetOptions"
+              (select)="handleSelect($event)">
+            </app-add-widget-dialog>
+          </li>
+        <!-- TODO might add later
+           <li class="nav-item">
+             <button class="btn btn-primary btn-sm d-flex align-items-center gap-1"
+                     (click)="onSave()">
+               <i class="bi bi-save"></i>
+               <span>Save</span>
+             </button>
+           </li>-->
         }
 
         <li class="nav-item">

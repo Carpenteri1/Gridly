@@ -1,6 +1,6 @@
 import {ModalViewModel} from "../Models/ModalView.Model";
 import {ModalFormType} from "../Types/modalForm.types.enum";
-import {MapComponentData} from "./componentModal.factory";
+import {MapComponentData} from "./componentDialog.factory";
 
 export function SetModalComponentFormData(override: Partial<ModalViewModel> = {}) : ModalViewModel{
   return {
