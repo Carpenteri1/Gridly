@@ -35,28 +35,6 @@ public class ComponentHandler(
         if (component == null || component.ComponentSettings == null)
             return Results.StatusCode(500);
         
-        if (handlerHelper.IconDataHasValue(command.IconData) && 
-             string.IsNullOrEmpty(command.IconUrl))
-        { 
-            component.IconData = await iconRepository.GetByFullName(command.IconData);
-            var connectionModel = new IconConnectedDtoModel { ComponentId = component.Id };
-             if (component.IconData != null)
-             {
-                 var connectedDtoModels = await iconConnectedRepository.GetManyById(null, component.IconData.Id);
-                 if (connectedDtoModels.Any(x => x.IconId == component.IconData.Id))
-                 {
-                     connectionModel.IconId = component.IconData.Id;
-                     return await iconConnectedRepository.Insert(connectionModel) != null ? 
-                         Results.Ok() : Results.StatusCode(500);
-                 }
-             }
-             
-             component.IconData = await iconRepository.Insert(command.IconData);
-             if (component.IconData != null) connectionModel.IconId = component.IconData.Id;
-             if(handlerHelper.UploadIcon(component) && 
-                await iconConnectedRepository.Insert(connectionModel) == null)
-                 return Results.StatusCode(500);
-        }
         return Results.Ok();
     }
     

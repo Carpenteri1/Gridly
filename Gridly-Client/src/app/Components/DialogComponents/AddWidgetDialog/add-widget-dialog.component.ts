@@ -1,13 +1,7 @@
 import {Component, Input, Output, EventEmitter,ViewChild, ElementRef, OnChanges, SimpleChanges, AfterViewInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TextStringsUtil} from "../../../Constants/text.strings.util";
-
-export type WidgetOption = {
-  type: string;
-  label: string;
-  description: string;
-  icon: string;
-};
+import {WidgetOptionsModal} from "../../../Models/WidgetOptionsModal";
 
 @Component({
   selector: 'app-add-widget-dialog',
@@ -18,7 +12,7 @@ export type WidgetOption = {
 })
 export class AddWidgetDialogComponent implements AfterViewInit, OnChanges {
   @Input() open = false;
-  @Input() widgetOptions: WidgetOption[] = [];
+  @Input() widgetOptions: WidgetOptionsModal[] = [];
 
   @Output() openChange = new EventEmitter<boolean>();
   @Output() select = new EventEmitter<string>();

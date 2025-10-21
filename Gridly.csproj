@@ -35,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-      <None Include="wwwroot" />
       <UpToDateCheckInput Remove="Views\Main\Index.cshtml" />
   </ItemGroup>
 

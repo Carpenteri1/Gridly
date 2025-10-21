@@ -11,7 +11,6 @@ import {PromptDialogComponent} from "../Components/DialogComponents/PromptDialog
 import {ComponentType} from "@angular/cdk/portal";
 import {Subject} from "rxjs";
 import {ComponentModel} from "../Models/Component.Model";
-import {ComponentEndPointType} from "../Types/endPoint.type.enum";
 
 @Injectable({providedIn: 'root'})
 export class DialogService{
@@ -27,7 +26,6 @@ export class DialogService{
   }
 
   async Submit(modalType: ModalViewModel)  {
-    console.log(modalType.type);
     switch (modalType.type) {
       case ModalFormType.Add:
          await this.componentService.AddNewComponent(modalType);
@@ -51,7 +49,7 @@ export class DialogService{
   private NotifyComponentToResetFileInput(): void {
     this.resetFile$.next();
   }
-
+/* TDOO might re-enable later
   public async CanSubmit(viewModel: ModalViewModel): Promise<boolean> {
       switch (viewModel.type) {
         case ModalFormType.Add:
@@ -68,7 +66,7 @@ export class DialogService{
         default:
           return this.canSubmit;
       }
-  }
+  }*/
 
   private NoEmptyInputFields(component: ComponentModel): boolean{
     return this.componentService.CheckComponentData(component) &&
