@@ -21,25 +21,21 @@ export class HeaderComponent implements OnInit {
     protected modalService: DialogService,
     protected componentService: ComponentService) {
   }
-  open = false;
-  //TODO widget options
+  protected open = false;
+  protected widgetOptions = [
+    { type: ModalFormType.Add, label: 'Add empty widget', description: '', icon: 'bi bi-window-plus' },
+  ]
+  /* TODO variants later maybe
+
   widgetOptions = [
     { type: 'chart', label: 'Chart', description: 'Visualize trends', icon: 'bi bi-graph-up' },
     { type: 'table', label: 'Table', description: 'Tabular data', icon: 'bi bi-table' },
     { type: 'kpi',   label: 'KPI',   description: 'Single metric',   icon: 'bi bi-speedometer2' },
     { type: 'note',  label: 'Note',  description: 'Plain text note', icon: 'bi bi-sticky' }
-  ];
+  ];*/
 
-  handleSelect(t: string) {
-    /* TODO
-        add logic or use addWidget */
-
-    /*if(this.componentService.InEditMode){
-      this.modalService.GetModalType(SetModalComponentFormData({type: this.FormType.Add}))
-    }
-    if(!this.componentService.InEditMode){
-      this.modalService.Cancel();
-    }*/
+  protected handleSelect(t: string) {
+    this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Add}));
   }
 
   async ngOnInit() {
@@ -53,6 +49,4 @@ export class HeaderComponent implements OnInit {
 
   protected readonly TextStringsUtil = TextStringsUtil;
   protected readonly FormType = ModalFormType;
-
-  protected readonly SetModalComponentFormData = SetModalComponentFormData;
 }

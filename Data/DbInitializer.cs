@@ -19,9 +19,9 @@ public class DbInitializer
                 CREATE TABLE IF NOT EXISTS Component(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 IndexPosition INTEGER NOT NULL,
-                Name TEXT NOT NULL,
-                URL TEXT NOT NULL,
-                IconUrl TEXT NOT NULL);
+                Name TEXT,
+                URL TEXT,
+                IconUrl TEXT);
 
                 CREATE TABLE IF NOT EXISTS IconsConnected(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,17 +32,17 @@ public class DbInitializer
 
                 CREATE TABLE IF NOT EXISTS Icon(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                Name TEXT NOT NULL,
-                Type TEXT NOT NULL,
-                Base64Data TEXT NOT NULL);
+                Name TEXT,
+                Type TEXT,
+                Base64Data TEXT);
 
                 CREATE TABLE IF NOT EXISTS ComponentSettings(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 ComponentId INTEGER NOT NULL,
                 Width INT NOT NULL,
                 Height INT NOT NULL,
-                TitleHidden INTEGER NOT NULL,
-                ImageHidden INTEGER NOT NULL,
+                TitleHidden INTEGER,
+                ImageHidden INTEGER,
                 FOREIGN KEY(ComponentId) REFERENCES Component(Id));",
             commandTimeout:150);
     }

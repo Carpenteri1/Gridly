@@ -123,19 +123,18 @@ export class ComponentService{
 
   async AddNewComponent(modalType: ModalViewModel) {
     let index = -1;
-    if(this.Component !== undefined && this.Components.length > 0 && modalType.component !== undefined){
+    /*if(this.Component !== undefined && this.Components.length > 0 && modalType.component !== undefined){
       index = this.componentEndpointService.GetIndex(modalType.component.id);
       modalType.component = MapComponentData.Override({id: Math.max(...this.components.map(x => x.id)) + 1}, modalType.component);
     }
     else if(this.components !== undefined){
       modalType.component = MapComponentData.Override({id:1},modalType.component);
-    }
+    }*/
 
-    if(index === -1 &&
-      modalType.component?.name !== "" &&
-      modalType.component?.url !== "")
+    if(index === -1)
       {
-        if(modalType.component.iconData != null &&
+        await this.CallEndpoint(ComponentEndPointType.Add, modalType);
+       /* if(modalType.component.iconData != null &&
           modalType.component.iconData !== undefined){
           if(modalType.component.iconData?.base64Data !== "" &&
             modalType.component.iconData?.name !== "" &&
@@ -145,7 +144,7 @@ export class ComponentService{
         }
         if(modalType.component.iconUrl !== ""){
           await this.CallEndpoint(ComponentEndPointType.Add, modalType);
-        }
+        }*/
       }
       else{
           await this.AddNewComponent(modalType);
