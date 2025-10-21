@@ -1,6 +1,5 @@
 .aw-card {
   min-width: min(92vw, 600px);
-  /*color: var(--bs-body-color, #212529);*/
   border-radius: .75rem;
   border: 1px solid rgba(0,0,0,.1);
   box-shadow: 0 1rem 3rem rgba(0,0,0,.175);
@@ -15,7 +14,6 @@
 
 .option-btn:hover {
   border-color: var(--bs-primary);
-  /*background-color: rgba(var(--bs-primary-rgb, 13,110,253), .05);*/
 }
 .option-icon { font-size: 2rem; color: var(--bs-primary); }
 
