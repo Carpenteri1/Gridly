@@ -8,10 +8,4 @@
     <img *ngIf="componentService.IconDataSet(componentService.Component)" [src]="IconFilePath(componentService.Component)" class="p-3 icon-size item-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
     <p [hidden]="componentService.Component.componentSettings?.titleHidden" class="text-center" >{{componentService.Component.name}}</p>
   </a>
-  <div class="d-flex justify-content-end position-absolute bottom-0 end-0 p-2">
-      <span [hidden]="!componentService.InResizeMode"  class="item-resize-button"
-            (pointerdown)="componentService.ResizeModeActive">
-          <i class="bi bi-arrows-angle-expand"  [id]="componentService.Component.id"></i>
-      </span>
-  </div>
 }

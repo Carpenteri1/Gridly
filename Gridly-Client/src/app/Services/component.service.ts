@@ -25,6 +25,12 @@ export class ComponentService{
   }
 
   get Components(): ComponentModel[] {
+    this.components = [
+      MapComponentData.Override({id: 1 ,name:"Title ett", iconUrl: "https://t4.ftcdn.net/jpg/16/18/52/61/360_F_1618526128_Kpdol855uNe6O7j4JFgMa4J9q9zBJLZb.jpg"}),
+      MapComponentData.Override({id: 2 ,name:"Title två", iconUrl: ""}),
+      MapComponentData.Override({id: 3 ,name:"Title tre", iconUrl: ""}),
+      MapComponentData.Override({id: 4 ,name:"Title fyra", iconUrl: ""}),
+      MapComponentData.Override({id: 5, name:"Title fem", iconUrl: ""})];
     return this.components;
   }
 
@@ -99,8 +105,8 @@ export class ComponentService{
 
   ToggleEditMode(): void {
     this.editMode = !this.editMode;
-    this.resizeModeActive = false;
-    this.dragMode = false;
+    //this.resizeModeActive = true;
+    this.dragMode = true;
   }
 
   ToggleResizeMode(): void {
@@ -122,33 +128,19 @@ export class ComponentService{
   }
 
   async AddNewComponent(modalType: ModalViewModel) {
-    let index = -1;
-    /*if(this.Component !== undefined && this.Components.length > 0 && modalType.component !== undefined){
+    let index = this.Component !== undefined && this.Components.length > 0 ? this.Components.length  : -1;
+
+    if(index != -1){
       index = this.componentEndpointService.GetIndex(modalType.component.id);
       modalType.component = MapComponentData.Override({id: Math.max(...this.components.map(x => x.id)) + 1}, modalType.component);
     }
-    else if(this.components !== undefined){
-      modalType.component = MapComponentData.Override({id:1},modalType.component);
-    }*/
-
     if(index === -1)
-      {
-        await this.CallEndpoint(ComponentEndPointType.Add, modalType);
-       /* if(modalType.component.iconData != null &&
-          modalType.component.iconData !== undefined){
-          if(modalType.component.iconData?.base64Data !== "" &&
-            modalType.component.iconData?.name !== "" &&
-            modalType.component.iconData?.type !== ""){
-            await this.CallEndpoint(ComponentEndPointType.Add, modalType);
-          }
-        }
-        if(modalType.component.iconUrl !== ""){
-          await this.CallEndpoint(ComponentEndPointType.Add, modalType);
-        }*/
-      }
-      else{
-          await this.AddNewComponent(modalType);
-      }
+    {
+      await this.CallEndpoint(ComponentEndPointType.Add, modalType);
+    }
+    else{
+      await this.AddNewComponent(modalType);
+    }
   }
 
   async EditComponentData(modalViewModel: ModalViewModel) {
