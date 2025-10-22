@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg container py-2">
     <div class="d-flex align-items-center me-3" animate.enter="enter-animation">
       <div class="logo-box me-2">
-        <i class="bi bi-grid text-white fs-5"></i>
+        <i class="bi bi-columns text-white fs-5"></i>
       </div>
       <h1 class="h4 fw-bold gradient-text m-0">{{TextStringsUtil.ClientTitle}}</h1>
     </div>
@@ -19,21 +19,19 @@
               <i class="bi bi-plus-lg me-1"></i>
               <span>{{TextStringsUtil.MenuAddWidgetButtonTitle}}</span>
             </button>
-
             <app-add-widget-dialog
               [(open)]="open"
               [widgetOptions]="widgetOptions"
               (select)="handleSelect($event)">
             </app-add-widget-dialog>
           </li>
-        <!-- TODO might add later
            <li class="nav-item">
              <button class="btn btn-primary btn-sm d-flex align-items-center gap-1"
-                     (click)="onSave()">
+                     (click)="componentService.EditComponentsData(componentService.Components)">
                <i class="bi bi-save"></i>
                <span>Save</span>
              </button>
-           </li>-->
+           </li>
         }
 
         <li class="nav-item">
