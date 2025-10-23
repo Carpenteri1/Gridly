@@ -16,7 +16,9 @@ public class DbCommandRunner
     public async Task<bool> Execute<T>(string query,IEnumerable<T> parameters)
     {
         _connection.Open();
-        _rowsEffected = await _connection.ExecuteAsync(query, parameters);
+        using var tx = _connection.BeginTransaction();
+        _rowsEffected = await _connection.ExecuteAsync(query, parameters, transaction: tx);
+        tx.Commit();
         _connection.Close();
         return _rowsEffected > 0;
     }

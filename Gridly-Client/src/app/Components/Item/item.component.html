@@ -7,5 +7,8 @@
     <img *ngIf="componentService.IconUrlSet(componentService.Component)" [src]="componentService.Component.iconUrl" class="p-3 icon-size item-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
     <img *ngIf="componentService.IconDataSet(componentService.Component)" [src]="IconFilePath(componentService.Component)" class="p-3 icon-size item-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
     <p [hidden]="componentService.Component.componentSettings?.titleHidden" class="text-center" >{{componentService.Component.name}}</p>
+   <!--TODO fix for test data
+    <p class="text-center">The ID {{CurrentComponentId}}</p>
+    -->
   </a>
 }
