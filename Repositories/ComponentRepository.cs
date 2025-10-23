@@ -28,11 +28,10 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
 
     public async Task<bool> BatchEdit(IEnumerable<ComponentModel>? components)
     {
-        var ctx = await Get();
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.UpdateComponentQuery);
-        builder.Where(QueryStrings.WhereComponentForeignKeyEqualsComponentSettingsForeignKeyWithAlias);
-        return await _dbCommandRunner.Execute(template.RawSql, ctx.Except(components));
+        builder.Where(QueryStrings.WhereIdForeignKeyEqualId);
+        return await _dbCommandRunner.Execute(template.RawSql, components);
     }
 
     public async Task<IEnumerable<ComponentModel>?> Get()
@@ -43,7 +42,7 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
         builder.LeftJoin(QueryStrings.JoinComponentSettingsQuery);
         builder.LeftJoin(QueryStrings.JoinIconsConnectedDataQuery);
         builder.LeftJoin(QueryStrings.JoinIconDataQuery);
-        builder.OrderBy(QueryStrings.OrderByIndexWithAlias);
+        builder.OrderBy(QueryStrings.IndexPositionWithAlias);
         var Dtos = 
             await _dbCommandRunner.SelectMany<ComponentDtoModel>(template.RawSql, template.Parameters);
         return Factories.ComponentFactory.CreateMany(Dtos);

@@ -224,7 +224,8 @@ export class ComponentService{
       default:
         break;
     }
-    this.ResetAllComponentData();
+    //TODO might remove
+    // this.ResetAllComponentData();
     this.ResetModes();
     window.location.reload();
   }

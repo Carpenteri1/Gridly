@@ -38,7 +38,7 @@ public class QueryStrings
         i.Type AS Type,
         i.Name AS IconName,
         i.Base64Data AS Base64Data
-        FROM Component co /**leftjoin**//**where**/";
+        FROM Component co /**leftjoin**//**where**//**orderby**/";
     
     public const string SelectIconQuery = @"
     SELECT i.Id, i.Name, i.Type, i.Base64Data 
@@ -62,7 +62,8 @@ public class QueryStrings
         Width = @Width,
         Height = @Height,
         TitleHidden = @TitleHidden, 
-        ImageHidden = @ImageHidden /**where**/";
+        ImageHidden = @ImageHidden 
+        /**where**/";
     
     public const string DeleteFromComponentSettingsQuery = "DELETE FROM ComponentSettings /**where**/";
     public const string DeleteFromComponentQuery = "DELETE FROM Component /**where**/";
@@ -76,6 +77,7 @@ public class QueryStrings
     public const string WhereComponentIdForeignKeyEqualId = "ComponentId = @ComponentId";
     public const string WhereComponentIdPrimaryKeyEqualComponentObjectId = "Id = @Id";
     public const string WhereIconIdForeignKeyEqualId = "Id = @Id";
+    public const string WhereIdForeignKeyEqualId = "Id = @Id";
     
     public const string WhereIconConnectedIconIdForeignKeyEqualIdWithAlias = "ic.IconId = @IconId";
     public const string WhereIconConnectedComponentIdForeignKeyEqualIdWithAlias = "ic.ComponentId = @ComponentId";
@@ -84,5 +86,5 @@ public class QueryStrings
     public const string WhereIconNameEqualsNameWithAlias = "i.Name = @Name";
     public const string WhereIconTypeEqualsTypeWithAlias = "i.Type = @Type";
     
-    public const string OrderByIndexWithAlias = "ORDER BY co.IndexPosition;";
+    public const string IndexPositionWithAlias = "co.IndexPosition;";
 }
