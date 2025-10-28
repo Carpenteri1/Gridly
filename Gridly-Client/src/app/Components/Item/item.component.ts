@@ -31,4 +31,5 @@ export class ItemComponent {
   protected readonly TextStringsUtil = TextStringsUtil;
   protected readonly SetModalComponentFormData = SetModalComponentFormData;
   protected readonly FormType = ModalFormType;
+  protected readonly Component = Component;
 }

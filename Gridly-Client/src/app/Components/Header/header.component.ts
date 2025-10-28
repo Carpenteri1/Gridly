@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
   }
   protected open = false;
   protected widgetOptions = [
-    { type: ModalFormType.Add, label: 'Add empty widget', description: '', icon: 'bi bi-window-plus' },
+    { type: ModalFormType.Add, label: 'Add empty widget', description: '', icon: 'bi bi-box' },
   ]
   /* TODO variants later maybe
 

@@ -69,6 +69,13 @@ export class ComponentService{
       !item.componentSettings?.imageHidden;
   }
 
+  get ComponentHasBaseData(){
+    return this.component.name !== undefined && "" &&
+      this.component.url !== undefined && "" &&
+      this.component.iconData !== undefined ||
+      this.component.iconUrl !== undefined && "";
+  }
+
   get IconIsUrlHidden(){
     return this.iconUrlHidden;
   }
