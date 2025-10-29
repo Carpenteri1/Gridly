@@ -4,9 +4,8 @@
   color:white;
   width: 38px;
   height: 32px;
-  z-index: 1;
+  position:relative;
   background-color: rgba(255, 255, 255, 0.1);
-  justify-content: left;
 }
 
 .icon-size{
