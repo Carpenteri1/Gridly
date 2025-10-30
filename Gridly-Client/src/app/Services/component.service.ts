@@ -85,7 +85,7 @@ export class ComponentService{
   }
 
   get ResizeModeActive(): boolean {
-    return this.resizeModeActive;
+    return this.editMode;
   }
 
   CheckComponentData(item:ComponentModel): boolean {
@@ -114,20 +114,8 @@ export class ComponentService{
 
   ToggleEditMode(): void {
     this.editMode = !this.editMode;
-    //this.resizeModeActive = true;
-    this.dragMode = true;
-  }
-
-  ToggleResizeMode(): void {
     this.resizeModeActive = !this.resizeModeActive;
-    this.dragMode = false;
-    this.editMode = false;
-  }
-
-  ToggleDragMode(): void {
     this.dragMode = !this.dragMode;
-    this.editMode = false;
-    this.resizeModeActive = false;
   }
 
   ResetModes(){

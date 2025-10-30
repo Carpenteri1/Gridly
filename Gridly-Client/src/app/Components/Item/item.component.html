@@ -1,25 +1,35 @@
 @if (CurrentComponentId === id){
   <!-- edit buttons -->
-  <div class="container">
-    <div class="row">
-      <div class="col">
-
-      </div>
-      <div class="col">
-        <button
-          [hidden]="!componentService.InEditMode"
-          (click)="modalService.GetModalType(SetModalComponentFormData({ type: FormType.Edit, component: componentService.GetComponentById(id) }))"
-          class="btn edit-button start-0" style="margin-left: 0.5em;">
-          <i class="bi bi-arrows-move"></i>
-        </button>
-      </div>
-      <div class="col d-flex justify-content-end">
-        <button
-          (click)="modalService.GetModalType(SetModalComponentFormData({ type: FormType.Delete, component: componentService.GetComponentById(id) }))"
-          class="btn edit-button">
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
+  <div class="row h-10">
+    <div class="col">
+    </div>
+    <div class="col">
+      <button
+        [hidden]="!componentService.InEditMode"
+        (click)="!componentService.InDragMode"
+        class="btn edit-button start-100" style="margin-left: 0.5em;">
+        <i class="bi bi-arrows-move"></i>
+      </button>
+    </div>
+    <div class="col">
+      <button
+        [hidden]="!componentService.InEditMode"
+        (click)="open = true"
+        class="btn edit-button start-50" style="margin-left: 0.5em;">
+        <i class="bi bi-pencil-square"></i>
+      </button>
+      <edit-widget-dialog
+        [(open)]="open"
+        (select)="handleSelect($event)">
+      </edit-widget-dialog>
+    </div>
+    <div class="col d-flex justify-content-end">
+      <button
+        [hidden]="!componentService.InEditMode"
+        (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Delete, component: componentService.GetComponentById(id) }))"
+        class="btn edit-button">
+        <i class="bi bi-x-lg"></i>
+      </button>
     </div>
   </div>
 <!-- Item content -->
@@ -38,4 +48,12 @@
         <p class="small-text">{{TextStringsUtil.EmptyWidgetDescription}}</p>
       </a>
     }
+  <div class="d-flex justify-content-end">
+    <button
+      [hidden]="!componentService.InEditMode"
+      (click)="componentService.ResizeModeActive"
+      class="btn edit-button start-0" style="margin-left: 0.5em;">
+      <i class="bi bi-arrows-angle-expand"></i>
+    </button>
+  </div>
 }

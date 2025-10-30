@@ -14,8 +14,6 @@ import {ComponentModel} from "../Models/Component.Model";
 
 @Injectable({providedIn: 'root'})
 export class DialogService{
-  canSubmit:boolean = false;
-  componentAsString:string = "";
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
   public resetFile$ = new Subject<void>();
 
@@ -74,15 +72,7 @@ export class DialogService{
   }
 
   Cancel(): void {
-    if (this.componentService.InEditMode)
-      this.componentService.ToggleEditMode();
-    if (this.componentService.InResizeMode)
-      this.componentService.ToggleResizeMode();
-    if (this.componentService.InDragMode)
-      this.componentService.ToggleDragMode();
-
     this.ResetFormData();
-    window.location.reload();
   }
 
   OnFileUpload(event:any): IconModel | undefined{
