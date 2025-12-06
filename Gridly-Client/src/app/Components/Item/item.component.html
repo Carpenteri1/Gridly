@@ -2,26 +2,17 @@
   <!-- edit buttons -->
   <div class="row h-10">
     <div class="col">
+      <button type="button" (click)="componentService.ToggleOpenEditWidget()" class="btn edit-button start-50" style="margin-left: 0.5em;">
+        <i class="bi bi-pencil-square" ></i>
+      </button>
     </div>
     <div class="col">
       <button
         [hidden]="!componentService.InEditMode"
         (click)="!componentService.InDragMode"
-        class="btn edit-button start-100" style="margin-left: 0.5em;">
+        class="btn edit-button" style="margin-left: 0.5em;">
         <i class="bi bi-arrows-move"></i>
       </button>
-    </div>
-    <div class="col">
-      <button
-        [hidden]="!componentService.InEditMode"
-        (click)="open = true"
-        class="btn edit-button start-50" style="margin-left: 0.5em;">
-        <i class="bi bi-pencil-square"></i>
-      </button>
-      <edit-widget-dialog
-        [(open)]="open"
-        (select)="handleSelect($event)">
-      </edit-widget-dialog>
     </div>
     <div class="col d-flex justify-content-end">
       <button
@@ -49,11 +40,11 @@
       </a>
     }
   <div class="d-flex justify-content-end">
-    <button
+    <!--<button
       [hidden]="!componentService.InEditMode"
       (click)="componentService.ResizeModeActive"
       class="btn edit-button start-0" style="margin-left: 0.5em;">
       <i class="bi bi-arrows-angle-expand"></i>
-    </button>
+    </button>-->
   </div>
 }

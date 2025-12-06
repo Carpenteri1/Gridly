@@ -15,6 +15,8 @@ export class ComponentService{
   private resizeModeActive!: boolean;
   private iconHidden!: boolean;
   private iconUrlHidden!: boolean;
+  private openEdit!: boolean;
+  private widgetId!: number;
   private components!: ComponentModel[];
   private component!: ComponentModel;
 
@@ -114,8 +116,20 @@ export class ComponentService{
 
   ToggleEditMode(): void {
     this.editMode = !this.editMode;
-    this.resizeModeActive = !this.resizeModeActive;
-    this.dragMode = !this.dragMode;
+    //this.resizeModeActive = !this.resizeModeActive;
+    this.dragMode = this.editMode;
+  }
+
+  ToggleOpenEditWidget(): void {
+    this.openEdit = !this.openEdit;
+  }
+
+  get WidgetId(){
+    return this.widgetId;
+  }
+
+  set WidgetId(id:number) {
+    this.widgetId = id;
   }
 
   ResetModes(){

@@ -10,7 +10,7 @@ import {TextStringsUtil} from "../../../Constants/text.strings.util";
   styleUrls: ['./edit-widget-dialog.component.css']
 })
 export class EditWidgetDialogComponent implements AfterViewInit, OnChanges {
-  @Input() open = false;
+  @Input() id: number = 0;
 
   @Output() openChange = new EventEmitter<boolean>();
   @Output() select = new EventEmitter<string>();
@@ -30,7 +30,9 @@ export class EditWidgetDialogComponent implements AfterViewInit, OnChanges {
 
   private syncDialog() {
     const dlg = this.dlgRef.nativeElement;
-    if (this.open && !dlg.open) dlg.showModal();
+    if (this.open && !dlg.open){
+      dlg.showModal();
+    }
     if (!this.open && dlg.open) dlg.close();
   }
 

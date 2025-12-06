@@ -4,16 +4,16 @@ import {ComponentService} from "../../Services/component.service";
 import {ModalViewModel} from "../../Models/ModalView.Model";
 import {ComponentEndPointType} from "../../Types/endPoint.type.enum";
 import {ItemComponent} from "../Item/item.component";
-import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
-import {ResizableDirective} from "../../Directives/resizable.directive";
+import {CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
 import {ComponentModel} from "../../Models/Component.Model";
+import {EditWidgetDialogComponent} from "../DialogComponents/EditWidgetDialog/edit-widget-dialog.component";
 
 @Component({
   selector: 'grid-component',
-  imports: [CommonModule, ItemComponent, CdkDropList, CdkDrag, ResizableDirective],
+  imports: [CommonModule, ItemComponent, CdkDropList, EditWidgetDialogComponent],
   templateUrl: './grid.component.html',
   standalone: true,
-  styleUrls: ['./grid.component.css']
+  styleUrls: ['./grid.component.css'],
 })
 
 export class GridComponent implements AfterViewChecked, OnInit{
