@@ -9,34 +9,33 @@ import {TextStringsUtil} from "../../../Constants/text.strings.util";
   templateUrl: './edit-widget-dialog.component.html',
   styleUrls: ['./edit-widget-dialog.component.css']
 })
-export class EditWidgetDialogComponent implements AfterViewInit
-///  , OnChanges
+export class EditWidgetDialogComponent implements AfterViewInit, OnChanges
 {
   @Input() id: number = 0;
+  @Input() open = false;
 
   @Output() openChange = new EventEmitter<boolean>();
   @Output() select = new EventEmitter<string>();
+  protected readonly TextStringsUtil = TextStringsUtil;
 
   @ViewChild('dlg', { static: true }) dlgRef!: ElementRef<HTMLDialogElement>;
 
   ngAfterViewInit(): void {
-    //this.syncDialog();
+    this.syncDialog();
     this.dlgRef.nativeElement.addEventListener('close', () => this.openChange.emit(false));
     this.dlgRef.nativeElement.addEventListener('cancel', () => this.openChange.emit(false)); // Esc
   }
-/*
+
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.dlgRef) return;
-    //if (changes['open']) this.syncDialog();
-  }*/
+    if (changes['open']) this.syncDialog();
+  }
 
-  /*private syncDialog() {
+  private syncDialog() {
     const dlg = this.dlgRef.nativeElement;
-    if (this.open && !dlg.open){
-      dlg.showModal();
-    }
+    if (this.open && !dlg.open) dlg.showModal();
     if (!this.open && dlg.open) dlg.close();
-  }*/
+  }
 
   close() {
     this.dlgRef.nativeElement.close();
@@ -44,7 +43,12 @@ export class EditWidgetDialogComponent implements AfterViewInit
   }
 
   onBackdropClick(ev: MouseEvent) {
+    debugger;
     if (ev.target === this.dlgRef.nativeElement) this.close();
   }
-  protected readonly TextStringsUtil = TextStringsUtil;
+
+  onSelect(type: string) {
+    this.select.emit(type);
+    this.close();
+  }
 }

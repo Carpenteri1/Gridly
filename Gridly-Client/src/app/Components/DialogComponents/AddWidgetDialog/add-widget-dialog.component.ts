@@ -16,6 +16,7 @@ export class AddWidgetDialogComponent implements AfterViewInit, OnChanges {
 
   @Output() openChange = new EventEmitter<boolean>();
   @Output() select = new EventEmitter<string>();
+  protected readonly TextStringsUtil = TextStringsUtil;
 
   @ViewChild('dlg', { static: true }) dlgRef!: ElementRef<HTMLDialogElement>;
 
@@ -50,5 +51,4 @@ export class AddWidgetDialogComponent implements AfterViewInit, OnChanges {
     this.close();
   }
 
-  protected readonly TextStringsUtil = TextStringsUtil;
 }

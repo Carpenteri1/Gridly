@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable, signal} from "@angular/core";
 import {ComponentModel} from "../Models/Component.Model";
 import {MapComponentData} from "../Utils/componentDialog.factory";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
@@ -27,14 +27,12 @@ export class ComponentService{
   }
 
   get Components(): ComponentModel[] {
-    /*
-    Test data
     this.components = [
       MapComponentData.Override({id: 1 ,name:"Title ett", iconUrl: "https://t4.ftcdn.net/jpg/16/18/52/61/360_F_1618526128_Kpdol855uNe6O7j4JFgMa4J9q9zBJLZb.jpg"}),
       MapComponentData.Override({id: 2 ,name:"Title två", iconUrl: ""}),
       MapComponentData.Override({id: 3 ,name:"Title tre", iconUrl: ""}),
       MapComponentData.Override({id: 4 ,name:"Title fyra", iconUrl: ""}),
-      MapComponentData.Override({id: 5, name:"Title fem", iconUrl: ""})];*/
+      MapComponentData.Override({id: 5, name:"Title fem", iconUrl: ""})];
     return this.components;
   }
 
@@ -130,6 +128,10 @@ export class ComponentService{
 
   set WidgetId(id:number) {
     this.widgetId = id;
+  }
+
+  get OpenEdit(){
+    return this.openEdit;
   }
 
   ResetModes(){
@@ -245,5 +247,11 @@ export class ComponentService{
 
   public ResetAllComponentData(): void{
     this.Component = MapComponentData(undefined);
+  }
+
+  showMenu = signal(false);
+  toggleMenu(): void {
+    debugger;
+    this.showMenu.update((showMenu) => showMenu);
   }
 }

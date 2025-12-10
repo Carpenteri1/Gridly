@@ -7,6 +7,9 @@ import {ItemComponent} from "../Item/item.component";
 import {CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
 import {ComponentModel} from "../../Models/Component.Model";
 import {EditWidgetDialogComponent} from "../DialogComponents/EditWidgetDialog/edit-widget-dialog.component";
+import { DialogService } from '../../Services/dialog.service';
+import { SetModalComponentFormData } from '../../Utils/viewModel.factory';
+import {ModalFormType} from "../../Types/modalForm.types.enum";
 
 @Component({
   selector: 'grid-component',
@@ -18,11 +21,19 @@ import {EditWidgetDialogComponent} from "../DialogComponents/EditWidgetDialog/ed
 
 export class GridComponent implements AfterViewChecked, OnInit{
   protected modalModel!: ModalViewModel;
+  protected readonly FormType = ModalFormType;
 
   constructor(
     protected componentService: ComponentService,
+    protected modalService: DialogService,
     private render: Renderer2,
     private el: ElementRef) {
+  }
+  
+  protected open = false;
+  protected handleSelect(t: string) {
+    debugger;
+    this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Edit}));
   }
 
   async ngOnInit(): Promise<void> {

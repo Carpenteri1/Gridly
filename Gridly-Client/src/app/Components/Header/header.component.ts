@@ -16,15 +16,20 @@ import {AddWidgetDialogComponent} from "../DialogComponents/AddWidgetDialog/add-
   imports: [CommonModule, AddWidgetDialogComponent]
 })
 export class HeaderComponent implements OnInit {
+
+  protected readonly TextStringsUtil = TextStringsUtil;
+  protected readonly FormType = ModalFormType;
+  protected open = false;
+  protected widgetOptions = [
+    { type: ModalFormType.Add, label: 'Add empty widget', description: '', icon: 'bi bi-box' },
+  ]
+  
   constructor(
     protected versionService: VersionService,
     protected modalService: DialogService,
     protected componentService: ComponentService) {
   }
-  protected open = false;
-  protected widgetOptions = [
-    { type: ModalFormType.Add, label: 'Add empty widget', description: '', icon: 'bi bi-box' },
-  ]
+
   /* TODO variants later maybe
 
   widgetOptions = [
@@ -46,7 +51,4 @@ export class HeaderComponent implements OnInit {
   toggleMenu(): void {
     this.showMenu.update((showMenu) => showMenu);
   }
-
-  protected readonly TextStringsUtil = TextStringsUtil;
-  protected readonly FormType = ModalFormType;
 }

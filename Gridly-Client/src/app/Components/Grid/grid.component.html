@@ -1,15 +1,16 @@
 <div class="grid-layout" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
-  <div *ngFor="let component of componentService.Components" [id]="component.id" class="shadow-sm grid-item-style" >
+  <div *ngFor="let component of componentService.Components" makeResizable 
+       [id]="component.id"
+       class="shadow-sm grid-item-style" >
     <item-component [id]="component.id"></item-component>
-    <edit-widget-dialog
-      [id]="componentService.WidgetId">
+    <edit-widget-dialog 
+    [(open)]="open"
+    (select)="handleSelect($event)">
     </edit-widget-dialog>
   </div>
 </div>
+<!-- 
+        [canResize]="componentService.InResizeMode"
 
-
-<!-- TODO was placed in ngfor div but blocked button clicks, find fix
-  makeResizable
-       [canResize]="componentService.InResizeMode"
-       cdkDrag [cdkDragDisabled]="!componentService.InDragMode"
- -->
+cdkDrag [cdkDragDisabled]="!componentService.InDragMode" 
+-->
