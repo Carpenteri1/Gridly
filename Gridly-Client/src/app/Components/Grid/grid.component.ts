@@ -4,7 +4,8 @@ import {ComponentService} from "../../Services/component.service";
 import {ModalViewModel} from "../../Models/ModalView.Model";
 import {ComponentEndPointType} from "../../Types/endPoint.type.enum";
 import {ItemComponent} from "../Item/item.component";
-import {CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
+import {ResizableDirective} from "../../Directives/resizable.directive";
 import {ComponentModel} from "../../Models/Component.Model";
 import {EditWidgetDialogComponent} from "../DialogComponents/EditWidgetDialog/edit-widget-dialog.component";
 import { DialogService } from '../../Services/dialog.service';
@@ -13,7 +14,7 @@ import {ModalFormType} from "../../Types/modalForm.types.enum";
 
 @Component({
   selector: 'grid-component',
-  imports: [CommonModule, ItemComponent, CdkDropList, EditWidgetDialogComponent],
+  imports: [CommonModule, ItemComponent, CdkDropList, CdkDrag, EditWidgetDialogComponent],
   templateUrl: './grid.component.html',
   standalone: true,
   styleUrls: ['./grid.component.css'],

@@ -1,7 +1,10 @@
 <div class="grid-layout" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
-  <div *ngFor="let component of componentService.Components" makeResizable
-       [id]="component.id"
-       class="shadow-sm grid-item-style" >
+  <div 
+  *ngFor="let component of componentService.Components" 
+  cdkDrag 
+  [cdkDragDisabled]="!false"  
+  [id]="component.id"
+  class="shadow-sm grid-item-style" >
         <edit-widget-dialog
           [id]="component.id"
           [open]="componentService.OpenEdit"
@@ -12,7 +15,5 @@
   </div>
 </div>
 <!-- 
-        [canResize]="componentService.InResizeMode"
-
-cdkDrag [cdkDragDisabled]="!componentService.InDragMode" 
+[canResize]="componentService.InResizeMode"
 -->

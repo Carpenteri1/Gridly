@@ -118,6 +118,11 @@ export class ComponentService{
     this.dragMode = this.editMode;
   }
 
+  ToggleDragMode(): boolean {
+    this.dragMode = !this.dragMode;
+    return this.dragMode;
+  }
+
   ToggleOpenEditWidget(): void {
     this.openEdit = !this.openEdit;
   }
