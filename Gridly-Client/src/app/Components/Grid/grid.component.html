@@ -1,12 +1,14 @@
 <div class="grid-layout" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
-  <div *ngFor="let component of componentService.Components" makeResizable 
+  <div *ngFor="let component of componentService.Components" makeResizable
        [id]="component.id"
        class="shadow-sm grid-item-style" >
+        <edit-widget-dialog
+          [id]="component.id"
+          [open]="componentService.OpenEdit"
+          (openChange)="componentService.ToggleOpenEditWidget()"
+          (select)="handleSelect($event)">
+        </edit-widget-dialog>
     <item-component [id]="component.id"></item-component>
-    <edit-widget-dialog 
-    [(open)]="open"
-    (select)="handleSelect($event)">
-    </edit-widget-dialog>
   </div>
 </div>
 <!-- 

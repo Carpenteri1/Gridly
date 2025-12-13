@@ -30,9 +30,7 @@ export class GridComponent implements AfterViewChecked, OnInit{
     private el: ElementRef) {
   }
   
-  protected open = false;
   protected handleSelect(t: string) {
-    debugger;
     this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Edit}));
   }
 

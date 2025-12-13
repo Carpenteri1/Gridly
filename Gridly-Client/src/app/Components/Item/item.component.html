@@ -2,7 +2,10 @@
   <!-- edit buttons -->
   <div class="row h-10">
     <div class="col">
-      <button type="button" (click)="componentService.ToggleOpenEditWidget()" class="btn edit-button start-50" style="margin-left: 0.5em;">
+      <button type="button" 
+      [hidden]="!componentService.InEditMode"
+      (click)="componentService.ToggleOpenEditWidget()" 
+      class="btn edit-button start-50" style="margin-left: 0.5em;">
         <i class="bi bi-pencil-square" ></i>
       </button>
     </div>
