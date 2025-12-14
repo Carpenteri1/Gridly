@@ -11,37 +11,26 @@ import {ModalViewModel} from "../Models/ModalView.Model";
 @Injectable({providedIn: 'root'})
 export class ComponentService{
   private editMode!: boolean;
-  private dragMode!: boolean;
-  private resizeModeActive!: boolean;
   private iconHidden!: boolean;
   private iconUrlHidden!: boolean;
   private openEdit!: boolean;
-  private widgetId!: number;
   private components!: ComponentModel[];
   private component!: ComponentModel;
 
   constructor(public componentEndpointService: ComponentEndpointService) {
     this.editMode = false;
-    this.dragMode = false;
-    this.resizeModeActive = false;
   }
 
   get Components(): ComponentModel[] {
-    this.components = [
-      MapComponentData.Override({id: 1 ,name:"Title ett", iconUrl: "https://t4.ftcdn.net/jpg/16/18/52/61/360_F_1618526128_Kpdol855uNe6O7j4JFgMa4J9q9zBJLZb.jpg"}),
-      MapComponentData.Override({id: 2 ,name:"Title två", iconUrl: ""}),
-      MapComponentData.Override({id: 3 ,name:"Title tre", iconUrl: ""}),
-      MapComponentData.Override({id: 4 ,name:"Title fyra", iconUrl: ""}),
-      MapComponentData.Override({id: 5, name:"Title fem", iconUrl: ""})];
     return this.components;
+  }
+
+  get Component() {
+    return this.component;
   }
 
   set Components(components: ComponentModel[]) {
     this.components = components;
-  }
-
-  GetComponentById(id: number): ComponentModel | undefined{
-    return this.Components.find((i: ComponentModel) => i.id === id);
   }
 
   set Component(item: ComponentModel) {
@@ -50,8 +39,8 @@ export class ComponentService{
     }
   }
 
-  get Component() {
-    return this.component;
+  GetComponentById(id: number): ComponentModel | undefined{
+    return this.Components.find((i: ComponentModel) => i.id === id);
   }
 
   IconDataSet(item :ComponentModel) {
@@ -100,39 +89,12 @@ export class ComponentService{
     return this.editMode;
   }
 
-  get InResizeMode(): boolean {
-    return this.resizeModeActive;
-  }
-
-  get InDragMode(): boolean {
-    return this.dragMode;
-  }
-
-  get InAnyMode(): boolean{
-    return this.InEditMode || this.InResizeMode || this.InResizeMode;
-  }
-
   ToggleEditMode(): void {
     this.editMode = !this.editMode;
-    //this.resizeModeActive = !this.resizeModeActive;
-    this.dragMode = this.editMode;
-  }
-
-  ToggleDragMode(): boolean {
-    this.dragMode = !this.dragMode;
-    return this.dragMode;
   }
 
   ToggleOpenEditWidget(): void {
     this.openEdit = !this.openEdit;
-  }
-
-  get WidgetId(){
-    return this.widgetId;
-  }
-
-  set WidgetId(id:number) {
-    this.widgetId = id;
   }
 
   get OpenEdit(){
@@ -141,8 +103,6 @@ export class ComponentService{
 
   ResetModes(){
     this.editMode = false;
-    this.resizeModeActive = false;
-    this.dragMode = false;
   }
 
   async AddNewComponent(modalType: ModalViewModel) {
@@ -256,7 +216,6 @@ export class ComponentService{
 
   showMenu = signal(false);
   toggleMenu(): void {
-    debugger;
     this.showMenu.update((showMenu) => showMenu);
   }
 }

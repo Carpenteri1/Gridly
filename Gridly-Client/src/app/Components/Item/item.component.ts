@@ -1,18 +1,19 @@
 import {Component, Input} from "@angular/core";
+import {CommonModule} from "@angular/common";
 import {ComponentService} from "../../Services/component.service";
 import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
 import {DialogService} from "../../Services/dialog.service";
 import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {ComponentModel} from "../../Models/Component.Model";
 import {ModalFormType} from "../../Types/modalForm.types.enum";
-import {NgIf} from "@angular/common";
+import {CdkDragHandle} from "@angular/cdk/drag-drop";
 
 @Component({
   selector: 'item-component',
   templateUrl: './item.component.html',
   styleUrl: './item.component.css',
   standalone: true,
-  imports: [NgIf]
+  imports: [CommonModule, CdkDragHandle],
 })
 
 export class ItemComponent {
