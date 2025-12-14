@@ -71,9 +71,9 @@ gulp.task(
   gulp.series(
     "ng-build",
     "ng-move-build",
-    "ng-clean-build"
-    //"dotnet-restore",
-    //"dotnet-run"
+    "ng-clean-build",
+    "dotnet-restore",
+    "dotnet-run"
   )
 );
 
