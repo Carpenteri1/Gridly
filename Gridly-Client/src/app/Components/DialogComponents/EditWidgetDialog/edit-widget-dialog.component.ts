@@ -1,18 +1,18 @@
 import {Component, Input, Output, EventEmitter,ViewChild, ElementRef, OnChanges, SimpleChanges, AfterViewInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TextStringsUtil} from "../../../Constants/text.strings.util";
-import {WidgetOptionsModal} from "../../../Models/WidgetOptionsModal";
 
 @Component({
-  selector: 'add-widget-dialog',
+  selector: 'edit-widget-dialog',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './add-widget-dialog.component.html',
-  styleUrls: ['./add-widget-dialog.component.css']
+  templateUrl: './edit-widget-dialog.component.html',
+  styleUrls: ['./edit-widget-dialog.component.css']
 })
-export class AddWidgetDialogComponent implements AfterViewInit, OnChanges {
+export class EditWidgetDialogComponent implements AfterViewInit, OnChanges
+{
+  @Input() id: number = 0;
   @Input() open = false;
-  @Input() widgetOptions: WidgetOptionsModal[] = [];
 
   @Output() openChange = new EventEmitter<boolean>();
   @Output() select = new EventEmitter<string>();
@@ -43,6 +43,7 @@ export class AddWidgetDialogComponent implements AfterViewInit, OnChanges {
   }
 
   onBackdropClick(ev: MouseEvent) {
+    debugger;
     if (ev.target === this.dlgRef.nativeElement) this.close();
   }
 
@@ -50,5 +51,4 @@ export class AddWidgetDialogComponent implements AfterViewInit, OnChanges {
     this.select.emit(type);
     this.close();
   }
-
 }
