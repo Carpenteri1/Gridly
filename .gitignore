@@ -33,6 +33,9 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
+# Cursor
+.cursor/*
+
 # Miscellaneous
 Gridly-Client/.angular/cache
 .angular/cache

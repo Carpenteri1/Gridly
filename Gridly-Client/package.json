@@ -2,12 +2,12 @@
   "name": "gridly-client",
   "version": "v1.1.6-alpha",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "node-run": "node dist/gridly-client/server/server.mjs"
+    "node-run": "node dist/gridly-client/server/server.mjs",
+    "start": "gulp build-angular-net",
+    "start-angular": "gulp build-angular"
   },
   "private": true,
   "dependencies": {
