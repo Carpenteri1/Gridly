@@ -51,7 +51,7 @@ export class TextStringsUtil {
 
   static readonly ClientTitle = "Gridly";
 
-  static readonly AddWidgetDescription = "Choose widget type for your dashboard";
+  static readonly AddWidgetDescription = "Pick widget type for your dashboard";
   static readonly AddWidgetTitle = "Add Widget";
 
   static readonly EmptyWidgetTitle = "Empty Widget";
