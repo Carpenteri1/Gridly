@@ -1,18 +1,16 @@
 <div class="grid-layout" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
-  <div 
-  *ngFor="let component of componentService.Components" 
-  cdkDrag 
-  [cdkDragDisabled]="!false"  
-  [id]="component.id"
-  class="shadow-sm grid-item-style" >
-        <edit-widget-dialog
-          [id]="component.id"
-          [open]="componentService.OpenEdit"
-          (openChange)="componentService.ToggleOpenEditWidget()"
-          (select)="handleSelect($event)">
-        </edit-widget-dialog>
-    <item-component [id]="component.id"></item-component>
-  </div>
+  
+  @for (component of componentService.Components; track component.id) {
+    <div class="shadow-sm grid-item-style" cdkDrag>
+      <!--<edit-widget-dialog
+        [id]="component.id"
+        [open]="componentService.OpenEdit"
+        (openChange)="componentService.ToggleOpenEditWidget()"
+        (select)="handleSelect($event)">
+      </edit-widget-dialog>-->
+      <item-component [id]="component.id"></item-component>
+    </div>
+  }
 </div>
 <!-- 
 [canResize]="componentService.InResizeMode"

@@ -50,8 +50,8 @@ export class GridComponent implements AfterViewChecked, OnInit{
   }
 
   protected Drop(event: CdkDragDrop<any[]>): void {
-    if (!this.componentService.InDragMode) return;
-    moveItemInArray(this.componentService.Components, event.previousIndex, event.currentIndex);
+    if (!this.componentService.InEditMode) return;
+        moveItemInArray(this.componentService.Components, event.previousIndex, event.currentIndex);
   }
 
   protected SetLayout() {
