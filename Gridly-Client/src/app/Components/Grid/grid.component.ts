@@ -4,8 +4,8 @@ import { ComponentService } from "../../Services/component.service";
 import { ModalViewModel } from "../../Models/ModalView.Model";
 import { ItemComponent } from "../Item/item.component";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
-import { EditWidgetDialogComponent } from "../DialogComponents/EditWidgetDialog/edit-widget-dialog.component";
-import { DialogService } from '../../Services/dialog.service';
+import { EditWidgetModalComponent } from "../ModalComponents/EditWidgetModal/edit-widget-modal.component";
+import { ModalService } from '../../Services/modal.service';
 import { SetModalComponentFormData } from '../../Utils/viewModel.factory';
 import { ModalFormType } from "../../Types/modalForm.types.enum";
 import { ComponentEndPointType } from '../../Types/endPoint.type.enum';
@@ -13,7 +13,7 @@ import { ComponentModel } from '../../Models/Component.Model';
 
 @Component({
   selector: 'grid-component',
-  imports: [CommonModule, ItemComponent, CdkDropList, CdkDrag, EditWidgetDialogComponent],
+  imports: [CommonModule, CdkDropList, CdkDrag, EditWidgetModalComponent, ItemComponent],
   templateUrl: './grid.component.html',
   standalone: true,
   styleUrls: ['./grid.component.css'],
@@ -25,7 +25,7 @@ export class GridComponent implements AfterViewChecked, OnInit{
 
   constructor(
     protected componentService: ComponentService,
-    protected modalService: DialogService,
+    protected modalService: ModalService,
     private render: Renderer2,
     private el: ElementRef) {
   }

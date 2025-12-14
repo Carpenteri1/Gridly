@@ -2,18 +2,18 @@ import {Component, OnInit, signal} from "@angular/core";
 import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {CommonModule} from "@angular/common";
 import {VersionService} from "../../Services/version.services";
-import {DialogService} from "../../Services/dialog.service";
 import {ComponentService} from "../../Services/component.service";
 import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
 import {ModalFormType} from "../../Types/modalForm.types.enum";
-import {AddWidgetDialogComponent} from "../DialogComponents/AddWidgetDialog/add-widget-dialog.component";
+import {AddWidgetModalComponent} from "../ModalComponents/AddWidgetModal/add-widget-modal.component";
+import { ModalService } from "../../Services/modal.service";
 
 @Component({
   selector: 'header-component',
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   standalone: true,
-  imports: [CommonModule, AddWidgetDialogComponent]
+  imports: [CommonModule, AddWidgetModalComponent]
 })
 export class HeaderComponent implements OnInit {
 
@@ -26,7 +26,7 @@ export class HeaderComponent implements OnInit {
   
   constructor(
     protected versionService: VersionService,
-    protected modalService: DialogService,
+    protected modalService: ModalService,
     protected componentService: ComponentService) {
   }
 

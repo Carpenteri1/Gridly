@@ -1,19 +1,19 @@
 import { ElementRef, Injectable, ViewChild} from "@angular/core";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ModalFormType} from "../Types/modalForm.types.enum";
-import {AddWidgetDialogComponent} from "../Components/DialogComponents/AddWidgetDialog/add-widget-dialog.component";
+import {AddWidgetModalComponent} from "../Components/ModalComponents/AddWidgetModal/add-widget-modal.component";
 import {TextStringsUtil} from "../Constants/text.strings.util";
 import {ModalViewModel} from "../Models/ModalView.Model";
 import {ComponentService} from "./component.service";
 import {IconModel} from "../Models/Icon.Model";
 import {SetModalComponentFormData, SetModalPromptData} from "../Utils/viewModel.factory";
-import {PromptDialogComponent} from "../Components/DialogComponents/PromptDialog/prompt-dialog.component";
+import {PromptModalComponent} from "../Components/ModalComponents/PromptModal/prompt-modal.component";
 import {ComponentType} from "@angular/cdk/portal";
 import {Subject} from "rxjs";
 import {ComponentModel} from "../Models/Component.Model";
 
 @Injectable({providedIn: 'root'})
-export class DialogService{
+export class ModalService{
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
   public resetFile$ = new Subject<void>();
 
@@ -147,8 +147,8 @@ export class DialogService{
   private openModal(data: ModalViewModel): MatDialogRef<any> {
     const component: ComponentType<any> =
       (data.type === ModalFormType.Delete || data.type === ModalFormType.None)
-        ? PromptDialogComponent
-        : AddWidgetDialogComponent;
+        ? PromptModalComponent
+        : AddWidgetModalComponent;
 
     const ref = this.dialog.open(component, {
       width: '600px',

@@ -2,11 +2,11 @@ import {Component, Input} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {ComponentService} from "../../Services/component.service";
 import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
-import {DialogService} from "../../Services/dialog.service";
 import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {ComponentModel} from "../../Models/Component.Model";
 import {ModalFormType} from "../../Types/modalForm.types.enum";
 import {CdkDragHandle} from "@angular/cdk/drag-drop";
+import { ModalService } from "../../Services/modal.service";
 
 @Component({
   selector: 'item-component',
@@ -18,7 +18,7 @@ import {CdkDragHandle} from "@angular/cdk/drag-drop";
 
 export class ItemComponent {
   @Input() id!: number;
-  constructor(public componentService: ComponentService, public modalService: DialogService) {}
+  constructor(public componentService: ComponentService, public modalService: ModalService) {}
 
   protected IconFilePath(item: ComponentModel): string {
     return "Assets/Icons/" + item.iconData?.name + "." + item.iconData?.type;
