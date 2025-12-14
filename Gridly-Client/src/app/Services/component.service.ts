@@ -91,6 +91,8 @@ export class ComponentService{
 
   ToggleEditMode(): void {
     this.editMode = !this.editMode;
+    if(!this.editMode)
+      window.location.reload();
   }
 
   ToggleOpenEditWidget(): void {
@@ -99,10 +101,6 @@ export class ComponentService{
 
   get OpenEdit(){
     return this.openEdit;
-  }
-
-  ResetModes(){
-    this.editMode = false;
   }
 
   async AddNewComponent(modalType: ModalViewModel) {
@@ -200,20 +198,13 @@ export class ComponentService{
       default:
         break;
     }
-    //TODO might remove
-    // this.ResetAllComponentData();
-    this.ResetModes();
+
     window.location.reload();
   }
 
   async DeleteComponent(modalType: ModalViewModel) {
     await this.CallEndpoint(ComponentEndPointType.Delete, modalType);
-  }
-
-  public ResetAllComponentData(): void{
-    this.Component = MapComponentData(undefined);
-  }
-
+  } 
   showMenu = signal(false);
   toggleMenu(): void {
     this.showMenu.update((showMenu) => showMenu);

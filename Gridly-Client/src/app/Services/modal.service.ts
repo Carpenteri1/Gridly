@@ -162,7 +162,6 @@ export class ModalService{
   }
 
   private ResetFormData(): void{
-    this.componentService.ResetAllComponentData();
     this.ResetImageData();
   }
 

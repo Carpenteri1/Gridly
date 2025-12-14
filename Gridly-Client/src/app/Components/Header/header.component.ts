@@ -7,6 +7,7 @@ import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
 import {ModalFormType} from "../../Types/modalForm.types.enum";
 import {AddWidgetModalComponent} from "../ModalComponents/AddWidgetModal/add-widget-modal.component";
 import { ModalService } from "../../Services/modal.service";
+import { WidgetType } from "../../Types/widget.type.enum";
 
 @Component({
   selector: 'header-component',
@@ -20,8 +21,10 @@ export class HeaderComponent implements OnInit {
   protected readonly TextStringsUtil = TextStringsUtil;
   protected readonly FormType = ModalFormType;
   protected open = false;
+  
   protected widgetOptions = [
-    { type: ModalFormType.Add, label: 'Add empty widget', description: '', icon: 'bi bi-box' },
+    { type: WidgetType.Empty, label: 'Add empty widget', description: '', icon: 'bi bi-box' },
+    { type: WidgetType.Custom, label: 'Add custom widget', description: '', icon: 'bi bi-box-fill' },
   ]
   
   constructor(

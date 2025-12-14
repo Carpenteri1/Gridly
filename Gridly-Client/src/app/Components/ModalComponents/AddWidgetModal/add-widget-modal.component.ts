@@ -2,6 +2,7 @@ import {Component, Input, Output, EventEmitter,ViewChild, ElementRef, OnChanges,
 import {CommonModule} from '@angular/common';
 import {TextStringsUtil} from "../../../Constants/text.strings.util";
 import {WidgetOptionsModal} from "../../../Models/WidgetOptionsModal";
+import { WidgetType } from '../../../Types/widget.type.enum';
 
 @Component({
   selector: 'add-widget-modal',
@@ -15,7 +16,7 @@ export class AddWidgetModalComponent implements AfterViewInit, OnChanges {
   @Input() widgetOptions: WidgetOptionsModal[] = [];
 
   @Output() openChange = new EventEmitter<boolean>();
-  @Output() select = new EventEmitter<string>();
+  @Output() select = new EventEmitter<WidgetType>();
   protected readonly TextStringsUtil = TextStringsUtil;
 
   @ViewChild('dlg', { static: true }) dlgRef!: ElementRef<HTMLDialogElement>;
@@ -46,9 +47,19 @@ export class AddWidgetModalComponent implements AfterViewInit, OnChanges {
     if (ev.target === this.dlgRef.nativeElement) this.close();
   }
 
-  onSelect(type: string) {
-    this.select.emit(type);
-    this.close();
+  onSelect(type: WidgetType) {
+    switch(type){
+      case WidgetType.Custom:
+        this.select.emit(type);//TODO use this value 
+      break;
+    default:
+        this.select.emit(type);
+        this.close();
+      break;
+    }
   }
 
+  get SelectedType(): EventEmitter<WidgetType> {
+    return this.select;
+  }
 }
