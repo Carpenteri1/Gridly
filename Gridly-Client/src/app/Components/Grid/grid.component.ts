@@ -7,7 +7,9 @@ import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk
 import { ModalService } from '../../Services/modal.service';
 import { SetModalComponentFormData } from '../../Utils/viewModel.factory';
 import { ModalFormType } from "../../Types/modalForm.types.enum";
-import { MapComponentData } from '../../Utils/componentDialog.factory';
+//import { MapComponentData } from '../../Utils/componentDialog.factory';
+import { ComponentModel } from '../../Models/Component.Model';
+import { ComponentEndPointType } from '../../Types/endPoint.type.enum';
 
 @Component({
   selector: 'grid-component',
@@ -34,18 +36,18 @@ export class GridComponent implements AfterViewChecked, OnInit{
 
   async ngOnInit(): Promise<void> {
     //TODO in testing mode add empty components
-    /*
+    
     if(this.componentService.Components === undefined){
       this.componentService.Components = await this.componentService.CallEndpoint(ComponentEndPointType.Get) as ComponentModel[];
     }
-    */
-
+    
+/*
     this.componentService.Components = [
       MapComponentData.Override({id: 1 ,name:"Title ett", iconUrl: "https://t4.ftcdn.net/jpg/16/18/52/61/360_F_1618526128_Kpdol855uNe6O7j4JFgMa4J9q9zBJLZb.jpg"}),
       MapComponentData.Override({id: 2 ,name:"Title två", iconUrl: ""}),
       MapComponentData.Override({id: 3 ,name:"Title tre", iconUrl: ""}),
       MapComponentData.Override({id: 4 ,name:"Title fyra", iconUrl: ""}),
-      MapComponentData.Override({id: 5, name:"Title fem", iconUrl: ""})];
+      MapComponentData.Override({id: 5, name:"Title fem", iconUrl: ""})];*/
   }
 
   ngAfterViewChecked() {
