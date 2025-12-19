@@ -7,13 +7,14 @@ import {ComponentModel} from "../../Models/Component.Model";
 import {ModalFormType} from "../../Types/modalForm.types.enum";
 import {CdkDragHandle} from "@angular/cdk/drag-drop";
 import { ModalService } from "../../Services/modal.service";
+import { EditWidgetModalComponent } from "../ModalComponents/EditWidgetModal/edit-widget-modal.component";
 
 @Component({
   selector: 'item-component',
   templateUrl: './item.component.html',
   styleUrl: './item.component.css',
   standalone: true,
-  imports: [CommonModule, CdkDragHandle],
+  imports: [CommonModule, CdkDragHandle, EditWidgetModalComponent],
 })
 
 export class ItemComponent {

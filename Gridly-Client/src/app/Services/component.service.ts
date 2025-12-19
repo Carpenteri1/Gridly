@@ -14,6 +14,7 @@ export class ComponentService{
   private iconHidden!: boolean;
   private iconUrlHidden!: boolean;
   private openEdit!: boolean;
+  private widgetId!:number;
   private components!: ComponentModel[];
   private component!: ComponentModel;
 
@@ -95,12 +96,21 @@ export class ComponentService{
       window.location.reload();
   }
 
-  ToggleOpenEditWidget(): void {
+  ToggleOpenEditWidget(id:number): void {
+    this.WidgetId = id;
     this.openEdit = !this.openEdit;
   }
 
   get OpenEdit(){
     return this.openEdit;
+  }
+
+  get WidgetId(){
+    return this.widgetId;
+  }
+
+  set WidgetId(id: number){
+    this.widgetId = id;
   }
 
   async AddNewComponent(modalType: ModalViewModel) {

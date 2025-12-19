@@ -4,7 +4,7 @@
   {
       <div class="col">
         <button type="button" 
-        (click)="componentService.ToggleOpenEditWidget()" 
+        (click)="componentService.ToggleOpenEditWidget(CurrentComponentId)" 
         class="btn edit-button start-50" style="margin-left: 0.5em;">
           <i class="bi bi-pencil-square" ></i>
         </button>
@@ -43,7 +43,7 @@
   {
       <a class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2">
         <span><i class="bi bi-box"></i></span>
-        <p>{{componentService.Component.id}}</p>//TODO for testing, remove later
+        <p>{{componentService.Component.id}}</p>
         <h5 class="fw-bold">{{TextStringsUtil.EmptyWidgetTitle}}</h5>
         <p class="small-text">{{TextStringsUtil.EmptyWidgetDescription}}</p>
       </a>
@@ -56,4 +56,11 @@
       <i class="bi bi-arrows-angle-expand"></i>
     </button>-->
   </div>
+  <edit-widget-modal
+  [id]="CurrentComponentId"
+  [widgetId]="this.componentService.WidgetId"
+  [open]="componentService.OpenEdit"
+  (openChange)="componentService.OpenEdit"
+  (select)="handleSelect($event)">
+  </edit-widget-modal>
 }

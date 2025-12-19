@@ -2,12 +2,6 @@
   
   @for (component of componentService.Components; track component.id) {
     <div class="shadow-sm grid-item-style" cdkDrag>
-      <edit-widget-modal
-        [id]="component.id"
-        [open]="componentService.OpenEdit"
-        (openChange)="componentService.ToggleOpenEditWidget()"
-        (select)="handleSelect($event)">
-      </edit-widget-modal>
       <item-component [id]="component.id" ></item-component>
     </div>
   }

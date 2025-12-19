@@ -4,16 +4,14 @@ import { ComponentService } from "../../Services/component.service";
 import { ModalViewModel } from "../../Models/ModalView.Model";
 import { ItemComponent } from "../Item/item.component";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
-import { EditWidgetModalComponent } from "../ModalComponents/EditWidgetModal/edit-widget-modal.component";
 import { ModalService } from '../../Services/modal.service';
 import { SetModalComponentFormData } from '../../Utils/viewModel.factory';
 import { ModalFormType } from "../../Types/modalForm.types.enum";
-import { ComponentEndPointType } from '../../Types/endPoint.type.enum';
-import { ComponentModel } from '../../Models/Component.Model';
+import { MapComponentData } from '../../Utils/componentDialog.factory';
 
 @Component({
   selector: 'grid-component',
-  imports: [CommonModule, CdkDropList, CdkDrag, EditWidgetModalComponent, ItemComponent],
+  imports: [CommonModule, CdkDropList, CdkDrag, ItemComponent],
   templateUrl: './grid.component.html',
   standalone: true,
   styleUrls: ['./grid.component.css'],
@@ -36,16 +34,18 @@ export class GridComponent implements AfterViewChecked, OnInit{
 
   async ngOnInit(): Promise<void> {
     //TODO in testing mode add empty components
+    /*
     if(this.componentService.Components === undefined){
       this.componentService.Components = await this.componentService.CallEndpoint(ComponentEndPointType.Get) as ComponentModel[];
     }
-/*
+    */
+
     this.componentService.Components = [
       MapComponentData.Override({id: 1 ,name:"Title ett", iconUrl: "https://t4.ftcdn.net/jpg/16/18/52/61/360_F_1618526128_Kpdol855uNe6O7j4JFgMa4J9q9zBJLZb.jpg"}),
       MapComponentData.Override({id: 2 ,name:"Title två", iconUrl: ""}),
       MapComponentData.Override({id: 3 ,name:"Title tre", iconUrl: ""}),
       MapComponentData.Override({id: 4 ,name:"Title fyra", iconUrl: ""}),
-      MapComponentData.Override({id: 5, name:"Title fem", iconUrl: ""})];*/
+      MapComponentData.Override({id: 5, name:"Title fem", iconUrl: ""})];
   }
 
   ngAfterViewChecked() {
