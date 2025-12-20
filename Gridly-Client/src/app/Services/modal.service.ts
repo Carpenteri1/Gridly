@@ -16,12 +16,11 @@ import {ComponentModel} from "../Models/Component.Model";
 export class ModalService{
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
   public resetFile$ = new Subject<void>();
+  private open!: boolean;
+  private modalId!:number;
 
   constructor(private dialog: MatDialog, protected componentService: ComponentService) {}
 
-  GetModalType(modalType: ModalViewModel ){
-      this.BuildModalTypeData(modalType);
-  }
 
   async Submit(modalType: ModalViewModel)  {
     switch (modalType.type) {
@@ -101,6 +100,7 @@ export class ModalService{
     return undefined;
   }
 
+  //TODO miight remove
   private BuildModalTypeData(modalType: ModalViewModel): void {
     switch (modalType.type) {
       case ModalFormType.Add:
@@ -165,4 +165,24 @@ export class ModalService{
     this.ResetImageData();
   }
 
+  get ModalId(){
+    return this.modalId;
+  }
+
+  set ModalId(id: number){
+    this.modalId = id;
+  }
+
+  get ShowModal(){
+    return this.open;
+  }
+
+  set ShowModal(show: boolean){
+    this.open = show;
+  }
+
+  ToggleDeleteModal(modalId: number): void {
+    this.ModalId = modalId;
+    this.open = !this.open;
+  }
 }

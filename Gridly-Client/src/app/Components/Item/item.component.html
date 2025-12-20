@@ -18,7 +18,7 @@
       </div>
       <div class="col d-flex justify-content-end">
         <button
-          (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Delete, component: componentService.GetComponentById(id) }))"
+          (click)="modalService.ToggleDeleteModal(CurrentComponentId)"
           class="btn edit-button">
           <i class="bi bi-x-lg"></i>
         </button>
@@ -58,9 +58,16 @@
   </div>
   <edit-widget-modal
   [id]="CurrentComponentId"
-  [widgetId]="this.componentService.WidgetId"
+  [modalId]="this.componentService.ModalId"
   [open]="componentService.OpenEdit"
   (openChange)="componentService.OpenEdit"
   (select)="handleSelect($event)">
   </edit-widget-modal>
+  <prompt-modal
+  [id]="CurrentComponentId"
+  [modalId]="this.modalService.ModalId"
+  [open]="modalService.ShowModal"
+  (openChange)="modalService.ShowModal"
+  (select)="handleSelect($event)">
+  </prompt-modal>
 }

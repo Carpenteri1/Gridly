@@ -12,7 +12,7 @@ import { WidgetType } from '../../../Types/widget.type.enum';
 })
 export class EditWidgetModalComponent implements AfterViewInit, OnChanges
 {
-  @Input() widgetId: number = 0;
+  @Input() modalId: number = 0;
   @Input() id: number = 0;
   @Input() open = false;
 
@@ -29,7 +29,7 @@ export class EditWidgetModalComponent implements AfterViewInit, OnChanges
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.widgetId === this.id)
+    if(this.modalId === this.id)
     {
       if (!this.dlgRef) return;
       if (changes['open']) this.syncDialog();
@@ -37,11 +37,9 @@ export class EditWidgetModalComponent implements AfterViewInit, OnChanges
   }
 
   private syncDialog() {
-    if(this.widgetId){
       const dlg = this.dlgRef.nativeElement;
       if (this.open && !dlg.open) dlg.showModal();
       if (!this.open && dlg.open) dlg.close();
-    }
   }
 
   close() {
