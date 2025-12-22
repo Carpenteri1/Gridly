@@ -1,15 +1,67 @@
-<dialog #dlg class="ew-dialog" (click)="onBackdropClick($event)">
+<dialog #dlg class="ew-dialog" (click)="onBackdropClick($event)" aria-labelledby="ew-title">
   <div class="ew-card" (click)="$event.stopPropagation()">
     <header class="ew-header">
-      <h5 id="ew-title" class="m-0">edit mode</h5>
-      <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+      <h3 id="ew-title" class="m-0">Edit</h3>
+      <button type="button" class="btn" aria-label="Close" (click)="close()">
+        <i class="bi bi-x-lg"></i>
+      </button>
     </header>
-    <div class="aw-body">
-      <p class="text-muted mb-3"> Edit </p>
-      <div class="row row-cols-1 row-cols-sm-2 g-3 py-2">
-          <div class="col">
-          </div>
-      </div>
+
+    <div class="ew-body">
+      <form (ngSubmit)="onSave()">
+        <div class="mb-3">
+          <label for="name-input" class="form-label">Name</label>
+          <input 
+            type="text" 
+            id="name-input"
+            class="form-control" 
+            placeholder="Enter name"
+            name="name"
+            required>
+        </div>
+
+        <div class="mb-3">
+          <label for="url-input" class="form-label">Url</label>
+          <input 
+            type="text" 
+            id="url-input"
+            class="form-control" 
+            placeholder="Enter URL"
+            name="url"
+            required>
+        </div>
+
+        <div class="mb-3">
+          <label for="icon-select" class="form-label">Icon</label>
+          <select 
+            id="icon-select"
+            class="form-select" 
+            name="icon">
+            [(ngModel)]="this.modalModel.selectedDropDownValue" placeholder="Select option"
+            (selectionChange)="this.ResetImageInput()">         
+            <option [value]="1"> title one </option>
+            <option [value]="2"> title two</option>
+            <!--@for(icon of icons; track icon.id) {
+              <option [value]="icon.id">{{ icon.name }}</option>
+            }-->
+          </select>
+        </div>
+        <!--TODO  [hidden]="this.modalModel.selectedDropDownValue != 1"-->s
+        <div class="mb-3" >
+          <label> </label>
+            <input placeholder="Icon" type="file" id="formFile" #fileInput (change)="this.OnFileUpload($event)"/>  
+        </div>
+
+        <!--TODO  [hidden]="this.modalModel.selectedDropDownValue != 2"-->
+        <div class="mb-3">
+          <input />
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
     </div>
   </div>
 </dialog>

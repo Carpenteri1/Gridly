@@ -4,6 +4,7 @@
   border: 1px solid rgba(0,0,0,.1);
   box-shadow: 0 1rem 3rem rgba(0,0,0,.175);
   overflow: hidden;
+  color: white;
 }
 
 .ew-header {
@@ -35,6 +36,22 @@ dialog.ew-dialog::backdrop {
   backdrop-filter: blur(2px);
 }
 
-p, h5{
-  color:white !important;
+p, h5, label {
+  color: white !important;
+}
+
+.form-control, .form-select {
+  background-color: #2d2f31;
+  border-color: rgba(255,255,255,.1);
+  color: white;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: #2d2f31;
+  border-color: var(--bs-primary);
+  color: white;
+}
+
+.form-control::placeholder {
+  color: rgba(255,255,255,.5);
 }

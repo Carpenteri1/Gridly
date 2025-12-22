@@ -32,7 +32,7 @@ export class ItemComponent {
   }
 
   //TODO might remove
-  protected handleSelect(t: string) {
+  protected handleSelect(t: any) {
     this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Edit}));
   }
 
