@@ -47,17 +47,15 @@
         <p class="small-text">{{TextStringsUtil.EmptyWidgetDescription}}</p>
       </a>
   }
-  <div class="d-flex justify-content-end">
-    <button
-      [hidden]="!componentService.InEditMode"
-      makeResizable
-      [canResize]="componentService.InEditMode"
-      [targetId]="id"
-      type="button"
-      class="btn edit-button start-0" style="margin-left: 0.5em;">
-      <i class="bi bi-arrows-angle-expand"></i>
-    </button>
-  </div>
+  <button
+    [hidden]="!componentService.InEditMode"
+    makeResizable
+    [canResize]="componentService.InEditMode"
+    [targetId]="id"
+    type="button"
+    class="btn edit-button resize-button">
+    <i class="bi bi-arrows-angle-expand"></i>
+  </button>
   <edit-widget-modal 
     [open]="isEditModalOpen"
     [modalId]="id"

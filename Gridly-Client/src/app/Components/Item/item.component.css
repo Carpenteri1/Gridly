@@ -29,8 +29,14 @@
   margin:auto;
 }
 
-.item-resize-button{
-  align-self: center;
+.resize-button{
+  position: absolute !important;
+  bottom: 8px !important;
+  right: 8px !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: 10;
+  margin: 0 !important;
 }
 
 .bi-arrows-angle-expand{
