@@ -4,16 +4,15 @@ import { ComponentService } from "../../Services/component.service";
 import { ModalViewModel } from "../../Models/ModalView.Model";
 import { ItemComponent } from "../Item/item.component";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
-import { EditWidgetDialogComponent } from "../DialogComponents/EditWidgetDialog/edit-widget-dialog.component";
-import { DialogService } from '../../Services/dialog.service';
 import { SetModalComponentFormData } from '../../Utils/viewModel.factory';
 import { ModalFormType } from "../../Types/modalForm.types.enum";
-import { ComponentEndPointType } from '../../Types/endPoint.type.enum';
+import { MapComponentData } from '../../Utils/componentDialog.factory';
 import { ComponentModel } from '../../Models/Component.Model';
+import { ComponentEndPointType } from '../../Types/endPoint.type.enum';
 
 @Component({
   selector: 'grid-component',
-  imports: [CommonModule, ItemComponent, CdkDropList, CdkDrag, EditWidgetDialogComponent],
+  imports: [CommonModule, CdkDropList, CdkDrag, ItemComponent],
   templateUrl: './grid.component.html',
   standalone: true,
   styleUrls: ['./grid.component.css'],
@@ -25,27 +24,30 @@ export class GridComponent implements AfterViewChecked, OnInit{
 
   constructor(
     protected componentService: ComponentService,
-    protected modalService: DialogService,
     private render: Renderer2,
     private el: ElementRef) {
   }
-  
+  /*
   protected handleSelect(t: string) {
     this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Edit}));
-  }
+  }*/
 
   async ngOnInit(): Promise<void> {
     //TODO in testing mode add empty components
+    /*
     if(this.componentService.Components === undefined){
       this.componentService.Components = await this.componentService.CallEndpoint(ComponentEndPointType.Get) as ComponentModel[];
+    }*/
+    
+    // Fallback test data if API fails or returns empty
+    if(!this.componentService.Components || this.componentService.Components.length === 0){
+      this.componentService.Components = [
+        MapComponentData.Override({id: 1 ,name:"Title ett", iconUrl: "https://t4.ftcdn.net/jpg/16/18/52/61/360_F_1618526128_Kpdol855uNe6O7j4JFgMa4J9q9zBJLZb.jpg"}),
+        MapComponentData.Override({id: 2 ,name:"Title två", iconUrl: ""}),
+        MapComponentData.Override({id: 3 ,name:"Title tre", iconUrl: ""}),
+        MapComponentData.Override({id: 4 ,name:"Title fyra", iconUrl: ""}),
+        MapComponentData.Override({id: 5, name:"Title fem", iconUrl: ""})];
     }
-/*
-    this.componentService.Components = [
-      MapComponentData.Override({id: 1 ,name:"Title ett", iconUrl: "https://t4.ftcdn.net/jpg/16/18/52/61/360_F_1618526128_Kpdol855uNe6O7j4JFgMa4J9q9zBJLZb.jpg"}),
-      MapComponentData.Override({id: 2 ,name:"Title två", iconUrl: ""}),
-      MapComponentData.Override({id: 3 ,name:"Title tre", iconUrl: ""}),
-      MapComponentData.Override({id: 4 ,name:"Title fyra", iconUrl: ""}),
-      MapComponentData.Override({id: 5, name:"Title fem", iconUrl: ""})];*/
   }
 
   ngAfterViewChecked() {

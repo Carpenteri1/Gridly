@@ -2,31 +2,31 @@ import {Component, OnInit, signal} from "@angular/core";
 import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {CommonModule} from "@angular/common";
 import {VersionService} from "../../Services/version.services";
-import {DialogService} from "../../Services/dialog.service";
 import {ComponentService} from "../../Services/component.service";
-import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
 import {ModalFormType} from "../../Types/modalForm.types.enum";
-import {AddWidgetDialogComponent} from "../DialogComponents/AddWidgetDialog/add-widget-dialog.component";
+import {AddWidgetModalComponent} from "../ModalComponents/AddWidgetModal/add-widget-modal.component";
+import { WidgetType } from "../../Types/widget.type.enum";
 
 @Component({
   selector: 'header-component',
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   standalone: true,
-  imports: [CommonModule, AddWidgetDialogComponent]
+  imports: [CommonModule, AddWidgetModalComponent]
 })
 export class HeaderComponent implements OnInit {
 
   protected readonly TextStringsUtil = TextStringsUtil;
   protected readonly FormType = ModalFormType;
   protected open = false;
+  
   protected widgetOptions = [
-    { type: ModalFormType.Add, label: 'Add empty widget', description: '', icon: 'bi bi-box' },
+    { type: WidgetType.Empty, label: 'Add empty widget', description: '', icon: 'bi bi-box' },
+    { type: WidgetType.Custom, label: 'Add custom widget', description: '', icon: 'bi bi-box-fill' },
   ]
   
   constructor(
     protected versionService: VersionService,
-    protected modalService: DialogService,
     protected componentService: ComponentService) {
   }
 
@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit {
   ];*/
 
   protected handleSelect(t: string) {
-    this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Add}));
+    //this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Add}));
   }
 
   async ngOnInit() {

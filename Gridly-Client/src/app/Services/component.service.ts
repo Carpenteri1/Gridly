@@ -14,6 +14,7 @@ export class ComponentService{
   private iconHidden!: boolean;
   private iconUrlHidden!: boolean;
   private openEdit!: boolean;
+  private modalId!:number;
   private components!: ComponentModel[];
   private component!: ComponentModel;
 
@@ -91,18 +92,34 @@ export class ComponentService{
 
   ToggleEditMode(): void {
     this.editMode = !this.editMode;
+    if(!this.editMode)
+      window.location.reload();
   }
 
-  ToggleOpenEditWidget(): void {
+  ToggleOpenEditWidget(id:number): void {
+    this.ModalId = id;
     this.openEdit = !this.openEdit;
+  }
+
+  OpenEditWidget(id:number): void {
+    this.ModalId = id;
+    this.openEdit = true;
   }
 
   get OpenEdit(){
     return this.openEdit;
   }
 
-  ResetModes(){
-    this.editMode = false;
+  set OpenEdit(open: boolean){
+    this.openEdit = open;
+  }
+
+  get ModalId(){
+    return this.modalId;
+  }
+
+  set ModalId(id: number){
+    this.modalId = id;
   }
 
   async AddNewComponent(modalType: ModalViewModel) {
@@ -200,20 +217,13 @@ export class ComponentService{
       default:
         break;
     }
-    //TODO might remove
-    // this.ResetAllComponentData();
-    this.ResetModes();
+
     window.location.reload();
   }
 
   async DeleteComponent(modalType: ModalViewModel) {
     await this.CallEndpoint(ComponentEndPointType.Delete, modalType);
-  }
-
-  public ResetAllComponentData(): void{
-    this.Component = MapComponentData(undefined);
-  }
-
+  } 
   showMenu = signal(false);
   toggleMenu(): void {
     this.showMenu.update((showMenu) => showMenu);

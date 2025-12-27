@@ -1,41 +1,103 @@
-import {Component, Input} from "@angular/core";
-import {CommonModule} from "@angular/common";
-import {ComponentService} from "../../Services/component.service";
-import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
-import {DialogService} from "../../Services/dialog.service";
-import {TextStringsUtil} from "../../Constants/text.strings.util";
-import {ComponentModel} from "../../Models/Component.Model";
-import {ModalFormType} from "../../Types/modalForm.types.enum";
-import {CdkDragHandle} from "@angular/cdk/drag-drop";
+import { Component, Input, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ComponentService } from '../../Services/component.service';
+import { SetModalComponentFormData } from '../../Utils/viewModel.factory';
+import { TextStringsUtil } from '../../Constants/text.strings.util';
+import { ComponentModel } from '../../Models/Component.Model';
+import { ModalFormType } from '../../Types/modalForm.types.enum';
+import { CdkDragHandle } from '@angular/cdk/drag-drop';
+import { PromptModalComponent } from '../ModalComponents/PromptModal/prompt-modal.component';
+import { EditWidgetModalComponent } from '../ModalComponents/EditWidgetModal/edit-widget-modal.component';
+import { ModalBehaviorService } from '../../Services/modal-behavior.service';
 
 @Component({
   selector: 'item-component',
   templateUrl: './item.component.html',
   styleUrl: './item.component.css',
   standalone: true,
-  imports: [CommonModule, CdkDragHandle],
+  imports: [
+    CommonModule,
+    CdkDragHandle,
+    PromptModalComponent,
+    EditWidgetModalComponent,
+  ],
 })
-
 export class ItemComponent {
   @Input() id!: number;
-  constructor(public componentService: ComponentService, public modalService: DialogService) {}
+
+  @ViewChild(PromptModalComponent) promptModal!: PromptModalComponent;
+  @ViewChild(EditWidgetModalComponent) editModal!: EditWidgetModalComponent;
+
+  isEditModalOpen: boolean = false;
+  isDeleteModalOpen: boolean = false;
+
+  constructor(
+    public componentService: ComponentService,
+    private modalBehavior: ModalBehaviorService
+  ) {}
 
   protected IconFilePath(item: ComponentModel): string {
-    return "Assets/Icons/" + item.iconData?.name + "." + item.iconData?.type;
+    return 'Assets/Icons/' + item.iconData?.name + '.' + item.iconData?.type;
   }
 
-  get CurrentComponentId():number {
-    this.componentService.Component = this.componentService.GetComponentById(this.id)!;
-    return this.componentService.Component.id;
+  get CurrentComponent(): ComponentModel | undefined {
+    return this.componentService.GetComponentById(this.id);
   }
 
-  //TODO might remove
-  protected handleSelect(t: string) {
-    this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Edit}));
+  get CurrentComponentId(): number {
+    const component = this.componentService.GetComponentById(this.id);
+    if (component) {
+      this.componentService.Component = component;
+      return component.id;
+    }
+    return this.id;
+  }
+
+  hasBaseData(component: ComponentModel): boolean {
+    return (
+      component.name !== undefined &&
+      component.name !== '' &&
+      component.url !== undefined &&
+      component.url !== '' &&
+      (component.iconData !== undefined || component.iconUrl !== undefined)
+    );
+  }
+
+  protected handleSelect(t: any) {
+    this.modalBehavior.submit(
+      SetModalComponentFormData({ type: this.FormType.Edit })
+    );
+  }
+
+  handleEditModalChange(modalId: number): void {
+    if (modalId === this.id) {
+      this.isEditModalOpen = false;
+    }
+  }
+
+  handleDeleteModalChange(modalId: number): void {
+    if (modalId === this.id) {
+      this.isDeleteModalOpen = false;
+    }
+  }
+
+  protected handleSubmit() {
+    // Submit logic if needed
+  }
+
+  OpenEditModal(componentId: number): void {
+    if (componentId === this.id) {
+      this.isEditModalOpen = true;
+    }
+  }
+
+  OpenDeleteModal(componentId: number): void {
+    if (componentId === this.id) {
+      this.isDeleteModalOpen = true;
+    }
   }
 
   protected readonly TextStringsUtil = TextStringsUtil;
   protected readonly SetModalComponentFormData = SetModalComponentFormData;
   protected readonly FormType = ModalFormType;
-  protected readonly Component = Component;
 }

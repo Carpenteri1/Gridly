@@ -1,10 +1,9 @@
-@if (CurrentComponentId === id){
-  <div class="row h-10">
+<div class="row h-10">
   @if( componentService.InEditMode)
   {
       <div class="col">
         <button type="button" 
-        (click)="componentService.ToggleOpenEditWidget()" 
+        (click)="OpenEditModal(id)" 
         class="btn edit-button start-50" style="margin-left: 0.5em;">
           <i class="bi bi-pencil-square" ></i>
         </button>
@@ -18,7 +17,7 @@
       </div>
       <div class="col d-flex justify-content-end">
         <button
-          (click)="modalService.GetModalType(SetModalComponentFormData({type: FormType.Delete, component: componentService.GetComponentById(id) }))"
+        (click)="OpenDeleteModal(id)" 
           class="btn edit-button">
           <i class="bi bi-x-lg"></i>
         </button>
@@ -27,17 +26,23 @@
 </div>
 
 <!-- Item content -->
-  @if (componentService.ComponentHasBaseData){
-      <a [style]="componentService.InEditMode ? 'cursor:none;':'cursor:auto;'" [href]="componentService.InEditMode ? null : componentService.Component.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75" target="_blank">
-        <img *ngIf="componentService.IconUrlSet(componentService.Component)" [src]="componentService.Component.iconUrl" class="p-3 icon-size item-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
-        <img *ngIf="componentService.IconDataSet(componentService.Component)" [src]="IconFilePath(componentService.Component)" class="p-3 icon-size item-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
-        <p [hidden]="componentService.Component.componentSettings?.titleHidden" class="text-center" >{{componentService.Component.name}}</p>
+  @if (CurrentComponent && hasBaseData(CurrentComponent)){
+      <a [style]="componentService.InEditMode ? 'cursor:none;':'cursor:auto;'" [href]="componentService.InEditMode ? null : CurrentComponent.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75" target="_blank">
+        @if(componentService.IconUrlSet(CurrentComponent)){
+          <img [src]="CurrentComponent.iconUrl" class="p-3 icon-size item-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
+        }
+        @if(componentService.IconDataSet(CurrentComponent)){
+          <img [src]="IconFilePath(CurrentComponent)" class="p-3 icon-size item-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
+        }
+        <p>{{CurrentComponent.id}}</p>
+        <p [hidden]="CurrentComponent.componentSettings?.titleHidden" class="text-center" >{{CurrentComponent.name}}</p>
       </a>
   }
   @else
   {
       <a class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2">
         <span><i class="bi bi-box"></i></span>
+        <p>{{id}}</p>
         <h5 class="fw-bold">{{TextStringsUtil.EmptyWidgetTitle}}</h5>
         <p class="small-text">{{TextStringsUtil.EmptyWidgetDescription}}</p>
       </a>
@@ -50,4 +55,15 @@
       <i class="bi bi-arrows-angle-expand"></i>
     </button>-->
   </div>
-}
+  <edit-widget-modal 
+    [open]="isEditModalOpen"
+    [modalId]="id"
+    [id]="id"
+    (openChange)="handleEditModalChange($event)">
+  </edit-widget-modal>
+  <prompt-modal
+    [open]="isDeleteModalOpen"
+    [modalId]="id"
+    [id]="id"
+    (openChange)="handleDeleteModalChange($event)">
+  </prompt-modal>

@@ -1,6 +1,6 @@
-import {ModalFormType} from "../Types/modalForm.types.enum";
+import { WidgetType } from "../Types/widget.type.enum";
 export class WidgetOptionsModal {
-  type!: ModalFormType;
+  type!: WidgetType;
   label!: string;
   description!: string;
   icon!: string;
