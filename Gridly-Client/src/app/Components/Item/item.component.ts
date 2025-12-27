@@ -9,6 +9,7 @@ import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { PromptModalComponent } from '../ModalComponents/PromptModal/prompt-modal.component';
 import { EditWidgetModalComponent } from '../ModalComponents/EditWidgetModal/edit-widget-modal.component';
 import { ModalBehaviorService } from '../../Services/modal-behavior.service';
+import { ResizableDirective } from '../../Directives/resizable.directive';
 
 @Component({
   selector: 'item-component',
@@ -20,6 +21,7 @@ import { ModalBehaviorService } from '../../Services/modal-behavior.service';
     CdkDragHandle,
     PromptModalComponent,
     EditWidgetModalComponent,
+    ResizableDirective,
   ],
 })
 export class ItemComponent {

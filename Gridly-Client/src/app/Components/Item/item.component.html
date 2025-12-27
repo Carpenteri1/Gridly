@@ -48,12 +48,15 @@
       </a>
   }
   <div class="d-flex justify-content-end">
-    <!--<button
+    <button
       [hidden]="!componentService.InEditMode"
-      (click)="componentService.ResizeModeActive"
+      makeResizable
+      [canResize]="componentService.InEditMode"
+      [targetId]="id"
+      type="button"
       class="btn edit-button start-0" style="margin-left: 0.5em;">
       <i class="bi bi-arrows-angle-expand"></i>
-    </button>-->
+    </button>
   </div>
   <edit-widget-modal 
     [open]="isEditModalOpen"

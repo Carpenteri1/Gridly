@@ -64,10 +64,15 @@ export class GridComponent implements AfterViewChecked, OnInit{
   }
 
   protected SetLayout() {
+    if(!this.componentService.Components) return;
+    
     for (const item of this.componentService.Components) {
-      let el = document.getElementById(item.id.toString()) == null ? this.el.nativeElement : document.getElementById(item.id.toString());
-      this.render.setStyle(el, 'height', item.componentSettings?.height + 'px');
-      this.render.setStyle(el, 'flex', '0 0 ' + item.componentSettings?.width + 'px');
+      const el = document.getElementById(item.id.toString());
+      if(el) {
+        this.render.setStyle(el, 'height', item.componentSettings?.height + 'px');
+        this.render.setStyle(el, 'width', item.componentSettings?.width + 'px');
+        this.render.setStyle(el, 'flex', '0 0 ' + item.componentSettings?.width + 'px');
+      }
     }
   }
 }
