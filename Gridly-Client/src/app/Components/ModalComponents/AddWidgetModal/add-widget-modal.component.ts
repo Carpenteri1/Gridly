@@ -35,8 +35,7 @@ export class AddWidgetModalComponent
     super(modalBehavior);
   }
 
-  override ngAfterViewInit(): void {
-    super.ngAfterViewInit();
+  ngAfterViewInit(): void {
     if (this.modalDirective) {
       this.modalDirective.openChange.subscribe(() => {
         this.openChange.emit(false);

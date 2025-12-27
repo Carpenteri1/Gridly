@@ -34,17 +34,11 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
     }
   }
 
-  override ngAfterViewInit(): void {
-    super.ngAfterViewInit?.();
+  ngAfterViewInit(): void {
     if (this.modalDirective) {
       this.modalDirective.openChange.subscribe((modalId) => {
         this.openChange.emit(modalId);
       });
     }
-  }
-
-  onSave() {
-    // Component-specific save logic can be added here
-    this.close();
   }
 }
