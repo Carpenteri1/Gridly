@@ -31,22 +31,17 @@ export class ResizableDirective {
     event.preventDefault();
     event.stopPropagation();
     
-    // Get the component first
     const component = this.componentService.GetComponentById(this.targetId);
     if(!component) return;
     
     this.componentService.Component = component;
     
-    // Find the parent grid item element
-    // The button is inside item-component, which is inside grid-item-style
-    // Try multiple approaches to find the grid item
     this.gridItemElement = this.el.nativeElement.closest('.grid-item-style') as HTMLElement;
     
     if(!this.gridItemElement) {
-      // Fallback: traverse up the DOM tree
       let parent = this.el.nativeElement.parentElement;
       let depth = 0;
-      while(parent && depth < 10) { // Limit depth to prevent infinite loops
+      while(parent && depth < 10) {
         if(parent.classList && parent.classList.contains('grid-item-style')) {
           this.gridItemElement = parent as HTMLElement;
           break;
@@ -61,7 +56,6 @@ export class ResizableDirective {
       return;
     }
     
-    // Capture pointer to keep focus on button
     try {
       this.el.nativeElement.setPointerCapture(event.pointerId);
       this.pointerId = event.pointerId;
@@ -69,7 +63,6 @@ export class ResizableDirective {
       console.warn('Failed to capture pointer:', e);
     }
     
-    // Store initial state
     this.startX = event.clientX;
     this.startY = event.clientY;
     this.startWidth = component.componentSettings?.width ?? 250;
@@ -83,22 +76,17 @@ export class ResizableDirective {
   OnPointerMove(event: PointerEvent): void {
     if(!this.isResizing || !this.gridItemElement || !this.componentService.Component) return;
     
-    // Only process if this is our captured pointer (if we have one)
     if(this.pointerId !== null && event.pointerId !== this.pointerId) return;
     
-    // Calculate deltas from initial position
     const deltaX = event.clientX - this.startX;
     const deltaY = event.clientY - this.startY;
     
-    // Calculate new dimensions (right/down = bigger, left/up = smaller)
     const newWidth = Math.max(250, this.startWidth + deltaX);
     const newHeight = Math.max(250, this.startHeight + deltaY);
     
-    // Apply size constraints
     const adjustedWidth = this.AdjustComponentSize(newWidth);
     const adjustedHeight = this.AdjustComponentSize(newHeight);
     
-    // Update component model
     const updatedComponent = MapComponentData.Override(
       {
         componentSettings: {
@@ -110,7 +98,6 @@ export class ResizableDirective {
     
     this.componentService.Component = updatedComponent;
     
-    // Update component in the Components array to persist changes
     if(this.componentService.Components) {
       const componentIndex = this.componentService.Components.findIndex(c => c.id === this.targetId);
       if(componentIndex !== -1) {
@@ -118,7 +105,6 @@ export class ResizableDirective {
       }
     }
     
-    // Apply styles to grid item element (matching SetLayout pattern)
     this.renderer.setStyle(this.gridItemElement, 'height', adjustedHeight + 'px');
     this.renderer.setStyle(this.gridItemElement, 'width', adjustedWidth + 'px');
     this.renderer.setStyle(this.gridItemElement, 'flex', '0 0 ' + adjustedWidth + 'px');
@@ -132,7 +118,6 @@ export class ResizableDirective {
       try {
         this.el.nativeElement.releasePointerCapture(this.pointerId);
       } catch (e) {
-        // Ignore errors if pointer was already released
       }
       this.pointerId = null;
     }
@@ -147,7 +132,6 @@ export class ResizableDirective {
       try {
         this.el.nativeElement.releasePointerCapture(this.pointerId);
       } catch (e) {
-        // Ignore errors
       }
       this.pointerId = null;
     }
