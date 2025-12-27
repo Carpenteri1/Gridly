@@ -1,14 +1,14 @@
-<dialog #dlg class="ew-dialog" (click)="modalDirective.onBackdropClick($event)">
+<dialog modalWindow [open]="open" [modalId]="modalId" [id]="id" (openChange)="openChange.emit($event)" #dlg class="ew-dialog" (click)="onBackdropClick($event)" aria-labelledby="ew-title">
   <div class="ew-card" (click)="$event.stopPropagation()">
     <header class="ew-header">
-      <h3 id="ew-title" class="m-0">Edit {{modalDirective.modalId.toString()}}</h3>
-      <button type="button" class="btn" aria-label="Close" (click)="modalDirective.close()">
+      <h3 id="ew-title" class="m-0">Edit {{modalId}}</h3>
+      <button type="button" class="btn" aria-label="Close" (click)="close()">
         <i class="bi bi-x-lg"></i>
       </button>
     </header>
 
     <div class="ew-body">
-      <form (ngSubmit)="onSave()">
+      <form (ngSubmit)="save()">
         <div class="mb-3">
           <label for="name-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputNameTitle}}</label>
           <input 
@@ -49,7 +49,7 @@
         <!--TODO  [hidden]="this.modalModel.selectedDropDownValue != 1"-->s
         <div class="mb-3" >
           <label> </label>
-            <input placeholder="Icon" type="file" id="formFile" #fileInput (change)="modalBehavior.onFileUpload($event)"/>  
+            <input placeholder="Icon" type="file" id="formFile" #fileInput (change)="onFileUpload($event)"/>  
         </div>
 
         <!--TODO  [hidden]="this.modalModel.selectedDropDownValue != 2"-->
@@ -58,7 +58,7 @@
         </div>
 
         <div class="d-flex justify-content-end gap-2 mt-4">
-          <button type="button" class="btn btn-secondary" (click)="modalDirective.close()">{{TextStringsUtil.ModalEditComponentCancelBtnTitle}}</button>
+          <button type="button" class="btn btn-secondary" (click)="close()">{{TextStringsUtil.ModalEditComponentCancelBtnTitle}}</button>
           <button type="submit" class="btn btn-primary">{{TextStringsUtil.ModalEditComponentAcceptBtnTitle}}</button>
         </div>
       </form>

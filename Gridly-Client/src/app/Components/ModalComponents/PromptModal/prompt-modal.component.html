@@ -1,11 +1,11 @@
 <dialog modalWindow [open]="open" [modalId]="modalId" [id]="id" (openChange)="openChange.emit($event)" #dlg class="ew-dialog" (click)="onBackdropClick($event)" aria-labelledby="ew-title">
   <div class="ew-card" (click)="$event.stopPropagation()">
     <header class="ew-header">
-      <h5 id="ew-title" class="m-0">{{TextStringsUtil.ModalDeleteComponentTitle}}</h5>
+      <h5 id="ew-title" class="m-0">{{TextStringsUtil.ModalDeleteComponentTitle}} {{modalId}}</h5>
       <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
     </header>
     <div class="aw-body">
-      <p class="text-muted mb-3"> {{TextStringsUtil.ModalDeleteComponentBtnTitle}} </p>
+      <p class="text-muted mb-3"> {{TextStringsUtil.ModalDeleteComponentBtnTitle}}</p>
       <div class="row row-cols-1 row-cols-sm-2 g-3 py-2">
           <div class="col">
 

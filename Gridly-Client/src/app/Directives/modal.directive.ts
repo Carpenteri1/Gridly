@@ -15,6 +15,7 @@ import {
   exportAs: 'modalWindow',
 })
 export class ModalDirective implements AfterViewInit, OnChanges {
+
   @Input() modalId: number = 0;
   @Input() id: number = 0;
   @Input() open: boolean = false;
@@ -50,7 +51,11 @@ export class ModalDirective implements AfterViewInit, OnChanges {
 
   close(): void {
     this.el.nativeElement.close();
-      this.openChange.emit(this.modalId);
+    this.openChange.emit(this.modalId);
+  }
+
+  save() {
+    this.close();
   }
 
   onBackdropClick(ev: MouseEvent): void {
