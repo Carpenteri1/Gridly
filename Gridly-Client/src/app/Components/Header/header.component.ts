@@ -3,10 +3,8 @@ import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {CommonModule} from "@angular/common";
 import {VersionService} from "../../Services/version.services";
 import {ComponentService} from "../../Services/component.service";
-import {SetModalComponentFormData} from "../../Utils/viewModel.factory";
 import {ModalFormType} from "../../Types/modalForm.types.enum";
 import {AddWidgetModalComponent} from "../ModalComponents/AddWidgetModal/add-widget-modal.component";
-import { ModalService } from "../../Services/modal.service";
 import { WidgetType } from "../../Types/widget.type.enum";
 
 @Component({
@@ -29,7 +27,6 @@ export class HeaderComponent implements OnInit {
   
   constructor(
     protected versionService: VersionService,
-    protected modalService: ModalService,
     protected componentService: ComponentService) {
   }
 
@@ -43,7 +40,7 @@ export class HeaderComponent implements OnInit {
   ];*/
 
   protected handleSelect(t: string) {
-    this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Add}));
+    //this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Add}));
   }
 
   async ngOnInit() {

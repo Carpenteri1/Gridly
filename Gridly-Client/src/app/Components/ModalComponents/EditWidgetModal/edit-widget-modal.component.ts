@@ -1,95 +1,50 @@
-import {Component, Input, Output, EventEmitter,ViewChild, ElementRef, OnChanges, SimpleChanges, AfterViewInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {TextStringsUtil} from "../../../Constants/text.strings.util";
-import {ComponentModel} from "../../../Models/Component.Model";
-import {IconModel} from "../../../Models/Icon.Model";
-import { ModalViewModel } from '../../../Models/ModalView.Model';
-import { ModalService } from '../../../Services/modal.service';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ModalDirective } from '../../../Directives/modal.directive';
+import { BaseModalComponent } from '../SharedModalComponents/base-modal.component';
+import { ModalBehaviorService } from '../../../Services/modal-behavior.service';
 
 @Component({
   selector: 'edit-widget-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ModalDirective],
   templateUrl: './edit-widget-modal.component.html',
-  styleUrls: ['./edit-widget-modal.component.css']
+  styleUrls: ['./edit-widget-modal.component.css'],
 })
-export class EditWidgetModalComponent implements AfterViewInit, OnChanges
-{ 
-   public modalModel!: ModalViewModel;
-   constructor(protected modalService: ModalService){}
-
-
+export class EditWidgetModalComponent extends BaseModalComponent implements OnChanges {
+  @Input() open: boolean = false;
   @Input() modalId: number = 0;
   @Input() id: number = 0;
-  @Input() open = false;
-  @Input() component: ComponentModel = {
-    id: 0,
-    indexPosition: 0,
-    name: '',
-    url: ''
-  };
-  @Input() icons: IconModel[] = [];
-  @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
+  @Output() openChange = new EventEmitter<number>();
 
-  @Output() openChange = new EventEmitter<boolean>();
-  @Output() save = new EventEmitter<{component: ComponentModel, selectedIconId: number | null}>();
-  protected readonly TextStringsUtil = TextStringsUtil;
-
-  selectedIconId: number | null = null;
-
-  @ViewChild('dlg', { static: true }) dlgRef!: ElementRef<HTMLDialogElement>;
-WidgetType: any;
-
-  ngAfterViewInit(): void {
-    this.syncDialog();
-    this.dlgRef.nativeElement.addEventListener('close', () => this.openChange.emit(false));
-    this.dlgRef.nativeElement.addEventListener('cancel', () => this.openChange.emit(false)); // Esc
+  constructor(modalBehavior: ModalBehaviorService) {
+    super(modalBehavior);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.modalId === this.id)
-    {
-      if (!this.dlgRef) return;
-      if (changes['open']) this.syncDialog();
-      if (changes['component'] && this.component) {
-        const iconData = this.component.iconData;
-        this.selectedIconId = (iconData && 'id' in iconData && iconData.id) ? iconData.id : null;
-      }
+    if (changes['open'] && this.modalDirective) {
+      this.modalDirective.open = this.open;
+    }
+    if (changes['modalId'] && this.modalDirective) {
+      this.modalDirective.modalId = this.modalId;
+    }
+    if (changes['id'] && this.modalDirective) {
+      this.modalDirective.id = this.id;
     }
   }
 
-  private syncDialog() {
-      const dlg = this.dlgRef.nativeElement;
-      if (this.open && !dlg.open) dlg.showModal();
-      if (!this.open && dlg.open) dlg.close();
-  }
-
-  close() {
-    this.dlgRef.nativeElement.close();
-    this.openChange.emit(false);
-  }
-
-  onBackdropClick(ev: MouseEvent) {
-    if (ev.target === this.dlgRef.nativeElement) this.close();
+  override ngAfterViewInit(): void {
+    super.ngAfterViewInit?.();
+    if (this.modalDirective) {
+      this.modalDirective.openChange.subscribe((modalId) => {
+        this.openChange.emit(modalId);
+      });
+    }
   }
 
   onSave() {
-    this.save.emit({
-      component: this.component,
-      selectedIconId: this.selectedIconId
-    });
+    // Component-specific save logic can be added here
     this.close();
   }
-
-  protected OnFileUpload(event:any){
-    this.modalModel.component.iconData = this.modalService.OnFileUpload(event);
-  }
-  protected ResetImageInput(): void {
-    this.modalService.resetFile$.subscribe(() => {
-      this.fileInputRef.nativeElement.value = '';
-    });
-    this.modalService.ResetImageData();
-  }
-
 }

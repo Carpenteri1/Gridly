@@ -101,8 +101,17 @@ export class ComponentService{
     this.openEdit = !this.openEdit;
   }
 
+  OpenEditWidget(id:number): void {
+    this.ModalId = id;
+    this.openEdit = true;
+  }
+
   get OpenEdit(){
     return this.openEdit;
+  }
+
+  set OpenEdit(open: boolean){
+    this.openEdit = open;
   }
 
   get ModalId(){

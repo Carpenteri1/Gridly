@@ -1,65 +1,52 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from "@angular/core";
-import {ModalViewModel} from "../../../Models/ModalView.Model";
-import {FormsModule} from "@angular/forms";
-import {ModalService} from "../../../Services/modal.service";
-import {ComponentService} from "../../../Services/component.service";
-import { TextStringsUtil } from "../../../Constants/text.strings.util";
-import { WidgetType } from "../../../Types/widget.type.enum";
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ModalDirective } from '../../../Directives/modal.directive';
+import { BaseModalComponent } from '../SharedModalComponents/base-modal.component';
+import { ModalBehaviorService } from '../../../Services/modal-behavior.service';
 
 @Component({
   selector: 'prompt-modal',
   templateUrl: './prompt-modal.component.html',
   standalone: true,
-  imports:
-    [FormsModule]
+  imports: [FormsModule, ModalDirective],
 })
-export class PromptModalComponent implements AfterViewInit, OnChanges
-{
-  protected modalModel!: ModalViewModel;
-  constructor(protected modalService: ModalService, protected componentService: ComponentService) {}
-
+export class PromptModalComponent extends BaseModalComponent implements OnChanges {
+  @Input() open: boolean = false;
   @Input() modalId: number = 0;
   @Input() id: number = 0;
-  @Input() open = false;
+  @Output() openChange = new EventEmitter<number>();
 
-  @Output() openChange = new EventEmitter<boolean>();
-  @Output() select = new EventEmitter<WidgetType>();
-  protected readonly TextStringsUtil = TextStringsUtil;
-
-  @ViewChild('dlg', { static: true }) dlgRef!: ElementRef<HTMLDialogElement>;
-
-  ngAfterViewInit(): void {
-    this.syncDialog();
-    this.dlgRef.nativeElement.addEventListener('close', () => this.openChange.emit(false));
-    this.dlgRef.nativeElement.addEventListener('cancel', () => this.openChange.emit(false));
+  constructor(modalBehavior: ModalBehaviorService) {
+    super(modalBehavior);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.modalId === this.id)
-    {
-      if (!this.dlgRef) return;
-      if (changes['open']) this.syncDialog();
+    setTimeout(() => {
+      if (this.modalDirective) {
+        if (changes['open']) {
+          this.modalDirective.open = this.open;
+        }
+        if (changes['modalId']) {
+          this.modalDirective.modalId = this.modalId;
+        }
+        if (changes['id']) {
+          this.modalDirective.id = this.id;
+        }
+      }
+    });
+  }
+
+  override ngAfterViewInit(): void {
+    super.ngAfterViewInit();
+    if (this.modalDirective) {
+
+      this.modalDirective.open = this.open;
+      this.modalDirective.modalId = this.modalId;
+      this.modalDirective.id = this.id;
+      
+      this.modalDirective.openChange.subscribe((modalId) => {
+        this.openChange.emit(modalId);
+      });
     }
-  }
-
-  private syncDialog() {
-      const dlg = this.dlgRef.nativeElement;
-      if (this.open && !dlg.open) dlg.showModal();
-      if (!this.open && dlg.open) dlg.close();
-
-  }
-
-  close() {
-    this.dlgRef.nativeElement.close();
-    this.openChange.emit(false);
-  }
-
-  onBackdropClick(ev: MouseEvent) {
-    if (ev.target === this.dlgRef.nativeElement) this.close();
-  }
-
-  onSelect(type: WidgetType) {
-    this.select.emit(type);
-    this.close();
   }
 }
