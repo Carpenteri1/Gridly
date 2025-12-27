@@ -36,8 +36,7 @@ export class PromptModalComponent extends BaseModalComponent implements OnChange
     });
   }
 
-  override ngAfterViewInit(): void {
-    super.ngAfterViewInit();
+  ngAfterViewInit(): void {
     if (this.modalDirective) {
 
       this.modalDirective.open = this.open;
