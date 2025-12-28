@@ -1,7 +1,6 @@
 import {Directive, ElementRef, HostListener, Input, Renderer2} from '@angular/core';
-import {ComponentModel} from "../Models/Component.Model";
 import {ComponentService} from "../Services/component.service";
-import {MapComponentData} from "../Utils/componentDialog.factory";
+import {MapComponentData} from "../Utils/componentModel.factory";
 
 @Directive({
   standalone: true,
@@ -167,7 +166,6 @@ export class ResizableDirective {
   }
 
   private AdjustComponentSize(value: number): number {
-    // Ensure minimum size
     if(value < 250) return 250;
     
     switch(true){

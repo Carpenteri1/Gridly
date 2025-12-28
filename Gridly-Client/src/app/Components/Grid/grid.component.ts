@@ -5,8 +5,7 @@ import { ModalViewModel } from "../../Models/ModalView.Model";
 import { ItemComponent } from "../Item/item.component";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
 import { SetModalComponentFormData } from '../../Utils/viewModel.factory';
-import { ModalFormType } from "../../Types/modalForm.types.enum";
-import { MapComponentData } from '../../Utils/componentDialog.factory';
+import { MapComponentData } from '../../Utils/componentModel.factory';
 import { ComponentModel } from '../../Models/Component.Model';
 import { ComponentEndPointType } from '../../Types/endPoint.type.enum';
 
@@ -20,7 +19,6 @@ import { ComponentEndPointType } from '../../Types/endPoint.type.enum';
 
 export class GridComponent implements AfterViewChecked, OnInit{
   protected modalModel!: ModalViewModel;
-  protected readonly FormType = ModalFormType;
 
   constructor(
     protected componentService: ComponentService,
@@ -34,12 +32,13 @@ export class GridComponent implements AfterViewChecked, OnInit{
 
   async ngOnInit(): Promise<void> {
     //TODO in testing mode add empty components
-    /*
+    
     if(this.componentService.Components === undefined){
       this.componentService.Components = await this.componentService.CallEndpoint(ComponentEndPointType.Get) as ComponentModel[];
-    }*/
+    }
     
     // Fallback test data if API fails or returns empty
+    /*
     if(!this.componentService.Components || this.componentService.Components.length === 0){
       this.componentService.Components = [
         MapComponentData.Override({id: 1 ,name:"Title ett", iconUrl: "https://t4.ftcdn.net/jpg/16/18/52/61/360_F_1618526128_Kpdol855uNe6O7j4JFgMa4J9q9zBJLZb.jpg"}),
@@ -47,7 +46,7 @@ export class GridComponent implements AfterViewChecked, OnInit{
         MapComponentData.Override({id: 3 ,name:"Title tre", iconUrl: ""}),
         MapComponentData.Override({id: 4 ,name:"Title fyra", iconUrl: ""}),
         MapComponentData.Override({id: 5, name:"Title fem", iconUrl: ""})];
-    }
+    }*/
   }
 
   ngAfterViewChecked() {

@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 import { FormsModule } from '@angular/forms';
 import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../SharedModalComponents/base-modal.component';
-import { ModalBehaviorService } from '../../../Services/modal-behavior.service';
+import { ModalService } from '../../../Services/modal.service';
 
 @Component({
   selector: 'prompt-modal',
@@ -16,8 +16,8 @@ export class PromptModalComponent extends BaseModalComponent implements OnChange
   @Input() id: number = 0;
   @Output() openChange = new EventEmitter<number>();
 
-  constructor(modalBehavior: ModalBehaviorService) {
-    super(modalBehavior);
+  constructor(modalService: ModalService) {
+    super(modalService);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -22,6 +22,17 @@
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
+      <div class="col d-flex justify-content-end">
+        <button
+        makeResizable
+        [canResize]="componentService.InEditMode"
+        [targetId]="id"
+        type="button"
+        class="btn edit-button resize-button">
+        <i class="bi bi-arrows-angle-expand"></i>
+      </button>
+      </div>
+
   }
 </div>
 
@@ -47,19 +58,11 @@
         <p class="small-text">{{TextStringsUtil.EmptyWidgetDescription}}</p>
       </a>
   }
-  <button
-    [hidden]="!componentService.InEditMode"
-    makeResizable
-    [canResize]="componentService.InEditMode"
-    [targetId]="id"
-    type="button"
-    class="btn edit-button resize-button">
-    <i class="bi bi-arrows-angle-expand"></i>
-  </button>
   <edit-widget-modal 
     [open]="isEditModalOpen"
     [modalId]="id"
     [id]="id"
+    (editedComponent)="handleSubmit($event)"
     (openChange)="handleEditModalChange($event)">
   </edit-widget-modal>
   <prompt-modal

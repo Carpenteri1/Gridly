@@ -1,6 +1,6 @@
 import {Injectable, signal} from "@angular/core";
 import {ComponentModel} from "../Models/Component.Model";
-import {MapComponentData} from "../Utils/componentDialog.factory";
+import {MapComponentData} from "../Utils/componentModel.factory";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
 import {ComponentEndPointType} from "../Types/endPoint.type.enum";
 import {TextStringsUtil} from "../Constants/text.strings.util";
@@ -122,36 +122,30 @@ export class ComponentService{
     this.modalId = id;
   }
 
-  async AddNewComponent(modalType: ModalViewModel) {
-    let index = this.Component !== undefined && this.Components.length > 0 ? this.Components.length  : -1;
+  async AddNewComponent(component: ComponentModel) {
+    let index = this.Components.length > 0 ? this.Components.length  : 0;
 
-    if(index != -1){
-      index = this.componentEndpointService.GetIndex(modalType.component.id);
-      modalType.component = MapComponentData.Override({id: Math.max(...this.components.map(x => x.id)) + 1}, modalType.component);
+    if(index !== 0){
+      index = this.componentEndpointService.GetIndex(component.id);
     }
-    if(index === -1)
-    {
-      await this.CallEndpoint(ComponentEndPointType.Add, modalType);
-    }
-    else{
-      await this.AddNewComponent(modalType);
-    }
+    component = MapComponentData.Override({id: Math.max(...this.components.map(x => x.id)) + 1}, component);
+    await this.CallEndpoint(ComponentEndPointType.Add,undefined, component);
   }
 
-  async EditComponentData(modalViewModel: ModalViewModel) {
+ async EditComponentData(modalViewModel: ModalViewModel) {
     if(modalViewModel.component.id !== 0){
       await this.CallEndpoint(ComponentEndPointType.Edit,modalViewModel);
     }
   }
 
-  async EditComponentsData(components: ComponentModel[]): Promise<void> {
+  async EditComponentsData(components: ComponentModel[]){
     if(components !== undefined){
       await this.CallEndpoint(ComponentEndPointType.BatchEdit,undefined, undefined ,components);
     }
   }
 
-  async CallEndpoint(type: ComponentEndPointType, modalViewModel?: ModalViewModel, componentData?: ComponentModel, componentsData?: ComponentModel[]): Promise<any> {
-    switch(type){
+ async CallEndpoint(type: ComponentEndPointType, modalViewModel?: ModalViewModel, componentData?: ComponentModel, componentsData?: ComponentModel[]): Promise<any> {
+  switch(type){
       case ComponentEndPointType.Get:
         try {
           this.Components = await lastValueFrom(this.componentEndpointService.GetComponents());
@@ -160,9 +154,9 @@ export class ComponentService{
         }
         return this.Components;
       case ComponentEndPointType.Add:
-        if(modalViewModel !== undefined && modalViewModel !== null && modalViewModel.component !== undefined){
+        if(componentData !== undefined && componentData !== null){
           try {
-            this.Component = await lastValueFrom(this.componentEndpointService.AddComponent(modalViewModel.component));
+            this.Component = await lastValueFrom(this.componentEndpointService.AddComponent(componentData));
           } catch (err) {
             console.error(TextStringsUtil.ComponentAddedFailedEndPointMessage, err);
           }
@@ -223,7 +217,8 @@ export class ComponentService{
 
   async DeleteComponent(modalType: ModalViewModel) {
     await this.CallEndpoint(ComponentEndPointType.Delete, modalType);
-  } 
+  }
+
   showMenu = signal(false);
   toggleMenu(): void {
     this.showMenu.update((showMenu) => showMenu);

@@ -2,25 +2,27 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ComponentService } from './component.service';
 import { ModalViewModel } from '../Models/ModalView.Model';
-import { ModalFormType } from '../Types/modalForm.types.enum';
+import { ModalType } from '../Types/modaltypes.enum';
 import { ComponentModel } from '../Models/Component.Model';
 import { IconModel } from '../Models/Icon.Model';
 
 @Injectable({ providedIn: 'root' })
-export class ModalBehaviorService {
+export class ModalService {
   public resetFile$ = new Subject<void>();
 
   constructor(private componentService: ComponentService) {}
 
   async submit(modalType: ModalViewModel): Promise<void> {
+    debugger;
     switch (modalType.type) {
-      case ModalFormType.Add:
-        await this.componentService.AddNewComponent(modalType);
+      case ModalType.Add:
+        await this.componentService.AddNewComponent(modalType.component);
         break;
-      case ModalFormType.Edit:
+      case ModalType.Edit:
+        debugger
         await this.componentService.EditComponentData(modalType);
         break;
-      case ModalFormType.Delete:
+      case ModalType.Delete:
         await this.componentService.DeleteComponent(modalType);
         break;
       default:

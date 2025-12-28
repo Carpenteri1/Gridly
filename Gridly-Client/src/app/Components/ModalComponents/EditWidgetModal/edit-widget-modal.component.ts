@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../SharedModalComponents/base-modal.component';
-import { ModalBehaviorService } from '../../../Services/modal-behavior.service';
+import { ModalService } from '../../../Services/modal.service';
+import { MapComponentData } from '../../../Utils/componentModel.factory';
+import { ComponentModel } from '../../../Models/Component.Model';
 
 @Component({
   selector: 'edit-widget-modal',
@@ -17,9 +19,10 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
   @Input() modalId: number = 0;
   @Input() id: number = 0;
   @Output() openChange = new EventEmitter<number>();
+  @Output() editedComponent = new EventEmitter<ComponentModel>();
 
-  constructor(modalBehavior: ModalBehaviorService) {
-    super(modalBehavior);
+  constructor(modalService: ModalService) {
+    super(modalService);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -40,5 +43,10 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
         this.openChange.emit(modalId);
       });
     }
+  }
+
+  onSubmit() {
+    this.close();
+    this.editedComponent.emit(MapComponentData());
   }
 }
