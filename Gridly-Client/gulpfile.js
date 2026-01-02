@@ -1,22 +1,74 @@
 var gulp = require("gulp");
-var exec = require("gulp-exec");
+var gulpexec = require("gulp-exec");
 var clean = require('gulp-clean');
+var { exec, spawn } = require('child_process');
+var ngProcess = null;
 
 // ---- Angular ----
 gulp.task('ng-build', function () {
   return gulp.src('./')
-    .pipe(exec('ng build --output-path=dist'))
-    .pipe(exec.reporter());
+    .pipe(gulpexec('ng build --output-path=dist'))
+    .pipe(gulpexec.reporter());
 });
 
-gulp.task("ng-serve", function () {
+gulp.task("ng-serve", function (done) {
   console.log("🚀 Starting client server...");
-  gulp
-      .src(".", { allowEmpty: true })
-      .pipe(exec("ng serve"))
-      .pipe(exec.reporter());
+  ngProcess = spawn('ng', ['serve'], {
+    stdio: 'inherit',
+    shell: true,
+    cwd: process.cwd()
+  });
   MessageLoop("ng");
-  return gulp;
+      
+  ngProcess.on('close', (code) => {
+    if (code !== null) {
+      console.log(`ng serve exited with code ${code}`);
+      done();
+    }
+  });
+  
+  ngProcess.on('error', (err) => {
+    console.error('Failed to start ng serve:', err);
+    done(err);
+  });
+
+  done();
+});
+
+
+gulp.task("ng-stop", function (done) {
+  console.log("🛑 Stopping ng serve...");
+  
+  // Try to kill the stored process first
+  if (ngProcess) {
+    ngProcess.kill('SIGTERM');
+    ngProcess = null;
+  }
+  
+  const isWindows = process.platform === 'win32';
+  
+  if (isWindows) {
+    exec('netstat -ano | findstr :4200', (error, stdout) => {
+      if (stdout) {
+        const lines = stdout.trim().split('\n');
+        lines.forEach(line => {
+          const parts = line.trim().split(/\s+/);
+          const pid = parts[parts.length - 1];
+          if (pid) {
+            exec(`taskkill /F /PID ${pid}`, () => {});
+          }
+        });
+      }
+      done();
+    });
+  } else {
+    exec('pkill -f "ng serve" || lsof -ti:4200 | xargs kill -9 2>/dev/null || true', (error) => {
+      if (!error) {
+        console.log("✅ ng serve stopped");
+      }
+      done();
+    });
+  }
 });
 
 gulp.task("ng-move-build", function () {
@@ -35,16 +87,23 @@ gulp.task("ng-clean-build", function () {
 gulp.task("dotnet-restore", function () {
   return gulp
     .src(".")
-    .pipe(exec(`cd .. && dotnet restore`))
-    .pipe(exec.reporter());
+    .pipe(gulpexec(`cd .. && dotnet restore`))
+    .pipe(gulpexec.reporter());
+});
+
+gulp.task("dotnet-build-debug", function () {
+  return gulp
+    .src(".")
+    .pipe(gulpexec(`cd .. && dotnet build --configuration Debug`))
+    .pipe(gulpexec.reporter());
 });
 
 gulp.task("dotnet-run", function () {
   console.log("🚀 Starting .NET kestrel...");
   gulp
     .src(".")
-    .pipe(exec(`cd .. && dotnet run`))
-    .pipe(exec.reporter());
+    .pipe(gulpexec(`cd .. && dotnet run`))
+    .pipe(gulpexec.reporter());
   MessageLoop("net");
   return gulp;
 });
@@ -67,18 +126,25 @@ function MessageLoop(session){
 }
 
 gulp.task(
-  "build-angular-net",
+  "build-net-debug",
   gulp.series(
-    "ng-build",
-    "ng-move-build",
-    "ng-clean-build",
     "dotnet-restore",
-    "dotnet-run"
+    "dotnet-build-debug"
   )
 );
 
 gulp.task(
-  "build-angular",
+  "build-angular-net-debug",
+  gulp.series(
+    "ng-build",
+    "ng-move-build",
+    "ng-clean-build",
+    "dotnet-build-debug"
+  )
+);
+
+gulp.task(
+  "build-angular-debug",
   gulp.series(
     "ng-serve",
   )
