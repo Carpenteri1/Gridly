@@ -1,0 +1,68 @@
+{
+    "configurations": [
+      {
+        "name": "Run Angular & .NET --debug",
+        "request": "launch",
+        "type": "coreclr",
+        "preLaunchTask": "run angular and .net --debug",
+        "program": "${workspaceFolder}/bin/Debug/net8.0/Gridly.dll",
+        "args": [
+          "--urls",
+          "http://localhost:7575"
+        ],
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "serverReadyAction": {
+          "action": "openExternally",
+          "pattern": "\\bNow listening on:\\s+(http?://\\S+)",
+          "uriFormat": "%s"
+        },
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development",
+          "ASPNETCORE_URLS": "http://localhost:7575"
+
+        },
+        "sourceFileMap": {
+          "/Views": "${workspaceFolder}/Views"
+        },
+        "justMyCode": false
+      },
+      {
+        "name": "Run .NET --debug",
+        "request": "launch",
+        "type": "coreclr",
+        "preLaunchTask": "run .net --debug",
+        "program": "${workspaceFolder}/bin/Debug/net8.0/Gridly.dll",
+        "args": [
+          "--urls",
+          "http://localhost:7575"
+        ],
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "serverReadyAction": {
+          "pattern": "\\bNow listening on:\\s+(http?://\\S+)",
+        },
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development",
+          "ASPNETCORE_URLS": "http://localhost:7575"
+
+        },
+        "sourceFileMap": {
+          "/Views": "${workspaceFolder}/Views"
+        },
+        "justMyCode": false
+      },
+      {
+        "name": "Run Angular --debug",
+        "request": "launch",
+        "type": "chrome",
+        "url": "http://localhost:4200",
+        "preLaunchTask": "run angular --debug",
+        "postDebugTask": "stop angular --debug",
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "AngularEnvironment": "Development"
+        }
+      }
+    ]
+}
