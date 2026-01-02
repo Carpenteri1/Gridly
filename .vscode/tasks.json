@@ -1,0 +1,68 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "run angular and .net --debug",
+        "type": "shell",
+        "command": "npx gulp build-angular-net-debug",
+        "options": {
+          "cwd": "${workspaceFolder}/Gridly-Client"
+        },
+        "presentation": {
+          "close": true
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "run .net --debug",
+        "type": "shell",
+        "command": "npx gulp build-net-debug",
+        "options": {
+          "cwd": "${workspaceFolder}/Gridly-Client"
+        },
+        "presentation": {
+          "close": true
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "run angular --debug",
+        "type": "shell",
+        "command": "npx gulp build-angular-debug",
+        "options": {
+          "cwd": "${workspaceFolder}/Gridly-Client"
+        },
+        "isBackground": true,
+        "presentation": {
+          "close": true
+        },
+        "problemMatcher": {
+          "pattern": {
+            "regexp": "^([^\\s].*):(\\d+):(\\d+):\\s+(warning|error)\\s+(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "message": 5
+          },
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": ".*Starting.*|.*Building.*",
+            "endsPattern": ".*Local:\\s+http://localhost:4200.*|.*Compiled successfully.*|.*Application bundle generation complete.*"
+          }
+        }
+      },
+      {
+        "label": "stop angular --debug",
+        "type": "shell",
+        "command": "npx gulp ng-stop",
+        "options": {
+          "cwd": "${workspaceFolder}/Gridly-Client"
+        },
+        "presentation": {
+          "close": true
+        },
+        "problemMatcher": []
+      }
+    ]
+  }
