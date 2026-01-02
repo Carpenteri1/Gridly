@@ -39,7 +39,6 @@ gulp.task("ng-serve", function (done) {
 gulp.task("ng-stop", function (done) {
   console.log("🛑 Stopping ng serve...");
   
-  // Try to kill the stored process first
   if (ngProcess) {
     ngProcess.kill('SIGTERM');
     ngProcess = null;
