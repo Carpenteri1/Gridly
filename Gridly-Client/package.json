@@ -12,7 +12,6 @@
   "private": true,
   "dependencies": {
     "@angular-devkit/build-angular": "^20.3.2",
-    "@angular/material": "^20.2.4",
     "@angular/platform-server": "^20.3.1",
     "@angular/ssr": "^20.3.2",
     "bootstrap": "^5.3.8",
