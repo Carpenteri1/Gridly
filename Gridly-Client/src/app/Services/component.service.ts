@@ -123,13 +123,17 @@ export class ComponentService{
   }
 
   async AddNewComponent(component: ComponentModel) {
-    let index = this.Components.length > 0 ? this.Components.length  : 0;
-
+    let index = this.Components.length > 0 ? this.Components.length != 0 : 0;
     if(index !== 0){
-      index = this.componentEndpointService.GetIndex(component.id);
+      let sortedListOfComponents = this.components.sort((a,b) => a.id - b.id);
+      const lastIndex = sortedListOfComponents.length - 1;
+      component = MapComponentData.Override({id: sortedListOfComponents[lastIndex].id + 1 }, component);
     }
-    component = MapComponentData.Override({id: Math.max(...this.components.map(x => x.id)) + 1}, component);
+    else{
+      component = MapComponentData.Override({id: index + 1 }, component);
+    }
     await this.CallEndpoint(ComponentEndPointType.Add,undefined, component);
+
   }
 
  async EditComponentData(modalViewModel: ModalViewModel) {
@@ -183,10 +187,11 @@ export class ComponentService{
         }
         break;
       case ComponentEndPointType.Delete:
-        if(modalViewModel !== undefined && modalViewModel !== null && modalViewModel.component !== undefined){
+        debugger;
+        if(componentData !== undefined && componentData !== null){
           try {
             this.Component = await lastValueFrom(
-              this.componentEndpointService.Delete(modalViewModel.component.id));
+              this.componentEndpointService.Delete(componentData.id));
             } catch (err) {
               console.error(TextStringsUtil.ComponentDeletionFailedEndPointMessage, err);
             }
@@ -215,8 +220,8 @@ export class ComponentService{
     window.location.reload();
   }
 
-  async DeleteComponent(modalType: ModalViewModel) {
-    await this.CallEndpoint(ComponentEndPointType.Delete, modalType);
+  async DeleteComponent(component: ComponentModel) {
+    await this.CallEndpoint(ComponentEndPointType.Delete, undefined ,component);
   }
 
   showMenu = signal(false);

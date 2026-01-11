@@ -62,12 +62,13 @@
     [open]="isEditModalOpen"
     [modalId]="id"
     [id]="id"
-    (editedComponent)="handleSubmit($event)"
-    (openChange)="handleEditModalChange($event)">
+    (editWidget)="handleSubmit($event)"
+    (openChange)="handleModalChange($event)">
   </edit-widget-modal>
   <prompt-modal
     [open]="isDeleteModalOpen"
     [modalId]="id"
     [id]="id"
-    (openChange)="handleDeleteModalChange($event)">
+    (deleteWidget)="handleSubmit($event)"
+    (openChange)="handleModalChange($event)">
   </prompt-modal>

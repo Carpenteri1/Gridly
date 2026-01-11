@@ -30,7 +30,7 @@ export class AddWidgetModalComponent
   @Input() widgetOptions: WidgetOptionsModal[] = [];
 
   @Output() openChange = new EventEmitter<boolean>();
-  @Output() newComponent = new EventEmitter<ComponentModel>();
+  @Output() newWidget = new EventEmitter<ComponentModel>();
 
   constructor(modalService: ModalService) {
     super(modalService);
@@ -57,9 +57,9 @@ export class AddWidgetModalComponent
   onSelect(type: WidgetType) {
     switch (type) {
       case WidgetType.Custom:
-        return this.newComponent.emit(MapComponentData());
+        return this.newWidget.emit(MapComponentData());
       default:
-        return this.newComponent.emit(MapComponentData());
+        return this.newWidget.emit(MapComponentData());
     }
   }
 }

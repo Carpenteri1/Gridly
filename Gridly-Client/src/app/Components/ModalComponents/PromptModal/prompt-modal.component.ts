@@ -3,10 +3,14 @@ import { FormsModule } from '@angular/forms';
 import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../SharedModalComponents/base-modal.component';
 import { ModalService } from '../../../Services/modal.service';
+import { ComponentModel } from '../../../Models/Component.Model';
+import { MapComponentData } from '../../../Utils/componentModel.factory';
+import { ModalType } from '../../../Types/modaltypes.enum';
 
 @Component({
   selector: 'prompt-modal',
   templateUrl: './prompt-modal.component.html',
+  styleUrls: ['../../../css/shared.modal.css'],
   standalone: true,
   imports: [FormsModule, ModalDirective],
 })
@@ -15,6 +19,7 @@ export class PromptModalComponent extends BaseModalComponent implements OnChange
   @Input() modalId: number = 0;
   @Input() id: number = 0;
   @Output() openChange = new EventEmitter<number>();
+  @Output() deleteWidget = new EventEmitter<{component: ComponentModel, modalType: ModalType}>();
 
   constructor(modalService: ModalService) {
     super(modalService);
@@ -48,4 +53,9 @@ export class PromptModalComponent extends BaseModalComponent implements OnChange
       });
     }
   }
+
+    onSubmit() {
+      this.close();
+      this.deleteWidget.emit({component: MapComponentData.Override({id: this.id}), modalType: ModalType.Delete});
+    }
 }

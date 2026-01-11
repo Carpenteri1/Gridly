@@ -8,7 +8,7 @@
     </header>
 
     <div class="ew-body">
-      <form (ngSubmit)="save()">
+      <form (ngSubmit)="onSubmit()">
         <div class="mb-3">
           <label for="name-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputNameTitle}}</label>
           <input 
@@ -59,7 +59,7 @@
 
         <div class="d-flex justify-content-end gap-2 mt-4">
           <button type="button" class="btn btn-secondary" (click)="close()">{{TextStringsUtil.ModalEditComponentCancelBtnTitle}}</button>
-          <button type="submit" class="btn btn-primary" (click)="onSubmit()">{{TextStringsUtil.ModalEditComponentAcceptBtnTitle}}</button>
+          <button type="submit" class="btn btn-primary">{{TextStringsUtil.ModalEditComponentAcceptBtnTitle}}</button>
         </div>
       </form>
     </div>

@@ -23,7 +23,7 @@ export class ModalService {
         await this.componentService.EditComponentData(modalType);
         break;
       case ModalType.Delete:
-        await this.componentService.DeleteComponent(modalType);
+        //await this.componentService.DeleteComponent(modalType);
         break;
       default:
         console.error("Unknown modal type: " + modalType.type);

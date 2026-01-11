@@ -26,10 +26,6 @@ export abstract class BaseModalComponent {
     this.close();
   }
 
-  async save(): Promise<void> {
-    this.close();
-  }
-
   onFileUpload(event: any) {
     return this.modalService.onFileUpload(event);
   }

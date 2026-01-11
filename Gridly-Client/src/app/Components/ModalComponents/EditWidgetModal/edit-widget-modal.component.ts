@@ -6,20 +6,21 @@ import { BaseModalComponent } from '../SharedModalComponents/base-modal.componen
 import { ModalService } from '../../../Services/modal.service';
 import { MapComponentData } from '../../../Utils/componentModel.factory';
 import { ComponentModel } from '../../../Models/Component.Model';
+import { ModalType } from '../../../Types/modaltypes.enum';
 
 @Component({
   selector: 'edit-widget-modal',
   standalone: true,
   imports: [CommonModule, FormsModule, ModalDirective],
   templateUrl: './edit-widget-modal.component.html',
-  styleUrls: ['./edit-widget-modal.component.css'],
+  styleUrls: ['../../../css/shared.modal.css'],
 })
 export class EditWidgetModalComponent extends BaseModalComponent implements OnChanges {
   @Input() open: boolean = false;
   @Input() modalId: number = 0;
   @Input() id: number = 0;
   @Output() openChange = new EventEmitter<number>();
-  @Output() editedComponent = new EventEmitter<ComponentModel>();
+  @Output() editWidget = new EventEmitter<{component: ComponentModel, modalType: ModalType}>();
 
   constructor(modalService: ModalService) {
     super(modalService);
@@ -47,6 +48,6 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
 
   onSubmit() {
     this.close();
-    this.editedComponent.emit(MapComponentData());
+    this.editWidget.emit({component: MapComponentData(), modalType: ModalType.Edit});
   }
 }

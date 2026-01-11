@@ -71,20 +71,26 @@ export class ItemComponent {
     );
   }
 
-  handleEditModalChange(modalId: number): void {
+  handleModalChange(modalId: number): void {
     if (modalId === this.id) {
       this.isEditModalOpen = false;
-    }
-  }
-
-  handleDeleteModalChange(modalId: number): void {
-    if (modalId === this.id) {
       this.isDeleteModalOpen = false;
     }
   }
 
-  protected handleSubmit(newComponent: ComponentModel) {
-    this.componentService.AddNewComponent(newComponent);
+  protected handleSubmit(event: {component: ComponentModel; modalType: ModalType }) {
+    debugger;
+    switch (event.modalType) {
+      case ModalType.Add:
+        //this.componentService.AddNewComponent(newComponent);
+        break;
+      case ModalType.Edit:
+        //this.componentService.EditComponentData(event.component);
+        break;
+      case ModalType.Delete:
+        this.componentService.DeleteComponent(event.component);
+        break;
+    }
   }
 
   OpenEditModal(componentId: number): void {

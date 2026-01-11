@@ -34,7 +34,7 @@ export class TextStringsUtil {
   static readonly ModalDeleteComponentHeaderTitle = "Warning";
   static readonly ModalDeleteComponentAcceptBtnTitle = "Delete";
   static readonly ModalDeleteComponentCancelBtnTitle = "Cancel";
-  static readonly ModalDeleteComponentBtnTitle = "You sure you want to delete the component?";
+  static readonly ModalDeleteComponentDescription = "You sure you want to delete this widget?";
 
   static readonly MenuAddWidgetButtonTitle = "Add Widget";
   static readonly MenuEditButtonTitle = "Edit";
