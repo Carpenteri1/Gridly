@@ -22,16 +22,24 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
     {
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.UpdateComponentQuery);
-        builder.Where(QueryStrings.WhereComponentIdPrimaryKeyEqualComponentObjectId, component);
-        return await _dbCommandRunner.Execute(template.RawSql,template.Parameters) != null;
+        builder.Where(QueryStrings.WhereComponentIdForeignKeyEqualId, component);
+        return await _dbCommandRunner.Execute(template.RawSql,template.Parameters);
     }
 
     public async Task<bool> BatchEdit(IEnumerable<ComponentModel>? components)
     {
-        var builder = new SqlBuilder();
-        var template = builder.AddTemplate(QueryStrings.UpdateComponentQuery);
-        builder.Where(QueryStrings.WhereIdForeignKeyEqualId);
-        return await _dbCommandRunner.Execute(template.RawSql, components);
+        var parameters = components
+            .Select(c => new 
+            { 
+                c.Id,
+                c.IndexPosition,
+                Width = c.ComponentSettings.Width,
+                Height = c.ComponentSettings.Height
+            })
+            .ToList();
+
+        var result = await connection.ExecuteAsync(QueryStrings.UpdateBatchComponentQuery, parameters);
+        return result > 0;
     }
 
     public async Task<IEnumerable<ComponentModel>?> Get()
@@ -65,7 +73,7 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
     {
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.DeleteFromComponentQuery);
-        builder.Where(QueryStrings.WhereComponentIdPrimaryKeyEqualComponentObjectId, component);
-        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters) != null;
+        builder.Where(QueryStrings.WhereIdForeignKeyEqualId, component);
+        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
     }
 }

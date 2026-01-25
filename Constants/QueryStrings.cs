@@ -55,6 +55,16 @@ public class QueryStrings
         Url = @Url, 
         IconUrl = @IconUrl
         /**where**/";
+
+    public const string UpdateBatchComponentQuery = @"
+    UPDATE Component 
+    SET IndexPosition = @IndexPosition
+    WHERE Id = @Id;
+
+    UPDATE ComponentSettings 
+    SET Width = @Width, Height = @Height
+    WHERE ComponentId = @Id;
+    ";
     
     public const string UpdateComponentSettingsQuery = @"
     UPDATE ComponentSettings
@@ -75,16 +85,11 @@ public class QueryStrings
     public const string JoinComponentSettingsQuery = "ComponentSettings cs ON cs.ComponentId = co.Id";
     
     public const string WhereComponentIdForeignKeyEqualId = "ComponentId = @ComponentId";
-    public const string WhereComponentIdPrimaryKeyEqualComponentObjectId = "Id = @Id";
-    public const string WhereIconIdForeignKeyEqualId = "Id = @Id";
     public const string WhereIdForeignKeyEqualId = "Id = @Id";
-    
     public const string WhereIconConnectedIconIdForeignKeyEqualIdWithAlias = "ic.IconId = @IconId";
     public const string WhereIconConnectedComponentIdForeignKeyEqualIdWithAlias = "ic.ComponentId = @ComponentId";
-    public const string WhereComponentForeignKeyEqualsComponentSettingsForeignKeyWithAlias = "co.Id = cs.ComponentId";
     public const string WhereComponentIdEqualsComponentIdWithAlias = "co.Id = @componentId";
     public const string WhereIconNameEqualsNameWithAlias = "i.Name = @Name";
     public const string WhereIconTypeEqualsTypeWithAlias = "i.Type = @Type";
-    
     public const string IndexPositionWithAlias = "co.IndexPosition;";
 }

@@ -37,7 +37,7 @@ public class IconRepository(IDbConnection connection, IFileService fileService) 
     { 
         var builder = new SqlBuilder();                                                       
         var template = builder.AddTemplate(QueryStrings.DeleteFromIconQuery); 
-        builder.Where(QueryStrings.WhereIconIdForeignKeyEqualId, new { Id});
+        builder.Where(QueryStrings.WhereIdForeignKeyEqualId, new { Id});
         var s = await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
         return s;
     }
