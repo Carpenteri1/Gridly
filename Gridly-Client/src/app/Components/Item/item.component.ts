@@ -81,9 +81,6 @@ export class ItemComponent {
   protected handleSubmit(event: {component: ComponentModel; modalType: ModalType }) {
     debugger;
     switch (event.modalType) {
-      case ModalType.Add:
-        //this.componentService.AddNewComponent(newComponent);
-        break;
       case ModalType.Edit:
         //this.componentService.EditComponentData(event.component);
         break;

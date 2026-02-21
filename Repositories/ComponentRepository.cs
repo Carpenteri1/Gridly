@@ -69,11 +69,11 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
         return Factories.ComponentFactory.Create(dto);
     }
 
-    public async Task<bool> Delete(ComponentModel component)
+    public async Task<bool> Delete(int id)
     {
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.DeleteFromComponentQuery);
-        builder.Where(QueryStrings.WhereIdForeignKeyEqualId, component);
+        builder.Where(QueryStrings.WhereIdForeignKeyEqualId, new { Id = id });
         return await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
     }
 }

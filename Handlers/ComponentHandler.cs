@@ -41,13 +41,15 @@ public class ComponentHandler(
     public async Task<IResult> Handle(DeleteComponentCommand command, CancellationToken cancellationToken)
     {
         var components = await componentRepository.Get();
-        var component = components.FirstOrDefault(x => x.Id == command.Id);
+   
         
-        if (await settingsRepository.Delete(component.ComponentSettings.Id.Value) is false &&
-            await componentRepository.Delete(component) is false)
+        if (await settingsRepository.Delete(command.Id) is false ||
+            await componentRepository.Delete(command.Id) is false)
             return Results.StatusCode(500);
-
-        if (component.IconData != null)
+        
+         var component = components.FirstOrDefault(x => x.Id == command.Id);
+        if (component != null &&
+         component.IconData != null)
         {
             var iconsConnected = 
                 await iconConnectedRepository.GetManyById(null,component.IconData.Id);
@@ -67,7 +69,7 @@ public class ComponentHandler(
     
     public async Task<IResult> Handle(EditComponentCommand command, CancellationToken cancellationToken)
     {
-        var components = await componentRepository.Get() as List<ComponentModel>;
+        var components = await componentRepository.Get();
         if (components == null) return Results.StatusCode(500);
         
         var component = components.FirstOrDefault(x => x.Id == command.EditComponent.Id);
