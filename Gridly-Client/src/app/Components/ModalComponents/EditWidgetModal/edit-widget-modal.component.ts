@@ -21,6 +21,7 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
   @Input() id: number = 0;
   @Output() openChange = new EventEmitter<number>();
   @Output() editWidget = new EventEmitter<{component: ComponentModel, modalType: ModalType}>();
+  componentData: ComponentModel = MapComponentData();
 
   constructor(modalService: ModalService) {
     super(modalService);
@@ -47,7 +48,8 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
   }
 
   onSubmit() {
+    this.componentData.id = this.id;
     this.close();
-    this.editWidget.emit({component: MapComponentData(), modalType: ModalType.Edit});
+    this.editWidget.emit({component: MapComponentData(this.componentData), modalType: ModalType.Edit});
   }
 }

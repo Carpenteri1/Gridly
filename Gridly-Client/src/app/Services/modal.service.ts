@@ -13,14 +13,12 @@ export class ModalService {
   constructor(private componentService: ComponentService) {}
 
   async submit(modalType: ModalViewModel): Promise<void> {
-    debugger;
     switch (modalType.type) {
       case ModalType.Add:
         await this.componentService.AddNewComponent(modalType.component);
         break;
       case ModalType.Edit:
-        debugger
-        await this.componentService.EditComponentData(modalType);
+        await this.componentService.EditComponentData(modalType.component);
         break;
       case ModalType.Delete:
         //await this.componentService.DeleteComponent(modalType);

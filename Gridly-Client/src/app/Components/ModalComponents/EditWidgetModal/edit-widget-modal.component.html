@@ -17,6 +17,7 @@
             class="form-control" 
             placeholder="Enter name"
             name="name"
+            [(ngModel)]="componentData.name"
             required>
         </div>
 
@@ -26,6 +27,7 @@
             type="text" 
             id="url-input"
             class="form-control" 
+            [(ngModel)]="componentData.url"
             placeholder="Enter URL"
             name="url"
             required>

@@ -79,10 +79,9 @@ export class ItemComponent {
   }
 
   protected handleSubmit(event: {component: ComponentModel; modalType: ModalType }) {
-    debugger;
     switch (event.modalType) {
       case ModalType.Edit:
-        //this.componentService.EditComponentData(event.component);
+        this.componentService.EditComponentData(event.component);
         break;
       case ModalType.Delete:
         this.componentService.DeleteComponent(event.component);

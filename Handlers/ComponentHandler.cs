@@ -119,7 +119,7 @@ public class ComponentHandler(
                         }
                     }
                 }
-                else
+                /*else
                 {
                     connectionModel.ComponentId = component.Id;
                     component.IconData = await iconRepository.Insert(command.EditComponent.IconData);
@@ -128,6 +128,7 @@ public class ComponentHandler(
                        await iconConnectedRepository.Insert(connectionModel) == null)
                         return Results.StatusCode(500);   
                 }
+                */
                 break;
             case 2:
                 if (currentHasIcon)
@@ -159,10 +160,11 @@ public class ComponentHandler(
             component.ComponentSettings.Height = command.EditComponent.ComponentSettings.Height;
             component.ComponentSettings.Width = command.EditComponent.ComponentSettings.Width;
         }
+
+        var result = await settingsRepository.Edit(component.ComponentSettings) != null;
+        result = await componentRepository.Edit(component);
         
-        return await settingsRepository.Edit(component.ComponentSettings) != null && 
-               await componentRepository.Edit(component) ? 
-            Results.Ok() : Results.StatusCode(500);
+        return result ? Results.Ok() : Results.StatusCode(500);
     }
 
     public async Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken)

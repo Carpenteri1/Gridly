@@ -21,8 +21,8 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
     public async Task<bool> Edit(ComponentModel component)
     {
         var builder = new SqlBuilder();
-        var template = builder.AddTemplate(QueryStrings.UpdateComponentQuery);
-        builder.Where(QueryStrings.WhereComponentIdForeignKeyEqualId, component);
+        var template = builder.AddTemplate(QueryStrings.UpdateComponentQuery,component);
+        builder.Where(QueryStrings.WhereComponentIdForeignKeyEqualId, new { ComponentId = component.Id });
         return await _dbCommandRunner.Execute(template.RawSql,template.Parameters);
     }
 

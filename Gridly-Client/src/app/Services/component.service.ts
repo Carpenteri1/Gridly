@@ -136,10 +136,8 @@ export class ComponentService{
 
   }
 
- async EditComponentData(modalViewModel: ModalViewModel) {
-    if(modalViewModel.component.id !== 0){
-      await this.CallEndpoint(ComponentEndPointType.Edit,modalViewModel);
-    }
+ async EditComponentData(component: ComponentModel) {
+      await this.CallEndpoint(ComponentEndPointType.Edit,undefined, component);
   }
 
   async EditComponentsData(components: ComponentModel[]){
@@ -167,11 +165,11 @@ export class ComponentService{
         }
         break;
       case ComponentEndPointType.Edit:
-        if(modalViewModel !== undefined && modalViewModel !== null && modalViewModel.component !== undefined){
+        if(componentData !== undefined){
           try {
             this.Component =
               await lastValueFrom(this.componentEndpointService.EditComponent(
-                modalViewModel.component,modalViewModel.selectedDropDownValue!));
+                componentData,1));
           } catch (err) {
             console.error(TextStringsUtil.ComponentEditFailedEndPointMessage, err);
           }
@@ -187,7 +185,6 @@ export class ComponentService{
         }
         break;
       case ComponentEndPointType.Delete:
-        debugger;
         if(componentData !== undefined && componentData !== null){
           try {
             this.Component = await lastValueFrom(
