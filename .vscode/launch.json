@@ -19,8 +19,8 @@
         },
         "env": {
           "ASPNETCORE_ENVIRONMENT": "Development",
-          "ASPNETCORE_URLS": "http://localhost:7575"
-
+          "ASPNETCORE_URLS": "http://localhost:7575",
+          "AngularEnvironment": "Production"
         },
         "sourceFileMap": {
           "/Views": "${workspaceFolder}/Views"
@@ -45,7 +45,6 @@
         "env": {
           "ASPNETCORE_ENVIRONMENT": "Development",
           "ASPNETCORE_URLS": "http://localhost:7575"
-
         },
         "sourceFileMap": {
           "/Views": "${workspaceFolder}/Views"

@@ -22,17 +22,33 @@
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
+      <div class="col d-flex justify-content-end">
+        <button
+        makeResizable
+        [canResize]="componentService.InEditMode"
+        [targetId]="id"
+        type="button"
+        class="btn edit-button resize-button">
+        <i class="bi bi-arrows-angle-expand"></i>
+      </button>
+      </div>
+
   }
 </div>
 
 <!-- Item content -->
   @if (CurrentComponent && hasBaseData(CurrentComponent)){
-      <a [style]="componentService.InEditMode ? 'cursor:none;':'cursor:auto;'" [href]="componentService.InEditMode ? null : CurrentComponent.url" class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75" target="_blank">
-        @if(componentService.IconUrlSet(CurrentComponent)){
+      <a [style]="componentService.InEditMode ? 'cursor:none;':'cursor:auto;'" 
+      [href]="componentService.InEditMode ? null : CurrentComponent.url" 
+      class="text-center d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75" target="_blank">
+        @if (componentService.IconUrlSet(CurrentComponent)){
           <img [src]="CurrentComponent.iconUrl" class="p-3 icon-size item-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
         }
-        @if(componentService.IconDataSet(CurrentComponent)){
+        @if (componentService.IconDataSet(CurrentComponent)){
           <img [src]="IconFilePath(CurrentComponent)" class="p-3 icon-size item-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
+        }
+        @else {
+          <span><i class="bi bi-box"></i></span>
         }
         <p>{{CurrentComponent.id}}</p>
         <p [hidden]="CurrentComponent.componentSettings?.titleHidden" class="text-center" >{{CurrentComponent.name}}</p>
@@ -47,24 +63,17 @@
         <p class="small-text">{{TextStringsUtil.EmptyWidgetDescription}}</p>
       </a>
   }
-  <button
-    [hidden]="!componentService.InEditMode"
-    makeResizable
-    [canResize]="componentService.InEditMode"
-    [targetId]="id"
-    type="button"
-    class="btn edit-button resize-button">
-    <i class="bi bi-arrows-angle-expand"></i>
-  </button>
   <edit-widget-modal 
     [open]="isEditModalOpen"
     [modalId]="id"
     [id]="id"
-    (openChange)="handleEditModalChange($event)">
+    (editWidget)="handleSubmit($event)"
+    (openChange)="handleModalChange($event)">
   </edit-widget-modal>
   <prompt-modal
     [open]="isDeleteModalOpen"
     [modalId]="id"
     [id]="id"
-    (openChange)="handleDeleteModalChange($event)">
+    (deleteWidget)="handleSubmit($event)"
+    (openChange)="handleModalChange($event)">
   </prompt-modal>

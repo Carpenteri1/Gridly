@@ -1,6 +1,6 @@
 import { ViewChild, Directive } from '@angular/core';
 import { ModalDirective } from '../../../Directives/modal.directive';
-import { ModalBehaviorService } from '../../../Services/modal-behavior.service';
+import { ModalService } from '../../../Services/modal.service';
 import { TextStringsUtil } from '../../../Constants/text.strings.util';
 import { ModalViewModel } from '../../../Models/ModalView.Model';
 
@@ -10,7 +10,7 @@ export abstract class BaseModalComponent {
 
   protected readonly TextStringsUtil = TextStringsUtil;
 
-  constructor(protected modalBehavior: ModalBehaviorService) {}
+  constructor(protected modalService: ModalService) {}
 
 
   close(): void {
@@ -22,20 +22,16 @@ export abstract class BaseModalComponent {
   }
 
   async submit(modalType: ModalViewModel): Promise<void> {
-    await this.modalBehavior.submit(modalType);
-    this.close();
-  }
-
-  async save(): Promise<void> {
+    await this.modalService.submit(modalType);
     this.close();
   }
 
   onFileUpload(event: any) {
-    return this.modalBehavior.onFileUpload(event);
+    return this.modalService.onFileUpload(event);
   }
 
   resetImageData(): void {
-    this.modalBehavior.resetImageData();
+    this.modalService.resetImageData();
   }
 
   get isOpen(): boolean {

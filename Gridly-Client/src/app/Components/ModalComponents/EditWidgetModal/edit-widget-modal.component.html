@@ -8,7 +8,7 @@
     </header>
 
     <div class="ew-body">
-      <form (ngSubmit)="save()">
+      <form (ngSubmit)="onSubmit()">
         <div class="mb-3">
           <label for="name-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputNameTitle}}</label>
           <input 
@@ -17,6 +17,7 @@
             class="form-control" 
             placeholder="Enter name"
             name="name"
+            [(ngModel)]="componentData.name"
             required>
         </div>
 
@@ -26,11 +27,12 @@
             type="text" 
             id="url-input"
             class="form-control" 
+            [(ngModel)]="componentData.url"
             placeholder="Enter URL"
             name="url"
             required>
         </div>
-
+ <!--
         <div class="mb-3">
           <label for="icon-select" class="form-label">{{TextStringsUtil.ModalEditComponentLinkToImageTitle}}</label>
           <select 
@@ -41,22 +43,23 @@
             (selectionChange)="this.ResetImageInput()">         
             <option [value]="1"> title one </option>
             <option [value]="2"> title two</option>
-            <!--@for(icon of icons; track icon.id) {
+           @for(icon of icons; track icon.id) {
               <option [value]="icon.id">{{ icon.name }}</option>
-            }-->
+            }
           </select>
         </div>
-        <!--TODO  [hidden]="this.modalModel.selectedDropDownValue != 1"-->s
+        -->
+        <!--TODO  [hidden]="this.modalModel.selectedDropDownValue != 1"
         <div class="mb-3" >
           <label> </label>
             <input placeholder="Icon" type="file" id="formFile" #fileInput (change)="onFileUpload($event)"/>  
         </div>
-
-        <!--TODO  [hidden]="this.modalModel.selectedDropDownValue != 2"-->
+-->
+        <!--TODO  [hidden]="this.modalModel.selectedDropDownValue != 2"
         <div class="mb-3">
           <input />
         </div>
-
+-->
         <div class="d-flex justify-content-end gap-2 mt-4">
           <button type="button" class="btn btn-secondary" (click)="close()">{{TextStringsUtil.ModalEditComponentCancelBtnTitle}}</button>
           <button type="submit" class="btn btn-primary">{{TextStringsUtil.ModalEditComponentAcceptBtnTitle}}</button>

@@ -3,9 +3,9 @@ import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {CommonModule} from "@angular/common";
 import {VersionService} from "../../Services/version.services";
 import {ComponentService} from "../../Services/component.service";
-import {ModalFormType} from "../../Types/modalForm.types.enum";
 import {AddWidgetModalComponent} from "../ModalComponents/AddWidgetModal/add-widget-modal.component";
 import { WidgetType } from "../../Types/widget.type.enum";
+import { ComponentModel } from "../../Models/Component.Model";
 
 @Component({
   selector: 'header-component',
@@ -17,7 +17,6 @@ import { WidgetType } from "../../Types/widget.type.enum";
 export class HeaderComponent implements OnInit {
 
   protected readonly TextStringsUtil = TextStringsUtil;
-  protected readonly FormType = ModalFormType;
   protected open = false;
   
   protected widgetOptions = [
@@ -39,7 +38,8 @@ export class HeaderComponent implements OnInit {
     { type: 'note',  label: 'Note',  description: 'Plain text note', icon: 'bi bi-sticky' }
   ];*/
 
-  protected handleSelect(t: string) {
+  protected handleSubmit(component: ComponentModel) {
+    this.componentService.AddNewComponent(component);
     //this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Add}));
   }
 

@@ -1,4 +1,4 @@
-import {ModalFormType} from "../Types/modalForm.types.enum";
+import {ModalType} from "../Types/modaltypes.enum";
 import {ComponentModel} from "./Component.Model";
 export class ModalViewModel {
   title!: string;
@@ -11,7 +11,7 @@ export class ModalViewModel {
   dropDownTitleOne?: string;
   dropDownTitleTwo?: string;
   linkToImageTitle?: string;
-  type!: ModalFormType;
+  type!: ModalType;
   component!: ComponentModel
   selectedDropDownValue?: number;
 }

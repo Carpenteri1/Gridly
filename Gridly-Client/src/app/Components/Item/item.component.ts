@@ -4,11 +4,11 @@ import { ComponentService } from '../../Services/component.service';
 import { SetModalComponentFormData } from '../../Utils/viewModel.factory';
 import { TextStringsUtil } from '../../Constants/text.strings.util';
 import { ComponentModel } from '../../Models/Component.Model';
-import { ModalFormType } from '../../Types/modalForm.types.enum';
+import { ModalType } from '../../Types/modaltypes.enum';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { PromptModalComponent } from '../ModalComponents/PromptModal/prompt-modal.component';
 import { EditWidgetModalComponent } from '../ModalComponents/EditWidgetModal/edit-widget-modal.component';
-import { ModalBehaviorService } from '../../Services/modal-behavior.service';
+import { ModalService } from '../../Services/modal.service';
 import { ResizableDirective } from '../../Directives/resizable.directive';
 
 @Component({
@@ -35,7 +35,7 @@ export class ItemComponent {
 
   constructor(
     public componentService: ComponentService,
-    private modalBehavior: ModalBehaviorService
+    private modalService: ModalService
   ) {}
 
   protected IconFilePath(item: ComponentModel): string {
@@ -66,25 +66,27 @@ export class ItemComponent {
   }
 
   protected handleSelect(t: any) {
-    this.modalBehavior.submit(
-      SetModalComponentFormData({ type: this.FormType.Edit })
+    this.modalService.submit(
+      SetModalComponentFormData({ type: ModalType.Edit })
     );
   }
 
-  handleEditModalChange(modalId: number): void {
+  handleModalChange(modalId: number): void {
     if (modalId === this.id) {
       this.isEditModalOpen = false;
-    }
-  }
-
-  handleDeleteModalChange(modalId: number): void {
-    if (modalId === this.id) {
       this.isDeleteModalOpen = false;
     }
   }
 
-  protected handleSubmit() {
-    // Submit logic if needed
+  protected handleSubmit(event: {component: ComponentModel; modalType: ModalType }) {
+    switch (event.modalType) {
+      case ModalType.Edit:
+        this.componentService.EditComponentData(event.component);
+        break;
+      case ModalType.Delete:
+        this.componentService.DeleteComponent(event.component);
+        break;
+    }
   }
 
   OpenEditModal(componentId: number): void {
@@ -101,5 +103,4 @@ export class ItemComponent {
 
   protected readonly TextStringsUtil = TextStringsUtil;
   protected readonly SetModalComponentFormData = SetModalComponentFormData;
-  protected readonly FormType = ModalFormType;
 }

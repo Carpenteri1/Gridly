@@ -7,7 +7,6 @@ export function MapIconData(icon?: IconModel) : IconModel {
     base64Data: icon?.base64Data ?? "",
   } as IconModel;
 }
-
 MapIconData.Override = function(override: Partial<IconModel>, icon?: IconModel): IconModel {
   return MapIconData({
     name: override?.name ?? icon?.name ?? "",

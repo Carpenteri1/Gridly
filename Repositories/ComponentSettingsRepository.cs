@@ -18,7 +18,7 @@ public class ComponentSettingsRepository(IDbConnection connection) : IComponentS
     {
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.UpdateComponentSettingsQuery);
-        builder.Where(QueryStrings.WhereComponentIdPrimaryKeyEqualComponentObjectId, settings);
+        builder.Where(QueryStrings.WhereComponentIdForeignKeyEqualId, settings);
         return await _dbCommandRunner.Execute(template.RawSql,settings);
     }
     
@@ -27,6 +27,6 @@ public class ComponentSettingsRepository(IDbConnection connection) : IComponentS
         var builder = new SqlBuilder();                                                       
         var template = builder.AddTemplate(QueryStrings.DeleteFromComponentSettingsQuery); 
         builder.Where(QueryStrings.WhereComponentIdForeignKeyEqualId, new { ComponentId = Id });
-        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters) == null;
+        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
     }
 }

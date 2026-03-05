@@ -41,13 +41,15 @@ public class ComponentHandler(
     public async Task<IResult> Handle(DeleteComponentCommand command, CancellationToken cancellationToken)
     {
         var components = await componentRepository.Get();
-        var component = components.FirstOrDefault(x => x.Id == command.Id);
+   
         
-        if (await settingsRepository.Delete(component.ComponentSettings.Id.Value) is false &&
-            await componentRepository.Delete(component) is false)
+        if (await settingsRepository.Delete(command.Id) is false ||
+            await componentRepository.Delete(command.Id) is false)
             return Results.StatusCode(500);
-
-        if (component.IconData != null)
+        
+         var component = components.FirstOrDefault(x => x.Id == command.Id);
+        if (component != null &&
+         component.IconData != null)
         {
             var iconsConnected = 
                 await iconConnectedRepository.GetManyById(null,component.IconData.Id);
@@ -67,7 +69,7 @@ public class ComponentHandler(
     
     public async Task<IResult> Handle(EditComponentCommand command, CancellationToken cancellationToken)
     {
-        var components = await componentRepository.Get() as List<ComponentModel>;
+        var components = await componentRepository.Get();
         if (components == null) return Results.StatusCode(500);
         
         var component = components.FirstOrDefault(x => x.Id == command.EditComponent.Id);
@@ -117,7 +119,7 @@ public class ComponentHandler(
                         }
                     }
                 }
-                else
+                /*else
                 {
                     connectionModel.ComponentId = component.Id;
                     component.IconData = await iconRepository.Insert(command.EditComponent.IconData);
@@ -126,6 +128,7 @@ public class ComponentHandler(
                        await iconConnectedRepository.Insert(connectionModel) == null)
                         return Results.StatusCode(500);   
                 }
+                */
                 break;
             case 2:
                 if (currentHasIcon)
@@ -157,10 +160,11 @@ public class ComponentHandler(
             component.ComponentSettings.Height = command.EditComponent.ComponentSettings.Height;
             component.ComponentSettings.Width = command.EditComponent.ComponentSettings.Width;
         }
+
+        var result = await settingsRepository.Edit(component.ComponentSettings) != null;
+        result = await componentRepository.Edit(component);
         
-        return await settingsRepository.Edit(component.ComponentSettings) != null && 
-               await componentRepository.Edit(component) ? 
-            Results.Ok() : Results.StatusCode(500);
+        return result ? Results.Ok() : Results.StatusCode(500);
     }
 
     public async Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken)

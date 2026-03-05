@@ -7,17 +7,18 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../SharedModalComponents/base-modal.component';
-import { ModalBehaviorService } from '../../../Services/modal-behavior.service';
+import { ModalService } from '../../../Services/modal.service';
 import { WidgetType } from '../../../Types/widget.type.enum';
 import { WidgetOptionsModal } from '../../../Models/WidgetOptionsModal';
+import { MapComponentData } from '../../../Utils/componentModel.factory';
+import { ComponentModel } from '../../../Models/Component.Model';
 
 @Component({
   selector: 'add-widget-modal',
   standalone: true,
-  imports: [CommonModule, ModalDirective],
+  imports: [ModalDirective],
   templateUrl: './add-widget-modal.component.html',
   styleUrls: ['./add-widget-modal.component.css'],
 })
@@ -29,10 +30,10 @@ export class AddWidgetModalComponent
   @Input() widgetOptions: WidgetOptionsModal[] = [];
 
   @Output() openChange = new EventEmitter<boolean>();
-  @Output() select = new EventEmitter<WidgetType>();
+  @Output() newWidget = new EventEmitter<ComponentModel>();
 
-  constructor(modalBehavior: ModalBehaviorService) {
-    super(modalBehavior);
+  constructor(modalService: ModalService) {
+    super(modalService);
   }
 
   ngAfterViewInit(): void {
@@ -56,16 +57,9 @@ export class AddWidgetModalComponent
   onSelect(type: WidgetType) {
     switch (type) {
       case WidgetType.Custom:
-        this.select.emit(type); // TODO use this value
-        break;
+        return this.newWidget.emit(MapComponentData());
       default:
-        this.select.emit(type);
-        this.close();
-        break;
+        return this.newWidget.emit(MapComponentData());
     }
-  }
-
-  get SelectedType(): EventEmitter<WidgetType> {
-    return this.select;
   }
 }
