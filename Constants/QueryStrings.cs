@@ -85,7 +85,7 @@ public class QueryStrings
     public const string JoinComponentSettingsQuery = "ComponentSettings cs ON cs.ComponentId = co.Id";
     
     public const string WhereComponentIdForeignKeyEqualId = "ComponentId = @ComponentId";
-    public const string WhereIdForeignKeyEqualId = "Id = @Id";
+    public const string WhereIdEqualsId = "Id = @Id";
     public const string WhereIconConnectedIconIdForeignKeyEqualIdWithAlias = "ic.IconId = @IconId";
     public const string WhereIconConnectedComponentIdForeignKeyEqualIdWithAlias = "ic.ComponentId = @ComponentId";
     public const string WhereComponentIdEqualsComponentIdWithAlias = "co.Id = @componentId";

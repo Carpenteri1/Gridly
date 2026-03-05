@@ -22,7 +22,7 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
     {
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.UpdateComponentQuery,component);
-        builder.Where(QueryStrings.WhereComponentIdForeignKeyEqualId, new { ComponentId = component.Id });
+        builder.Where(QueryStrings.WhereIdEqualsId,  new { Id = component.Id });
         return await _dbCommandRunner.Execute(template.RawSql,template.Parameters);
     }
 
@@ -73,7 +73,7 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
     {
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.DeleteFromComponentQuery);
-        builder.Where(QueryStrings.WhereIdForeignKeyEqualId, new { Id = id });
+        builder.Where(QueryStrings.WhereIdEqualsId, new { Id = id });
         return await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
     }
 }
