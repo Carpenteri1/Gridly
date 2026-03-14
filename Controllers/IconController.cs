@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gridly.Controllers;
 
-
 [ApiController]
 [Route("/api/[controller]")]
 public class IconController(IMediator mediator) : Controller
 {
     [HttpGet("get")]
     public async Task<IResult> Get() =>
-        await mediator.Send(new GetIconsCommand());
+        await mediator.Send(new GetIconCommand());
+
+    [HttpGet("search")]
+    public async Task<IResult> Search([FromBody] SearchIconsCommand command) =>
+        await mediator.Send(command);
 }
