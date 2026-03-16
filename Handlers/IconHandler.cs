@@ -1,6 +1,9 @@
 using Gridly.Command;
+using Gridly.Constants;
+using Gridly.Dtos;
 using Gridly.Services;
 using MediatR;
+using System.Text.Json;
 
 public class ComponentHandler(
     IIconRepository iconRepository, 
@@ -14,8 +17,6 @@ public class ComponentHandler(
         //TODO Thirdparty endpoint here
         //Some limiter here
         //Search for stored icons here
-
-        //https://api.iconify.design/
         return Results.Ok();
     }
 
@@ -23,8 +24,8 @@ public class ComponentHandler(
     {
         //Some limiter here
         //cashing maybe??
-        var endpoint = $"https://api.iconify.design/search?query={command.Value}&limit=20";
-        var result = await httpClientServices.Get(endpoint);
-        return Results.Ok(result);
+        var result = await httpClientServices.Get(string.Format(EndpointStrings.SearchIconifyDesignEndPoint, command.Value));
+        var searchResult = JsonSerializer.Deserialize<SearchIconsResultDto>(result.Item2, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        return Results.Ok(searchResult);
     }
 }

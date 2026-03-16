@@ -13,6 +13,6 @@ public class IconController(IMediator mediator) : Controller
         await mediator.Send(new GetIconCommand());
 
     [HttpGet("search")]
-    public async Task<IResult> Search([FromBody] SearchIconsCommand command) =>
-        await mediator.Send(command);
+    public async Task<IResult> Search([FromQuery] SearchIconsCommand command) =>
+    await mediator.Send(command);
 }
