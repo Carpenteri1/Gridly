@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalDirective } from '../../../Directives/modal.directive';
@@ -7,10 +7,10 @@ import { ModalService } from '../../../Services/modal.service';
 import { MapComponentData } from '../../../Utils/componentModel.factory';
 import { ComponentModel } from '../../../Models/Component.Model';
 import { ModalType } from '../../../Types/modaltypes.enum';
+import { IconService } from '../../../Services/Icon.service';
 
 @Component({
   selector: 'edit-widget-modal',
-  standalone: true,
   imports: [CommonModule, FormsModule, ModalDirective],
   templateUrl: './edit-widget-modal.component.html',
   styleUrls: ['../../../css/shared.modal.css'],
@@ -22,6 +22,11 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
   @Output() openChange = new EventEmitter<number>();
   @Output() editWidget = new EventEmitter<{component: ComponentModel, modalType: ModalType}>();
   componentData: ComponentModel = MapComponentData();
+  selectedOption: string = '';
+
+  #iconService = inject(IconService);
+  icons$ = this.#iconService.icons$;
+  input$ = this.#iconService.searchInput$;
 
   constructor(modalService: ModalService) {
     super(modalService);
@@ -45,6 +50,10 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
         this.openChange.emit(modalId);
       });
     }
+  }
+
+  onSearch(input: string) {
+    this.#iconService.searchInput$.next(input);
   }
 
   onSubmit() {

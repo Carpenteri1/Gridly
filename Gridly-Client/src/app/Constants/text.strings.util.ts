@@ -17,6 +17,7 @@ export class TextStringsUtil {
   static readonly ModalEditComponentCancelBtnTitle = "Cancel";
   static readonly ModalEditComponentInputNameTitle = "Edit Component: Title";
   static readonly ModalEditComponentInputUrlTitle = "Edit Component URL: http://127.0.0.1";
+  static readonly ModalEditComponentInputSearchIconTitle = "Search for Icon";
   static readonly ModalEditComponentDropDownOptionTitleOne = "Upload New Image to Component";
   static readonly ModalEditComponentDropDownOptionTitleTwo = "Link To Image";
   static readonly ModalEditComponentLinkToImageTitle = "URL To Image"

@@ -32,7 +32,29 @@
             name="url"
             required>
         </div>
- <!--
+        
+        <div class="mb-3">
+          <label for="icon-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputSearchIconTitle}}</label>
+            <div class="d-flex flex-row">
+              <input type="text"
+                #iconInput
+                (input)="onSearch(iconInput.value)" 
+                id="icon-input"
+                class="form-control" 
+                placeholder="Enter Icon name"
+                name="icon">
+              <select>
+                @if (icons$ | async; as icons)
+                {
+                  @for (icon of icons.icons; track icon) {
+                    <option [value]="icon">{{icon}}</option>
+                  }
+                }
+              </select>
+            </div>
+        </div>
+
+        <!--
         <div class="mb-3">
           <label for="icon-select" class="form-label">{{TextStringsUtil.ModalEditComponentLinkToImageTitle}}</label>
           <select 
