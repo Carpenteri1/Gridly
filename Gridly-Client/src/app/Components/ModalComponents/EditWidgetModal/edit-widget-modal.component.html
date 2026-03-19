@@ -10,7 +10,7 @@
     <div class="ew-body">
       <form (ngSubmit)="onSubmit()">
         <div class="mb-3">
-          <label for="name-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputNameTitle}}</label>
+          <mat-label for="name-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputNameTitle}}</mat-label>
           <input 
             type="text" 
             id="name-input"
@@ -22,7 +22,7 @@
         </div>
 
         <div class="mb-3">
-          <label for="url-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputUrlTitle}}</label>
+          <mat-label for="url-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputUrlTitle}}</mat-label>
           <input 
             type="text" 
             id="url-input"
@@ -34,24 +34,25 @@
         </div>
         
         <div class="mb-3">
-          <label for="icon-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputSearchIconTitle}}</label>
-            <div class="d-flex flex-row">
-              <input type="text"
+          <mat-label for="icon-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputSearchIconTitle}}</mat-label>
+            <div class="d-flex flex-column">
+              <input 
+                type="text"
+                class="form-control"
                 #iconInput
                 (input)="onSearch(iconInput.value)" 
-                id="icon-input"
-                class="form-control" 
+                matInput
                 placeholder="Enter Icon name"
                 name="icon">
-              <select>
+              <mat-select>
                 @if (icons$ | async; as icons)
                 {
                   @for (icon of icons.icons; track icon) {
-                    <option [value]="icon">{{icon}}</option>
+                    <mat-option [value]="icon"><mat-icon>{{icon}}</mat-icon></mat-option>
                   }
                 }
-              </select>
-            </div>
+              </mat-select>
+            </div>    
         </div>
 
         <!--

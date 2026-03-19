@@ -4,7 +4,5 @@ public class EndpointStrings
 {
     public const string GetVersionRemoteEndPoint = "https://api.github.com/repos/Carpenteri1/Gridly/releases/latest";
     public const string GetVersionInternalEndPoint = "http://localhost:7575/api/version/latest";
-
-    public const string IconifyDesignEndPoint = "https://api.iconify.design";
-    public const string SearchIconifyDesignEndPoint = IconifyDesignEndPoint+@"/search?query={0}&limit=20";
+    public const string materialIconsEndPoint = "https://raw.githubusercontent.com/google/material-design-icons/master/font/MaterialIcons-Regular.codepoints"; 
 }

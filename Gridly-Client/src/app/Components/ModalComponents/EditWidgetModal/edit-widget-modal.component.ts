@@ -8,10 +8,12 @@ import { MapComponentData } from '../../../Utils/componentModel.factory';
 import { ComponentModel } from '../../../Models/Component.Model';
 import { ModalType } from '../../../Types/modaltypes.enum';
 import { IconService } from '../../../Services/Icon.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'edit-widget-modal',
-  imports: [CommonModule, FormsModule, ModalDirective],
+  imports: [CommonModule, FormsModule, ModalDirective, MatIconModule, MatSelectModule],
   templateUrl: './edit-widget-modal.component.html',
   styleUrls: ['../../../css/shared.modal.css'],
 })
