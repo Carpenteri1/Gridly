@@ -5,7 +5,6 @@ using Gridly.Services;
 using MediatR;
 
 public class ComponentHandler(
-    IIconRepository iconRepository, 
     IHttpClientServices httpClientServices,
     IMemoryCashingService memoryCache) : 
         IRequestHandler<GetIconCommand, IResult>,

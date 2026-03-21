@@ -10,12 +10,13 @@ import { ModalType } from '../../../Types/modaltypes.enum';
 import { IconService } from '../../../Services/Icon.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'edit-widget-modal',
-  imports: [CommonModule, FormsModule, ModalDirective, MatIconModule, MatSelectModule],
+  imports: [CommonModule, FormsModule, ModalDirective, MatIconModule, MatSelectModule, MatInputModule],  
   templateUrl: './edit-widget-modal.component.html',
-  styleUrls: ['../../../css/shared.modal.css'],
+styleUrls: ['../../../css/shared.modal.css', './edit-widget-modal.component.css'],
 })
 export class EditWidgetModalComponent extends BaseModalComponent implements OnChanges {
   @Input() open: boolean = false;

@@ -15,7 +15,7 @@ export class IconService{
 
     getIcons$ (input$: Observable<string>): Observable<SearchIconsResultDto | null>{
       const result = input$.pipe(
-        debounceTime(300),
+        debounceTime(1000),
         filter(input => input.length > 0),
         switchMap(input => this.#iconEndpoints.search(input).pipe(catchError(() => of(null))))
       );
