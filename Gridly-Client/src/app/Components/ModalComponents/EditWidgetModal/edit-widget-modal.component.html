@@ -18,7 +18,7 @@
             class="form-control" 
             placeholder="Enter name"
             name="name"
-            [(ngModel)]="componentData.name"
+            [(ngModel)]="facade.componentData.name"
             required>
         </mat-form-field>
 
@@ -29,7 +29,7 @@
             type="text" 
             id="url-input"
             class="form-control" 
-            [(ngModel)]="componentData.url"
+            [(ngModel)]="facade.componentData.url"
             placeholder="Enter URL"
             name="url"
             required>
@@ -42,7 +42,7 @@
             matInput
             type="text"
             #iconInput
-            (input)="onSearch(iconInput.value)" 
+            (input)="facade.onSearch(iconInput.value)" 
             placeholder="Enter Icon name"
             name="icon">
           <button matSuffix id="dropDownButton" (click)="dropDown.open();$event.stopPropagation()" type="button">
@@ -50,8 +50,8 @@
           </button>
         </div>
           <div class="d-flex">
-            <mat-select #dropDown>             
-              @if (icons$ | async; as icons)
+            <mat-select #dropDown [value]="facade.componentData.materialIcon" (selectionChange)="facade.setIcon($event.value)">             
+              @if (facade.icons$ | async; as icons)
               {
                 @for (icon of icons.icons; track icon) {
                   <mat-option [value]="icon"><mat-icon>{{icon}}</mat-icon></mat-option>
@@ -60,9 +60,6 @@
             </mat-select>
           </div>
         </mat-form-field>
-              <!-- -->
-
-
         <!--
         <div class="mb-3">
           <label for="icon-select" class="form-label">{{TextStringsUtil.ModalEditComponentLinkToImageTitle}}</label>

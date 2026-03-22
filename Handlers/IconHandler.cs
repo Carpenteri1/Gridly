@@ -17,9 +17,6 @@ public class ComponentHandler(
 
     public async Task<IResult> Handle(SearchIconsCommand command, CancellationToken cancellationToken)
     {
-
-        //TODO use a cached list of icons instead of calling the endpoint every time
-        //Better filter
         var data = memoryCache.Get<string[]>("mat-icons");
 
         if (data == null)

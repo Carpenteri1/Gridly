@@ -47,6 +47,9 @@
         @if (componentService.IconDataSet(CurrentComponent)){
           <img [src]="IconFilePath(CurrentComponent)" class="p-3 icon-size item-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
         }
+        @if(componentService.MaterialIconSet(CurrentComponent)){
+          <mat-icon>{{CurrentComponent.materialIcon}}</mat-icon>
+        }
         @else {
           <span><i class="bi bi-box"></i></span>
         }

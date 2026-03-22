@@ -6,4 +6,5 @@ public class IconModel
     public string Name {get; set;}
     public string Type {get; set;}
     public string Base64Data {get; set;}
+    public string MaterialIcon {get; set;}
 }

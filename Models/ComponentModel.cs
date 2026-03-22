@@ -10,5 +10,6 @@ public class ComponentModel
     [JsonPropertyName("url")] public string Url { get; set; }
     [JsonPropertyName("iconData")] public IconModel? IconData { get; set; }
     [JsonPropertyName("iconUrl")] public string IconUrl { get; set; }
+    [JsonPropertyName("materialIcon")] public string? MaterialIcon { get; set; }
     [JsonPropertyName("componentSettings")] public ComponentSettingsModel? ComponentSettings { get; set; }
 }

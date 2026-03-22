@@ -151,6 +151,7 @@ public class ComponentHandler(
         {
             component.Name = command.EditComponent.Name;
             component.Url = command.EditComponent.Url;
+            component.MaterialIcon = command.EditComponent.MaterialIcon;
         }
 
         if (component.ComponentSettings != command.EditComponent.ComponentSettings)

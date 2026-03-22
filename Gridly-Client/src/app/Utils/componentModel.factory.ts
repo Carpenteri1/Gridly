@@ -20,6 +20,7 @@ MapComponentData.Override = function(override: Partial<ComponentModel>, componen
     url: override.url ??  component?.url ?? "",
     iconData: override.iconData ?? component?.iconData ?? null,
     iconUrl: override.iconUrl ?? component?.iconUrl ?? "",
+    materialIcon: override.materialIcon ?? component?.materialIcon ?? "",
     componentSettings: override.componentSettings ?? component?.componentSettings ?? MapComponentSettingsData()
   } as ComponentModel);
 };

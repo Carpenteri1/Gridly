@@ -59,6 +59,12 @@ export class ComponentService{
       !item.componentSettings?.imageHidden;
   }
 
+    MaterialIconSet(item :ComponentModel): boolean {
+    return  item.materialIcon !== undefined  &&
+      item.materialIcon !== "" &&
+      !item.componentSettings?.imageHidden;
+  }
+
   get ComponentHasBaseData(){
     return this.component.name !== undefined && "" &&
       this.component.url !== undefined && "" &&

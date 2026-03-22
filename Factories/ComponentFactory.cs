@@ -13,12 +13,14 @@ public static class ComponentFactory
             Name = dto.ComponentName,
             Url = dto.Url,
             IconUrl = dto.IconUrl,
+            MaterialIcon = dto.MaterialIcon,
             IconData = dto.IconName != null ? new IconModel
             {
                 Id = dto.IconId != null ? dto.IconId : 0,
                 Name = dto.IconName,
                 Type = dto.Type,
-                Base64Data = dto.Base64Data
+                Base64Data = dto.Base64Data,
+                MaterialIcon = dto.MaterialIcon
             } : null,
             ComponentSettings = new ComponentSettingsModel
             {
