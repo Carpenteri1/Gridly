@@ -79,79 +79,94 @@ public class ComponentHandler(
         var currentHasIcon = handlerHelper.IconDataHasValue(component.IconData);
 
 
-        switch (command.SelectedDropDownIconValue)
+        /* switch (command.SelectedDropDownIconValue)
+         {
+             case 1:
+                 component.IconUrl = string.Empty;
+                 if (editHasIcon)
+                 {
+                     if (currentHasIcon)
+                     {
+                         var icon = await iconRepository.GetByFullName(component.IconData);
+                         if (icon != null)
+                         {
+                             var connections = await iconConnectedRepository.GetManyById(null, icon.Id);
+                             if (connections.Count(x => x.IconId == icon.Id) <= 1)
+                             {
+                                 await iconConnectedRepository.Delete(component.Id);
+                                 await iconRepository.Delete(icon.Id);
+                                 handlerHelper.DeleteIcon(component);
+                             }
+                         }
+                     }
+                     var editIcon = await iconRepository.GetByFullName(command.EditComponent.IconData);
+                     if (editIcon == null)
+                     {
+                         editIcon = await iconRepository.Insert(command.EditComponent.IconData);
+                         component.IconData = editIcon;
+                         connectionModel.IconId = editIcon.Id;
+                         await iconConnectedRepository.Insert(connectionModel);
+                         handlerHelper.UploadIcon(component);
+                     }
+                     else
+                     {
+                         component.IconData = editIcon;
+                         var connections = await iconConnectedRepository.GetManyById(null, editIcon.Id);
+                         if (connections.Count(x => x.IconId == editIcon.Id) == 0)
+                         {
+                             connectionModel.IconId = editIcon.Id;
+                             if (await iconConnectedRepository.Insert(connectionModel) == null) return Results.StatusCode(500);   
+                         }
+                     }
+                 }
+                 /*else
+                 {
+                     connectionModel.ComponentId = component.Id;
+                     component.IconData = await iconRepository.Insert(command.EditComponent.IconData);
+                     if (component.IconData != null) connectionModel.IconId = component.IconData.Id;
+                     if(handlerHelper.UploadIcon(component) && 
+                        await iconConnectedRepository.Insert(connectionModel) == null)
+                         return Results.StatusCode(500);   
+                 }
+
+                 break;
+             case 2:
+                 if (currentHasIcon)
+                 {
+                     var connections = await iconConnectedRepository.GetManyById(null, component.IconData.Id);
+                     var connectionsToIcon = connections.Count(x => x.IconId == component.IconData.Id);
+                     if (connectionsToIcon == 1)
+                     {
+                         if(handlerHelper.DeleteIcon(component) is false &&
+                            await iconRepository.Delete(component.IconData.Id) is false)
+                             return Results.StatusCode(500);  
+                     }
+                     if (await iconConnectedRepository.Delete(component.Id) is false) return Results.StatusCode(500);  
+                     component.IconUrl = command.EditComponent.IconUrl;
+                 } 
+                 break;
+         }*/
+
+        if(component.IconData is not null)
         {
-            case 1:
-                component.IconUrl = string.Empty;
-                if (editHasIcon)
-                {
-                    if (currentHasIcon)
-                    {
-                        var icon = await iconRepository.GetByFullName(component.IconData);
-                        if (icon != null)
-                        {
-                            var connections = await iconConnectedRepository.GetManyById(null, icon.Id);
-                            if (connections.Count(x => x.IconId == icon.Id) <= 1)
-                            {
-                                await iconConnectedRepository.Delete(component.Id);
-                                await iconRepository.Delete(icon.Id);
-                                handlerHelper.DeleteIcon(component);
-                            }
-                        }
-                    }
-                    var editIcon = await iconRepository.GetByFullName(command.EditComponent.IconData);
-                    if (editIcon == null)
-                    {
-                        editIcon = await iconRepository.Insert(command.EditComponent.IconData);
-                        component.IconData = editIcon;
-                        connectionModel.IconId = editIcon.Id;
-                        await iconConnectedRepository.Insert(connectionModel);
-                        handlerHelper.UploadIcon(component);
-                    }
-                    else
-                    {
-                        component.IconData = editIcon;
-                        var connections = await iconConnectedRepository.GetManyById(null, editIcon.Id);
-                        if (connections.Count(x => x.IconId == editIcon.Id) == 0)
-                        {
-                            connectionModel.IconId = editIcon.Id;
-                            if (await iconConnectedRepository.Insert(connectionModel) == null) return Results.StatusCode(500);   
-                        }
-                    }
-                }
-                /*else
-                {
-                    connectionModel.ComponentId = component.Id;
-                    component.IconData = await iconRepository.Insert(command.EditComponent.IconData);
-                    if (component.IconData != null) connectionModel.IconId = component.IconData.Id;
-                    if(handlerHelper.UploadIcon(component) && 
-                       await iconConnectedRepository.Insert(connectionModel) == null)
-                        return Results.StatusCode(500);   
-                }
-                */
-                break;
-            case 2:
-                if (currentHasIcon)
-                {
-                    var connections = await iconConnectedRepository.GetManyById(null, component.IconData.Id);
-                    var connectionsToIcon = connections.Count(x => x.IconId == component.IconData.Id);
-                    if (connectionsToIcon == 1)
-                    {
-                        if(handlerHelper.DeleteIcon(component) is false &&
-                           await iconRepository.Delete(component.IconData.Id) is false)
-                            return Results.StatusCode(500);  
-                    }
-                    if (await iconConnectedRepository.Delete(component.Id) is false) return Results.StatusCode(500);  
-                    component.IconUrl = command.EditComponent.IconUrl;
-                } 
-                break;
+            component.IconData.MaterialIcon = command.EditComponent.IconData.MaterialIcon;
+        }
+        else
+        {
+            component.IconData = new IconModel
+            {
+                Id = 0,
+                Name = command.EditComponent.IconData.Name,
+                Type = command.EditComponent.IconData.Type,
+                Base64Data = command.EditComponent.IconData.Base64Data,
+                MaterialIcon = command.EditComponent.IconData.MaterialIcon
+            };
         }
 
         if (component != command.EditComponent)
         {
             component.Name = command.EditComponent.Name;
             component.Url = command.EditComponent.Url;
-            component.MaterialIcon = command.EditComponent.MaterialIcon;
         }
 
         if (component.ComponentSettings != command.EditComponent.ComponentSettings)
@@ -164,7 +179,10 @@ public class ComponentHandler(
 
         var result = await settingsRepository.Edit(component.ComponentSettings) != null;
         result = await componentRepository.Edit(component);
-        
+
+        if (component.IconData is not null)
+           await iconRepository.Insert(component.IconData);
+
         return result ? Results.Ok() : Results.StatusCode(500);
     }
 

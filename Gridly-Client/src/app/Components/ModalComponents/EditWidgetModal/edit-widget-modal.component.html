@@ -50,7 +50,7 @@
           </button>
         </div>
           <div class="d-flex">
-            <mat-select #dropDown [value]="facade.componentData.materialIcon" (selectionChange)="facade.setIcon($event.value)">             
+            <mat-select #dropDown [value]="facade.componentData.iconData?.materialIcon" (selectionChange)="facade.setIcon($event.value)">             
               @if (facade.icons$ | async; as icons)
               {
                 @for (icon of icons.icons; track icon) {

@@ -20,7 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [
     CommonModule,
     CdkDragHandle,
-    PromptModalComponent,
+    PromptModalComponent,   
     EditWidgetModalComponent,
     ResizableDirective,
     MatIconModule

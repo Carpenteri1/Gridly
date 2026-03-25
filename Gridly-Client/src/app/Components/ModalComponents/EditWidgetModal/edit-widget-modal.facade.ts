@@ -27,20 +27,17 @@ export class EditWidgetModalFacade {
     this.#iconService.searchInput$.next(input);
   }
 
-  //TODO make it better
   setIcon(event: string): void {
     this.componentData.iconData = MapIconData();
-    this.componentData.materialIcon = event;
+    this.componentData.iconData.materialIcon = event;
   }
 
   reset(initial?: Partial<ComponentModel>): void {
     this.componentData = MapComponentData.Override(initial ?? {});
   }
 
-  //TODO fix bug, seems to reset the materialicon do its default value 
   buildSubmitPayload(widgetId: number): { component: ComponentModel; modalType: ModalType } {
     this.componentData.id = widgetId;
-    debugger;
     return {
       component: MapComponentData(this.componentData),
       modalType: ModalType.Edit,

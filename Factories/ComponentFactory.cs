@@ -13,7 +13,6 @@ public static class ComponentFactory
             Name = dto.ComponentName,
             Url = dto.Url,
             IconUrl = dto.IconUrl,
-            MaterialIcon = dto.MaterialIcon,
             IconData = dto.IconName != null ? new IconModel
             {
                 Id = dto.IconId != null ? dto.IconId : 0,
