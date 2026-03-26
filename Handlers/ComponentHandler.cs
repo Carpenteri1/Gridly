@@ -79,11 +79,11 @@ public class ComponentHandler(
         var currentHasIcon = handlerHelper.IconDataHasValue(component.IconData);
 
 
-        /* switch (command.SelectedDropDownIconValue)
-         {
-             case 1:
+         //switch (command.SelectedDropDownIconValue)
+        // {
+           //  case 1:
                  component.IconUrl = string.Empty;
-                 if (editHasIcon)
+                 /*if (editHasIcon)
                  {
                      if (currentHasIcon)
                      {
@@ -119,7 +119,7 @@ public class ComponentHandler(
                          }
                      }
                  }
-                 /*else
+                 else
                  {
                      connectionModel.ComponentId = component.Id;
                      component.IconData = await iconRepository.Insert(command.EditComponent.IconData);
@@ -127,10 +127,10 @@ public class ComponentHandler(
                      if(handlerHelper.UploadIcon(component) && 
                         await iconConnectedRepository.Insert(connectionModel) == null)
                          return Results.StatusCode(500);   
-                 }
+                 }*/
 
-                 break;
-             case 2:
+             //    break;
+           //  case 2:
                  if (currentHasIcon)
                  {
                      var connections = await iconConnectedRepository.GetManyById(null, component.IconData.Id);
@@ -141,11 +141,12 @@ public class ComponentHandler(
                             await iconRepository.Delete(component.IconData.Id) is false)
                              return Results.StatusCode(500);  
                      }
-                     if (await iconConnectedRepository.Delete(component.Id) is false) return Results.StatusCode(500);  
-                     component.IconUrl = command.EditComponent.IconUrl;
-                 } 
-                 break;
-         }*/
+                     if (await iconConnectedRepository.Delete(component.Id) is false) return Results.StatusCode(500);
+                        //component.IconUrl = command.EditComponent.IconUrl;
+                        component.IconData.MaterialIcon = command.EditComponent.IconData.MaterialIcon;
+        } 
+               // break;
+        // }
 
         if(component.IconData is not null)
         {
@@ -155,7 +156,7 @@ public class ComponentHandler(
         {
             component.IconData = new IconModel
             {
-                Id = 0,
+                Id = command.EditComponent.IconData.Id,
                 Name = command.EditComponent.IconData.Name,
                 Type = command.EditComponent.IconData.Type,
                 Base64Data = command.EditComponent.IconData.Base64Data,
@@ -179,11 +180,16 @@ public class ComponentHandler(
 
         var result = await settingsRepository.Edit(component.ComponentSettings) != null;
         result = await componentRepository.Edit(component);
-
-        if (component.IconData is not null)
-           await iconRepository.Insert(component.IconData);
-
-        return result ? Results.Ok() : Results.StatusCode(500);
+        component.IconData = await iconRepository.Insert(component.IconData);
+        if (component.IconData.Id > 0)
+        {
+            result = await iconConnectedRepository.Insert(new IconConnectedDtoModel
+            {
+                ComponentId = component.Id,
+                IconId = component.IconData.Id
+            }) != null;
+        }
+        return result ? Results.Ok(): Results.StatusCode(500);
     }
 
     public async Task<IResult> Handle(BatchEditComponentCommand commands, CancellationToken cancellationToken)
