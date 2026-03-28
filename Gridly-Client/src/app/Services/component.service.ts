@@ -60,8 +60,8 @@ export class ComponentService{
   }
 
     MaterialIconSet(item :ComponentModel): boolean {
-    return  item.materialIcon !== undefined  &&
-      item.materialIcon !== "" &&
+    return  item.iconData?.materialIcon !== undefined  &&
+      item.iconData?.materialIcon !== "" &&
       !item.componentSettings?.imageHidden;
   }
 
@@ -129,17 +129,8 @@ export class ComponentService{
   }
 
   async AddNewComponent(component: ComponentModel) {
-    let index = this.Components.length > 0 ? this.Components.length != 0 : 0;
-    if(index !== 0){
-      let sortedListOfComponents = this.components.sort((a,b) => a.id - b.id);
-      const lastIndex = sortedListOfComponents.length - 1;
-      component = MapComponentData.Override({id: sortedListOfComponents[lastIndex].id + 1 }, component);
-    }
-    else{
-      component = MapComponentData.Override({id: index + 1 }, component);
-    }
+    console.log("Adding component: ", component);
     await this.CallEndpoint(ComponentEndPointType.Add,undefined, component);
-
   }
 
  async EditComponentData(component: ComponentModel) {

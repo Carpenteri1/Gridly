@@ -1,5 +1,6 @@
 using Gridly.Command;
 using Gridly.Dtos;
+using Gridly.Factories;
 using Gridly.helpers;
 using Gridly.Models;
 using Gridly.Repositories;
@@ -21,6 +22,7 @@ public class ComponentHandler(
     IRequestHandler<BatchEditComponentCommand, IResult>
 {
     private readonly ComponentHandlerHelper handlerHelper = new(fileService);
+
     public async Task<IResult> Handle(SaveComponentCommand command, CancellationToken cancellationToken)
     {
         var storedComponents = await componentRepository.Get();
@@ -29,12 +31,15 @@ public class ComponentHandler(
         else command.IndexPosition = storedComponents.Count() + 1;
         
         var component = await componentRepository.Insert(command);
+
         command.ComponentSettings.ComponentId = component.Id;
-        component.ComponentSettings = await settingsRepository.Insert(command.ComponentSettings);
-        
-        if (component == null || component.ComponentSettings == null)
-            return Results.StatusCode(500);
-        
+        await settingsRepository.Insert(command.ComponentSettings);
+
+        component.IconData = IconFactory.Create(command.IconData);
+        component.IconData = await iconRepository.Insert(component.IconData);
+
+        await iconConnectedRepository.Insert(IconConnectedFactory.Create(component.Id, component.IconData.Id));
+
         return Results.Ok();
     }
     
@@ -82,7 +87,7 @@ public class ComponentHandler(
          //switch (command.SelectedDropDownIconValue)
         // {
            //  case 1:
-                 component.IconUrl = string.Empty;
+        component.IconUrl = string.Empty;
                  /*if (editHasIcon)
                  {
                      if (currentHasIcon)
@@ -131,37 +136,27 @@ public class ComponentHandler(
 
              //    break;
            //  case 2:
-                 if (currentHasIcon)
-                 {
-                     var connections = await iconConnectedRepository.GetManyById(null, component.IconData.Id);
-                     var connectionsToIcon = connections.Count(x => x.IconId == component.IconData.Id);
-                     if (connectionsToIcon == 1)
-                     {
-                         if(handlerHelper.DeleteIcon(component) is false &&
-                            await iconRepository.Delete(component.IconData.Id) is false)
-                             return Results.StatusCode(500);  
-                     }
-                     if (await iconConnectedRepository.Delete(component.Id) is false) return Results.StatusCode(500);
-                        //component.IconUrl = command.EditComponent.IconUrl;
-                        component.IconData.MaterialIcon = command.EditComponent.IconData.MaterialIcon;
-        } 
-               // break;
+        if (currentHasIcon)
+        {
+            var connections = await iconConnectedRepository.GetManyById(null, component.IconData.Id);
+            var connectionsToIcon = connections.Count(x => x.IconId == component.IconData.Id);
+            if (connectionsToIcon == 1)
+            {
+                if(handlerHelper.DeleteIcon(component) is false &&
+                   await iconRepository.Delete(component.IconData.Id) is false)
+                    return Results.StatusCode(500);  
+            }
+            if (await iconConnectedRepository.Delete(component.Id) is false) return Results.StatusCode(500);
+               //component.IconUrl = command.EditComponent.IconUrl;
+               component.IconData.MaterialIcon = command.EditComponent.IconData.MaterialIcon;
+        }
+        // break;
         // }
 
-        if(component.IconData is not null)
+        //TODO EditComponent.IconData.MaterialIcon has no value 
+        if (component.IconData is not null)
         {
             component.IconData.MaterialIcon = command.EditComponent.IconData.MaterialIcon;
-        }
-        else
-        {
-            component.IconData = new IconModel
-            {
-                Id = command.EditComponent.IconData.Id,
-                Name = command.EditComponent.IconData.Name,
-                Type = command.EditComponent.IconData.Type,
-                Base64Data = command.EditComponent.IconData.Base64Data,
-                MaterialIcon = command.EditComponent.IconData.MaterialIcon
-            };
         }
 
         if (component != command.EditComponent)
@@ -180,15 +175,26 @@ public class ComponentHandler(
 
         var result = await settingsRepository.Edit(component.ComponentSettings) != null;
         result = await componentRepository.Edit(component);
-        component.IconData = await iconRepository.Insert(component.IconData);
-        if (component.IconData.Id > 0)
+        component.IconData = await iconRepository.Edit(component.IconData);
+        var s = await iconConnectedRepository.GetManyById(component.Id, component.IconData.Id);
+
+        if(s.Count() == 0)
+        {
+            await iconConnectedRepository.Insert(
+               new IconConnectedDtoModel
+            {
+                ComponentId = component.Id,
+                IconId = component.IconData.Id
+            });
+        }
+        /*if (component.IconData.Id > 0)
         {
             result = await iconConnectedRepository.Insert(new IconConnectedDtoModel
             {
                 ComponentId = component.Id,
                 IconId = component.IconData.Id
             }) != null;
-        }
+        }*/
         return result ? Results.Ok(): Results.StatusCode(500);
     }
 
@@ -204,7 +210,7 @@ public class ComponentHandler(
     public async Task<IResult> Handle(GetAllComponentCommand command, CancellationToken cancellationToken)
     {
         var components = await componentRepository.Get();
-        return Results.Ok(components);
+        return Results.Ok(components.OrderBy(c => c.IndexPosition));
     }
     
     public async Task<ComponentModel?> Handle(GetByIdComponentCommands command, CancellationToken cancellationToken) => 

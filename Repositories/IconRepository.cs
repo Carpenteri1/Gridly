@@ -15,7 +15,15 @@ public class IconRepository(IDbConnection connection, IFileService fileService) 
     {
         return await _dbCommandRunner.Execute(QueryStrings.InsertToIconQuery, icon);
     }
-    
+
+    public async Task<IconModel> Edit(IconModel icon)
+    {
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(QueryStrings.UpdateIconQuery, icon);
+        builder.Where(QueryStrings.WhereIdEqualsId, new { Id = icon.Id });
+        return await _dbCommandRunner.Execute(template.RawSql, icon);
+    }
+
     public async Task<IconModel> GetByFullName(IconModel icon)
     {
         var builder = new SqlBuilder();

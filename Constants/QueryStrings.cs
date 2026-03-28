@@ -48,7 +48,15 @@ public class QueryStrings
     public const string SelectIconConnectedQuery = @"
     SELECT *
     FROM IconsConnected ic /**leftjoin**//**where**/";
-    
+
+    public const string UpdateIconQuery = @"
+    UPDATE Component
+    SET Name = @Name, 
+        Type = @Type,
+        Base64Data = @Base64Data, 
+        MaterialIcon = @MaterialIcon
+        /**where**/";
+
     public const string UpdateComponentQuery = @"
     UPDATE Component
     SET Name = @Name, 
