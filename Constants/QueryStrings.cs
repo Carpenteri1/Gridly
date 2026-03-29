@@ -50,7 +50,7 @@ public class QueryStrings
     FROM IconsConnected ic /**leftjoin**//**where**/";
 
     public const string UpdateIconQuery = @"
-    UPDATE Component
+    UPDATE Icon
     SET Name = @Name, 
         Type = @Type,
         Base64Data = @Base64Data, 

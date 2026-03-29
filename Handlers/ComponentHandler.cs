@@ -154,10 +154,12 @@ public class ComponentHandler(
         // }
 
         //TODO EditComponent.IconData.MaterialIcon has no value 
-        if (component.IconData is not null)
+        if (component.IconData is null)
         {
-            component.IconData.MaterialIcon = command.EditComponent.IconData.MaterialIcon;
+            component.IconData = await iconRepository.GetById(command.EditComponent.IconData.Id);
         }
+
+        component.IconData.MaterialIcon = command.EditComponent.IconData.MaterialIcon;
 
         if (component != command.EditComponent)
         {
@@ -175,7 +177,7 @@ public class ComponentHandler(
 
         var result = await settingsRepository.Edit(component.ComponentSettings) != null;
         result = await componentRepository.Edit(component);
-        component.IconData = await iconRepository.Edit(component.IconData);
+        await iconRepository.Edit(component.IconData);
         var s = await iconConnectedRepository.GetManyById(component.Id, component.IconData.Id);
 
         if(s.Count() == 0)
