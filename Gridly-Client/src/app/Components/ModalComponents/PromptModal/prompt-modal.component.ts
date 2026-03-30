@@ -4,7 +4,6 @@ import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../SharedModalComponents/base-modal.component';
 import { ModalService } from '../../../Services/modal.service';
 import { ComponentModel } from '../../../Models/Component.Model';
-import { MapComponentData } from '../../../Utils/componentModel.factory';
 import { ModalType } from '../../../Types/modaltypes.enum';
 
 @Component({

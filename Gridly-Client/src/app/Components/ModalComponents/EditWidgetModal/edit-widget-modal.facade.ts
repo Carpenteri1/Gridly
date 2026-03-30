@@ -4,14 +4,12 @@ import { SearchIconsResultDto } from '../../../DTOs/SearchIconsResultDto';
 import { ComponentModel } from '../../../Models/Component.Model';
 import { IconService } from '../../../Services/Icon.service';
 import { ModalType } from '../../../Types/modaltypes.enum';
-import { MapComponentData } from '../../../Utils/componentModel.factory';
 import { MapIconData } from '../../../Utils/iconModel.factory';
-import { IconModel } from '../../../Models/Icon.Model';
 
 @Injectable()
 export class EditWidgetModalFacade {
   readonly icons$: Observable<SearchIconsResultDto | null>;
-  componentData: ComponentModel = MapComponentData();
+  componentData: ComponentModel = new ComponentModel();
 
   #iconService = inject(IconService);
 
@@ -39,7 +37,7 @@ export class EditWidgetModalFacade {
   buildSubmitPayload(widgetId: number): { component: ComponentModel; modalType: ModalType } {
     this.componentData.id = widgetId;
     return {
-      component: MapComponentData(this.componentData),
+      component: this.componentData,
       modalType: ModalType.Edit,
     };
   }

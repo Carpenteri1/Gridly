@@ -12,24 +12,7 @@ public static class ComponentFactory
             IndexPosition = dto. IndexPosition,
             Name = dto.ComponentName,
             Url = dto.Url,
-            IconUrl = dto.IconUrl,
-            IconData = dto.IconName != null ? new IconModel
-            {
-                Id = dto.IconId != null ? dto.IconId : 0,
-                Name = dto.IconName,
-                Type = dto.Type,
-                Base64Data = dto.Base64Data,
-                MaterialIcon = dto.MaterialIcon
-            } : null,
-            ComponentSettings = new ComponentSettingsModel
-            {
-                Id = dto.ComponentSettingsId != null ? dto.ComponentSettingsId : 0,
-                ComponentId = dto.ComponentId, 
-                Width = dto.Width, 
-                Height = dto.Height,
-                TitleHidden = dto.TitleHidden,
-                ImageHidden = dto.ImageHidden
-            }
+            IconUrl = dto.IconUrl
         };
 
     public static IEnumerable<ComponentModel> CreateMany(IEnumerable<ComponentDtoModel> dtos) 
