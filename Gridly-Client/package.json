@@ -12,9 +12,10 @@
   "private": true,
   "dependencies": {
     "@angular-devkit/build-angular": "^21.2.1",
-    "@angular/platform-server": "^21.2.1",
-    "@angular/forms": "^21.2.1",
     "@angular/cdk": "^21.2.1",
+    "@angular/forms": "^21.2.1",
+    "@angular/material": "^21.2.3",
+    "@angular/platform-server": "^21.2.1",
     "@angular/ssr": "^21.2.1",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",

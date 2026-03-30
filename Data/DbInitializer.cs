@@ -34,7 +34,8 @@ public class DbInitializer
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Name TEXT,
                 Type TEXT,
-                Base64Data TEXT);
+                Base64Data TEXT,
+                MaterialIcon TEXT);
 
                 CREATE TABLE IF NOT EXISTS ComponentSettings(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -13,8 +13,8 @@ public class QueryStrings
     SELECT * FROM ComponentSettings WHERE Id = last_insert_rowid();";
     
     public const string InsertToIconQuery = @"
-    INSERT INTO Icon (Name, Type, Base64Data) 
-    VALUES (@Name, @Type, @Base64Data);
+    INSERT INTO Icon (Name, Type, Base64Data, MaterialIcon) 
+    VALUES (@Name, @Type, @Base64Data, @MaterialIcon);
     SELECT * FROM Icon WHERE Id = last_insert_rowid();";
     
     public const string InsertToConnectedIconQuery = @"
@@ -37,17 +37,26 @@ public class QueryStrings
         i.Id AS IconId,
         i.Type AS Type,
         i.Name AS IconName,
-        i.Base64Data AS Base64Data
+        i.Base64Data AS Base64Data,
+        i.MaterialIcon AS MaterialIcon
         FROM Component co /**leftjoin**//**where**//**orderby**/";
     
     public const string SelectIconQuery = @"
-    SELECT i.Id, i.Name, i.Type, i.Base64Data 
+    SELECT i.Id, i.Name, i.Type, i.Base64Data, i.MaterialIcon 
     FROM Icon i /**leftjoin**//**where**/";
     
     public const string SelectIconConnectedQuery = @"
     SELECT *
     FROM IconsConnected ic /**leftjoin**//**where**/";
-    
+
+    public const string UpdateIconQuery = @"
+    UPDATE Icon
+    SET Name = @Name, 
+        Type = @Type,
+        Base64Data = @Base64Data, 
+        MaterialIcon = @MaterialIcon
+        /**where**/";
+
     public const string UpdateComponentQuery = @"
     UPDATE Component
     SET Name = @Name, 

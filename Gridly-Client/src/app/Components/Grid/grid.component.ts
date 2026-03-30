@@ -6,8 +6,8 @@ import { ItemComponent } from "../Item/item.component";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
 import { SetModalComponentFormData } from '../../Utils/viewModel.factory';
 import { MapComponentData } from '../../Utils/componentModel.factory';
-import { ComponentModel } from '../../Models/Component.Model';
-import { ComponentEndPointType } from '../../Types/endPoint.type.enum';
+import { ComponentEndPointType } from "../../Types/endPoint.type.enum";
+import { ComponentModel } from "../../Models/Component.Model";
 
 @Component({
   selector: 'grid-component',
@@ -25,15 +25,10 @@ export class GridComponent implements AfterViewChecked, OnInit{
     private render: Renderer2,
     private el: ElementRef) {
   }
-  /*
-  protected handleSelect(t: string) {
-    this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Edit}));
-  }*/
-
-  async ngOnInit(): Promise<void> {
+    async ngOnInit(): Promise<void> {
     //TODO in testing mode add empty components
     
-    if(this.componentService.Components === undefined){
+   if(this.componentService.Components === undefined){
       this.componentService.Components = await this.componentService.CallEndpoint(ComponentEndPointType.Get) as ComponentModel[];
     }
     

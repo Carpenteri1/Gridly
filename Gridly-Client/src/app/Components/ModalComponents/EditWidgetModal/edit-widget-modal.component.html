@@ -1,4 +1,4 @@
-<dialog #dlg modalWindow [open]="open" [modalId]="modalId" [id]="id" (openChange)="openChange.emit($event)" class="ew-dialog" (click)="modalDirective?.onBackdropClick($event)">
+<dialog #dlg modalWindow [open]="open" [modalId]="modalId" [id]="id" (openChange)="openChange.emit($event)" class="ew-dialog" (click)="modalDirective.onBackdropClick($event)">
   <div class="ew-card" (click)="$event.stopPropagation()">
     <header class="ew-header">
       <h3 id="ew-title" class="m-0">Edit {{modalId}}</h3>
@@ -9,30 +9,58 @@
 
     <div class="ew-body">
       <form (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label for="name-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputNameTitle}}</label>
+        <mat-form-field class="mb-3 w-100 gap-2 form-control">
+          <mat-label for="name-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputNameTitle}}</mat-label>
           <input 
             type="text" 
+            matInput
             id="name-input"
             class="form-control" 
             placeholder="Enter name"
             name="name"
-            [(ngModel)]="componentData.name"
+            [(ngModel)]="facade.componentData.name"
             required>
-        </div>
+        </mat-form-field>
 
-        <div class="mb-3">
-          <label for="url-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputUrlTitle}}</label>
+        <mat-form-field class="mb-3 w-100 gap-2 form-control">
+          <mat-label for="url-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputUrlTitle}}</mat-label>
           <input 
+            matInput
             type="text" 
             id="url-input"
             class="form-control" 
-            [(ngModel)]="componentData.url"
+            [(ngModel)]="facade.componentData.url"
             placeholder="Enter URL"
             name="url"
             required>
+        </mat-form-field>
+
+        <mat-form-field class="mb-3 w-100 gap-2 form-control">
+          <mat-label>{{TextStringsUtil.ModalEditComponentInputSearchIconTitle}}</mat-label>
+        <div class="d-flex">
+          <input 
+            matInput
+            type="text"
+            #iconInput
+            (input)="facade.onSearch(iconInput.value)" 
+            placeholder="Enter Icon name"
+            name="icon">
+          <button matSuffix id="dropDownButton" (click)="dropDown.open();$event.stopPropagation()" type="button">
+            <mat-icon>arrow_drop_down</mat-icon>
+          </button>
         </div>
- <!--
+          <div class="d-flex">
+            <mat-select #dropDown [value]="facade.componentData.iconData?.materialIcon" (selectionChange)="facade.setIcon($event.value)">             
+              @if (facade.icons$ | async; as icons)
+              {
+                @for (icon of icons.icons; track icon) {
+                  <mat-option [value]="icon"><mat-icon>{{icon}}</mat-icon></mat-option>
+                }
+              }
+            </mat-select>
+          </div>
+        </mat-form-field>
+        <!--
         <div class="mb-3">
           <label for="icon-select" class="form-label">{{TextStringsUtil.ModalEditComponentLinkToImageTitle}}</label>
           <select 

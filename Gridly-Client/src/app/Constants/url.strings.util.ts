@@ -10,5 +10,9 @@ export class UrlStringsUtil {
   static readonly ComponentUrlEdit = this.ComponentUrl+'edit';
   static readonly ComponentsBatchUrlEdit = this.ComponentUrl+'batch/edit';
 
+  static readonly IconUrl = '/api/icon/';
+  static readonly IconUrlSearch = this.IconUrl+'search?value=';
+  static readonly IconGet = this.IconUrl+'get';
+
   static readonly GitHubReleaseURL = 'https://github.com/Carpenteri1/Gridly/releases/tag/';
 }

@@ -10,6 +10,7 @@ import { PromptModalComponent } from '../ModalComponents/PromptModal/prompt-moda
 import { EditWidgetModalComponent } from '../ModalComponents/EditWidgetModal/edit-widget-modal.component';
 import { ModalService } from '../../Services/modal.service';
 import { ResizableDirective } from '../../Directives/resizable.directive';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'item-component',
@@ -19,9 +20,10 @@ import { ResizableDirective } from '../../Directives/resizable.directive';
   imports: [
     CommonModule,
     CdkDragHandle,
-    PromptModalComponent,
+    PromptModalComponent,   
     EditWidgetModalComponent,
     ResizableDirective,
+    MatIconModule
   ],
 })
 export class ItemComponent {

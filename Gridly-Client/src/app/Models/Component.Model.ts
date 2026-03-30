@@ -11,8 +11,10 @@ export class ComponentModel {
       type: "",
       name: "",
       base64Data: "",
+      materialIcon: ""
     };
   iconUrl?: string;
+  materialIcon?: string;
   componentSettings? : ComponentSettingsModel |
     {
       width:250,

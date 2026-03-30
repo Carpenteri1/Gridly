@@ -18,7 +18,8 @@ public static class ComponentFactory
                 Id = dto.IconId != null ? dto.IconId : 0,
                 Name = dto.IconName,
                 Type = dto.Type,
-                Base64Data = dto.Base64Data
+                Base64Data = dto.Base64Data,
+                MaterialIcon = dto.MaterialIcon
             } : null,
             ComponentSettings = new ComponentSettingsModel
             {

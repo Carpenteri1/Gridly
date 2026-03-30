@@ -11,6 +11,7 @@ public class ComponentDtoModel
     public string IconName { get; set; }
     public string Type { get; set; }
     public string Base64Data { get; set; }
+    public string MaterialIcon { get; set; }
     public int ComponentSettingsId { get; set; }
     public int Width { get; set; }
     public int Height { get; set; }

@@ -35,34 +35,16 @@
 
   }
 </div>
-
-<!-- Item content -->
-  @if (CurrentComponent && hasBaseData(CurrentComponent)){
-      <a [style]="componentService.InEditMode ? 'cursor:none;':'cursor:auto;'" 
-      [href]="componentService.InEditMode ? null : CurrentComponent.url" 
-      class="text-center d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75" target="_blank">
-        @if (componentService.IconUrlSet(CurrentComponent)){
-          <img [src]="CurrentComponent.iconUrl" class="p-3 icon-size item-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
-        }
-        @if (componentService.IconDataSet(CurrentComponent)){
-          <img [src]="IconFilePath(CurrentComponent)" class="p-3 icon-size item-icon-center" alt="{{TextStringsUtil.GridComponentIconNotFoundMessage}}">
-        }
-        @else {
-          <span><i class="bi bi-box"></i></span>
-        }
-        <p>{{CurrentComponent.id}}</p>
-        <p [hidden]="CurrentComponent.componentSettings?.titleHidden" class="text-center" >{{CurrentComponent.name}}</p>
-      </a>
-  }
-  @else
-  {
       <a class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2">
-        <span><i class="bi bi-box"></i></span>
-        <p>{{id}}</p>
+        <span>
+          <mat-icon class="component-mat-icon-size">
+            {{CurrentComponent?.iconData?.materialIcon}}
+          </mat-icon>
+        </span>
+        <p>{{CurrentComponent?.id}}</p>
         <h5 class="fw-bold">{{TextStringsUtil.EmptyWidgetTitle}}</h5>
-        <p class="small-text">{{TextStringsUtil.EmptyWidgetDescription}}</p>
+        <p [hidden]="CurrentComponent?.componentSettings?.titleHidden" class="text-center" >{{CurrentComponent?.name}}</p>
       </a>
-  }
   <edit-widget-modal 
     [open]="isEditModalOpen"
     [modalId]="id"
