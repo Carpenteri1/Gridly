@@ -36,7 +36,11 @@
   }
 </div>
       <a class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2">
-        <span><mat-icon>{{CurrentComponent?.iconData?.materialIcon}}</mat-icon></span>
+        <span>
+          <mat-icon class="component-mat-icon-size">
+            {{CurrentComponent?.iconData?.materialIcon}}
+          </mat-icon>
+        </span>
         <p>{{CurrentComponent?.id}}</p>
         <h5 class="fw-bold">{{TextStringsUtil.EmptyWidgetTitle}}</h5>
         <p [hidden]="CurrentComponent?.componentSettings?.titleHidden" class="text-center" >{{CurrentComponent?.name}}</p>

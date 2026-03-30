@@ -42,3 +42,9 @@
 .bi-arrows-angle-expand{
   transform: rotate(45deg) !important;
 }
+
+.component-mat-icon-size{
+  font-size: 80px;
+  width: 80px;
+  height: 80px;
+}
