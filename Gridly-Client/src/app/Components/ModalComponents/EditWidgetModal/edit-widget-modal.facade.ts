@@ -4,7 +4,7 @@ import { SearchIconsResultDto } from '../../../DTOs/SearchIconsResultDto';
 import { ComponentModel } from '../../../Models/Component.Model';
 import { IconService } from '../../../Services/Icon.service';
 import { ModalType } from '../../../Types/modaltypes.enum';
-import { MapIconData } from '../../../Utils/iconModel.factory';
+import { IconModel } from '../../../Models/Icon.Model';
 
 @Injectable()
 export class EditWidgetModalFacade {
@@ -26,12 +26,20 @@ export class EditWidgetModalFacade {
   }
 
   setIcon(event: string): void {
-    this.componentData.iconData = MapIconData();
+
+    var iconData = new IconModel();
+    iconData.materialIcon = event;
+    iconData.type = "";
+    iconData.name = "";
+    iconData.base64Data = "";
+    iconData.type = "";
+
+    this.componentData.iconData = iconData;
     this.componentData.iconData.materialIcon = event;
   }
 
   reset(initial?: Partial<ComponentModel>): void {
-    this.componentData = MapComponentData.Override(initial ?? {});
+    //this.componentData = MapComponentData.Override(initial ?? {});
   }
 
   buildSubmitPayload(widgetId: number): { component: ComponentModel; modalType: ModalType } {

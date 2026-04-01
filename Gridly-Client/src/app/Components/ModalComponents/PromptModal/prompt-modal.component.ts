@@ -18,7 +18,7 @@ export class PromptModalComponent extends BaseModalComponent implements OnChange
   @Input() modalId: number = 0;
   @Input() id: number = 0;
   @Output() openChange = new EventEmitter<number>();
-  @Output() deleteWidget = new EventEmitter<{component: ComponentModel, modalType: ModalType}>();
+  @Output() deleteWidget = new EventEmitter<{id: number, modalType: ModalType}>();
 
   constructor(modalService: ModalService) {
     super(modalService);
@@ -55,6 +55,6 @@ export class PromptModalComponent extends BaseModalComponent implements OnChange
 
     onSubmit() {
       this.close();
-      this.deleteWidget.emit({component: MapComponentData.Override({id: this.id}), modalType: ModalType.Delete});
+      this.deleteWidget.emit({id: this.id, modalType: ModalType.Delete});
     }
 }

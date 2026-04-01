@@ -179,7 +179,7 @@ export class ComponentService{
             console.error(TextStringsUtil.ComponentBatchEditFailedEndPointMessage, err);
           }
         }
-        break;
+        break;/*
       case ComponentEndPointType.Delete:
         if(componentData !== undefined && componentData !== null){
           try {
@@ -189,7 +189,7 @@ export class ComponentService{
               console.error(TextStringsUtil.ComponentDeletionFailedEndPointMessage, err);
             }
           }
-          break
+          break*/
       case ComponentEndPointType.GetById:
         let component!: ComponentModel;
 
@@ -213,12 +213,18 @@ export class ComponentService{
     window.location.reload();
   }
 
-  async DeleteComponent(component: ComponentModel) {
-    await this.CallEndpoint(ComponentEndPointType.Delete, undefined ,component);
+  
+  async DeleteComponent(id: number) {
+    try {
+          this.Component = await lastValueFrom(
+          this.componentEndpointService.Delete(id));
+        } catch (err) {
+          console.error(TextStringsUtil.ComponentDeletionFailedEndPointMessage, err);
+      }
   }
 
   showMenu = signal(false);
   toggleMenu(): void {
-    this.showMenu.update((showMenu) => showMenu);
+    this.showMenu.update((showMenu) => !showMenu);
   }
 }

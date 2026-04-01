@@ -1,7 +1,6 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComponentService } from '../../Services/component.service';
-import { SetModalComponentFormData } from '../../Utils/viewModel.factory';
 import { TextStringsUtil } from '../../Constants/text.strings.util';
 import { ComponentModel } from '../../Models/Component.Model';
 import { ModalType } from '../../Types/modaltypes.enum';
@@ -11,6 +10,7 @@ import { EditWidgetModalComponent } from '../ModalComponents/EditWidgetModal/edi
 import { ModalService } from '../../Services/modal.service';
 import { ResizableDirective } from '../../Directives/resizable.directive';
 import { MatIconModule } from '@angular/material/icon';
+import { ModalViewModel } from '../../Models/ModalView.Model';
 
 @Component({
   selector: 'item-component',
@@ -67,10 +67,10 @@ export class ItemComponent {
     );
   }
 
-  protected handleSelect(t: any) {
-    this.modalService.submit(
-      SetModalComponentFormData({ type: ModalType.Edit })
-    );
+  protected handleSelect(t: any) {//TODO facad maybe ?
+    var model = new ModalViewModel();
+    model.type = ModalType.Edit;
+    this.modalService.submit(model);
   }
 
   handleModalChange(modalId: number): void {
@@ -85,10 +85,11 @@ export class ItemComponent {
       case ModalType.Edit:
         this.componentService.EditComponentData(event.component);
         break;
-      case ModalType.Delete:
-        this.componentService.DeleteComponent(event.component);
-        break;
     }
+  }
+
+  protected deleteWidget(event: {id: number; modalType: ModalType }) {
+    this.componentService.DeleteComponent(event.id);
   }
 
   OpenEditModal(componentId: number): void {
@@ -104,5 +105,4 @@ export class ItemComponent {
   }
 
   protected readonly TextStringsUtil = TextStringsUtil;
-  protected readonly SetModalComponentFormData = SetModalComponentFormData;
 }

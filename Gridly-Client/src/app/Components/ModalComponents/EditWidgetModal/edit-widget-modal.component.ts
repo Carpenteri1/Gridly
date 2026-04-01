@@ -17,6 +17,7 @@ import { EditWidgetModalFacade } from './edit-widget-modal.facade';
   templateUrl: './edit-widget-modal.component.html',
   styleUrls: ['../../../css/shared.modal.css', './edit-widget-modal.component.css'],
   providers: [EditWidgetModalFacade],
+  standalone: true
 })
 export class EditWidgetModalComponent extends BaseModalComponent implements OnChanges {
   @Input() open: boolean = false;

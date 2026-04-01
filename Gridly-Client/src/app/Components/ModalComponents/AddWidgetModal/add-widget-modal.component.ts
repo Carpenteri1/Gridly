@@ -56,9 +56,9 @@ export class AddWidgetModalComponent
   onSelect(type: WidgetType) {
     switch (type) {
       case WidgetType.Custom:
-        return this.newWidget.emit(MapComponentData());
+        return this.newWidget.emit(new ComponentModel());
       default:
-        return this.newWidget.emit(MapComponentData());
+        return this.newWidget.emit(new ComponentModel());
     }
   }
 }
