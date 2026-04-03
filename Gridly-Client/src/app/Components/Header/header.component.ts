@@ -1,11 +1,12 @@
-import {Component, OnInit, signal} from "@angular/core";
+import {Component, inject, OnInit, signal} from "@angular/core";
+import { take } from 'rxjs';
 import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {CommonModule} from "@angular/common";
 import {VersionService} from "../../Services/version.services";
-import {ComponentService} from "../../Services/component.service";
 import {AddWidgetModalComponent} from "../ModalComponents/AddWidgetModal/add-widget-modal.component";
 import { WidgetType } from "../../Types/widget.type.enum";
 import { ComponentModel } from "../../Models/Component.Model";
+import { ComponentEndpointService } from "../../Services/endpoints/component.endpoint.service";
 
 @Component({
   selector: 'header-component',
@@ -16,18 +17,18 @@ import { ComponentModel } from "../../Models/Component.Model";
 })
 export class HeaderComponent implements OnInit {
 
+  #componentEndpointService = inject(ComponentEndpointService);
+  #versionEndpointService = inject(VersionService);
+  showMenu = signal(false);
+
   protected readonly TextStringsUtil = TextStringsUtil;
-  protected open = false;
+  protected addWidgetDialogActive = false;
   
   protected widgetOptions = [
     { type: WidgetType.Empty, label: 'Add empty widget', description: '', icon: 'bi bi-box' },
     { type: WidgetType.Custom, label: 'Add custom widget', description: '', icon: 'bi bi-box-fill' },
   ]
-  
-  constructor(
-    protected versionService: VersionService,
-    protected componentService: ComponentService) {
-  }
+
 
   /* TODO variants later maybe
 
@@ -39,15 +40,19 @@ export class HeaderComponent implements OnInit {
   ];*/
 
   protected handleSubmit(component: ComponentModel) {
-    this.componentService.AddNewComponent(component);
-    //this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Add}));
+    this.#componentEndpointService.add(component).pipe(take(1)).subscribe();
+  }
+
+  //componentService.EditComponentsData(componentService.Components)
+  //TODO get all components and activate edit mode
+  protected setEditMode(){
+    
   }
 
   async ngOnInit() {
-    await this.versionService.SetVersion();
+    await this.#versionEndpointService.SetVersion();
   }
 
-  showMenu = signal(false);
   toggleMenu(): void {
     this.showMenu.update((showMenu) => showMenu);
   }

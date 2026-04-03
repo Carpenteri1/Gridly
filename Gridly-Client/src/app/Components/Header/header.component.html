@@ -8,26 +8,26 @@
     </div>
 
     <button class="navbar-toggler" type="button" (click)="toggleMenu()" aria-controls="mainNavbar"
-            [attr.aria-expanded]="showMenu">
+            [attr.aria-expanded]="showMenu()">
     </button>
 
-    <div class="navbar-collapse collapse justify-content-end" [class.show]="showMenu" id="mainNavbar" animate.enter="enter-animation">
+    <div class="navbar-collapse collapse justify-content-end" [class.show]="showMenu()" id="mainNavbar" animate.enter="enter-animation">
       <ul class="navbar-nav align-items-lg-center gap-2 ms-lg-3"  >
-        @if(componentService.InEditMode){
+        @if(showMenu()){
           <li class="nav-item">
-            <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1" (click)="open = true">
+            <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1" (click)="addWidgetDialogActive = true">
               <i class="bi bi-plus-lg me-1"></i>
               <span>{{TextStringsUtil.MenuAddWidgetButtonTitle}}</span>
             </button>
             <add-widget-modal
-              [(open)]="open"
+              [(open)]="addWidgetDialogActive"
               [widgetOptions]="widgetOptions"
               (newWidget)="handleSubmit($event)">
             </add-widget-modal>
           </li>
            <li class="nav-item">
              <button class="btn btn-primary btn-sm d-flex align-items-center gap-1"
-                     (click)="componentService.EditComponentsData(componentService.Components)">
+                     (click)="setEditMode()">
                <i class="bi bi-save"></i>
                <span>Save</span>
              </button>
@@ -36,10 +36,10 @@
 
         <li class="nav-item">
           <button class="btn btn-sm d-flex align-items-center gap-1"
-                  [ngClass]="componentService.InEditMode ? 'btn-primary' : 'btn-outline-secondary'"
-                  (click)="componentService.ToggleEditMode()">
+                  [ngClass]="showMenu() ? 'btn-primary' : 'btn-outline-secondary'"
+                  (click)="showMenu()">
             <i class="bi bi-pencil"></i>
-            <span>{{componentService.InEditMode ?
+            <span>{{ showMenu() ?
               TextStringsUtil.MenuExitEditButtonTitle :
               TextStringsUtil.MenuEditButtonTitle }}</span>
           </button>
