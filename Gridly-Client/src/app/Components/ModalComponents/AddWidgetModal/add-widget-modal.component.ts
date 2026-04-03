@@ -12,7 +12,6 @@ import { BaseModalComponent } from '../SharedModalComponents/base-modal.componen
 import { ModalService } from '../../../Services/modal.service';
 import { WidgetType } from '../../../Types/widget.type.enum';
 import { WidgetOptionsModal } from '../../../Models/WidgetOptionsModal';
-import { MapComponentData } from '../../../Utils/componentModel.factory';
 import { ComponentModel } from '../../../Models/Component.Model';
 
 @Component({
@@ -57,9 +56,9 @@ export class AddWidgetModalComponent
   onSelect(type: WidgetType) {
     switch (type) {
       case WidgetType.Custom:
-        return this.newWidget.emit(MapComponentData());
+        return this.newWidget.emit(new ComponentModel());
       default:
-        return this.newWidget.emit(MapComponentData());
+        return this.newWidget.emit(new ComponentModel());
     }
   }
 }

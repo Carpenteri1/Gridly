@@ -1,6 +1,5 @@
 import {Directive, ElementRef, HostListener, Input, Renderer2} from '@angular/core';
 import {ComponentService} from "../Services/component.service";
-import {MapComponentData} from "../Utils/componentModel.factory";
 
 @Directive({
   standalone: true,
@@ -86,15 +85,13 @@ export class ResizableDirective {
     const adjustedWidth = this.AdjustComponentSize(newWidth);
     const adjustedHeight = this.AdjustComponentSize(newHeight);
     
-    const updatedComponent = MapComponentData.Override(
-      {
-        componentSettings: {
-          width: adjustedWidth,
-          height: adjustedHeight
-        }
-      },
-      this.componentService.Component);
-    
+    const updatedComponent = this.componentService.Component;
+    updatedComponent.componentSettings = {
+      ...updatedComponent.componentSettings,
+      width: adjustedWidth,
+      height: adjustedHeight
+    };
+
     this.componentService.Component = updatedComponent;
     
     if(this.componentService.Components) {

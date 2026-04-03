@@ -1,6 +1,5 @@
 import {Injectable, signal} from "@angular/core";
 import {ComponentModel} from "../Models/Component.Model";
-import {MapComponentData} from "../Utils/componentModel.factory";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
 import {ComponentEndPointType} from "../Types/endPoint.type.enum";
 import {TextStringsUtil} from "../Constants/text.strings.util";
@@ -36,7 +35,7 @@ export class ComponentService{
 
   set Component(item: ComponentModel) {
     if (item !== undefined) {
-      this.component = MapComponentData(item);
+      this.component = item;
     }
   }
 
@@ -166,7 +165,7 @@ export class ComponentService{
           try {
             this.Component =
               await lastValueFrom(this.componentEndpointService.EditComponent(
-                componentData,1));
+                componentData));
           } catch (err) {
             console.error(TextStringsUtil.ComponentEditFailedEndPointMessage, err);
           }
@@ -180,7 +179,7 @@ export class ComponentService{
             console.error(TextStringsUtil.ComponentBatchEditFailedEndPointMessage, err);
           }
         }
-        break;
+        break;/*
       case ComponentEndPointType.Delete:
         if(componentData !== undefined && componentData !== null){
           try {
@@ -190,14 +189,14 @@ export class ComponentService{
               console.error(TextStringsUtil.ComponentDeletionFailedEndPointMessage, err);
             }
           }
-          break
+          break*/
       case ComponentEndPointType.GetById:
         let component!: ComponentModel;
 
         if(componentData !== undefined && componentData !== null && componentsData)
-          component = MapComponentData(componentData);
+          component = componentData;
         else if(modalViewModel !== undefined && modalViewModel !== null && modalViewModel.component !== undefined)
-          component = MapComponentData(modalViewModel.component);
+          component = modalViewModel.component;
 
         if(component !== undefined ) {
           try {
@@ -214,12 +213,18 @@ export class ComponentService{
     window.location.reload();
   }
 
-  async DeleteComponent(component: ComponentModel) {
-    await this.CallEndpoint(ComponentEndPointType.Delete, undefined ,component);
+  
+  async DeleteComponent(id: number) {
+    try {
+          this.Component = await lastValueFrom(
+          this.componentEndpointService.Delete(id));
+        } catch (err) {
+          console.error(TextStringsUtil.ComponentDeletionFailedEndPointMessage, err);
+      }
   }
 
   showMenu = signal(false);
   toggleMenu(): void {
-    this.showMenu.update((showMenu) => showMenu);
+    this.showMenu.update((showMenu) => !showMenu);
   }
 }

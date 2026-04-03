@@ -3,7 +3,6 @@ import {VersionModel} from "../Models/Version.Model";
 import {VersionEndpointService} from "./endpoints/version.endpoint.service";
 import {lastValueFrom} from "rxjs";
 import {TextStringsUtil} from "../Constants/text.strings.util";
-import {MapVersionData} from "../Utils/versionModel.factory";
 import {version} from '../../../package.json';
 
 @Injectable({providedIn: 'root'})
@@ -33,7 +32,8 @@ export class VersionService {
     this.Version = await this.CallEndPoint();
 
     if(this.clientVersion !== this.Version.name)
-      this.Version = MapVersionData.Override({newRelease: this.clientVersion !== this.Version.name}, this.Version);
+      this.Version.newRelease = this.clientVersion !== this.Version.name;
+    
     return this.Version;
   }
 }

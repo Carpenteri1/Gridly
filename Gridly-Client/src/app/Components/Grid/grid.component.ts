@@ -4,8 +4,6 @@ import { ComponentService } from "../../Services/component.service";
 import { ModalViewModel } from "../../Models/ModalView.Model";
 import { ItemComponent } from "../Item/item.component";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
-import { SetModalComponentFormData } from '../../Utils/viewModel.factory';
-import { MapComponentData } from '../../Utils/componentModel.factory';
 import { ComponentEndPointType } from "../../Types/endPoint.type.enum";
 import { ComponentModel } from "../../Models/Component.Model";
 
@@ -22,26 +20,15 @@ export class GridComponent implements AfterViewChecked, OnInit{
 
   constructor(
     protected componentService: ComponentService,
-    private render: Renderer2,
-    private el: ElementRef) {
+    private render: Renderer2) {
   }
-    async ngOnInit(): Promise<void> {
-    //TODO in testing mode add empty components
-    
-   if(this.componentService.Components === undefined){
+  
+  async ngOnInit(): Promise<void> {
+
+    if(this.componentService.Components === undefined){
       this.componentService.Components = await this.componentService.CallEndpoint(ComponentEndPointType.Get) as ComponentModel[];
     }
-    
-    // Fallback test data if API fails or returns empty
-    /*
-    if(!this.componentService.Components || this.componentService.Components.length === 0){
-      this.componentService.Components = [
-        MapComponentData.Override({id: 1 ,name:"Title ett", iconUrl: "https://t4.ftcdn.net/jpg/16/18/52/61/360_F_1618526128_Kpdol855uNe6O7j4JFgMa4J9q9zBJLZb.jpg"}),
-        MapComponentData.Override({id: 2 ,name:"Title två", iconUrl: ""}),
-        MapComponentData.Override({id: 3 ,name:"Title tre", iconUrl: ""}),
-        MapComponentData.Override({id: 4 ,name:"Title fyra", iconUrl: ""}),
-        MapComponentData.Override({id: 5, name:"Title fem", iconUrl: ""})];
-    }*/
+
   }
 
   ngAfterViewChecked() {
