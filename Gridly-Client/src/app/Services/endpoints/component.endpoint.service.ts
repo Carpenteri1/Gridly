@@ -9,7 +9,6 @@ import {HttpClient} from "@angular/common/http";
 })
 
 export class ComponentEndpointService{
-  private flexItems: ComponentModel[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -35,9 +34,5 @@ export class ComponentEndpointService{
 
   EditComponents(editedComponent: ComponentModel[]): Observable<ComponentModel[]> {
     return this.http.post<ComponentModel[]>(UrlStringsUtil.ComponentsBatchUrlEdit, editedComponent).pipe(take(1));
-  }
-
-  GetIndex(id: number): number{
-    return this.flexItems === null ? -1 : this.flexItems.findIndex(item => item.id == id);
   }
 }
