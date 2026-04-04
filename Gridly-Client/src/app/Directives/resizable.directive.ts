@@ -29,10 +29,10 @@ export class ResizableDirective {
     event.preventDefault();
     event.stopPropagation();
     
-    const component = this.componentService.GetComponentById(this.targetId);
+    const component = this.componentService
     if(!component) return;
     
-    this.componentService.Component = component;
+    this.componentService;
     
     this.gridItemElement = this.el.nativeElement.closest('.grid-item-style') as HTMLElement;
     

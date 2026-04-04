@@ -8,7 +8,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ModalDirective } from '../../../Directives/modal.directive';
-import { BaseModalComponent } from '../SharedModalComponents/base-modal.component';
+import { BaseModalComponent } from '../../../Directives/base-modal.component';
 import { ModalService } from '../../../Services/modal.service';
 import { WidgetType } from '../../../Types/widget.type.enum';
 import { WidgetOptionsModal } from '../../../Models/WidgetOptionsModal';

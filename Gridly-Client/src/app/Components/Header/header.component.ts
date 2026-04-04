@@ -1,12 +1,11 @@
 import {Component, inject, OnInit, signal} from "@angular/core";
-import { take } from 'rxjs';
 import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {CommonModule} from "@angular/common";
-import {VersionService} from "../../Services/version.services";
+import {VersionService} from "../../Services/version.service";
 import {AddWidgetModalComponent} from "../ModalComponents/AddWidgetModal/add-widget-modal.component";
 import { WidgetType } from "../../Types/widget.type.enum";
 import { ComponentModel } from "../../Models/Component.Model";
-import { ComponentEndpointService } from "../../Services/endpoints/component.endpoint.service";
+import { ComponentService } from "../../Services/component.service";
 
 @Component({
   selector: 'header-component',
@@ -15,10 +14,14 @@ import { ComponentEndpointService } from "../../Services/endpoints/component.end
   standalone: true,
   imports: [CommonModule, AddWidgetModalComponent]
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
 
-  #componentEndpointService = inject(ComponentEndpointService);
-  #versionEndpointService = inject(VersionService);
+  #componentService = inject(ComponentService);
+  #versionService = inject(VersionService);
+
+  component$ = this.#componentService.component$;
+  version$ = this.#versionService.version$;
+
   showMenu = signal(false);
 
   protected readonly TextStringsUtil = TextStringsUtil;
@@ -39,18 +42,14 @@ export class HeaderComponent implements OnInit {
     { type: 'note',  label: 'Note',  description: 'Plain text note', icon: 'bi bi-sticky' }
   ];*/
 
-  protected handleSubmit(component: ComponentModel) {
-    this.#componentEndpointService.add(component).pipe(take(1)).subscribe();
+  protected add(component: ComponentModel) {
+    this.#componentService.add$(component);
   }
 
   //componentService.EditComponentsData(componentService.Components)
   //TODO get all components and activate edit mode
   protected setEditMode(){
     
-  }
-
-  async ngOnInit() {
-    await this.#versionEndpointService.SetVersion();
   }
 
   toggleMenu(): void {

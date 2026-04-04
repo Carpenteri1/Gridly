@@ -1,12 +1,10 @@
-import {AfterViewChecked, Component, ElementRef, OnInit, Renderer2} from '@angular/core';
+import { Component, inject, Renderer2} from '@angular/core';
 import { CommonModule} from '@angular/common';
 import { ComponentService } from "../../Services/component.service";
-import { ModalViewModel } from "../../Models/ModalView.Model";
 import { ItemComponent } from "../Item/item.component";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
-import { ComponentEndPointType } from "../../Types/endPoint.type.enum";
-import { ComponentModel } from "../../Models/Component.Model";
-
+import { ComponentModel } from '../../Models/Component.Model';
+import { GridService } from '../../Services/grid.service';
 @Component({
   selector: 'grid-component',
   imports: [CommonModule, CdkDropList, CdkDrag, ItemComponent],
@@ -15,45 +13,33 @@ import { ComponentModel } from "../../Models/Component.Model";
   styleUrls: ['./grid.component.css'],
 })
 
-export class GridComponent implements AfterViewChecked, OnInit{
-  protected modalModel!: ModalViewModel;
+export class GridComponent{
 
-  constructor(
-    protected componentService: ComponentService,
-    private render: Renderer2) {
-  }
+  #componentService = inject(ComponentService);
+  #gridService = inject(GridService);
   
-  async ngOnInit(): Promise<void> {
+  components$ = this.#componentService.components$;
+  
+  inEditMode!: boolean;
 
-    if(this.componentService.Components === undefined){
-      this.componentService.Components = await this.componentService.CallEndpoint(ComponentEndPointType.Get) as ComponentModel[];
-    }
-
+  constructor(private render: Renderer2) {
+    this.inEditMode = this.#gridService.inEditMode;
+    this.SetLayout();
   }
 
-  ngAfterViewChecked() {
-    if(!this.componentService.InEditMode &&
-      this.componentService.Components !== undefined)
-    {
-      this.SetLayout();
-    }
-  }
-
-  protected Drop(event: CdkDragDrop<any[]>): void {
-    if (!this.componentService.InEditMode) return;
-        moveItemInArray(this.componentService.Components, event.previousIndex, event.currentIndex);
+  protected Drop(event: CdkDragDrop<ComponentModel[]>): void {
+    if (!this.inEditMode) return;
+        moveItemInArray(event.item.data, event.previousIndex, event.currentIndex);
   }
 
   protected SetLayout() {
-    if(!this.componentService.Components) return;
-    
-    for (const item of this.componentService.Components) {
+    /*for (const item of this.components) {
       const el = document.getElementById(item.id.toString());
       if(el) {
         this.render.setStyle(el, 'height', item.componentSettings?.height + 'px');
         this.render.setStyle(el, 'width', item.componentSettings?.width + 'px');
         this.render.setStyle(el, 'flex', '0 0 ' + item.componentSettings?.width + 'px');
       }
-    }
+    }*/
   }
 }

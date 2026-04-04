@@ -1,8 +1,9 @@
-<div class="grid-layout" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
-  
-  @for (component of componentService.Components; track component.id) {
-    <div class="shadow-sm grid-item-style" cdkDrag [cdkDragDisabled]="!componentService.InEditMode" [id]="component.id.toString()">
-      <item-component [id]="component.id" ></item-component>
+@if (components$ | async; as components) {
+  <div class="grid-layout" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
+    @for(component of components; track component) {
+    <div class="shadow-sm grid-item-style" cdkDrag [cdkDragDisabled]="!inEditMode" [id]="component.id.toString()">
+      <item-component></item-component>
     </div>
-  }
-</div>
+    }
+  </div>
+}
