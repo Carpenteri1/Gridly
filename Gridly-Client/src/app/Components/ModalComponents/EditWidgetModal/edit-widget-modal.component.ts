@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalDirective } from '../../../Directives/modal.directive';
-import { BaseModalComponent } from '../SharedModalComponents/base-modal.component';
+import { BaseModalComponent } from '../../../Directives/base-modal.component';
 import { ModalService } from '../../../Services/modal.service';
 import { ComponentModel } from '../../../Models/Component.Model';
 import { ModalType } from '../../../Types/modaltypes.enum';
@@ -25,7 +25,8 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
   @Input() id: number = 0;
   @Input() component?: ComponentModel;
   @Output() openChange = new EventEmitter<number>();
-  @Output() editWidget = new EventEmitter<{component: ComponentModel, modalType: ModalType}>();
+  @Output() editedComponent = new EventEmitter();
+  
   readonly facade: EditWidgetModalFacade;
 
   constructor(modalService: ModalService, facade: EditWidgetModalFacade) {
@@ -59,6 +60,6 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
   onSubmit() {
     const payload = this.facade.buildSubmitPayload(this.id);
     this.close();
-    this.editWidget.emit(payload);
+    this.editedComponent.emit(payload);
   }
 }

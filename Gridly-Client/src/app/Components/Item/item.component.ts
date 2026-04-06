@@ -1,16 +1,14 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, inject, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComponentService } from '../../Services/component.service';
 import { TextStringsUtil } from '../../Constants/text.strings.util';
 import { ComponentModel } from '../../Models/Component.Model';
-import { ModalType } from '../../Types/modaltypes.enum';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { PromptModalComponent } from '../ModalComponents/PromptModal/prompt-modal.component';
 import { EditWidgetModalComponent } from '../ModalComponents/EditWidgetModal/edit-widget-modal.component';
-import { ModalService } from '../../Services/modal.service';
 import { ResizableDirective } from '../../Directives/resizable.directive';
 import { MatIconModule } from '@angular/material/icon';
-import { ModalViewModel } from '../../Models/ModalView.Model';
+import { GridService } from '../../Services/grid.service';
 
 @Component({
   selector: 'item-component',
@@ -27,50 +25,25 @@ import { ModalViewModel } from '../../Models/ModalView.Model';
   ],
 })
 export class ItemComponent {
-  @Input() id!: number;
+  @Input() id!: number; //TODO might not need this in the grid component
 
   @ViewChild(PromptModalComponent) promptModal!: PromptModalComponent;
   @ViewChild(EditWidgetModalComponent) editModal!: EditWidgetModalComponent;
 
+  #componentService = inject(ComponentService);
+  #gridService = inject(GridService);
+
+  component$ = this.#componentService.component$;
+   
   isEditModalOpen: boolean = false;
   isDeleteModalOpen: boolean = false;
-
-  constructor(
-    public componentService: ComponentService,
-    private modalService: ModalService
-  ) {}
+  inEditMode = this.#gridService.inEditMode;
 
   protected IconFilePath(item: ComponentModel): string {
     return 'Assets/Icons/' + item.iconData?.name + '.' + item.iconData?.type;
   }
-
-  get CurrentComponent(): ComponentModel | undefined {
-    return this.componentService.GetComponentById(this.id);
-  }
-
-  get CurrentComponentId(): number {
-    const component = this.componentService.GetComponentById(this.id);
-    if (component) {
-      this.componentService.Component = component;
-      return component.id;
-    }
-    return this.id;
-  }
-
-  hasBaseData(component: ComponentModel): boolean {
-    return (
-      component.name !== undefined &&
-      component.name !== '' &&
-      component.url !== undefined &&
-      component.url !== '' &&
-      (component.iconData !== undefined || component.iconUrl !== undefined)
-    );
-  }
-
-  protected handleSelect(t: any) {//TODO facad maybe ?
-    var model = new ModalViewModel();
-    model.type = ModalType.Edit;
-    this.modalService.submit(model);
+   protected handleSelect(t: any) {
+    this.#componentService.edit$();
   }
 
   handleModalChange(modalId: number): void {
@@ -80,28 +53,20 @@ export class ItemComponent {
     }
   }
 
-  protected handleSubmit(event: {component: ComponentModel; modalType: ModalType }) {
-    switch (event.modalType) {
-      case ModalType.Edit:
-        this.componentService.EditComponentData(event.component);
-        break;
-    }
+  protected edit() {
+    this.#componentService.edit$();
   }
 
-  protected deleteWidget(event: {id: number; modalType: ModalType }) {
-    this.componentService.DeleteComponent(event.id);
+  protected remove() {
+    this.#componentService.delete$();
   }
 
-  OpenEditModal(componentId: number): void {
-    if (componentId === this.id) {
-      this.isEditModalOpen = true;
-    }
+  openEditDialog(): void {
+        //TODO make dialog class and open dialog here
   }
 
-  OpenDeleteModal(componentId: number): void {
-    if (componentId === this.id) {
-      this.isDeleteModalOpen = true;
-    }
+  openDeleteDialog(): void {
+    //TODO make dialog class and open dialog here
   }
 
   protected readonly TextStringsUtil = TextStringsUtil;

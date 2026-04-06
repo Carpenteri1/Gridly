@@ -1,5 +1,6 @@
-import {Directive, ElementRef, HostListener, Input, Renderer2} from '@angular/core';
+import {Directive, ElementRef, HostListener, inject, Input, Renderer2} from '@angular/core';
 import {ComponentService} from "../Services/component.service";
+import { ComponentModel } from '../Models/Component.Model';
 
 @Directive({
   standalone: true,
@@ -10,6 +11,11 @@ export class ResizableDirective {
   @Input() canResize!: boolean;
   @Input() targetId!: number;
 
+  #componentService = inject(ComponentService);
+  
+  private component = this.#componentService.currentComponent() as ComponentModel;
+  private components = this.#componentService.currentComponents() as ComponentModel[];
+
   private isResizing: boolean = false;
   private startX: number = 0;
   private startY: number = 0;
@@ -19,8 +25,7 @@ export class ResizableDirective {
   private pointerId: number | null = null;
 
   constructor(private el: ElementRef,
-              private renderer: Renderer2,
-              private componentService: ComponentService) {}
+              private renderer: Renderer2) {}
 
   @HostListener('pointerdown', ['$event'])
   OnPointerDown(event: PointerEvent): void {
@@ -29,10 +34,8 @@ export class ResizableDirective {
     event.preventDefault();
     event.stopPropagation();
     
-    const component = this.componentService.GetComponentById(this.targetId);
-    if(!component) return;
-    
-    this.componentService.Component = component;
+
+    if(!this.component) return;
     
     this.gridItemElement = this.el.nativeElement.closest('.grid-item-style') as HTMLElement;
     
@@ -63,8 +66,8 @@ export class ResizableDirective {
     
     this.startX = event.clientX;
     this.startY = event.clientY;
-    this.startWidth = component.componentSettings?.width ?? 250;
-    this.startHeight = component.componentSettings?.height ?? 250;
+    this.startWidth = this.component.componentSettings?.width ?? 250;
+    this.startHeight = this.component . componentSettings?.height ?? 250;
     this.isResizing = true;
     
     this.HideCursor();
@@ -72,7 +75,7 @@ export class ResizableDirective {
 
   @HostListener('document:pointermove', ['$event'])
   OnPointerMove(event: PointerEvent): void {
-    if(!this.isResizing || !this.gridItemElement || !this.componentService.Component) return;
+    if(!this.isResizing || !this.gridItemElement || !this.component) return;
     
     if(this.pointerId !== null && event.pointerId !== this.pointerId) return;
     
@@ -85,19 +88,19 @@ export class ResizableDirective {
     const adjustedWidth = this.AdjustComponentSize(newWidth);
     const adjustedHeight = this.AdjustComponentSize(newHeight);
     
-    const updatedComponent = this.componentService.Component;
+    const updatedComponent = this.component;
     updatedComponent.componentSettings = {
       ...updatedComponent.componentSettings,
       width: adjustedWidth,
       height: adjustedHeight
     };
 
-    this.componentService.Component = updatedComponent;
+    this.component = updatedComponent;
     
-    if(this.componentService.Components) {
-      const componentIndex = this.componentService.Components.findIndex(c => c.id === this.targetId);
+    if(this.components) {
+      const componentIndex = this.components.findIndex(c => c.id === this.targetId);
       if(componentIndex !== -1) {
-        this.componentService.Components[componentIndex] = updatedComponent;
+        this.components[componentIndex] = updatedComponent;
       }
     }
     
@@ -179,3 +182,7 @@ export class ResizableDirective {
     }
   }
 }
+function take(arg0: number): import("rxjs").OperatorFunction<import("../Models/Component.Model").ComponentModel, unknown> {
+  throw new Error('Function not implemented.');
+}
+

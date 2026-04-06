@@ -1,11 +1,11 @@
-import {Component, OnInit, signal} from "@angular/core";
+import {Component, inject, OnInit, signal} from "@angular/core";
 import {TextStringsUtil} from "../../Constants/text.strings.util";
 import {CommonModule} from "@angular/common";
-import {VersionService} from "../../Services/version.services";
-import {ComponentService} from "../../Services/component.service";
+import {VersionService} from "../../Services/version.service";
 import {AddWidgetModalComponent} from "../ModalComponents/AddWidgetModal/add-widget-modal.component";
 import { WidgetType } from "../../Types/widget.type.enum";
 import { ComponentModel } from "../../Models/Component.Model";
+import { ComponentService } from "../../Services/component.service";
 
 @Component({
   selector: 'header-component',
@@ -14,20 +14,24 @@ import { ComponentModel } from "../../Models/Component.Model";
   standalone: true,
   imports: [CommonModule, AddWidgetModalComponent]
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
+
+  #componentService = inject(ComponentService);
+  #versionService = inject(VersionService);
+
+  component$ = this.#componentService.component$;
+  version$ = this.#versionService.version$;
+
+  showMenu = signal(false);
 
   protected readonly TextStringsUtil = TextStringsUtil;
-  protected open = false;
+  protected addWidgetDialogActive = false;
   
   protected widgetOptions = [
     { type: WidgetType.Empty, label: 'Add empty widget', description: '', icon: 'bi bi-box' },
     { type: WidgetType.Custom, label: 'Add custom widget', description: '', icon: 'bi bi-box-fill' },
   ]
-  
-  constructor(
-    protected versionService: VersionService,
-    protected componentService: ComponentService) {
-  }
+
 
   /* TODO variants later maybe
 
@@ -38,16 +42,16 @@ export class HeaderComponent implements OnInit {
     { type: 'note',  label: 'Note',  description: 'Plain text note', icon: 'bi bi-sticky' }
   ];*/
 
-  protected handleSubmit(component: ComponentModel) {
-    this.componentService.AddNewComponent(component);
-    //this.modalService.Submit(SetModalComponentFormData({type: this.FormType.Add}));
+  protected add(component: ComponentModel) {
+    this.#componentService.add$(component);
   }
 
-  async ngOnInit() {
-    await this.versionService.SetVersion();
+  //componentService.EditComponentsData(componentService.Components)
+  //TODO get all components and activate edit mode
+  protected setEditMode(){
+    
   }
 
-  showMenu = signal(false);
   toggleMenu(): void {
     this.showMenu.update((showMenu) => showMenu);
   }

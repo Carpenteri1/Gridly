@@ -1,9 +1,10 @@
-<div class="row h-10">
-  @if( componentService.InEditMode)
+@if (component$ | async; as component) {
+ <div class="row h-10">
+  @if (inEditMode)
   {
       <div class="col">
         <button type="button" 
-        (click)="OpenEditModal(id)" 
+        (click)="openEditDialog()" 
         class="btn edit-button start-50" style="margin-left: 0.5em;">
           <i class="bi bi-pencil-square" ></i>
         </button>
@@ -17,7 +18,7 @@
       </div>
       <div class="col d-flex justify-content-end">
         <button
-        (click)="OpenDeleteModal(id)" 
+        (click)="openDeleteDialog()" 
           class="btn edit-button">
           <i class="bi bi-x-lg"></i>
         </button>
@@ -25,8 +26,8 @@
       <div class="col d-flex justify-content-end">
         <button
         makeResizable
-        [canResize]="componentService.InEditMode"
-        [targetId]="id"
+        [canResize]="inEditMode"
+        [targetId]="component.id"
         type="button"
         class="btn edit-button resize-button">
         <i class="bi bi-arrows-angle-expand"></i>
@@ -38,24 +39,25 @@
       <a class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2">
         <span>
           <mat-icon class="component-mat-icon-size">
-            {{CurrentComponent?.iconData?.materialIcon}}
+            {{component?.iconData?.materialIcon}}
           </mat-icon>
         </span>
-        <p>{{CurrentComponent?.id}}</p>
+        <p>{{component?.id}}</p>
         <h5 class="fw-bold">{{TextStringsUtil.EmptyWidgetTitle}}</h5>
-        <p [hidden]="CurrentComponent?.componentSettings?.titleHidden" class="text-center" >{{CurrentComponent?.name}}</p>
+        <p [hidden]="component?.componentSettings?.titleHidden" class="text-center" >{{component?.name}}</p>
       </a>
   <edit-widget-modal 
     [open]="isEditModalOpen"
-    [modalId]="id"
-    [id]="id"
-    (editWidget)="handleSubmit($event)"
+    [modalId]="component.id"
+    [id]="component.id"
+    (editedComponent)="edit()"
     (openChange)="handleModalChange($event)">
   </edit-widget-modal>
   <prompt-modal
     [open]="isDeleteModalOpen"
-    [modalId]="id"
-    [id]="id"
-    (deleteWidget)="deleteWidget($event)"
+    [modalId]="component.id"
+    [id]="component.id"
+    (delete)="remove()"
     (openChange)="handleModalChange($event)">
   </prompt-modal>
+}

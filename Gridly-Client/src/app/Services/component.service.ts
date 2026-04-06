@@ -1,47 +1,43 @@
-import {Injectable, signal} from "@angular/core";
+import {inject, Injectable, Signal, signal} from "@angular/core";
+import {toSignal} from '@angular/core/rxjs-interop';
 import {ComponentModel} from "../Models/Component.Model";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
-import {ComponentEndPointType} from "../Types/endPoint.type.enum";
-import {TextStringsUtil} from "../Constants/text.strings.util";
-import {lastValueFrom} from "rxjs";
+import {Observable, ReplaySubject, switchMap, take} from "rxjs";
 import {RegexStringsUtil} from "../Constants/regex.strings.util";
-import {ModalViewModel} from "../Models/ModalView.Model";
 
 @Injectable({providedIn: 'root'})
 export class ComponentService{
-  private editMode!: boolean;
+  public editMode!: boolean;
   private iconHidden!: boolean;
   private iconUrlHidden!: boolean;
   private openEdit!: boolean;
   private modalId!:number;
-  private components!: ComponentModel[];
-  private component!: ComponentModel;
 
-  constructor(public componentEndpointService: ComponentEndpointService) {
+  #api = inject(ComponentEndpointService);
+  
+  componentId$ = new ReplaySubject<number>(1);
+  component$: Observable<ComponentModel>;
+  components$: Observable<ComponentModel[]>;
+
+  readonly currentComponent: Signal<ComponentModel | undefined>;
+  readonly currentComponents: Signal<ComponentModel[] | undefined>;
+
+  constructor() {
     this.editMode = false;
+
+    this.component$ = this.getById$();
+    this.components$ = this.get$();
+
+    this.currentComponent = toSignal(this.component$);
+    this.currentComponents = toSignal(this.components$);
   }
 
-  get Components(): ComponentModel[] {
-    return this.components;
-  }
-
-  get Component() {
-    return this.component;
-  }
-
-  set Components(components: ComponentModel[]) {
-    this.components = components;
-  }
-
-  set Component(item: ComponentModel) {
-    if (item !== undefined) {
-      this.component = item;
-    }
-  }
-
-  GetComponentById(id: number): ComponentModel | undefined{
-    return this.Components.find((i: ComponentModel) => i.id === id);
-  }
+  getById$ = () => this.componentId$.pipe(switchMap(id => this.#api.getById(id)), take(1));
+  delete$ = () => this.componentId$.pipe(switchMap(id => this.#api.delete(id)), take(1));
+  edit$ = () => this.component$.pipe(switchMap(component => this.#api.edit(component)), take(1));
+  get$ = () => this.#api.get().pipe(take(1));
+  add$ = (component: ComponentModel) => this.#api.add(component).pipe(take(1)); 
+  batchEdit$ = (components: ComponentModel[]) => this.#api.batchEdit(components).pipe(take(1));
 
   IconDataSet(item :ComponentModel) {
     return item.iconData != undefined &&
@@ -65,10 +61,12 @@ export class ComponentService{
   }
 
   get ComponentHasBaseData(){
+    return true;
+    /*
     return this.component.name !== undefined && "" &&
       this.component.url !== undefined && "" &&
       this.component.iconData !== undefined ||
-      this.component.iconUrl !== undefined && "";
+      this.component.iconUrl !== undefined && "";*/
   }
 
   get IconIsUrlHidden(){
@@ -126,103 +124,7 @@ export class ComponentService{
   set ModalId(id: number){
     this.modalId = id;
   }
-
-  async AddNewComponent(component: ComponentModel) {
-    console.log("Adding component: ", component);
-    await this.CallEndpoint(ComponentEndPointType.Add,undefined, component);
-  }
-
- async EditComponentData(component: ComponentModel) {
-      await this.CallEndpoint(ComponentEndPointType.Edit,undefined, component);
-  }
-
-  async EditComponentsData(components: ComponentModel[]){
-    if(components !== undefined){
-      await this.CallEndpoint(ComponentEndPointType.BatchEdit,undefined, undefined ,components);
-    }
-  }
-
- async CallEndpoint(type: ComponentEndPointType, modalViewModel?: ModalViewModel, componentData?: ComponentModel, componentsData?: ComponentModel[]): Promise<any> {
-  switch(type){
-      case ComponentEndPointType.Get:
-        try {
-          this.Components = await lastValueFrom(this.componentEndpointService.GetComponents());
-        } catch (err) {
-          console.error(TextStringsUtil.GetComponentsFailedEndPointMessage, err);
-        }
-        return this.Components;
-      case ComponentEndPointType.Add:
-        if(componentData !== undefined && componentData !== null){
-          try {
-            this.Component = await lastValueFrom(this.componentEndpointService.AddComponent(componentData));
-          } catch (err) {
-            console.error(TextStringsUtil.ComponentAddedFailedEndPointMessage, err);
-          }
-        }
-        break;
-      case ComponentEndPointType.Edit:
-        if(componentData !== undefined){
-          try {
-            this.Component =
-              await lastValueFrom(this.componentEndpointService.EditComponent(
-                componentData));
-          } catch (err) {
-            console.error(TextStringsUtil.ComponentEditFailedEndPointMessage, err);
-          }
-        }
-        break;
-      case ComponentEndPointType.BatchEdit:
-        if(componentsData !== undefined && componentsData !== null && componentsData.length > 0){
-          try {
-            this.Components = await lastValueFrom(this.componentEndpointService.EditComponents(componentsData));
-          } catch (err) {
-            console.error(TextStringsUtil.ComponentBatchEditFailedEndPointMessage, err);
-          }
-        }
-        break;/*
-      case ComponentEndPointType.Delete:
-        if(componentData !== undefined && componentData !== null){
-          try {
-            this.Component = await lastValueFrom(
-              this.componentEndpointService.Delete(componentData.id));
-            } catch (err) {
-              console.error(TextStringsUtil.ComponentDeletionFailedEndPointMessage, err);
-            }
-          }
-          break*/
-      case ComponentEndPointType.GetById:
-        let component!: ComponentModel;
-
-        if(componentData !== undefined && componentData !== null && componentsData)
-          component = componentData;
-        else if(modalViewModel !== undefined && modalViewModel !== null && modalViewModel.component !== undefined)
-          component = modalViewModel.component;
-
-        if(component !== undefined ) {
-          try {
-            this.Component = await lastValueFrom(this.componentEndpointService.GetComponentById(component.id));
-          } catch (err) {
-            console.error(TextStringsUtil.ComponentGetByIdFailedEndPointMessage, err);
-          }
-        }
-        return this.component;
-      default:
-        break;
-    }
-
-    window.location.reload();
-  }
-
   
-  async DeleteComponent(id: number) {
-    try {
-          this.Component = await lastValueFrom(
-          this.componentEndpointService.Delete(id));
-        } catch (err) {
-          console.error(TextStringsUtil.ComponentDeletionFailedEndPointMessage, err);
-      }
-  }
-
   showMenu = signal(false);
   toggleMenu(): void {
     this.showMenu.update((showMenu) => !showMenu);
