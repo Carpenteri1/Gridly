@@ -12,7 +12,7 @@ export class ComponentEndpointService{
 
   constructor(private http: HttpClient) {}
 
-  delete(id: number): Observable<ComponentModel> {
+  delete(id: number) {
     return this.http.delete<ComponentModel>(UrlStringsUtil.ComponentUrlDelete+id).pipe(take(1));
   }
 

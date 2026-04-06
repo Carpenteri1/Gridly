@@ -3,14 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ComponentService } from '../../Services/component.service';
 import { TextStringsUtil } from '../../Constants/text.strings.util';
 import { ComponentModel } from '../../Models/Component.Model';
-import { ModalType } from '../../Types/modaltypes.enum';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { PromptModalComponent } from '../ModalComponents/PromptModal/prompt-modal.component';
 import { EditWidgetModalComponent } from '../ModalComponents/EditWidgetModal/edit-widget-modal.component';
-import { ModalService } from '../../Services/modal.service';
 import { ResizableDirective } from '../../Directives/resizable.directive';
 import { MatIconModule } from '@angular/material/icon';
-import { ModalViewModel } from '../../Models/ModalView.Model';
 import { GridService } from '../../Services/grid.service';
 
 @Component({
@@ -42,16 +39,11 @@ export class ItemComponent {
   isDeleteModalOpen: boolean = false;
   inEditMode = this.#gridService.inEditMode;
 
-  constructor(private modalService: ModalService) {}
-
   protected IconFilePath(item: ComponentModel): string {
     return 'Assets/Icons/' + item.iconData?.name + '.' + item.iconData?.type;
   }
-
-  protected handleSelect(t: any) {//TODO facad maybe ?
-    var model = new ModalViewModel();
-    model.type = ModalType.Edit;
-    this.modalService.submit(model);
+   protected handleSelect(t: any) {
+    this.#componentService.edit$();
   }
 
   handleModalChange(modalId: number): void {
@@ -61,20 +53,20 @@ export class ItemComponent {
     }
   }
 
-  protected edit(){
-    this.#componentService.edit$;
+  protected edit() {
+    this.#componentService.edit$();
   }
 
   protected remove() {
-    this.#componentService.delete$;
+    this.#componentService.delete$();
   }
 
-  openEditDialog(componentId: number): void {
-    this.isEditModalOpen = true;
+  openEditDialog(): void {
+        //TODO make dialog class and open dialog here
   }
 
-  openDeleteDialog(componentId: number): void {
-    this.isDeleteModalOpen = true;
+  openDeleteDialog(): void {
+    //TODO make dialog class and open dialog here
   }
 
   protected readonly TextStringsUtil = TextStringsUtil;

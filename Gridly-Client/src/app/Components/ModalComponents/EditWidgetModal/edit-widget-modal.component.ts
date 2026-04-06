@@ -25,7 +25,8 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
   @Input() id: number = 0;
   @Input() component?: ComponentModel;
   @Output() openChange = new EventEmitter<number>();
-  @Output() editedComponent = new EventEmitter<{component: ComponentModel}>();
+  @Output() editedComponent = new EventEmitter();
+  
   readonly facade: EditWidgetModalFacade;
 
   constructor(modalService: ModalService, facade: EditWidgetModalFacade) {
