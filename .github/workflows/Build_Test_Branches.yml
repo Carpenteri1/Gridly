@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: ${{ env.ANGULAR_PATH }}/package-lock.json
+          cache-dependency-path: Gridly-Client/package-lock.json
 
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
@@ -38,15 +38,15 @@ jobs:
 
       - name: Install Angular dependencies
         run: npm ci
-        working-directory: ${{ env.ANGULAR_PATH }}
+        working-directory: Gridly-Client
 
       - name: Build Angular
         run: npm run build
-        working-directory: ${{ env.ANGULAR_PATH }}
+        working-directory: Gridly-Client
 
       - name: Test Angular
         run: npm run test -- --watch=false --browsers=ChromeHeadless
-        working-directory: ${{ env.ANGULAR_PATH }}
+        working-directory: Gridly-Client
 
       - name: Restore .NET dependencies
         run: dotnet restore
