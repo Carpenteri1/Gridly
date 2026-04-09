@@ -36,16 +36,16 @@ jobs:
 
       - name: Install Angular dependencies
         run: npm install
-        working-directory: Gridly-Client
+        working-directory:  ${{ env.ANGULAR_PATH }}
 
       - name: Build Angular
         run: npm run build
-        working-directory: Gridly-Client
+        working-directory:  ${{ env.ANGULAR_PATH }}
 
       # No Jest or karma-jasmine libraries, so skipping Angular tests for now
       #- name: Test Angular
       #  run: npm run test -- --watch=false --browsers=ChromeHeadless
-      #  working-directory: Gridly-Client
+      #  working-directory: ${{ env.ANGULAR_PATH }}
 
       - name: Restore .NET dependencies
         run: dotnet restore
