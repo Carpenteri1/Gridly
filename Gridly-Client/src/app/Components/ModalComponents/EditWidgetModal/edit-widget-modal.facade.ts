@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { SearchIconsResultDto } from '../../../DTOs/SearchIconsResultDto';
 import { ComponentModel } from '../../../Models/Component.Model';
 import { IconService } from '../../../Services/Icon.service';
-import { ModalType } from '../../../Types/modaltypes.enum';
 import { IconModel } from '../../../Models/Icon.Model';
 
 @Injectable()
@@ -42,11 +41,8 @@ export class EditWidgetModalFacade {
     //this.componentData = MapComponentData.Override(initial ?? {});
   }
 
-  buildSubmitPayload(widgetId: number): { component: ComponentModel; modalType: ModalType } {
+  buildSubmitPayload(widgetId: number): ComponentModel {
     this.componentData.id = widgetId;
-    return {
-      component: this.componentData,
-      modalType: ModalType.Edit,
-    };
+    return this.componentData;
   }
 }

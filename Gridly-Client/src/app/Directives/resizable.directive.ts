@@ -13,8 +13,8 @@ export class ResizableDirective {
 
   #componentService = inject(ComponentService);
   
-  private component = this.#componentService.currentComponent() as ComponentModel;
-  private components = this.#componentService.currentComponents() as ComponentModel[];
+  private component = this.#componentService.currentComponent();
+  private components = this.#componentService.currentComponents();
 
   private isResizing: boolean = false;
   private startX: number = 0;
@@ -34,7 +34,6 @@ export class ResizableDirective {
     event.preventDefault();
     event.stopPropagation();
     
-
     if(!this.component) return;
     
     this.gridItemElement = this.el.nativeElement.closest('.grid-item-style') as HTMLElement;
@@ -182,7 +181,3 @@ export class ResizableDirective {
     }
   }
 }
-function take(arg0: number): import("rxjs").OperatorFunction<import("../Models/Component.Model").ComponentModel, unknown> {
-  throw new Error('Function not implemented.');
-}
-

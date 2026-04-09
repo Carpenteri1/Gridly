@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../../../Directives/base-modal.component';
 import { ModalService } from '../../../Services/modal.service';
-import { ModalType } from '../../../Types/modaltypes.enum';
 
 @Component({
   selector: 'prompt-modal',

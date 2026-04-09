@@ -5,7 +5,6 @@ import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../../../Directives/base-modal.component';
 import { ModalService } from '../../../Services/modal.service';
 import { ComponentModel } from '../../../Models/Component.Model';
-import { ModalType } from '../../../Types/modaltypes.enum';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';

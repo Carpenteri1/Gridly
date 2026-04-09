@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ComponentService } from './component.service';
-import { ModalViewModel } from '../Models/ModalView.Model';
-import { ModalType } from '../Types/modaltypes.enum';
 import { ComponentModel } from '../Models/Component.Model';
 import { IconModel } from '../Models/Icon.Model';
 
@@ -11,23 +9,6 @@ export class ModalService {
   public resetFile$ = new Subject<void>();
 
   constructor(private componentService: ComponentService) {}
-
-  async submit(modalType: ModalViewModel): Promise<void> {
-    switch (modalType.type) {
-      case ModalType.Add:
-        //await this.componentService.AddNewComponent(modalType.component);
-        break;
-      case ModalType.Edit:
-        //await this.componentService.EditComponentData(modalType.component);
-        break;
-      case ModalType.Delete:
-        //await this.componentService.DeleteComponent(modalType);
-        break;
-      default:
-        console.error("Unknown modal type: " + modalType.type);
-        break;
-    }
-  }
 
   onFileUpload(event: any): IconModel | undefined {
     if (event.target.files.length > 0) {
