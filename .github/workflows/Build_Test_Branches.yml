@@ -28,8 +28,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: Gridly-Client/package-lock.json
 
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
@@ -37,7 +35,7 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Install Angular dependencies
-        run: npm ci
+        run: npm install
         working-directory: Gridly-Client
 
       - name: Build Angular
