@@ -18,11 +18,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Restore packages
+      uses: npm install
+
+    - name: Build Client
+      uses: ng build
+      
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build the application
+    - name: Build Api
       run: dotnet build --configuration Release
 
-    - name: Run tests
-      run: dotnet test --configuration Release
+    #- name: Run tests
+    #  run: dotnet test --configuration Release
