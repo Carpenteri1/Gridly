@@ -43,7 +43,7 @@ export class ItemComponent {
     return 'Assets/Icons/' + item.iconData?.name + '.' + item.iconData?.type;
   }
    protected handleSelect(t: any) {
-    this.#componentService.edit$();
+    this.#componentService.edit(t);
   }
 
   handleModalChange(modalId: number): void {
@@ -54,7 +54,7 @@ export class ItemComponent {
   }
 
   protected edit() {
-    this.#componentService.edit$();
+    //this.#componentService.edit();
   }
 
   protected remove() {

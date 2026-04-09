@@ -2,7 +2,6 @@ import { ViewChild, Directive } from '@angular/core';
 import { ModalDirective } from './modal.directive';
 import { ModalService } from '../Services/modal.service';
 import { TextStringsUtil } from '../Constants/text.strings.util';
-import { ModalViewModel } from '../Models/ModalView.Model';
 
 @Directive()
 export abstract class BaseModalComponent {
@@ -21,8 +20,9 @@ export abstract class BaseModalComponent {
     this.modalDirective?.onBackdropClick(ev);
   }
 
-  async submit(modalType: ModalViewModel): Promise<void> {
-    await this.modalService.submit(modalType);
+  async submit(): Promise<void> {
+    ///await this.modalService.submit(modalType);
+    //TODO call delete or edit from here or make new method that can handle that
     this.close();
   }
 

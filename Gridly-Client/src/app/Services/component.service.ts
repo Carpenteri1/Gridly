@@ -2,7 +2,7 @@ import {inject, Injectable, Signal, signal} from "@angular/core";
 import {toSignal} from '@angular/core/rxjs-interop';
 import {ComponentModel} from "../Models/Component.Model";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
-import {Observable, ReplaySubject, switchMap, take} from "rxjs";
+import {firstValueFrom, Observable, ReplaySubject, switchMap, take} from "rxjs";
 import {RegexStringsUtil} from "../Constants/regex.strings.util";
 
 @Injectable({providedIn: 'root'})
@@ -31,13 +31,15 @@ export class ComponentService{
     this.currentComponent = toSignal(this.component$);
     this.currentComponents = toSignal(this.components$);
   }
-
+  
+  private edit$ = (component: ComponentModel) => this.#api.edit(component).pipe(take(1));
   getById$ = () => this.componentId$.pipe(switchMap(id => this.#api.getById(id)), take(1));
   delete$ = () => this.componentId$.pipe(switchMap(id => this.#api.delete(id)), take(1));
-  edit$ = () => this.component$.pipe(switchMap(component => this.#api.edit(component)), take(1));
   get$ = () => this.#api.get().pipe(take(1));
   add$ = (component: ComponentModel) => this.#api.add(component).pipe(take(1)); 
   batchEdit$ = (components: ComponentModel[]) => this.#api.batchEdit(components).pipe(take(1));
+
+  edit = (component: ComponentModel) => firstValueFrom(this.edit$(component));
 
   IconDataSet(item :ComponentModel) {
     return item.iconData != undefined &&
