@@ -2,27 +2,59 @@ name: Build Test
 
 on:
   push:
-    branches:   
-    - '*'
+    branches:
+      - '**'
   pull_request:
     branches:
-    - '*'
+      - '**'
     types:
-    - open
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
   build:
     runs-on: ubuntu-latest
-  
+
+    env:
+      ANGULAR_PATH: Gridly-Client
+      DOTNET_PATH: .
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
-    - name: Build the application
-      run: dotnet build --configuration Release
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
 
-    - name: Run tests
-      run: dotnet test --configuration Release
+      - name: Install Angular dependencies
+        run: npm install
+        working-directory:  ${{ env.ANGULAR_PATH }}
+
+      - name: Build Angular
+        run: npm run build
+        working-directory:  ${{ env.ANGULAR_PATH }}
+
+      # No Jest or karma-jasmine libraries, so skipping Angular tests for now
+      #- name: Test Angular
+      #  run: npm run test -- --watch=false --browsers=ChromeHeadless
+      #  working-directory: ${{ env.ANGULAR_PATH }}
+
+      - name: Restore .NET dependencies
+        run: dotnet restore
+        working-directory: ${{ env.DOTNET_PATH }}
+
+      - name: Build .NET
+        run: dotnet build --configuration Release --no-restore
+        working-directory: ${{ env.DOTNET_PATH }}
+
+      - name: Test .NET
+        run: dotnet test --configuration Release --no-build
+        working-directory: ${{ env.DOTNET_PATH }}

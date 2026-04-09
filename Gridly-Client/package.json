@@ -23,5 +23,8 @@
     "gulp-clean": "^0.4.0",
     "gulp-exec": "^5.0.0",
     "zone.js": "^0.15.1"
+  },
+  "devDependencies": {
+    "@angular/cli": "^21.2.1"
   }
 }
