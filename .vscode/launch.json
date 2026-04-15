@@ -5,7 +5,7 @@
         "request": "launch",
         "type": "coreclr",
         "preLaunchTask": "run angular and .net --debug",
-        "program": "${workspaceFolder}/bin/Debug/net8.0/Gridly.dll",
+        "program": "${workspaceFolder}/bin/Debug/net10.0/Gridly.dll",
         "args": [
           "--urls",
           "http://localhost:7575"
@@ -32,7 +32,7 @@
         "request": "launch",
         "type": "coreclr",
         "preLaunchTask": "run .net --debug",
-        "program": "${workspaceFolder}/bin/Debug/net8.0/Gridly.dll",
+        "program": "${workspaceFolder}/bin/Debug/net10.0/Gridly.dll",
         "args": [
           "--urls",
           "http://localhost:7575"
