@@ -7,10 +7,6 @@
       <h1 class="h4 fw-bold gradient-text m-0">{{TextStringsUtil.ClientTitle}}</h1>
     </div>
 
-    <button class="navbar-toggler" type="button" (click)="toggleMenu()" aria-controls="mainNavbar"
-            [attr.aria-expanded]="showMenu()">
-    </button>
-
     <div class="navbar-collapse collapse justify-content-end" [class.show]="showMenu()" id="mainNavbar" animate.enter="enter-animation">
       <ul class="navbar-nav align-items-lg-center gap-2 ms-lg-3"  >
         @if(showMenu()){
@@ -37,7 +33,7 @@
         <li class="nav-item">
           <button class="btn btn-sm d-flex align-items-center gap-1"
                   [ngClass]="showMenu() ? 'btn-primary' : 'btn-outline-secondary'"
-                  (click)="showMenu()">
+                  (click)="toggleMenu()">
             <i class="bi bi-pencil"></i>
             <span>{{ showMenu() ?
               TextStringsUtil.MenuExitEditButtonTitle :

@@ -26,7 +26,7 @@ export class HeaderComponent {
 
   protected readonly TextStringsUtil = TextStringsUtil;
   protected addWidgetDialogActive = false;
-  
+  //TODO move to dialog
   protected widgetOptions = [
     { type: WidgetType.Empty, label: 'Add empty widget', description: '', icon: 'bi bi-box' },
     { type: WidgetType.Custom, label: 'Add custom widget', description: '', icon: 'bi bi-box-fill' },
@@ -53,6 +53,6 @@ export class HeaderComponent {
   }
 
   toggleMenu(): void {
-    this.showMenu.update((showMenu) => showMenu);
+    this.showMenu.update((showMenu) => !showMenu);
   }
 }
