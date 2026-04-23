@@ -28,13 +28,16 @@ public class ComponentRepository(IDbConnection connection) : IComponentRepositor
 
     public async Task<bool> BatchEdit(IEnumerable<ComponentModel>? components)
     {
+        if (components is null)
+            return false;
+
         var parameters = components
             .Select(c => new 
             { 
                 c.Id,
                 c.IndexPosition,
-                Width = c.ComponentSettings.Width,
-                Height = c.ComponentSettings.Height
+                Width = c.ComponentSettings?.Width ?? 250,
+                Height = c.ComponentSettings?.Height ?? 250
             })
             .ToList();
 

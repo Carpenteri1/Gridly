@@ -50,14 +50,14 @@
     [open]="isEditModalOpen"
     [modalId]="component.id"
     [id]="component.id"
-    (editedComponent)="edit()"
+    (editedComponent)="edit(component)"
     (openChange)="handleModalChange($event)">
   </edit-widget-modal>
   <prompt-modal
     [open]="isDeleteModalOpen"
     [modalId]="component.id"
     [id]="component.id"
-    (delete)="remove()"
+    (remove)="remove(component.id)"
     (openChange)="handleModalChange($event)">
   </prompt-modal>
 }

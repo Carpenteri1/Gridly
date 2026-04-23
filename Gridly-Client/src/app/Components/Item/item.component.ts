@@ -37,7 +37,7 @@ export class ItemComponent {
    
   isEditModalOpen: boolean = false;
   isDeleteModalOpen: boolean = false;
-  inEditMode = this.#gridService.inEditMode;
+  inEditMode = this.#gridService.getEditMode();
 
   protected IconFilePath(item: ComponentModel): string {
     return 'Assets/Icons/' + item.iconData?.name + '.' + item.iconData?.type;
@@ -53,12 +53,12 @@ export class ItemComponent {
     }
   }
 
-  protected edit() {
-    //this.#componentService.edit();
+  protected edit(component: ComponentModel) {
+    this.#componentService.edit(component);
   }
 
-  protected remove() {
-    this.#componentService.delete$();
+  protected remove(id: number ) {
+    this.#componentService.delete(id);
   }
 
   openEditDialog(): void {

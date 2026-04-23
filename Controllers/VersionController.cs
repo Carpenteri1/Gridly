@@ -9,6 +9,7 @@ namespace Gridly.Controllers;
 [Route("/api/[controller]")]
 public class VersionController(IMediator mediator) : ControllerBase
 { 
+     [HttpGet("get")]
      public async Task<IResult> Get() => await mediator.Send(new GetVersionCommand());
      [EnableRateLimiting("TokenLimiter")]
      [HttpGet("latest")]

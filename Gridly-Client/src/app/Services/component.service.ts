@@ -1,6 +1,7 @@
 import {inject, Injectable, Signal, signal} from "@angular/core";
 import {toSignal} from '@angular/core/rxjs-interop';
 import {ComponentModel} from "../Models/Component.Model";
+import {EditComponentModel} from "../Models/editComponent.Model";
 import {ComponentEndpointService} from "./endpoints/component.endpoint.service";
 import {firstValueFrom, Observable, ReplaySubject, switchMap, take} from "rxjs";
 import {RegexStringsUtil} from "../Constants/regex.strings.util";
@@ -32,14 +33,23 @@ export class ComponentService{
     this.currentComponents = toSignal(this.components$);
   }
   
-  private edit$ = (component: ComponentModel) => this.#api.edit(component).pipe(take(1));
+  private edit$ = (component: ComponentModel) => {
+    const editComponent = new EditComponentModel();
+    editComponent.editComponent = component;
+    editComponent.selectedDropDownIconValue = 2;
+
+    return this.#api.edit(editComponent).pipe(take(1));
+  };
+  //private edit$ = (component: ComponentModel) => this.#api.edit(component).pipe(take(1));
   getById$ = () => this.componentId$.pipe(switchMap(id => this.#api.getById(id)), take(1));
-  delete$ = () => this.componentId$.pipe(switchMap(id => this.#api.delete(id)), take(1));
+  delete$ = (id: number) => this.#api.delete(id).pipe(take(1));
   get$ = () => this.#api.get().pipe(take(1));
   add$ = (component: ComponentModel) => this.#api.add(component).pipe(take(1)); 
-  batchEdit$ = (components: ComponentModel[]) => this.#api.batchEdit(components).pipe(take(1));
+  batchEdit$ = (components: EditComponentModel[]) => this.#api.batchEdit(components).pipe(take(1));
 
   edit = (component: ComponentModel) => firstValueFrom(this.edit$(component));
+  add = (component: ComponentModel) => firstValueFrom(this.add$(component));
+  delete = (id: number) => firstValueFrom(this.delete$(id));
 
   IconDataSet(item :ComponentModel) {
     return item.iconData != undefined &&

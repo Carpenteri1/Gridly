@@ -3,6 +3,7 @@ import {UrlStringsUtil} from "../../Constants/url.strings.util";
 import {ComponentModel} from "../../Models/Component.Model";
 import {Observable, take} from "rxjs";
 import {HttpClient} from "@angular/common/http";
+import { EditComponentModel } from '../../Models/editComponent.Model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,11 +29,11 @@ export class ComponentEndpointService{
     return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlSave, newComponent).pipe(take(1));
   }
 
-  edit(componentModel: ComponentModel): Observable<ComponentModel> {
+  edit(componentModel: EditComponentModel): Observable<ComponentModel> {
     return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlEdit, componentModel).pipe(take(1));
   }
 
-  batchEdit(editedComponent: ComponentModel[]): Observable<ComponentModel[]> {
+  batchEdit(editedComponent: EditComponentModel[]): Observable<ComponentModel[]> {
     return this.http.post<ComponentModel[]>(UrlStringsUtil.ComponentsBatchUrlEdit, editedComponent).pipe(take(1));
   }
 }

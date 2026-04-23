@@ -1,9 +1,7 @@
 import {inject, Injectable, Signal} from "@angular/core";
 import {VersionModel} from "../Models/Version.Model";
 import {VersionEndpointService} from "./endpoints/version.endpoint.service";
-import {lastValueFrom, Observable} from "rxjs";
-import {TextStringsUtil} from "../Constants/text.strings.util";
-import {version} from '../../../package.json';
+import {Observable} from "rxjs";
 import { toSignal } from "@angular/core/rxjs-interop";
 
 @Injectable({providedIn: 'root'})

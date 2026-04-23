@@ -21,7 +21,7 @@ export class EditWidgetModalFacade {
   }
 
   onSearch(input: string): void {
-    this.#iconService.searchInput$.next(input);
+    this.#iconService.search(input);
   }
 
   setIcon(event: string): void {
