@@ -78,6 +78,7 @@ public class ComponentHandler(
         if (components == null) return Results.StatusCode(500);
         
         var component = components.FirstOrDefault(x => x.Id == command.EditComponent.Id);
+        if (component is null) return Results.BadRequest();
         
         var connectionModel = new IconConnectedDtoModel { ComponentId = component.Id };
         var editHasIcon = handlerHelper.IconDataHasValue(command.EditComponent.IconData);
@@ -154,12 +155,11 @@ public class ComponentHandler(
         // }
 
         //TODO EditComponent.IconData.MaterialIcon has no value 
-        if (component.IconData is null)
-        {
+        if (component.IconData is null && command.EditComponent.IconData is not null)
             component.IconData = await iconRepository.GetById(command.EditComponent.IconData.Id);
-        }
 
-        component.IconData.MaterialIcon = command.EditComponent.IconData.MaterialIcon;
+        if (component.IconData is not null)
+            component.IconData.MaterialIcon = command.EditComponent.IconData?.MaterialIcon ?? component.IconData.MaterialIcon;
 
         if (component != command.EditComponent)
         {
@@ -167,7 +167,8 @@ public class ComponentHandler(
             component.Url = command.EditComponent.Url;
         }
 
-        if (component.ComponentSettings != command.EditComponent.ComponentSettings)
+        if (component.ComponentSettings is not null && command.EditComponent.ComponentSettings is not null &&
+            component.ComponentSettings != command.EditComponent.ComponentSettings)
         {
             component.ComponentSettings.ImageHidden = command.EditComponent.ComponentSettings.ImageHidden;
             component.ComponentSettings.TitleHidden = command.EditComponent.ComponentSettings.TitleHidden;
@@ -175,8 +176,12 @@ public class ComponentHandler(
             component.ComponentSettings.Width = command.EditComponent.ComponentSettings.Width;
         }
 
-        var result = await settingsRepository.Edit(component.ComponentSettings) != null;
+        var result = component.ComponentSettings is null || await settingsRepository.Edit(component.ComponentSettings) != null;
         result = await componentRepository.Edit(component);
+        
+        if (component.IconData is null)
+            return result ? Results.Ok() : Results.StatusCode(500);
+        
         await iconRepository.Edit(component.IconData);
         var s = await iconConnectedRepository.GetManyById(component.Id, component.IconData.Id);
 

@@ -43,7 +43,7 @@ export class HeaderComponent {
   ];*/
 
   protected add(component: ComponentModel) {
-    this.#componentService.add$(component);
+    this.#componentService.add(component);
   }
 
   //componentService.EditComponentsData(componentService.Components)

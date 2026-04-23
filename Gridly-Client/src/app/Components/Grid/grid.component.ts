@@ -23,7 +23,7 @@ export class GridComponent{
   inEditMode!: boolean;
 
   constructor(private render: Renderer2) {
-    this.inEditMode = this.#gridService.inEditMode;
+    this.inEditMode = this.#gridService.getEditMode();
     this.SetLayout();
   }
 

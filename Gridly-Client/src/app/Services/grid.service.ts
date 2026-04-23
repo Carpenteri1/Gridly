@@ -2,6 +2,7 @@ import {Injectable, signal} from "@angular/core";
 
 @Injectable({providedIn: 'root'})
 export class GridService {
-    inEditMode = signal(false);
+    private inEditMode = signal(false);
     toggle = () => this.inEditMode.update((value) => !value);
+    getEditMode = () => this.inEditMode();
 }
