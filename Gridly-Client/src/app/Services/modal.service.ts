@@ -1,40 +1,38 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ComponentService } from './component.service';
 import { ComponentModel } from '../Models/Component.Model';
 import { IconModel } from '../Models/Icon.Model';
+import { ImageExtensionsType } from '../Types/image.extensions.type.enum';
 
 @Injectable({ providedIn: 'root' })
 export class ModalService {
-  public resetFile$ = new Subject<void>();
+  readonly resetFile$ = new Subject<void>();
+  #componentService = inject(ComponentService);
+  readonly #supportedImageExtensions: ReadonlyArray<string> = [
+    ImageExtensionsType.Svg,
+    ImageExtensionsType.Png,
+    ImageExtensionsType.Jpg,
+    ImageExtensionsType.Jpeg,
+    ImageExtensionsType.Ico,
+  ];
 
-  constructor(private componentService: ComponentService) {}
+  async onFileUpload(event: Event): Promise<IconModel | undefined> {
+    const fileInput = event.target as HTMLInputElement | null;
+    const file = fileInput?.files?.item(0);
 
-  onFileUpload(event: any): IconModel | undefined {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
+    if (!this.isSupportedImage(file!))
+      return undefined;
 
-      if (
-        file.type.includes('svg') ||
-        file.type.includes('png') ||
-        file.type.includes('jpg') ||
-        file.type.includes('jpeg') ||
-        file.type.includes('ico')
-      ) {
-        let iconData = new IconModel();
-        const reader = new FileReader();
-        reader.onload = () => {
-          iconData.base64Data = reader.result as string;
-          iconData.base64Data = iconData.base64Data.split(',')[1];
-        };
-        reader.readAsDataURL(file);
-        let nameSplit = file.name.split('.');
-        iconData.name = nameSplit[0];
-        iconData.type = nameSplit[1];
-        return iconData;
-      }
-    }
-    return undefined;
+    const iconData = new IconModel();
+    const extension = this.getFileExtension(file!.name);
+
+    iconData.name = this.getFileName(file!.name);
+    iconData.type = extension;
+    iconData.materialIcon = '';
+    iconData.base64Data = await this.readFileAsBase64(file!);
+
+    return iconData;
   }
 
   resetImageData(): void {
@@ -47,10 +45,44 @@ export class ModalService {
 
   noEmptyInputFields(component: ComponentModel): boolean {
     return (
-      this.componentService.CheckComponentData(component) &&
-      (this.componentService.IconDataSet(component) ||
-        this.componentService.IconUrlSet(component))
+      this.#componentService.CheckComponentData(component) &&
+      (this.#componentService.IconDataSet(component) ||
+        this.#componentService.IconUrlSet(component))
     );
   }
-}
 
+  private isSupportedImage(file: File | null): boolean {
+    if (!file) return false;
+    const normalizedType = file.type.toLowerCase();
+    const extension = this.getFileExtension(file.name);
+
+    return (
+      normalizedType.startsWith('image/') ||
+      this.#supportedImageExtensions.includes(extension)
+    );
+  }
+
+  private getFileName(fileName: string): string {
+    const lastDotIndex = fileName.lastIndexOf('.');
+    return lastDotIndex > 0 ? fileName.slice(0, lastDotIndex) : fileName;
+  }
+
+  private getFileExtension(fileName: string): string {
+    const lastDotIndex = fileName.lastIndexOf('.');
+    return lastDotIndex >= 0 ? fileName.slice(lastDotIndex + 1).toLowerCase() : '';
+  }
+
+  private readFileAsBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const result = typeof reader.result === 'string' ? reader.result : '';
+        resolve(result.split(',')[1] ?? '');
+      };
+      reader.onerror = () => reject(reader.error ?? new Error('Unable to read file.'));
+
+      reader.readAsDataURL(file);
+    });
+  }
+}

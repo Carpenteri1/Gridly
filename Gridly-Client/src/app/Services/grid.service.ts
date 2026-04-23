@@ -1,10 +1,7 @@
-import { Injectable } from "@angular/core";
+import {Injectable, signal} from "@angular/core";
 
 @Injectable({providedIn: 'root'})
 export class GridService {
-    public inEditMode!: boolean;
-    
-    constructor() {
-        this.inEditMode = false;
-    }
+    inEditMode = signal(false);
+    toggle = () => this.inEditMode.update((value) => !value);
 }
