@@ -43,7 +43,7 @@ jobs:
         working-directory:  ${{ env.ANGULAR_PATH }}
 
       - name: Run eslint
-        run: npm run lint -- --maxWarnings=0
+        run: npm run lint -- --max-warnings=0
         working-directory: ${{ env.ANGULAR_PATH }}
 
       # No Jest or karma-jasmine libraries, so skipping Angular tests for now
