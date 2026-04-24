@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {VersionModel} from "../../Models/Version.Model";
 import {UrlStringsUtil} from "../../Constants/url.strings.util";
@@ -9,7 +9,8 @@ import {Observable, take} from "rxjs";
 })
 
 export class VersionEndpointService{
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+
 
   get(): Observable<VersionModel> {
     return this.http.get<VersionModel>(UrlStringsUtil.GetVersionUrl).pipe(take(1));

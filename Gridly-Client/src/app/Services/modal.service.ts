@@ -9,7 +9,7 @@ import { ImageExtensionsType } from '../Types/image.extensions.type.enum';
 export class ModalService {
   readonly resetFile$ = new Subject<void>();
   #componentService = inject(ComponentService);
-  readonly #supportedImageExtensions: ReadonlyArray<string> = [
+  readonly #supportedImageExtensions: readonly string[] = [
     ImageExtensionsType.Svg,
     ImageExtensionsType.Png,
     ImageExtensionsType.Jpg,

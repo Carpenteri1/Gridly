@@ -2,7 +2,7 @@
   <div class="grid-layout" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="Drop($event)">
     @for(component of components; track component) {
     <div class="shadow-sm grid-item-style" cdkDrag [cdkDragDisabled]="!inEditMode" [id]="component.id.toString()">
-      <item-component [id]="component.id"></item-component>
+      <app-item [id]="component.id"></app-item>
     </div>
     }
   </div>
