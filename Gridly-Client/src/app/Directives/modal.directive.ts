@@ -1,27 +1,18 @@
-import {
-  AfterViewInit,
-  Directive,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 
 @Directive({
-  selector: '[modalWindow]',
+  selector: '[appModalWindow]',
   standalone: true,
-  exportAs: 'modalWindow',
+  exportAs: 'appModalWindow',
 })
 export class ModalDirective implements AfterViewInit, OnChanges {
+  private el = inject<ElementRef<HTMLDialogElement>>(ElementRef);
 
-  @Input() modalId: number = 0;
-  @Input() id: number = 0;
-  @Input() open: boolean = false;
+
+  @Input() modalId = 0;
+  @Input() id = 0;
+  @Input() open = false;
   @Output() openChange = new EventEmitter<number>();
-
-  constructor(private el: ElementRef<HTMLDialogElement>) {}
 
   ngAfterViewInit(): void {
     this.syncDialog();
@@ -54,10 +45,11 @@ export class ModalDirective implements AfterViewInit, OnChanges {
     this.openChange.emit(this.modalId);
   }
 
-  save() {
+  save(): void {
     this.close();
   }
 
+  @HostListener('click', ['$event'])
   onBackdropClick(ev: MouseEvent): void {
     if (ev.target === this.el.nativeElement) {
       this.close();

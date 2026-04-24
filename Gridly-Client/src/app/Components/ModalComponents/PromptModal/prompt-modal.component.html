@@ -1,5 +1,5 @@
-<dialog #dlg modalWindow [open]="open" [modalId]="modalId" [id]="id" (openChange)="openChange.emit($event)" class="ew-dialog" (click)="modalDirective?.onBackdropClick($event)">
-  <div class="ew-card" (click)="$event.stopPropagation()">
+<dialog #dlg appModalWindow [open]="open" [modalId]="modalId" [id]="id" (openChange)="openChange.emit($event)" class="ew-dialog">
+  <div class="ew-card">
     <header class="ew-header">
       <h3 id="ew-title" class="m-0">Edit {{modalId}}</h3>
       <button type="button" class="btn" aria-label="Close" (click)="close()">

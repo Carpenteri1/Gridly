@@ -51,11 +51,34 @@ export class ComponentService{
       !item.componentSettings?.imageHidden;
   }
 
-    MaterialIconSet(item :ComponentModel): boolean {
+  MaterialIconSet(item :ComponentModel): boolean {
     return  item.iconData?.materialIcon !== undefined  &&
       item.iconData?.materialIcon !== "" &&
       !item.componentSettings?.imageHidden;
   }
+
+  readonly #componentHasBaseData = true;
+
+  get ComponentHasBaseData(){
+    return this.#componentHasBaseData;
+    /*
+    return this.component.name !== undefined && "" &&
+      this.component.url !== undefined && "" &&
+      this.component.iconData !== undefined ||
+      this.component.iconUrl !== undefined && "";*/
+  }
+
+  /*get IconIsUrlHidden(){
+    return this.iconUrlHidden;
+  }
+
+  get IconIsFileHidden(){
+    return this.iconHidden;
+  }
+
+  get ResizeModeActive(): boolean {
+    return this.editMode;
+  }*/
 
   CheckComponentData(item:ComponentModel): boolean {
     return item !== undefined &&

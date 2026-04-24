@@ -1,14 +1,15 @@
-import {Component, inject, OnInit, signal} from "@angular/core";
-import {TextStringsUtil} from "../../Constants/text.strings.util";
-import {CommonModule} from "@angular/common";
-import {VersionService} from "../../Services/version.service";
-import {AddWidgetModalComponent} from "../ModalComponents/AddWidgetModal/add-widget-modal.component";
+import { Component, inject, signal } from "@angular/core";
+import { TextStringsUtil } from "../../Constants/text.strings.util";
+import { CommonModule } from "@angular/common";
+import { VersionService } from "../../Services/version.service";
+import { AddWidgetModalComponent } from "../ModalComponents/AddWidgetModal/add-widget-modal.component";
 import { WidgetType } from "../../Types/widget.type.enum";
 import { ComponentModel } from "../../Models/Component.Model";
 import { ComponentService } from "../../Services/component.service";
+import { GridService } from "../../Services/grid.service";
 
 @Component({
-  selector: 'header-component',
+  selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   standalone: true,
@@ -18,6 +19,7 @@ export class HeaderComponent {
 
   #componentService = inject(ComponentService);
   #versionService = inject(VersionService);
+  #gridService = inject(GridService);
 
   component$ = this.#componentService.component$;
   version$ = this.#versionService.version$;
@@ -30,7 +32,7 @@ export class HeaderComponent {
   protected widgetOptions = [
     { type: WidgetType.Empty, label: 'Add empty widget', description: '', icon: 'bi bi-box' },
     { type: WidgetType.Custom, label: 'Add custom widget', description: '', icon: 'bi bi-box-fill' },
-  ]
+  ];
 
 
   /* TODO variants later maybe
@@ -48,8 +50,8 @@ export class HeaderComponent {
 
   //componentService.EditComponentsData(componentService.Components)
   //TODO get all components and activate edit mode
-  protected setEditMode(){
-    
+  protected setEditMode(): void {
+    this.#gridService.toggle();
   }
 
   toggleMenu(): void {

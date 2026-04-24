@@ -25,7 +25,7 @@
       </div>
       <div class="col d-flex justify-content-end">
         <button
-        makeResizable
+        appMakeResizable
         [canResize]="inEditMode"
         [targetId]="component.id"
         type="button"
@@ -46,18 +46,18 @@
         <h5 class="fw-bold">{{TextStringsUtil.EmptyWidgetTitle}}</h5>
         <p [hidden]="component?.componentSettings?.titleHidden" class="text-center" >{{component?.name}}</p>
       </a>
-  <edit-widget-modal 
+  <app-edit-widget-modal
     [open]="isEditModalOpen"
     [modalId]="component.id"
     [id]="component.id"
     (editedComponent)="edit(component)"
     (openChange)="handleModalChange($event)">
-  </edit-widget-modal>
-  <prompt-modal
+  </app-edit-widget-modal>
+  <app-prompt-modal
     [open]="isDeleteModalOpen"
     [modalId]="component.id"
     [id]="component.id"
     (remove)="remove(component.id)"
     (openChange)="handleModalChange($event)">
-  </prompt-modal>
+  </app-prompt-modal>
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { IconModel } from '../../Models/Icon.Model';
 import { Observable } from 'rxjs/internal/Observable';
@@ -10,7 +10,8 @@ import { SearchIconsResultDto } from '../../DTOs/SearchIconsResultDto';
   providedIn: 'root'
 })
 export class IconEndpointService{
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+
 
   get(): Observable<IconModel> {
     return this.http.get<IconModel>(UrlStringsUtil.IconGet).pipe(take(1));

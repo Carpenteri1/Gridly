@@ -1,5 +1,5 @@
-<dialog modalWindow [open]="open" (openChange)="handleOpenChange($event)" #dlg class="aw-dialog" (click)="onBackdropClick($event)" aria-labelledby="aw-title">
-  <div class="aw-card" (click)="$event.stopPropagation()">
+<dialog appModalWindow [open]="open" (openChange)="handleOpenChange()" #dlg class="aw-dialog" aria-labelledby="aw-title">
+  <div class="aw-card">
     <header class="aw-header">
       <h5 id="aw-title" class="m-0">{{ TextStringsUtil.AddWidgetTitle }}</h5>
       <button type="button" class="btn" aria-label="Close" (click)="close()">
