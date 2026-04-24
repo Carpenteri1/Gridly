@@ -68,7 +68,7 @@ export class ComponentService{
       this.component.iconUrl !== undefined && "";*/
   }
 
-  get IconIsUrlHidden(){
+  /*get IconIsUrlHidden(){
     return this.iconUrlHidden;
   }
 
@@ -78,7 +78,7 @@ export class ComponentService{
 
   get ResizeModeActive(): boolean {
     return this.editMode;
-  }
+  }*/
 
   CheckComponentData(item:ComponentModel): boolean {
     return item !== undefined &&
