@@ -11,14 +11,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { GridService } from '../../Services/grid.service';
 
 @Component({
-  selector: 'item-component',
+  selector: 'app-item',
   templateUrl: './item.component.html',
   styleUrl: './item.component.css',
   standalone: true,
   imports: [
     CommonModule,
     CdkDragHandle,
-    PromptModalComponent,   
+    PromptModalComponent,
     EditWidgetModalComponent,
     ResizableDirective,
     MatIconModule
@@ -34,18 +34,14 @@ export class ItemComponent {
   #gridService = inject(GridService);
 
   component$ = this.#componentService.component$;
-   
-  isEditModalOpen: boolean = false;
-  isDeleteModalOpen: boolean = false;
+
+  isEditModalOpen = false;
+  isDeleteModalOpen = false;
   inEditMode = this.#gridService.getEditMode();
 
   protected IconFilePath(item: ComponentModel): string {
     return 'Assets/Icons/' + item.iconData?.name + '.' + item.iconData?.type;
   }
-   protected handleSelect(t: any) {
-    this.#componentService.edit(t);
-  }
-
   handleModalChange(modalId: number): void {
     if (modalId === this.id) {
       this.isEditModalOpen = false;
@@ -57,16 +53,16 @@ export class ItemComponent {
     this.#componentService.edit(component);
   }
 
-  protected remove(id: number ) {
+  protected remove(id: number) {
     this.#componentService.delete(id);
   }
 
   openEditDialog(): void {
-        //TODO make dialog class and open dialog here
+    this.isEditModalOpen = true;
   }
 
   openDeleteDialog(): void {
-    //TODO make dialog class and open dialog here
+    this.isDeleteModalOpen = true;
   }
 
   protected readonly TextStringsUtil = TextStringsUtil;

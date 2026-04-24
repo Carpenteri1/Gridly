@@ -3,6 +3,7 @@
   "version": "v1.1.6-alpha",
   "scripts": {
     "build": "ng build",
+    "lint": "ng lint",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "node-run": "node dist/gridly-client/server/server.mjs",
@@ -25,6 +26,10 @@
     "zone.js": "^0.15.1"
   },
   "devDependencies": {
-    "@angular/cli": "^21.2.1"
+    "@angular/cli": "^21.2.1",
+    "@eslint/js": "^10.0.1",
+    "angular-eslint": "^21.3.1",
+    "eslint": "^10.2.1",
+    "typescript-eslint": "^8.59.0"
   }
 }

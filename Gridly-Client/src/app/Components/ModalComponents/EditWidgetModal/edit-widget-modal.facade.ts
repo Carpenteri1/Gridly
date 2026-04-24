@@ -26,7 +26,7 @@ export class EditWidgetModalFacade {
 
   setIcon(event: string): void {
 
-    var iconData = new IconModel();
+    const iconData = new IconModel();
     iconData.materialIcon = event;
     iconData.type = "";
     iconData.name = "";
@@ -38,7 +38,7 @@ export class EditWidgetModalFacade {
   }
 
   reset(initial?: Partial<ComponentModel>): void {
-    //this.componentData = MapComponentData.Override(initial ?? {});
+    this.componentData = Object.assign(new ComponentModel(), initial ?? {});
   }
 
   buildSubmitPayload(widgetId: number): ComponentModel {

@@ -66,14 +66,16 @@ export class ComponentService{
       !item.componentSettings?.imageHidden;
   }
 
-    MaterialIconSet(item :ComponentModel): boolean {
+  MaterialIconSet(item :ComponentModel): boolean {
     return  item.iconData?.materialIcon !== undefined  &&
       item.iconData?.materialIcon !== "" &&
       !item.componentSettings?.imageHidden;
   }
 
+  readonly #componentHasBaseData = true;
+
   get ComponentHasBaseData(){
-    return true;
+    return this.#componentHasBaseData;
     /*
     return this.component.name !== undefined && "" &&
       this.component.url !== undefined && "" &&

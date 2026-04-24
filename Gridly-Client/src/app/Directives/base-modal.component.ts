@@ -1,4 +1,4 @@
-import { ViewChild, Directive } from '@angular/core';
+import { Directive, ViewChild, inject } from '@angular/core';
 import { ModalDirective } from './modal.directive';
 import { ModalService } from '../Services/modal.service';
 import { TextStringsUtil } from '../Constants/text.strings.util';
@@ -8,8 +8,7 @@ export abstract class BaseModalComponent {
   @ViewChild(ModalDirective) modalDirective!: ModalDirective;
 
   protected readonly TextStringsUtil = TextStringsUtil;
-
-  constructor(protected modalService: ModalService) {}
+  protected readonly modalService = inject(ModalService);
 
 
   close(): void {
@@ -26,7 +25,7 @@ export abstract class BaseModalComponent {
     this.close();
   }
 
-  onFileUpload(event: any) {
+  onFileUpload(event: Event): Promise<unknown> {
     return this.modalService.onFileUpload(event);
   }
 
@@ -38,4 +37,3 @@ export abstract class BaseModalComponent {
     return this.modalDirective?.open ?? false;
   }
 }
-

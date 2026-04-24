@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {UrlStringsUtil} from "../../Constants/url.strings.util";
 import {ComponentModel} from "../../Models/Component.Model";
 import {Observable, take} from "rxjs";
@@ -10,8 +10,8 @@ import { EditComponentModel } from '../../Models/editComponent.Model';
 })
 
 export class ComponentEndpointService{
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
 
   delete(id: number) {
     return this.http.delete<ComponentModel>(UrlStringsUtil.ComponentUrlDelete+id).pipe(take(1));
