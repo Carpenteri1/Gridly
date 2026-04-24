@@ -1,0 +1,5 @@
+Codex PR smoke test
+Branch: codex/test-pr-agent-bobby
+Base: sandbox
+Git identity target: agent-bobby <niclastime89@gmail.com>
+Created: 2026-04-24
