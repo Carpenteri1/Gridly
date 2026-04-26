@@ -5,15 +5,12 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/Gridly-Client" # Location of package manifests
+  - package-ecosystem: "npm"
+    directory: "/Gridly-Client" 
     schedule:
       interval: "daily"
 
-        # Enable version updates for Docker
   - package-ecosystem: "dotnet-sdk"
-    # Look for a `Dockerfile` in the `root` directory
     directory: "/"
-    # Check for updates once a week
     schedule:
       interval: "daily"
