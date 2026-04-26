@@ -1,21 +1,19 @@
-import {inject, Injectable, Signal} from "@angular/core";
-import {VersionModel} from "../Models/Version.Model";
-import {VersionEndpointService} from "./endpoints/version.endpoint.service";
-import {Observable} from "rxjs";
+import { inject, Injectable, Signal } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
+import { shareReplay } from "rxjs";
+import { VersionModel } from "../Models/Version.Model";
+import { VersionEndpointService } from "./endpoints/version.endpoint.service";
 
 @Injectable({providedIn: 'root'})
 export class VersionService {
-    #api = inject(VersionEndpointService);
+  #api = inject(VersionEndpointService);
 
-    version$: Observable<VersionModel>;
+  readonly version$ = this.#api.get().pipe(
+    shareReplay({ bufferSize: 1, refCount: true }),
+  );
+  readonly currentVersion: Signal<VersionModel | undefined>;
 
-    readonly currentVersion: Signal<VersionModel | undefined>;
-
-    constructor() {
-        this.version$ = this.getVersion$();
-        this.currentVersion = toSignal(this.version$);
-    }
-
-    getVersion$ = () => this.#api.get();
+  constructor() {
+    this.currentVersion = toSignal(this.version$);
+  }
 }

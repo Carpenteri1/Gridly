@@ -27,9 +27,16 @@
   },
   "devDependencies": {
     "@angular/cli": "^21.2.1",
+    "@types/jasmine": "^5.1.12",
     "@eslint/js": "^10.0.1",
     "angular-eslint": "^21.3.1",
     "eslint": "^10.2.1",
+    "jasmine-core": "^5.12.0",
+    "karma": "^6.4.4",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-coverage": "^2.2.1",
+    "karma-jasmine": "^5.1.0",
+    "karma-jasmine-html-reporter": "^2.1.0",
     "typescript-eslint": "^8.59.0"
   }
 }

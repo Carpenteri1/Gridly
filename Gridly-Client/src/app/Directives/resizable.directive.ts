@@ -1,5 +1,6 @@
 import { Directive, ElementRef, HostListener, inject, Input, Renderer2 } from '@angular/core';
 import { ComponentService } from "../Services/component.service";
+import { ComponentModel } from '../Models/Component.Model';
 
 @Directive({
   standalone: true,
@@ -14,9 +15,6 @@ export class ResizableDirective {
   @Input() targetId!: number;
 
   #componentService = inject(ComponentService);
-  
-  private component = this.#componentService.currentComponent();
-  private components = this.#componentService.currentComponents();
 
   private isResizing = false;
   private startX = 0;
@@ -33,7 +31,8 @@ export class ResizableDirective {
     event.preventDefault();
     event.stopPropagation();
 
-    if (!this.component) return;
+    const component = this.#componentService.getComponentById(this.targetId);
+    if (!component) return;
 
     this.gridItemElement = this.el.nativeElement.closest('.grid-item-style') as HTMLElement;
 
@@ -64,8 +63,8 @@ export class ResizableDirective {
 
     this.startX = event.clientX;
     this.startY = event.clientY;
-    this.startWidth = this.component.componentSettings?.width ?? 250;
-    this.startHeight = this.component.componentSettings?.height ?? 250;
+    this.startWidth = component.componentSettings?.width ?? 250;
+    this.startHeight = component.componentSettings?.height ?? 250;
     this.isResizing = true;
 
     this.HideCursor();
@@ -73,7 +72,8 @@ export class ResizableDirective {
 
   @HostListener('document:pointermove', ['$event'])
   OnPointerMove(event: PointerEvent): void {
-    if (!this.isResizing || !this.gridItemElement || !this.component) return;
+    const component = this.#componentService.getComponentById(this.targetId);
+    if (!this.isResizing || !this.gridItemElement || !component) return;
 
     if (this.pointerId !== null && event.pointerId !== this.pointerId) return;
 
@@ -86,21 +86,16 @@ export class ResizableDirective {
     const adjustedWidth = this.AdjustComponentSize(newWidth);
     const adjustedHeight = this.AdjustComponentSize(newHeight);
     
-    const updatedComponent = this.component;
-    updatedComponent.componentSettings = {
-      ...updatedComponent.componentSettings,
-      width: adjustedWidth,
-      height: adjustedHeight
+    const updatedComponent: ComponentModel = {
+      ...component,
+      componentSettings: {
+        ...component.componentSettings,
+        width: adjustedWidth,
+        height: adjustedHeight
+      }
     };
 
-    this.component = updatedComponent;
-    
-    if (this.components) {
-      const componentIndex = this.components.findIndex(c => c.id === this.targetId);
-      if (componentIndex !== -1) {
-        this.components[componentIndex] = updatedComponent;
-      }
-    }
+    this.#componentService.updateComponentInState(updatedComponent);
     
     this.renderer.setStyle(this.gridItemElement, 'height', adjustedHeight + 'px');
     this.renderer.setStyle(this.gridItemElement, 'width', adjustedWidth + 'px');

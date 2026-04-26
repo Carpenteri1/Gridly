@@ -1,4 +1,4 @@
-import { Component, inject, Input, ViewChild } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComponentService } from '../../Services/component.service';
 import { TextStringsUtil } from '../../Constants/text.strings.util';
@@ -25,36 +25,44 @@ import { GridService } from '../../Services/grid.service';
   ],
 })
 export class ItemComponent {
-  @Input() id!: number; //TODO might not need this in the grid component
-
-  @ViewChild(PromptModalComponent) promptModal!: PromptModalComponent;
-  @ViewChild(EditWidgetModalComponent) editModal!: EditWidgetModalComponent;
+  @Input({ required: true }) component!: ComponentModel;
 
   #componentService = inject(ComponentService);
   #gridService = inject(GridService);
 
-  component$ = this.#componentService.component$;
-
   isEditModalOpen = false;
   isDeleteModalOpen = false;
-  inEditMode = this.#gridService.getEditMode();
+  readonly inEditMode = this.#gridService.editMode;
 
-  protected IconFilePath(item: ComponentModel): string {
-    return 'Assets/Icons/' + item.iconData?.name + '.' + item.iconData?.type;
+  protected iconDataUrl(item: ComponentModel): string {
+    return `data:image/${item.iconData?.type};base64,${item.iconData?.base64Data}`;
   }
+
+  protected hasFileIcon(item: ComponentModel): boolean {
+    return this.#componentService.IconDataSet(item);
+  }
+
+  protected hasIconUrl(item: ComponentModel): boolean {
+    return this.#componentService.IconUrlSet(item);
+  }
+
+  protected hasMaterialIcon(item: ComponentModel): boolean {
+    return this.#componentService.MaterialIconSet(item);
+  }
+
   handleModalChange(modalId: number): void {
-    if (modalId === this.id) {
+    if (modalId === this.component.id) {
       this.isEditModalOpen = false;
       this.isDeleteModalOpen = false;
     }
   }
 
-  protected edit(component: ComponentModel) {
-    this.#componentService.edit(component);
+  protected edit(component: ComponentModel): void {
+    void this.#componentService.edit(component);
   }
 
-  protected remove(id: number) {
-    this.#componentService.delete(id);
+  protected remove(id: number): void {
+    void this.#componentService.delete(id);
   }
 
   openEditDialog(): void {
