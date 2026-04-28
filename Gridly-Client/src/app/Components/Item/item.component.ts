@@ -34,22 +34,6 @@ export class ItemComponent {
   isDeleteModalOpen = false;
   readonly inEditMode = this.#gridService.editMode;
 
-  protected iconDataUrl(item: ComponentModel): string {
-    return `data:image/${item.iconData?.type};base64,${item.iconData?.base64Data}`;
-  }
-
-  protected hasFileIcon(item: ComponentModel): boolean {
-    return this.#componentService.IconDataSet(item);
-  }
-
-  protected hasIconUrl(item: ComponentModel): boolean {
-    return this.#componentService.IconUrlSet(item);
-  }
-
-  protected hasMaterialIcon(item: ComponentModel): boolean {
-    return this.#componentService.MaterialIconSet(item);
-  }
-
   handleModalChange(modalId: number): void {
     if (modalId === this.component.id) {
       this.isEditModalOpen = false;

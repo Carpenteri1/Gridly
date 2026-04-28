@@ -1,6 +1,5 @@
 import { Directive, ElementRef, HostListener, inject, Input, Renderer2 } from '@angular/core';
 import { ComponentService } from "../Services/component.service";
-import { ComponentModel } from '../Models/Component.Model';
 
 @Directive({
   standalone: true,
@@ -15,6 +14,8 @@ export class ResizableDirective {
   @Input() targetId!: number;
 
   #componentService = inject(ComponentService);
+  
+  private components = this.#componentService.currentComponents();
 
   private isResizing = false;
   private startX = 0;
@@ -31,7 +32,7 @@ export class ResizableDirective {
     event.preventDefault();
     event.stopPropagation();
 
-    const component = this.#componentService.getById(this.targetId);
+    const component = this.components?.find((currentComponent) => currentComponent.id === this.targetId);
     if (!component) return;
 
     this.gridItemElement = this.el.nativeElement.closest('.grid-item-style') as HTMLElement;
@@ -72,7 +73,7 @@ export class ResizableDirective {
 
   @HostListener('document:pointermove', ['$event'])
   OnPointerMove(event: PointerEvent): void {
-    const component = this.#componentService.getById(this.targetId);
+    const component = this.components?.find((currentComponent) => currentComponent.id === this.targetId);
     if (!this.isResizing || !this.gridItemElement || !component) return;
 
     if (this.pointerId !== null && event.pointerId !== this.pointerId) return;
@@ -86,16 +87,11 @@ export class ResizableDirective {
     const adjustedWidth = this.AdjustComponentSize(newWidth);
     const adjustedHeight = this.AdjustComponentSize(newHeight);
     
-    const updatedComponent: ComponentModel = {
-      ...component,
-      componentSettings: {
-        ...component.componentSettings,
-        width: adjustedWidth,
-        height: adjustedHeight
-      }
+    component.componentSettings = {
+      ...component.componentSettings,
+      width: adjustedWidth,
+      height: adjustedHeight
     };
-
-    this.#componentService.updateInState(updatedComponent);
     
     this.renderer.setStyle(this.gridItemElement, 'height', adjustedHeight + 'px');
     this.renderer.setStyle(this.gridItemElement, 'width', adjustedWidth + 'px');

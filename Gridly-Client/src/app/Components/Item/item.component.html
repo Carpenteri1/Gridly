@@ -41,15 +41,9 @@
         target="_blank"
         rel="noreferrer">
         <span>
-          @if (hasMaterialIcon(component)) {
           <mat-icon class="component-mat-icon-size">
             {{component.iconData?.materialIcon}}
           </mat-icon>
-          } @else if (hasIconUrl(component)) {
-            <img [src]="component.iconUrl" [alt]="component.name" class="img-fluid mx-auto" />
-          } @else if (hasFileIcon(component)) {
-            <img [src]="iconDataUrl(component)" [alt]="component.name" class="img-fluid mx-auto" />
-          }
         </span>
         <p>{{component.id}}</p>
         <h5 [hidden]="component.componentSettings?.titleHidden" class="fw-bold">{{component.name || TextStringsUtil.EmptyWidgetTitle}}</h5>

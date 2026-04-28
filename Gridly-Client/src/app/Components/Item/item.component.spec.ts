@@ -29,6 +29,7 @@ describe('ItemComponent', () => {
   };
 
   const componentServiceMock = {
+    currentComponents: jest.fn(() => [currentComponent]),
     delete: jest.fn(),
     edit: jest.fn(),
     IconDataSet: jest.fn(() => false),

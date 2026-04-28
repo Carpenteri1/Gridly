@@ -14,7 +14,6 @@ type GridComponentTestHarness = GridComponent & {
 @Component({
   selector: 'app-item',
   template: '',
-  standalone: true,
 })
 class MockItemComponent {
   @Input({ required: true }) component!: ComponentModel;

@@ -45,7 +45,7 @@ export class ModalService {
 
   noEmptyInputFields(component: ComponentModel): boolean {
     return (
-      this.#componentService.CheckData(component) &&
+      this.#componentService.CheckComponentData(component) &&
       (this.#componentService.IconDataSet(component) ||
         this.#componentService.IconUrlSet(component))
     );

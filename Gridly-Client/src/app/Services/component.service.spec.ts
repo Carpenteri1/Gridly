@@ -33,7 +33,7 @@ describe('ComponentService', () => {
     getById: jest.fn(),
   };
 
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.clearAllMocks();
     endpointMock.get.mockReturnValue(of([componentA, componentB]));
     endpointMock.getById.mockReturnValue(of(componentA));
@@ -49,16 +49,17 @@ describe('ComponentService', () => {
     });
 
     service = TestBed.inject(ComponentService);
-    await Promise.resolve();
   });
 
   it('loads components once on construction', () => {
     expect(endpointMock.get).toHaveBeenCalledTimes(1);
   });
 
-  it('returns the matching component by id from the component state', () => {
-    const result = service.getById(1);
-    expect(result).toEqual(componentA);
+  it('loads the matching component by id through the endpoint service', () => {
+    service.componentId$.next(1);
+
+    expect(endpointMock.getById).toHaveBeenCalledWith(1);
+    expect(service.currentComponent()).toEqual(componentA);
   });
 
   it('delegates add, edit, and delete to the endpoint service', async () => {
@@ -81,8 +82,8 @@ describe('ComponentService', () => {
   });
 
   it('validates component base data with the shared regex rules', () => {
-    expect(service.CheckData(componentA)).toBe(true);
-    expect(service.CheckData({ ...componentA, url: 'not-a-url' })).toBe(false);
-    expect(service.CheckData({ ...componentA, name: '' })).toBe(false);
+    expect(service.CheckComponentData(componentA)).toBe(true);
+    expect(service.CheckComponentData({ ...componentA, url: 'not-a-url' })).toBe(false);
+    expect(service.CheckComponentData({ ...componentA, name: '' })).toBe(false);
   });
 });
