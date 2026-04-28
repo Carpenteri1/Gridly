@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModalService } from '../../../Services/modal.service';
+import { ComponentModel } from '../../../Models/Component.Model';
 import { AddWidgetModalComponent } from './add-widget-modal.component';
 import { WidgetType } from '../../../Types/widget.type.enum';
 
@@ -32,5 +33,26 @@ describe('AddWidgetModalComponent', () => {
     expect(emitSpy).toHaveBeenCalledTimes(2);
     expect(emitSpy.mock.calls[0][0]).toBeDefined();
     expect(emitSpy.mock.calls[1][0]).toBeDefined();
+  });
+
+  it('emits a fully initialized widget model', () => {
+    const emitSpy = jest.spyOn(component.newWidget, 'emit');
+
+    component.onSelect(WidgetType.Empty);
+
+    const widget = emitSpy.mock.calls[0][0] as ComponentModel;
+    expect(widget.componentSettings).toEqual({
+      width: 250,
+      height: 250,
+      imageHidden: false,
+      titleHidden: false,
+    });
+    expect(widget.iconData).toEqual({
+      id: undefined,
+      type: '',
+      name: '',
+      base64Data: '',
+      materialIcon: 'add_box',
+    });
   });
 });

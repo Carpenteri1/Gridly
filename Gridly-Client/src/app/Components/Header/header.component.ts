@@ -21,7 +21,6 @@ export class HeaderComponent {
   #versionService = inject(VersionService);
   #gridService = inject(GridService);
 
-  component$ = this.#componentService.component$;
   version$ = this.#versionService.version$;
 
   showMenu = signal(false);
