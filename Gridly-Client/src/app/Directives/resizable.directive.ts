@@ -31,7 +31,7 @@ export class ResizableDirective {
     event.preventDefault();
     event.stopPropagation();
 
-    const component = this.#componentService.getComponentById(this.targetId);
+    const component = this.#componentService.getById(this.targetId);
     if (!component) return;
 
     this.gridItemElement = this.el.nativeElement.closest('.grid-item-style') as HTMLElement;
@@ -72,7 +72,7 @@ export class ResizableDirective {
 
   @HostListener('document:pointermove', ['$event'])
   OnPointerMove(event: PointerEvent): void {
-    const component = this.#componentService.getComponentById(this.targetId);
+    const component = this.#componentService.getById(this.targetId);
     if (!this.isResizing || !this.gridItemElement || !component) return;
 
     if (this.pointerId !== null && event.pointerId !== this.pointerId) return;
@@ -95,7 +95,7 @@ export class ResizableDirective {
       }
     };
 
-    this.#componentService.updateComponentInState(updatedComponent);
+    this.#componentService.updateInState(updatedComponent);
     
     this.renderer.setStyle(this.gridItemElement, 'height', adjustedHeight + 'px');
     this.renderer.setStyle(this.gridItemElement, 'width', adjustedWidth + 'px');

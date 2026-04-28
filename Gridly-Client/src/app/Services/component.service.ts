@@ -12,6 +12,9 @@ export class ComponentService {
 
   readonly #componentsState = new BehaviorSubject<ComponentModel[]>([]);
   readonly components$: Observable<ComponentModel[]> = this.#componentsState.asObservable();
+  readonly component$: Observable<ComponentModel | undefined> = this.components$.pipe(
+    map((components) => components[0]),
+  );
   readonly currentComponents: Signal<ComponentModel[]>;
 
   constructor() {
@@ -31,7 +34,7 @@ export class ComponentService {
     );
   }
 
-  getComponentById(id: number): ComponentModel | undefined {
+  getById(id: number): ComponentModel | undefined {
     return this.#componentsState.value.find((component) => component.id === id);
   }
 
@@ -42,7 +45,7 @@ export class ComponentService {
         .pipe(take(1)),
     );
 
-    this.updateComponentInState(updatedComponent);
+    this.updateInState(updatedComponent);
     return updatedComponent;
   }
 
@@ -60,7 +63,7 @@ export class ComponentService {
     return deletedComponent;
   }
 
-  updateComponentInState(component: ComponentModel): void {
+  updateInState(component: ComponentModel): void {
     const components = this.#componentsState.value;
     const componentIndex = components.findIndex((item) => item.id === component.id);
 
@@ -95,7 +98,7 @@ export class ComponentService {
       !item.componentSettings?.imageHidden;
   }
 
-  CheckComponentData(item: ComponentModel): boolean {
+  CheckData(item: ComponentModel): boolean {
     return item !== undefined &&
       item.name !== "" &&
       item.url !== "" &&

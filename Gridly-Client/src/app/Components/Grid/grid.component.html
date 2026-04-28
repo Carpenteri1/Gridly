@@ -1,4 +1,4 @@
-@if (components(); as components) {
+@if (components$ | async; as components) {
   <div class="grid-layout" cdkDropList cdkDropListOrientation="horizontal" [cdkDropListData]="components" (cdkDropListDropped)="Drop($event)">
     @for(component of components; track component.id) {
     <div class="shadow-sm grid-item-style" cdkDrag [cdkDragDisabled]="!inEditMode()" [id]="component.id.toString()">

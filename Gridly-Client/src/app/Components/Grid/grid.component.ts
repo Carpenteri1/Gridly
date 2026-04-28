@@ -17,7 +17,7 @@ export class GridComponent {
   #componentService = inject(ComponentService);
   #gridService = inject(GridService);
 
-  readonly components = this.#componentService.currentComponents;
+  readonly components$ = this.#componentService.components$;
   readonly inEditMode = this.#gridService.editMode;
 
   protected Drop(event: CdkDragDrop<ComponentModel[]>): void {

@@ -57,7 +57,7 @@ describe('ComponentService', () => {
   });
 
   it('returns the matching component by id from the component state', () => {
-    const result = service.getComponentById(1);
+    const result = service.getById(1);
     expect(result).toEqual(componentA);
   });
 
@@ -81,8 +81,8 @@ describe('ComponentService', () => {
   });
 
   it('validates component base data with the shared regex rules', () => {
-    expect(service.CheckComponentData(componentA)).toBe(true);
-    expect(service.CheckComponentData({ ...componentA, url: 'not-a-url' })).toBe(false);
-    expect(service.CheckComponentData({ ...componentA, name: '' })).toBe(false);
+    expect(service.CheckData(componentA)).toBe(true);
+    expect(service.CheckData({ ...componentA, url: 'not-a-url' })).toBe(false);
+    expect(service.CheckData({ ...componentA, name: '' })).toBe(false);
   });
 });

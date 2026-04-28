@@ -1,6 +1,7 @@
 import { Component, inject, signal } from "@angular/core";
 import { TextStringsUtil } from "../../Constants/text.strings.util";
 import { CommonModule } from "@angular/common";
+import { VersionService } from "../../Services/version.service";
 import { AddWidgetModalComponent } from "../ModalComponents/AddWidgetModal/add-widget-modal.component";
 import { WidgetType } from "../../Types/widget.type.enum";
 import { ComponentModel } from "../../Models/Component.Model";
@@ -17,7 +18,11 @@ import { GridService } from "../../Services/grid.service";
 export class HeaderComponent {
 
   #componentService = inject(ComponentService);
+  #versionService = inject(VersionService);
   #gridService = inject(GridService);
+
+  component$ = this.#componentService.component$;
+  version$ = this.#versionService.version$;
 
   showMenu = signal(false);
 
@@ -40,7 +45,7 @@ export class HeaderComponent {
   ];*/
 
   protected add(component: ComponentModel) {
-    void this.#componentService.add(component);
+    this.#componentService.add(component);
   }
 
   //componentService.EditComponentsData(componentService.Components)
