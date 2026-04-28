@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { firstValueFrom, of } from 'rxjs';
+import { of } from 'rxjs';
 import { ComponentModel } from '../Models/Component.Model';
 import { ComponentEndpointService } from './endpoints/component.endpoint.service';
 import { ComponentService } from './component.service';
@@ -56,11 +56,9 @@ describe('ComponentService', () => {
     expect(endpointMock.get).toHaveBeenCalledTimes(1);
   });
 
-  it('returns the matching component by id from the observable stream', async () => {
-    service.componentId$.next(2);
-
-    await expect(firstValueFrom(service.component$)).resolves.toEqual(componentA);
-    expect(endpointMock.getById).toHaveBeenCalledWith(2);
+  it('returns the matching component by id from the component state', () => {
+    const result = service.getComponentById(1);
+    expect(result).toEqual(componentA);
   });
 
   it('delegates add, edit, and delete to the endpoint service', async () => {

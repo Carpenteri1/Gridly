@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { signal } from '@angular/core';
 import { ComponentModel } from '../../Models/Component.Model';
 import { ComponentService } from '../../Services/component.service';
 import { GridService } from '../../Services/grid.service';
@@ -29,18 +29,19 @@ describe('ItemComponent', () => {
   };
 
   const componentServiceMock = {
-    component$: of(currentComponent),
-    currentComponent: jest.fn(() => currentComponent),
-    currentComponents: jest.fn(() => [currentComponent]),
     delete: jest.fn(),
     edit: jest.fn(),
+    IconDataSet: jest.fn(() => false),
+    IconUrlSet: jest.fn(() => false),
+    MaterialIconSet: jest.fn(() => true),
   };
 
-  const gridServiceMock = {
-    getEditMode: jest.fn(() => true),
-  };
+  const editMode = signal(true);
+  const gridServiceMock = { editMode: editMode.asReadonly() };
 
   beforeEach(async () => {
+    jest.clearAllMocks();
+
     await TestBed.configureTestingModule({
       imports: [ItemComponent],
       providers: [
@@ -51,7 +52,7 @@ describe('ItemComponent', () => {
 
     fixture = TestBed.createComponent(ItemComponent);
     component = fixture.componentInstance;
-    component.id = 7;
+    fixture.componentRef.setInput('component', currentComponent);
     fixture.detectChanges();
   });
 
