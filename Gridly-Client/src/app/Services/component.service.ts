@@ -10,9 +10,10 @@ import {RegexStringsUtil} from "../Constants/regex.strings.util";
 export class ComponentService{
   #api = inject(ComponentEndpointService);
   
-  componentId$ = new ReplaySubject<number>(1);
   component$: Observable<ComponentModel>;
   components$: Observable<ComponentModel[]>;
+
+  componentId = new ReplaySubject<number>(1);
 
   readonly currentComponent: Signal<ComponentModel | undefined>;
   readonly currentComponents: Signal<ComponentModel[] | undefined>;
@@ -26,7 +27,7 @@ export class ComponentService{
   }
   
   private edit$ = (component: EditComponentModel) => this.#api.edit(component).pipe(take(1));
-  private getById$ = () => this.componentId$.pipe(switchMap(id => this.#api.getById(id)), take(1));
+  private getById$ = () => this.componentId.pipe(switchMap(id => this.#api.getById(id)), take(1));
   private delete$ = (id: number) => this.#api.delete(id).pipe(take(1));
   private get$ = () => this.#api.get().pipe(take(1));
   private add$ = (component: ComponentModel) => this.#api.add(component).pipe(take(1));

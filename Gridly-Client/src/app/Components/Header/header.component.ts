@@ -45,9 +45,8 @@ export class HeaderComponent {
   ];*/
 
   protected async add(component: ComponentModel): Promise<void> {
-    this.addWidgetDialogActive = false;
+    this.addWidgetDialogActive = !this.addWidgetDialogActive;
     await this.#componentService.add(component);
-    this.reloadPage();
   }
 
   //componentService.EditComponentsData(componentService.Components)
@@ -58,9 +57,5 @@ export class HeaderComponent {
 
   toggleMenu(): void {
     this.showMenu.update((showMenu) => !showMenu);
-  }
-
-  protected reloadPage(): void {
-    window.location.reload();
   }
 }

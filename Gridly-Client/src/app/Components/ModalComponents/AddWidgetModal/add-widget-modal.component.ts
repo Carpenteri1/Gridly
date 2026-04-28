@@ -18,16 +18,9 @@ export class AddWidgetModalComponent
   @Input() open = false;
   @Input() widgetOptions: WidgetOptionsModal[] = [];
 
-  @Output() openChange = new EventEmitter<boolean>();
   @Output() newWidget = new EventEmitter<ComponentModel>();
 
-  handleOpenChange(): void {
-    this.openChange.emit(false);
-  }
-
   onSelect(type: WidgetType) {
-    this.openChange.emit(false);
-
     switch (type) {
       case WidgetType.Custom:
         return this.newWidget.emit(new ComponentModel());
