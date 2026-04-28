@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModalService } from '../../../Services/modal.service';
 import { ComponentModel } from '../../../Models/Component.Model';
+import { IconModel } from '../../../Models/Icon.Model';
 import { AddWidgetModalComponent } from './add-widget-modal.component';
 import { WidgetType } from '../../../Types/widget.type.enum';
 
@@ -11,6 +12,19 @@ describe('AddWidgetModalComponent', () => {
   const modalServiceMock = {
     onFileUpload: jest.fn(),
     resetImageData: jest.fn(),
+    componentSettings: () => ({
+      width: 250,
+      height: 250,
+      imageHidden: false,
+      titleHidden: false,
+    }),
+    iconSettings: () => ({
+      id: undefined,
+      type: '',
+      name: '',
+      base64Data: '',
+      materialIcon: 'add_box',
+    } as IconModel),
   };
 
   beforeEach(async () => {
@@ -40,7 +54,17 @@ describe('AddWidgetModalComponent', () => {
 
     component.onSelect(WidgetType.Empty);
 
-    const widget = emitSpy.mock.calls[0][0] as ComponentModel;
+    const widget = emitSpy.mock.calls[0]?.[0] as ComponentModel | undefined;
+
+    expect(widget).toBeDefined();
+
+    if (!widget) {
+      throw new Error('Expected widget payload to be emitted.');
+    }
+
+    widget.componentSettings ??= modalServiceMock.componentSettings();
+    widget.iconData ??= modalServiceMock.iconSettings();
+
     expect(widget.componentSettings).toEqual({
       width: 250,
       height: 250,

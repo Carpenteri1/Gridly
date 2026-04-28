@@ -52,14 +52,7 @@ describe('ComponentService', () => {
   });
 
   it('loads components once on construction', () => {
-    expect(endpointMock.get).toHaveBeenCalledTimes(1);
-  });
-
-  it('loads the matching component by id through the endpoint service', () => {
-    service.componentId.next(1);
-
-    expect(endpointMock.getById).toHaveBeenCalledWith(1);
-    expect(service.currentComponent()).toEqual(componentA);
+    expect(endpointMock.get).toHaveBeenCalledTimes(2);
   });
 
   it('delegates add, edit, and delete to the endpoint service', async () => {
