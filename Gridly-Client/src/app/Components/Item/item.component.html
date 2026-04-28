@@ -1,6 +1,5 @@
-@if (component$ | async; as component) {
- <div class="row h-10">
-  @if (inEditMode)
+<div class="row h-10">
+  @if (inEditMode())
   {
       <div class="col">
         <button type="button" 
@@ -26,7 +25,7 @@
       <div class="col d-flex justify-content-end">
         <button
         appMakeResizable
-        [canResize]="inEditMode"
+        [canResize]="inEditMode()"
         [targetId]="component.id"
         type="button"
         class="btn edit-button resize-button">
@@ -36,21 +35,29 @@
 
   }
 </div>
-      <a class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2">
+      <a
+        class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2"
+        [href]="component.url"
+        target="_blank"
+        rel="noreferrer">
         <span>
+        @if (hasMaterialIcon(component)) 
+        {
           <mat-icon class="component-mat-icon-size">
-            {{component?.iconData?.materialIcon}}
+            {{component.iconData?.materialIcon}}
           </mat-icon>
+        }
         </span>
-        <p>{{component?.id}}</p>
-        <h5 class="fw-bold">{{TextStringsUtil.EmptyWidgetTitle}}</h5>
-        <p [hidden]="component?.componentSettings?.titleHidden" class="text-center" >{{component?.name}}</p>
+        <p>{{component.id}}</p>
+        <h5 [hidden]="component.componentSettings?.titleHidden" class="fw-bold">{{component.name || TextStringsUtil.EmptyWidgetTitle}}</h5>
+        <p class="text-center">{{component.url}}</p>
       </a>
   <app-edit-widget-modal
     [open]="isEditModalOpen"
     [modalId]="component.id"
     [id]="component.id"
-    (editedComponent)="edit(component)"
+    [component]="component"
+    (editedComponent)="edit($event)"
     (openChange)="handleModalChange($event)">
   </app-edit-widget-modal>
   <app-prompt-modal
@@ -60,4 +67,3 @@
     (remove)="remove(component.id)"
     (openChange)="handleModalChange($event)">
   </app-prompt-modal>
-}
