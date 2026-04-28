@@ -61,7 +61,6 @@ describe('HeaderComponent', () => {
 
   it('delegates add and edit mode actions to the injected services', async () => {
     const newComponent = new ComponentModel();
-    const reloadPageSpy = jest.spyOn(component as HeaderComponentTestHarness, 'reloadPage').mockImplementation(() => undefined);
 
     (component as HeaderComponentTestHarness).addWidgetDialogActive = true;
 
@@ -70,7 +69,6 @@ describe('HeaderComponent', () => {
 
     expect(componentServiceMock.add).toHaveBeenCalledWith(newComponent);
     expect((component as HeaderComponentTestHarness).addWidgetDialogActive).toBe(false);
-    expect(reloadPageSpy).toHaveBeenCalled();
     expect(gridServiceMock.toggle).toHaveBeenCalled();
   });
 

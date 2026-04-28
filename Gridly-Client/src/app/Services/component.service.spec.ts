@@ -56,7 +56,7 @@ describe('ComponentService', () => {
   });
 
   it('loads the matching component by id through the endpoint service', () => {
-    service.componentId$.next(1);
+    service.componentId.next(1);
 
     expect(endpointMock.getById).toHaveBeenCalledWith(1);
     expect(service.currentComponent()).toEqual(componentA);
