@@ -24,6 +24,8 @@ public class ComponentFactoryTests
         Assert.Equal(dto.ComponentName, result.Name);
         Assert.Equal(dto.Url, result.Url);
         Assert.Equal(dto.IconUrl, result.IconUrl);
+        Assert.NotNull(result.IconData);
+        Assert.NotNull(result.ComponentSettings);
     }
 
     [Fact]
@@ -42,5 +44,41 @@ public class ComponentFactoryTests
         Assert.Equal("First", result[0].Name);
         Assert.Equal(2, result[1].Id);
         Assert.Equal("Second", result[1].Name);
+    }
+
+    [Fact]
+    public void Create_MapsIconAndComponentSettings()
+    {
+        var dto = new ComponentDtoModel
+        {
+            ComponentId = 8,
+            IconId = 21,
+            IconName = "grid",
+            Type = "svg",
+            Base64Data = "Zm9v",
+            MaterialIcon = "dashboard",
+            ComponentSettingsId = 13,
+            Width = 500,
+            Height = 300,
+            TitleHidden = true,
+            ImageHidden = false
+        };
+
+        var result = ComponentFactory.Create(dto);
+
+        Assert.NotNull(result.IconData);
+        Assert.Equal(21, result.IconData.Id);
+        Assert.Equal("grid", result.IconData.Name);
+        Assert.Equal("svg", result.IconData.Type);
+        Assert.Equal("Zm9v", result.IconData.Base64Data);
+        Assert.Equal("dashboard", result.IconData.MaterialIcon);
+
+        Assert.NotNull(result.ComponentSettings);
+        Assert.Equal(13, result.ComponentSettings.Id);
+        Assert.Equal(8, result.ComponentSettings.ComponentId);
+        Assert.Equal(500, result.ComponentSettings.Width);
+        Assert.Equal(300, result.ComponentSettings.Height);
+        Assert.True(result.ComponentSettings.TitleHidden);
+        Assert.False(result.ComponentSettings.ImageHidden);
     }
 }

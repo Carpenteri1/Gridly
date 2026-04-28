@@ -32,10 +32,11 @@ public class ComponentHandler(
         
         var component = await componentRepository.Insert(command);
 
+        command.ComponentSettings ??= SettingsFactory.Create(null);
         command.ComponentSettings.ComponentId = component.Id;
         await settingsRepository.Insert(command.ComponentSettings);
 
-        component.IconData = IconFactory.Create(command.IconData);
+        component.IconData ??= IconFactory.Create(command.IconData);
         component.IconData = await iconRepository.Insert(component.IconData);
 
         await iconConnectedRepository.Insert(IconConnectedFactory.Create(component.Id, component.IconData.Id));

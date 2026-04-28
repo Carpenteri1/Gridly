@@ -21,7 +21,6 @@ export class HeaderComponent {
   #versionService = inject(VersionService);
   #gridService = inject(GridService);
 
-  component$ = this.#componentService.component$;
   version$ = this.#versionService.version$;
 
   showMenu = signal(false);
@@ -44,8 +43,9 @@ export class HeaderComponent {
     { type: 'note',  label: 'Note',  description: 'Plain text note', icon: 'bi bi-sticky' }
   ];*/
 
-  protected add(component: ComponentModel) {
-    this.#componentService.add(component);
+  protected async add(component: ComponentModel): Promise<void> {
+    this.addWidgetDialogActive = !this.addWidgetDialogActive;
+    await this.#componentService.add(component);
   }
 
   //componentService.EditComponentsData(componentService.Components)

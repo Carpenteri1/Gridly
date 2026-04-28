@@ -16,7 +16,7 @@
               <span>{{TextStringsUtil.MenuAddWidgetButtonTitle}}</span>
             </button>
             <app-add-widget-modal
-              [(open)]="addWidgetDialogActive"
+              [open]="addWidgetDialogActive"
               [widgetOptions]="widgetOptions"
               (newWidget)="add($event)">
             </app-add-widget-modal>
