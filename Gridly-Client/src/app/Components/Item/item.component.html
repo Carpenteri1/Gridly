@@ -41,9 +41,12 @@
         target="_blank"
         rel="noreferrer">
         <span>
+        @if (hasMaterialIcon(component)) 
+        {
           <mat-icon class="component-mat-icon-size">
             {{component.iconData?.materialIcon}}
           </mat-icon>
+        }
         </span>
         <p>{{component.id}}</p>
         <h5 [hidden]="component.componentSettings?.titleHidden" class="fw-bold">{{component.name || TextStringsUtil.EmptyWidgetTitle}}</h5>

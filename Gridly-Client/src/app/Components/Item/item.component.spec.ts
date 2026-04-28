@@ -89,4 +89,11 @@ describe('ItemComponent', () => {
     expect(componentServiceMock.edit).toHaveBeenCalledWith(currentComponent);
     expect(componentServiceMock.delete).toHaveBeenCalledWith(7);
   });
+  
+  it('hasMaterialIcon returns the value from the component service', () => {
+    const result = (component as any).hasMaterialIcon(currentComponent);
+    expect(componentServiceMock.MaterialIconSet).toHaveBeenCalledWith(currentComponent);
+    expect(result).toBe(true);
+  });
+
 });

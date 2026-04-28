@@ -49,6 +49,10 @@ export class ItemComponent {
     void this.#componentService.delete(id);
   }
 
+  protected hasMaterialIcon(item: ComponentModel): boolean {
+    return this.#componentService.MaterialIconSet(item);
+  }
+
   openEditDialog(): void {
     this.isEditModalOpen = true;
   }
