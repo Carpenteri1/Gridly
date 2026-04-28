@@ -8,6 +8,7 @@ import { ItemComponent } from './item.component';
 type ItemComponentTestHarness = ItemComponent & {
   edit(component: ComponentModel): void;
   remove(id: number): void;
+  hasMaterialIcon(item: ComponentModel): boolean;
 };
 
 describe('ItemComponent', () => {
@@ -91,7 +92,7 @@ describe('ItemComponent', () => {
   });
   
   it('hasMaterialIcon returns the value from the component service', () => {
-    const result = (component as any).hasMaterialIcon(currentComponent);
+    const result = (component as ItemComponentTestHarness).hasMaterialIcon(currentComponent);
     expect(componentServiceMock.MaterialIconSet).toHaveBeenCalledWith(currentComponent);
     expect(result).toBe(true);
   });
