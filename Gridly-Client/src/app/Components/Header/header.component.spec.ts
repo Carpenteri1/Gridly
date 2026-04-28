@@ -7,7 +7,9 @@ import { VersionService } from '../../Services/version.service';
 import { HeaderComponent } from './header.component';
 
 type HeaderComponentTestHarness = HeaderComponent & {
-  add(component: ComponentModel): void;
+  add(component: ComponentModel): Promise<void>;
+  addWidgetDialogActive: boolean;
+  reloadPage(): void;
   setEditMode(): void;
 };
 
@@ -29,6 +31,10 @@ describe('HeaderComponent', () => {
   };
 
   beforeEach(async () => {
+    componentServiceMock.add.mockResolvedValue(undefined);
+    componentServiceMock.add.mockClear();
+    gridServiceMock.toggle.mockClear();
+
     await TestBed.configureTestingModule({
       imports: [HeaderComponent],
       providers: [
@@ -53,13 +59,18 @@ describe('HeaderComponent', () => {
     expect(component.showMenu()).toBe(false);
   });
 
-  it('delegates add and edit mode actions to the injected services', () => {
+  it('delegates add and edit mode actions to the injected services', async () => {
     const newComponent = new ComponentModel();
+    const reloadPageSpy = jest.spyOn(component as HeaderComponentTestHarness, 'reloadPage').mockImplementation(() => undefined);
 
-    (component as HeaderComponentTestHarness).add(newComponent);
+    (component as HeaderComponentTestHarness).addWidgetDialogActive = true;
+
+    await (component as HeaderComponentTestHarness).add(newComponent);
     (component as HeaderComponentTestHarness).setEditMode();
 
     expect(componentServiceMock.add).toHaveBeenCalledWith(newComponent);
+    expect((component as HeaderComponentTestHarness).addWidgetDialogActive).toBe(false);
+    expect(reloadPageSpy).toHaveBeenCalled();
     expect(gridServiceMock.toggle).toHaveBeenCalled();
   });
 

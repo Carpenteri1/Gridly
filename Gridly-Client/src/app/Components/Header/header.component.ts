@@ -44,8 +44,10 @@ export class HeaderComponent {
     { type: 'note',  label: 'Note',  description: 'Plain text note', icon: 'bi bi-sticky' }
   ];*/
 
-  protected add(component: ComponentModel) {
-    this.#componentService.add(component);
+  protected async add(component: ComponentModel): Promise<void> {
+    this.addWidgetDialogActive = false;
+    await this.#componentService.add(component);
+    this.reloadPage();
   }
 
   //componentService.EditComponentsData(componentService.Components)
@@ -56,5 +58,9 @@ export class HeaderComponent {
 
   toggleMenu(): void {
     this.showMenu.update((showMenu) => !showMenu);
+  }
+
+  protected reloadPage(): void {
+    window.location.reload();
   }
 }

@@ -25,11 +25,15 @@ describe('AddWidgetModalComponent', () => {
   });
 
   it('emits a new widget payload for both supported widget types', () => {
+    const openChangeSpy = jest.spyOn(component.openChange, 'emit');
     const emitSpy = jest.spyOn(component.newWidget, 'emit');
 
     component.onSelect(WidgetType.Empty);
     component.onSelect(WidgetType.Custom);
 
+    expect(openChangeSpy).toHaveBeenCalledTimes(2);
+    expect(openChangeSpy).toHaveBeenNthCalledWith(1, false);
+    expect(openChangeSpy).toHaveBeenNthCalledWith(2, false);
     expect(emitSpy).toHaveBeenCalledTimes(2);
     expect(emitSpy.mock.calls[0][0]).toBeDefined();
     expect(emitSpy.mock.calls[1][0]).toBeDefined();

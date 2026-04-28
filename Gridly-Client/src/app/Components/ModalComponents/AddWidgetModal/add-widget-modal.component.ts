@@ -41,6 +41,8 @@ export class AddWidgetModalComponent
   }
 
   onSelect(type: WidgetType) {
+    this.openChange.emit(false);
+
     switch (type) {
       case WidgetType.Custom:
         return this.newWidget.emit(new ComponentModel());
