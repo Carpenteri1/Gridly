@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, AfterViewInit, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalDirective } from '../../../Directives/modal.directive';
@@ -17,7 +17,7 @@ import { EditWidgetModalFacade } from './edit-widget-modal.facade';
   providers: [EditWidgetModalFacade],
   standalone: true
 })
-export class EditWidgetModalComponent extends BaseModalComponent implements OnChanges, AfterViewInit {
+export class EditWidgetModalComponent extends BaseModalComponent implements OnChanges {
   @Input() open = false;
   @Input() modalId = 0;
   @Input() id = 0;
@@ -33,25 +33,8 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['open'] && this.modalDirective) {
-      this.modalDirective.open = this.open;
-    }
     if (changes['open']?.currentValue === true) {
       this.facade.reset(this.component ?? undefined);
-    }
-    if (changes['modalId'] && this.modalDirective) {
-      this.modalDirective.modalId = this.modalId;
-    }
-    if (changes['id'] && this.modalDirective) {
-      this.modalDirective.id = this.id;
-    }
-  }
-
-  ngAfterViewInit(): void {
-    if (this.modalDirective) {
-      this.modalDirective.openChange.subscribe((modalId) => {
-        this.openChange.emit(modalId);
-      });
     }
   }
 

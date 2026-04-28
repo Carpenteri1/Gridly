@@ -1,26 +1,32 @@
+import { Component, Input, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ComponentModel } from '../../Models/Component.Model';
 import { ComponentService } from '../../Services/component.service';
 import { GridService } from '../../Services/grid.service';
 import { GridComponent } from './grid.component';
+import { ItemComponent } from '../Item/item.component';
 
 type GridComponentTestHarness = GridComponent & {
   Drop(event: unknown): void;
 };
 
+@Component({
+  selector: 'app-item',
+  template: '',
+})
+class MockItemComponent {
+  @Input({ required: true }) component!: ComponentModel;
+}
+
 describe('GridComponent', () => {
   let fixture: ComponentFixture<GridComponent>;
   let component: GridComponent;
   let components: ComponentModel[];
+  let editMode: ReturnType<typeof signal<boolean>>;
 
-  const componentServiceMock = {
-    components$: of([] as ComponentModel[]),
-  };
-
-  const gridServiceMock = {
-    getEditMode: jest.fn(() => true),
-  };
+  const componentServiceMock = {} as { components$: Observable<ComponentModel[]> };
+  const gridServiceMock = {} as { editMode: () => boolean };
 
   beforeEach(async () => {
     components = [
@@ -28,6 +34,13 @@ describe('GridComponent', () => {
       { id: 2, indexPosition: 2, name: 'Two', url: 'https://two.example' },
     ];
     componentServiceMock.components$ = of(components);
+    editMode = signal(true);
+    gridServiceMock.editMode = editMode.asReadonly();
+
+    TestBed.overrideComponent(GridComponent, {
+      remove: { imports: [ItemComponent] },
+      add: { imports: [MockItemComponent] },
+    });
 
     await TestBed.configureTestingModule({
       imports: [GridComponent],
@@ -50,7 +63,7 @@ describe('GridComponent', () => {
 
   it('reorders items when drag-drop happens in edit mode', () => {
     const event = {
-      item: { data: components },
+      container: { data: components },
       previousIndex: 0,
       currentIndex: 1,
     } as never;
@@ -61,9 +74,10 @@ describe('GridComponent', () => {
   });
 
   it('does not reorder items when edit mode is disabled', () => {
-    component.inEditMode = false;
+    editMode.set(false);
+
     const event = {
-      item: { data: components },
+      container: { data: components },
       previousIndex: 0,
       currentIndex: 1,
     } as never;

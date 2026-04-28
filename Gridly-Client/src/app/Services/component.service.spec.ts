@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { firstValueFrom, of } from 'rxjs';
+import { of } from 'rxjs';
 import { ComponentModel } from '../Models/Component.Model';
 import { ComponentEndpointService } from './endpoints/component.endpoint.service';
 import { ComponentService } from './component.service';
@@ -33,7 +33,7 @@ describe('ComponentService', () => {
     getById: jest.fn(),
   };
 
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.clearAllMocks();
     endpointMock.get.mockReturnValue(of([componentA, componentB]));
     endpointMock.getById.mockReturnValue(of(componentA));
@@ -49,18 +49,17 @@ describe('ComponentService', () => {
     });
 
     service = TestBed.inject(ComponentService);
-    await Promise.resolve();
   });
 
   it('loads components once on construction', () => {
     expect(endpointMock.get).toHaveBeenCalledTimes(1);
   });
 
-  it('returns the matching component by id from the observable stream', async () => {
-    service.componentId$.next(2);
+  it('loads the matching component by id through the endpoint service', () => {
+    service.componentId$.next(1);
 
-    await expect(firstValueFrom(service.component$)).resolves.toEqual(componentA);
-    expect(endpointMock.getById).toHaveBeenCalledWith(2);
+    expect(endpointMock.getById).toHaveBeenCalledWith(1);
+    expect(service.currentComponent()).toEqual(componentA);
   });
 
   it('delegates add, edit, and delete to the endpoint service', async () => {

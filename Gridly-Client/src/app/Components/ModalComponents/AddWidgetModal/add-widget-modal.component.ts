@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../../../Directives/base-modal.component';
 import { WidgetType } from '../../../Types/widget.type.enum';
@@ -14,27 +14,12 @@ import { ComponentModel } from '../../../Models/Component.Model';
 })
 export class AddWidgetModalComponent
   extends BaseModalComponent
-  implements AfterViewInit, OnChanges
 {
   @Input() open = false;
   @Input() widgetOptions: WidgetOptionsModal[] = [];
 
   @Output() openChange = new EventEmitter<boolean>();
   @Output() newWidget = new EventEmitter<ComponentModel>();
-
-  ngAfterViewInit(): void {
-    if (this.modalDirective) {
-      this.modalDirective.openChange.subscribe(() => {
-        this.openChange.emit(false);
-      });
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['open'] && this.modalDirective) {
-      this.modalDirective.open = this.open;
-    }
-  }
 
   handleOpenChange(): void {
     this.openChange.emit(false);

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ModalService } from '../../../Services/modal.service';
 import { AddWidgetModalComponent } from './add-widget-modal.component';
 import { WidgetType } from '../../../Types/widget.type.enum';
 
@@ -6,9 +7,15 @@ describe('AddWidgetModalComponent', () => {
   let fixture: ComponentFixture<AddWidgetModalComponent>;
   let component: AddWidgetModalComponent;
 
+  const modalServiceMock = {
+    onFileUpload: jest.fn(),
+    resetImageData: jest.fn(),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AddWidgetModalComponent],
+      providers: [{ provide: ModalService, useValue: modalServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddWidgetModalComponent);
