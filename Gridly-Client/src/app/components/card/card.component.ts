@@ -32,14 +32,14 @@ export class CardComponent {
   #gridService = inject(GridService);
   #componentRulesService = inject(ComponentRulesService);
 
-  isEditModalOpen = false;
-  isDeleteModalOpen = false;
+  isEditDialogOpen = false;
+  isDeleteDialogOpen = false;
   readonly inEditMode = this.#gridService.editMode;
 
-  handleModalChange(modalId: number): void {
+  handleDialogChange(modalId: number): void {
     if (modalId === this.card.id) {
-      this.isEditModalOpen = false;
-      this.isDeleteModalOpen = false;
+      this.isEditDialogOpen = false;
+      this.isDeleteDialogOpen = false;
     }
   }
 
@@ -56,11 +56,11 @@ export class CardComponent {
   }
 
   openEditDialog(): void {
-    this.isEditModalOpen = true;
+    this.isEditDialogOpen = true;
   }
 
   openDeleteDialog(): void {
-    this.isDeleteModalOpen = true;
+    this.isDeleteDialogOpen = true;
   }
 
   protected readonly TextStringsUtil = TextStringsUtil;

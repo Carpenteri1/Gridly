@@ -25,9 +25,9 @@ export class AddCardDialogComponent
 
   onSelect(type: CardTypes) {
     const card = new CardModel();
-    card.settings = this.#modalService.componentSettings();
+    card.settings = this.#modalService.cardSettings();
     card.componentSettings = card.settings;
-    card.iconData = this.#modalService.iconSettings();
+    card.iconData = this.#modalService.icon();
 
     switch (type) {
       case CardTypes.Custom:

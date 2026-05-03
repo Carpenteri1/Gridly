@@ -9,28 +9,31 @@ describe('AddCardDialogComponent', () => {
   let fixture: ComponentFixture<AddCardDialogComponent>;
   let component: AddCardDialogComponent;
 
-  const modalServiceMock = {
+  const dialogServiceMock = {
     onFileUpload: jest.fn(),
     resetImageData: jest.fn(),
-    componentSettings: () => ({
+    settings: () => ({
       width: 250,
       height: 250,
       imageHidden: false,
       titleHidden: false,
     }),
-    iconSettings: () => ({
+    icon: () => ({
       id: undefined,
       type: '',
       name: '',
       base64Data: '',
       materialIcon: 'add_box',
     } as IconModel),
+    cardSettings() {
+      return this.settings();
+    },
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AddCardDialogComponent],
-      providers: [{ provide: ModalService, useValue: modalServiceMock }],
+      providers: [{ provide: ModalService, useValue: dialogServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddCardDialogComponent);
@@ -62,8 +65,8 @@ describe('AddCardDialogComponent', () => {
       throw new Error('Expected card payload to be emitted.');
     }
 
-    card.componentSettings ??= modalServiceMock.componentSettings();
-    card.iconData ??= modalServiceMock.iconSettings();
+    card.componentSettings ??= dialogServiceMock.settings();
+    card.iconData ??= dialogServiceMock.icon();
 
     expect(card.componentSettings).toEqual({
       width: 250,

@@ -7,7 +7,7 @@ import { CardService } from './card.service';
 describe('CardService', () => {
   let service: CardService;
 
-  const componentA: CardModel = {
+  const cardA: CardModel = {
     id: 1,
     indexPosition: 1,
     name: 'Alpha',
@@ -15,7 +15,7 @@ describe('CardService', () => {
     iconData: { name: 'dashboard', type: 'svg', base64Data: 'abc', materialIcon: 'dashboard' },
     componentSettings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
   };
-  const componentB: CardModel = {
+  const cardB: CardModel = {
     id: 2,
     indexPosition: 2,
     name: 'Beta',
@@ -35,11 +35,11 @@ describe('CardService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    endpointMock.get.mockReturnValue(of([componentA, componentB]));
-    endpointMock.getById.mockReturnValue(of(componentA));
-    endpointMock.add.mockReturnValue(of(componentB));
-    endpointMock.edit.mockReturnValue(of(componentB));
-    endpointMock.delete.mockReturnValue(of(componentA));
+    endpointMock.get.mockReturnValue(of([cardA, cardB]));
+    endpointMock.getById.mockReturnValue(of(cardA));
+    endpointMock.add.mockReturnValue(of(cardB));
+    endpointMock.edit.mockReturnValue(of(cardB));
+    endpointMock.delete.mockReturnValue(of(cardA));
 
     TestBed.configureTestingModule({
       providers: [
@@ -52,7 +52,7 @@ describe('CardService', () => {
   });
 
   it('loads components once on construction', () => {
-    expect(service.currentComponents()).toEqual([componentA, componentB]);
+    expect(service.currentComponents()).toEqual([cardA, cardB]);
     expect(endpointMock.get).toHaveBeenCalledTimes(2);
   });
 
@@ -63,14 +63,14 @@ describe('CardService', () => {
   });
 
   it('delegates add, edit, delete, and getById to the endpoint service', async () => {
-    await service.add(componentB);
-    await service.edit(componentB);
-    await expect(service.getById(1)).resolves.toEqual(componentA);
+    await service.add(cardB);
+    await service.edit(cardB);
+    await expect(service.getById(1)).resolves.toEqual(cardA);
     await service.delete(1);
 
-    expect(endpointMock.add).toHaveBeenCalledWith(componentB);
+    expect(endpointMock.add).toHaveBeenCalledWith(cardB);
     expect(endpointMock.edit).toHaveBeenCalledWith({
-      editComponent: componentB,
+      editComponent: cardB,
       selectedDropDownIconValue: 2,
     });
     expect(endpointMock.getById).toHaveBeenCalledWith(1);

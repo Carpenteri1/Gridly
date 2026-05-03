@@ -37,7 +37,7 @@ export class ModalService {
     this.notifyComponentToResetFileInput();
   }
 
-  componentSettings(): SettingsModel {
+  cardSettings(): SettingsModel {
     return {
       width: 250,
       height: 250,
@@ -46,7 +46,7 @@ export class ModalService {
     };
   }
 
-  iconSettings(): IconModel {
+  icon(): IconModel {
     return {
       id: undefined,
       type: '',

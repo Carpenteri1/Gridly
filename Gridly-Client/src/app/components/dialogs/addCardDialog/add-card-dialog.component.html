@@ -10,15 +10,15 @@
     <div class="aw-body">
       <p class="text-muted mb-3">{{ TextStringsUtil.AddCardDescription }}</p>
       <div class="row row-cols-1 row-cols-sm-2 g-3 py-2">
-        @for(w of cardOptions; track w.type){
+        @for(cardOption of cardOptions; track cardOption.type){
           <div class="col">
             <button type="button"
                     class="btn btn-outline-secondary w-100 h-100 d-flex flex-column align-items-center gap-2 p-4 option-btn"
-                    (click)="onSelect(w.type)">
-              <i [class]="w.icon + ' option-icon'"></i>
+                    (click)="onSelect(cardOption.type)">
+              <i [class]="cardOption.icon + ' option-icon'"></i>
               <div class="text-center">
-                <div class="fw-semibold">{{ w.label }}</div>
-                <div class="text-muted small">{{ w.description }}</div>
+                <div class="fw-semibold">{{ cardOption.label }}</div>
+                <div class="text-muted small">{{ cardOption.description }}</div>
               </div>
             </button>
           </div>
