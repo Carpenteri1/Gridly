@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { CardModel } from '../../Models/Card.Model';
+import { CardModel } from '../../Models/card.Model';
 import { ComponentService } from '../../Services/component.service';
 import { ComponentRulesService } from '../../Services/component-rules.service';
 import { GridService } from '../../Services/grid.service';
-import { CardComponent } from './card.component';
+import { CardComponent } from './card-component.component';
 
 type CardComponentTestHarness = CardComponent & {
   edit(card: CardModel): void;
@@ -14,7 +14,7 @@ type CardComponentTestHarness = CardComponent & {
 
 describe('CardComponent', () => {
   let fixture: ComponentFixture<CardComponent>;
-  let cardComponent: CardComponent;
+  let card: CardComponent;
 
   const currentCard: CardModel = {
     id: 7,
@@ -56,7 +56,7 @@ describe('CardComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(CardComponent);
-    cardComponent = fixture.componentInstance;
+    card = fixture.componentInstance;
     fixture.componentRef.setInput('card', currentCard);
     fixture.detectChanges();
   });
@@ -69,33 +69,33 @@ describe('CardComponent', () => {
   });
 
   it('opens the edit and delete dialogs from the component methods', () => {
-    cardComponent.openEditDialog();
-    cardComponent.openDeleteDialog();
+    card.openEditDialog();
+    card.openDeleteDialog();
 
-    expect(cardComponent.isEditModalOpen).toBe(true);
-    expect(cardComponent.isDeleteModalOpen).toBe(true);
+    expect(card.isEditModalOpen).toBe(true);
+    expect(card.isDeleteModalOpen).toBe(true);
   });
 
   it('closes both dialogs when the matching modal id is emitted', () => {
-    cardComponent.isEditModalOpen = true;
-    cardComponent.isDeleteModalOpen = true;
+    card.isEditModalOpen = true;
+    card.isDeleteModalOpen = true;
 
-    cardComponent.handleModalChange(7);
+    card.handleModalChange(7);
 
-    expect(cardComponent.isEditModalOpen).toBe(false);
-    expect(cardComponent.isDeleteModalOpen).toBe(false);
+    expect(card.isEditModalOpen).toBe(false);
+    expect(card.isDeleteModalOpen).toBe(false);
   });
 
   it('delegates edit and remove actions to the component service', () => {
-    (cardComponent as CardComponentTestHarness).edit(currentCard);
-    (cardComponent as CardComponentTestHarness).remove(7);
+    (card as CardComponentTestHarness).edit(currentCard);
+    (card as CardComponentTestHarness).remove(7);
 
     expect(componentServiceMock.edit).toHaveBeenCalledWith(currentCard);
     expect(componentServiceMock.delete).toHaveBeenCalledWith(7);
   });
   
   it('hasMaterialIcon returns the value from the component rules service', () => {
-    const result = (cardComponent as CardComponentTestHarness).hasMaterialIcon(currentCard);
+    const result = (card as CardComponentTestHarness).hasMaterialIcon(currentCard);
     expect(componentRulesServiceMock.hasMaterialIcon).toHaveBeenCalledWith(currentCard);
     expect(result).toBe(true);
   });

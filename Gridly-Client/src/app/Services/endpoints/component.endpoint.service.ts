@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import {UrlStringsUtil} from "../../Constants/url.strings.util";
-import {CardModel} from "../../Models/Card.Model";
+import {CardModel} from "../../Models/card.Model";
 import {Observable, take} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import { EditComponentModel } from '../../Models/editComponent.Model';
+import { EditCardModel } from '../../Models/editCard.Model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,11 +29,11 @@ export class ComponentEndpointService{
     return this.http.post<CardModel>(UrlStringsUtil.ComponentUrlSave, newComponent).pipe(take(1));
   }
 
-  edit(componentModel: EditComponentModel): Observable<CardModel> {
+  edit(componentModel: EditCardModel): Observable<CardModel> {
     return this.http.post<CardModel>(UrlStringsUtil.ComponentUrlEdit, componentModel).pipe(take(1));
   }
 
-  batchEdit(editedComponent: EditComponentModel[]): Observable<CardModel[]> {
+  batchEdit(editedComponent: EditCardModel[]): Observable<CardModel[]> {
     return this.http.post<CardModel[]>(UrlStringsUtil.ComponentsBatchUrlEdit, editedComponent).pipe(take(1));
   }
 }

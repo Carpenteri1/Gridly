@@ -3,21 +3,21 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../../../Directives/base-modal.component';
-import { CardModel } from '../../../Models/Card.Model';
+import { CardModel } from '../../../Models/card.Model';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { EditWidgetModalFacade } from './edit-widget-modal.facade';
+import { EditCardDialogFacade } from './edit-card-dialog.facade';
 
 @Component({
-  selector: 'app-edit-widget-modal',
+  selector: 'app-edit-card-dialog',
   imports: [CommonModule, FormsModule, ModalDirective, MatIconModule, MatSelectModule, MatInputModule],  
-  templateUrl: './edit-widget-modal.component.html',
-  styleUrls: ['../../../css/shared.modal.css', './edit-widget-modal.component.css'],
-  providers: [EditWidgetModalFacade],
+  templateUrl: './edit-card-dialog.component.html',
+  styleUrls: ['../../../css/shared.modal.css', './edit-card-dialog.component.css'],
+  providers: [EditCardDialogFacade],
   standalone: true
 })
-export class EditWidgetModalComponent extends BaseModalComponent implements OnChanges {
+export class EditCardDialogComponent extends BaseModalComponent implements OnChanges {
   @Input() open = false;
   @Input() modalId = 0;
   @Input() id = 0;
@@ -25,11 +25,11 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
   @Output() openChange = new EventEmitter<number>();
   @Output() editedComponent = new EventEmitter();
   
-  readonly facade: EditWidgetModalFacade;
+  readonly facade: EditCardDialogFacade;
 
   constructor() {
     super();
-    this.facade = inject(EditWidgetModalFacade);
+    this.facade = inject(EditCardDialogFacade);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

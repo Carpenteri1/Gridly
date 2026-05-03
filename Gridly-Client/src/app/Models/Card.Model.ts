@@ -1,5 +1,5 @@
-import {ComponentSettingsModel} from "./ComponentSettings.Model";
-import {IconModel} from "./Icon.Model";
+import {SettingsModel} from "./settings.Model";
+import {IconModel} from "./icon.Model";
 
 export class CardModel {
   id!: number;
@@ -15,7 +15,7 @@ export class CardModel {
     };
   iconUrl?: string;
   materialIcon?: string;
-  componentSettings? : ComponentSettingsModel |
+  componentSettings? : SettingsModel |
     {
       width:250,
       height:250,

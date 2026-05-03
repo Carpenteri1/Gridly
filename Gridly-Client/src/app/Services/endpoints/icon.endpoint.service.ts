@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { IconModel } from '../../Models/Icon.Model';
+import { IconModel } from '../../Models/icon.Model';
 import { Observable } from 'rxjs/internal/Observable';
 import { take } from 'rxjs/internal/operators/take';
 import { UrlStringsUtil } from '../../Constants/url.strings.util';

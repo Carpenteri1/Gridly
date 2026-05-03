@@ -2,9 +2,9 @@ import { Component, inject, signal } from "@angular/core";
 import { TextStringsUtil } from "../../Constants/text.strings.util";
 import { CommonModule } from "@angular/common";
 import { VersionService } from "../../Services/version.service";
-import { AddWidgetModalComponent } from "../ModalComponents/AddWidgetModal/add-widget-modal.component";
+import { AddCardDialogComponent } from "../Dialog/AddCardDialog/add-card-dialog.component";
 import { WidgetType } from "../../Types/widget.type.enum";
-import { CardModel } from "../../Models/Card.Model";
+import { CardModel } from "../../Models/card.Model";
 import { ComponentService } from "../../Services/component.service";
 import { GridService } from "../../Services/grid.service";
 
@@ -13,7 +13,7 @@ import { GridService } from "../../Services/grid.service";
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   standalone: true,
-  imports: [CommonModule, AddWidgetModalComponent]
+  imports: [CommonModule, AddCardDialogComponent]
 })
 export class HeaderComponent {
 

@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { IconService } from '../../../Services/Icon.service';
 import { ComponentRulesService } from '../../../Services/component-rules.service';
-import { EditWidgetModalFacade } from './edit-widget-modal.facade';
+import { EditCardDialogFacade } from './edit-card-dialog.facade';
 
-describe('EditWidgetModalFacade', () => {
-  let facade: EditWidgetModalFacade;
+describe('EditCardDialogFacade', () => {
+  let facade: EditCardDialogFacade;
 
   const iconServiceMock = {
     icons$: of({ icons: ['home'] }),
@@ -22,13 +22,13 @@ describe('EditWidgetModalFacade', () => {
     jest.clearAllMocks();
     TestBed.configureTestingModule({
       providers: [
-        EditWidgetModalFacade,
+        EditCardDialogFacade,
         { provide: IconService, useValue: iconServiceMock },
         { provide: ComponentRulesService, useValue: componentRulesServiceMock },
       ],
     });
 
-    facade = TestBed.inject(EditWidgetModalFacade);
+    facade = TestBed.inject(EditCardDialogFacade);
   });
 
   it('validates submit readiness from the current form data', () => {

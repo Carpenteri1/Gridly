@@ -3,16 +3,16 @@ import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../../../Directives/base-modal.component';
 import { WidgetType } from '../../../Types/widget.type.enum';
 import { WidgetOptionsModal } from '../../../Models/WidgetOptionsModal';
-import { CardModel } from '../../../Models/Card.Model';
+import { CardModel } from '../../../Models/card.Model';
 
 @Component({
-  selector: 'app-add-widget-modal',
+  selector: 'app-add-card-dialog',
   standalone: true,
   imports: [ModalDirective],
-  templateUrl: './add-widget-modal.component.html',
-  styleUrls: ['./add-widget-modal.component.css'],
+  templateUrl: './add-card-dialog.component.html',
+  styleUrls: ['./add-card-dialog.component.css'],
 })
-export class AddWidgetModalComponent
+export class AddCardDialogComponent
   extends BaseModalComponent
 {
   @Input() open = false;

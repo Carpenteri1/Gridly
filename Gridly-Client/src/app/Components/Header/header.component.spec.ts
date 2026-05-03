@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { CardModel } from '../../Models/Card.Model';
+import { CardModel } from '../../Models/card.Model';
 import { ComponentService } from '../../Services/component.service';
 import { GridService } from '../../Services/grid.service';
 import { VersionService } from '../../Services/version.service';
@@ -60,14 +60,14 @@ describe('HeaderComponent', () => {
   });
 
   it('delegates add and edit mode actions to the injected services', async () => {
-    const newComponent = new CardModel();
+    const card = new CardModel();
 
     (component as HeaderComponentTestHarness).addWidgetDialogActive = true;
 
-    await (component as HeaderComponentTestHarness).add(newComponent);
+    await (component as HeaderComponentTestHarness).add(card);
     (component as HeaderComponentTestHarness).setEditMode();
 
-    expect(componentServiceMock.add).toHaveBeenCalledWith(newComponent);
+    expect(componentServiceMock.add).toHaveBeenCalledWith(card);
     expect((component as HeaderComponentTestHarness).addWidgetDialogActive).toBe(false);
     expect(gridServiceMock.toggle).toHaveBeenCalled();
   });

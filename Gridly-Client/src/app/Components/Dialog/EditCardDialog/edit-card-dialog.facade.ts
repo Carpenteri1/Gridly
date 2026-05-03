@@ -1,13 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SearchIconsResultDto } from '../../../DTOs/SearchIconsResultDto';
-import { CardModel } from '../../../Models/Card.Model';
+import { CardModel } from '../../../Models/card.Model';
 import { IconService } from '../../../Services/Icon.service';
-import { IconModel } from '../../../Models/Icon.Model';
+import { IconModel } from '../../../Models/icon.Model';
 import { ComponentRulesService } from '../../../Services/component-rules.service';
 
 @Injectable()
-export class EditWidgetModalFacade {
+export class EditCardDialogFacade {
   readonly icons$: Observable<SearchIconsResultDto | null>;
   componentData: CardModel = new CardModel();
 

@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModalService } from '../../../Services/modal.service';
-import { CardModel } from '../../../Models/Card.Model';
-import { IconModel } from '../../../Models/Icon.Model';
-import { AddWidgetModalComponent } from './add-widget-modal.component';
+import { CardModel } from '../../../Models/card.Model';
+import { IconModel } from '../../../Models/icon.Model';
+import { AddCardDialogComponent } from './add-card-dialog.component';
 import { WidgetType } from '../../../Types/widget.type.enum';
 
-describe('AddWidgetModalComponent', () => {
-  let fixture: ComponentFixture<AddWidgetModalComponent>;
-  let component: AddWidgetModalComponent;
+describe('AddCardDialogComponent', () => {
+  let fixture: ComponentFixture<AddCardDialogComponent>;
+  let component: AddCardDialogComponent;
 
   const modalServiceMock = {
     onFileUpload: jest.fn(),
@@ -29,11 +29,11 @@ describe('AddWidgetModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddWidgetModalComponent],
+      imports: [AddCardDialogComponent],
       providers: [{ provide: ModalService, useValue: modalServiceMock }],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AddWidgetModalComponent);
+    fixture = TestBed.createComponent(AddCardDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,21 +1,21 @@
 import { Component, Input, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable, of } from 'rxjs';
-import { CardModel } from '../../Models/Card.Model';
+import { CardModel } from '../../Models/card.Model';
 import { ComponentService } from '../../Services/component.service';
 import { GridService } from '../../Services/grid.service';
 import { GridComponent } from './grid.component';
-import { CardComponent } from '../Card/card.component';
+import { CardComponent } from '../Card/card-component.component';
 
 type GridComponentTestHarness = GridComponent & {
   Drop(event: unknown): void;
 };
 
 @Component({
-  selector: 'app-card',
+  selector: 'app-card-component',
   template: '',
 })
-class MockCardComponent {
+class MockCardComponentComponent {
   @Input({ required: true }) card!: CardModel;
 }
 
@@ -39,7 +39,7 @@ describe('GridComponent', () => {
 
     TestBed.overrideComponent(GridComponent, {
       remove: { imports: [CardComponent] },
-      add: { imports: [MockCardComponent] },
+      add: { imports: [MockCardComponentComponent] },
     });
 
     await TestBed.configureTestingModule({
@@ -56,7 +56,7 @@ describe('GridComponent', () => {
   });
 
   it('renders one card component per returned component', () => {
-    const items = fixture.nativeElement.querySelectorAll('app-card');
+    const items = fixture.nativeElement.querySelectorAll('app-card-component');
 
     expect(items).toHaveLength(2);
   });

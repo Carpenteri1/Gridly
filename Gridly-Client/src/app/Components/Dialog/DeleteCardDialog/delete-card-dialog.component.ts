@@ -4,13 +4,13 @@ import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../../../Directives/base-modal.component';
 
 @Component({
-  selector: 'app-prompt-modal',
-  templateUrl: './prompt-modal.component.html',
+  selector: 'app-delete-card-dialog',
+  templateUrl: './delete-card-dialog.component.html',
   styleUrls: ['../../../css/shared.modal.css'],
   standalone: true,
   imports: [FormsModule, ModalDirective],
 })
-export class PromptModalComponent extends BaseModalComponent {
+export class DeleteCardDialogComponent extends BaseModalComponent {
   @Input() open = false;
   @Input() modalId = 0;
   @Input() id = 0;

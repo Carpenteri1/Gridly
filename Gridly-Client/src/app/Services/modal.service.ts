@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { IconModel } from '../Models/Icon.Model';
+import { IconModel } from '../Models/icon.Model';
 import { ImageExtensionsType } from '../Types/image.extensions.type.enum';
 
 @Injectable({ providedIn: 'root' })

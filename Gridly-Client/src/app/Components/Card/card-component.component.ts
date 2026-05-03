@@ -3,24 +3,24 @@ import { CommonModule } from '@angular/common';
 import { ComponentService } from '../../Services/component.service';
 import { ComponentRulesService } from '../../Services/component-rules.service';
 import { TextStringsUtil } from '../../Constants/text.strings.util';
-import { CardModel } from '../../Models/Card.Model';
+import { CardModel } from '../../Models/card.Model';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
-import { PromptModalComponent } from '../ModalComponents/PromptModal/prompt-modal.component';
-import { EditWidgetModalComponent } from '../ModalComponents/EditWidgetModal/edit-widget-modal.component';
+import { DeleteCardDialogComponent } from '../Dialog/DeleteCardDialog/delete-card-dialog.component';
+import { EditCardDialogComponent } from '../Dialog/EditCardDialog/edit-card-dialog.component';
 import { ResizableDirective } from '../../Directives/resizable.directive';
 import { MatIconModule } from '@angular/material/icon';
 import { GridService } from '../../Services/grid.service';
 
 @Component({
-  selector: 'app-card',
-  templateUrl: './card.component.html',
-  styleUrl: './card.component.css',
+  selector: 'app-card-component',
+  templateUrl: './card-component.component.html',
+  styleUrl: './card-component.component.css',
   standalone: true,
   imports: [
     CommonModule,
     CdkDragHandle,
-    PromptModalComponent,
-    EditWidgetModalComponent,
+    DeleteCardDialogComponent,
+    EditCardDialogComponent,
     ResizableDirective,
     MatIconModule
   ],

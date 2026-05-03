@@ -1,4 +1,4 @@
-export class ComponentSettingsModel {
+export class SettingsModel {
   width!: number;
   height!: number;
   imageHidden?: boolean = false;
