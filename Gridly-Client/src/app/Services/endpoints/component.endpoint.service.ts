@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import {UrlStringsUtil} from "../../Constants/url.strings.util";
-import {CardModel} from "../../Models/card.Model";
+import {UrlStringsUtil} from "../../constants/url.strings.util";
+import {CardModel} from "../../models/card.Model";
 import {Observable, take} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import { EditCardModel } from '../../Models/editCard.Model';
+import { EditCardModel } from '../../models/editCard.Model';
 
 @Injectable({
   providedIn: 'root'

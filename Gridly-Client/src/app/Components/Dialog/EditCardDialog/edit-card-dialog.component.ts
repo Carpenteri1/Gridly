@@ -1,9 +1,9 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ModalDirective } from '../../../Directives/modal.directive';
-import { BaseModalComponent } from '../../../Directives/base-modal.component';
-import { CardModel } from '../../../Models/card.Model';
+import { ModalDirective } from '../../../directives/modal.directive';
+import { BaseModalComponent } from '../../../directives/base-modal.component';
+import { CardModel } from '../../../models/card.Model';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';

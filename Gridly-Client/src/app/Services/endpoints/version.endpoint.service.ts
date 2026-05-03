@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {VersionModel} from "../../Models/Version.Model";
-import {UrlStringsUtil} from "../../Constants/url.strings.util";
+import {VersionModel} from "../../models/version.Model";
+import {UrlStringsUtil} from "../../constants/url.strings.util";
 import {Observable, take} from "rxjs";
 
 @Injectable({

@@ -1,5 +1,5 @@
 import { Directive, ElementRef, HostListener, inject, Input, Renderer2 } from '@angular/core';
-import { ComponentService } from "../Services/component.service";
+import { ComponentService } from "../services/component.service";
 
 @Directive({
   standalone: true,

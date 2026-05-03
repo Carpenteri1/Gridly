@@ -1,6 +1,6 @@
 import { inject, Injectable, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { SearchIconsResultDto } from '../DTOs/SearchIconsResultDto';
+import { SearchIconsResultDto } from '../dtos/searchIconsResultDto';
 import {
   BehaviorSubject,
   Observable,

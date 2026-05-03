@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { CardModel } from '../../Models/card.Model';
-import { ComponentService } from '../../Services/component.service';
-import { ComponentRulesService } from '../../Services/component-rules.service';
-import { GridService } from '../../Services/grid.service';
+import { CardModel } from '../../models/card.Model';
+import { ComponentService } from '../../services/component.service';
+import { ComponentRulesService } from '../../services/component-rules.service';
+import { GridService } from '../../services/grid.service';
 import { CardComponent } from './card.component';
 
 type CardComponentTestHarness = CardComponent & {

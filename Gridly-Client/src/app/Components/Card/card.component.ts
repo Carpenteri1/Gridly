@@ -1,15 +1,15 @@
 import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ComponentService } from '../../Services/component.service';
-import { ComponentRulesService } from '../../Services/component-rules.service';
-import { TextStringsUtil } from '../../Constants/text.strings.util';
-import { CardModel } from '../../Models/card.Model';
+import { ComponentService } from '../../services/component.service';
+import { ComponentRulesService } from '../../services/component-rules.service';
+import { TextStringsUtil } from '../../constants/text.strings.util';
+import { CardModel } from '../../models/card.Model';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
-import { DeleteCardDialogComponent } from '../Dialog/DeleteCardDialog/delete-card-dialog.component';
-import { EditCardDialogComponent } from '../Dialog/EditCardDialog/edit-card-dialog.component';
-import { ResizableDirective } from '../../Directives/resizable.directive';
+import { DeleteCardDialogComponent } from '../dialog/deleteCardDialog/delete-card-dialog.component';
+import { EditCardDialogComponent } from '../dialog/editCardDialog/edit-card-dialog.component';
+import { ResizableDirective } from '../../directives/resizable.directive';
 import { MatIconModule } from '@angular/material/icon';
-import { GridService } from '../../Services/grid.service';
+import { GridService } from '../../services/grid.service';
 
 @Component({
   selector: 'app-card-component',

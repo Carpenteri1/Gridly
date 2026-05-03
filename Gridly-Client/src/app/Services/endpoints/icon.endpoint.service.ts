@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { IconModel } from '../../Models/icon.Model';
+import { IconModel } from '../../models/icon.Model';
 import { Observable } from 'rxjs/internal/Observable';
 import { take } from 'rxjs/internal/operators/take';
-import { UrlStringsUtil } from '../../Constants/url.strings.util';
-import { SearchIconsResultDto } from '../../DTOs/SearchIconsResultDto';
+import { UrlStringsUtil } from '../../constants/url.strings.util';
+import { SearchIconsResultDto } from '../../dtos/searchIconsResultDto';
 
 @Injectable({
   providedIn: 'root'

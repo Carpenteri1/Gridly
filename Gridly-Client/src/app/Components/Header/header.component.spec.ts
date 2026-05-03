@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { CardModel } from '../../Models/card.Model';
-import { ComponentService } from '../../Services/component.service';
-import { GridService } from '../../Services/grid.service';
-import { VersionService } from '../../Services/version.service';
+import { CardModel } from '../../models/card.Model';
+import { ComponentService } from '../../services/component.service';
+import { GridService } from '../../services/grid.service';
+import { VersionService } from '../../services/version.service';
 import { HeaderComponent } from './header.component';
 
 type HeaderComponentTestHarness = HeaderComponent & {

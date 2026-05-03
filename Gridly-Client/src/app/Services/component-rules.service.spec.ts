@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { CardModel } from '../Models/Card.Model';
+import { CardModel } from '../models/card.Model';
 import { ComponentRulesService } from './component-rules.service';
 
 describe('ComponentRulesService', () => {

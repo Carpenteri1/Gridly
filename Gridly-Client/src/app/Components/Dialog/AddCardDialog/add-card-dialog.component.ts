@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ModalDirective } from '../../../Directives/modal.directive';
-import { BaseModalComponent } from '../../../Directives/base-modal.component';
-import { CardTypes } from '../../../Types/card.types.enum';
-import { CardOptionModel } from '../../../Models/WidgetOptionsModal';
-import { CardModel } from '../../../Models/card.Model';
+import { ModalDirective } from '../../../directives/modal.directive';
+import { BaseModalComponent } from '../../../directives/base-modal.component';
+import { CardTypes } from '../../../types/card.types.enum';
+import { CardOptionModel } from '../../../models/cardOptions.Model';
+import { CardModel } from '../../../models/card.Model';
 
 @Component({
   selector: 'app-add-card-dialog',

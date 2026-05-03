@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ModalService } from '../../../Services/modal.service';
-import { CardModel } from '../../../Models/card.Model';
-import { IconModel } from '../../../Models/icon.Model';
+import { ModalService } from '../../../services/modal.service';
+import { CardModel } from '../../../models/card.Model';
+import { IconModel } from '../../../models/icon.Model';
 import { AddCardDialogComponent } from './add-card-dialog.component';
-import { CardTypes } from '../../../Types/card.types.enum';
+import { CardTypes } from '../../../types/card.types.enum';
 
 describe('AddCardDialogComponent', () => {
   let fixture: ComponentFixture<AddCardDialogComponent>;

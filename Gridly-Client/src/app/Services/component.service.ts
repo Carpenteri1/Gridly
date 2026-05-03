@@ -1,8 +1,8 @@
 import { inject, Injectable, Signal } from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import { firstValueFrom, Observable, ReplaySubject, shareReplay, startWith, Subject, switchMap } from 'rxjs';
-import { CardModel } from '../Models/card.Model';
-import { EditCardModel } from '../Models/editCard.Model';
+import { CardModel } from '../models/card.Model';
+import { EditCardModel } from '../models/editCard.Model';
 import { ComponentEndpointService } from './endpoints/component.endpoint.service';
 
 @Injectable({ providedIn: 'root' })

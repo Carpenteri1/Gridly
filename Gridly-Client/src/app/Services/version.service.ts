@@ -1,5 +1,5 @@
 import {inject, Injectable, Signal} from "@angular/core";
-import {VersionModel} from "../Models/Version.Model";
+import {VersionModel} from "../models/version.Model";
 import {VersionEndpointService} from "./endpoints/version.endpoint.service";
 import {Observable} from "rxjs";
 import { toSignal } from "@angular/core/rxjs-interop";

@@ -1,11 +1,11 @@
 import { Component, Input, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable, of } from 'rxjs';
-import { CardModel } from '../../Models/card.Model';
-import { ComponentService } from '../../Services/component.service';
-import { GridService } from '../../Services/grid.service';
+import { CardModel } from '../../models/card.Model';
+import { ComponentService } from '../../services/component.service';
+import { GridService } from '../../services/grid.service';
 import { GridComponent } from './grid.component';
-import { CardComponent } from '../Card/card.component';
+import { CardComponent } from '../card/card.component';
 
 type GridComponentTestHarness = GridComponent & {
   Drop(event: unknown): void;

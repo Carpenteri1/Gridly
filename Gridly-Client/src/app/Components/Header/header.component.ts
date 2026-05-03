@@ -1,12 +1,12 @@
 import { Component, inject, signal } from "@angular/core";
-import { TextStringsUtil } from "../../Constants/text.strings.util";
+import { TextStringsUtil } from "../../constants/text.strings.util";
 import { CommonModule } from "@angular/common";
-import { VersionService } from "../../Services/version.service";
-import { AddCardDialogComponent } from "../Dialog/AddCardDialog/add-card-dialog.component";
-import { CardTypes } from "../../Types/card.types.enum";
-import { CardModel } from "../../Models/card.Model";
-import { ComponentService } from "../../Services/component.service";
-import { GridService } from "../../Services/grid.service";
+import { VersionService } from "../../services/version.service";
+import { AddCardDialogComponent } from "../dialog/addCardDialog/add-card-dialog.component";
+import { CardTypes } from "../../types/card.types.enum";
+import { CardModel } from "../../models/card.Model";
+import { ComponentService } from "../../services/component.service";
+import { GridService } from "../../services/grid.service";
 
 @Component({
   selector: 'app-header',

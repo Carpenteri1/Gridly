@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ModalDirective } from '../../../Directives/modal.directive';
-import { BaseModalComponent } from '../../../Directives/base-modal.component';
+import { ModalDirective } from '../../../directives/modal.directive';
+import { BaseModalComponent } from '../../../directives/base-modal.component';
 
 @Component({
   selector: 'app-delete-card-dialog',

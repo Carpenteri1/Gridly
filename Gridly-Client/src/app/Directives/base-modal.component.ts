@@ -1,7 +1,7 @@
 import { Directive, ViewChild, inject } from '@angular/core';
 import { ModalDirective } from './modal.directive';
-import { ModalService } from '../Services/modal.service';
-import { TextStringsUtil } from '../Constants/text.strings.util';
+import { ModalService } from '../services/modal.service';
+import { TextStringsUtil } from '../constants/text.strings.util';
 
 @Directive()
 export abstract class BaseModalComponent {

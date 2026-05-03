@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { RegexStringsUtil } from '../Constants/regex.strings.util';
-import { CardModel } from '../Models/card.Model';
+import { RegexStringsUtil } from '../constants/regex.strings.util';
+import { CardModel } from '../models/card.Model';
 
 @Injectable({ providedIn: 'root' })
 export class ComponentRulesService {

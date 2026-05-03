@@ -1,4 +1,4 @@
-import { CardTypes } from "../Types/card.types.enum";
+import { CardTypes } from "../types/card.types.enum";
 export class CardOptionModel {
   type!: CardTypes;
   label!: string;

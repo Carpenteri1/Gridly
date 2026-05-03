@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ComponentService } from "../../Services/component.service";
-import { CardComponent } from "../Card/card.component";
+import { ComponentService } from "../../services/component.service";
+import { CardComponent } from "../card/card.component";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
-import { CardModel } from '../../Models/card.Model';
-import { GridService } from '../../Services/grid.service';
+import { CardModel } from '../../models/card.Model';
+import { GridService } from '../../services/grid.service';
 @Component({
   selector: 'app-grid',
   imports: [CommonModule, CdkDropList, CdkDrag, CardComponent],

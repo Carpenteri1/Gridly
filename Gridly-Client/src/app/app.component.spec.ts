@@ -1,5 +1,5 @@
 import { AppComponent } from './app.component';
-import { TextStringsUtil } from './Constants/text.strings.util';
+import { TextStringsUtil } from './constants/text.strings.util';
 
 describe('AppComponent', () => {
   afterEach(() => {

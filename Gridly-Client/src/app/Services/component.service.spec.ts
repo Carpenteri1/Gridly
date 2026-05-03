@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { CardModel } from '../Models/card.Model';
+import { CardModel } from '../models/card.Model';
 import { ComponentEndpointService } from './endpoints/component.endpoint.service';
 import { ComponentService } from './component.service';
 
