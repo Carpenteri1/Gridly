@@ -9,7 +9,7 @@ import { ComponentRulesService } from '../../../Services/component-rules.service
 @Injectable()
 export class EditCardDialogFacade {
   readonly icons$: Observable<SearchIconsResultDto | null>;
-  componentData: CardModel = new CardModel();
+  card: CardModel = new CardModel();
 
   #iconService = inject(IconService);
   #componentRulesService = inject(ComponentRulesService);
@@ -20,9 +20,9 @@ export class EditCardDialogFacade {
 
   get canSubmit(): boolean {
     return this.#componentRulesService.hasRequiredFields({
-      ...this.componentData,
-      name: this.componentData.name.trim(),
-      url: this.componentData.url.trim(),
+      ...this.card,
+      name: this.card.name.trim(),
+      url: this.card.url.trim(),
     });
   }
 
@@ -39,16 +39,16 @@ export class EditCardDialogFacade {
     iconData.base64Data = "";
     iconData.type = "";
 
-    this.componentData.iconData = iconData;
-    this.componentData.iconData.materialIcon = event;
+    this.card.iconData = iconData;
+    this.card.iconData.materialIcon = event;
   }
 
   reset(initial?: Partial<CardModel>): void {
-    this.componentData = Object.assign(new CardModel(), initial ?? {});
+    this.card = Object.assign(new CardModel(), initial ?? {});
   }
 
-  buildSubmitPayload(widgetId: number): CardModel {
-    this.componentData.id = widgetId;
-    return this.componentData;
+  buildSubmitPayload(id: number): CardModel {
+    this.card.id = id;
+    return this.card;
   }
 }

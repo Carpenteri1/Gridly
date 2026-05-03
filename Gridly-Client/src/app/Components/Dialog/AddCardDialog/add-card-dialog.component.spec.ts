@@ -3,7 +3,7 @@ import { ModalService } from '../../../Services/modal.service';
 import { CardModel } from '../../../Models/card.Model';
 import { IconModel } from '../../../Models/icon.Model';
 import { AddCardDialogComponent } from './add-card-dialog.component';
-import { WidgetType } from '../../../Types/widget.type.enum';
+import { CardTypes } from '../../../Types/card.types.enum';
 
 describe('AddCardDialogComponent', () => {
   let fixture: ComponentFixture<AddCardDialogComponent>;
@@ -38,40 +38,40 @@ describe('AddCardDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  it('emits a new widget payload for both supported widget types', () => {
-    const emitSpy = jest.spyOn(component.newWidget, 'emit');
+  it('emits a new card payload for both supported card types', () => {
+    const emitSpy = jest.spyOn(component.newCard, 'emit');
 
-    component.onSelect(WidgetType.Empty);
-    component.onSelect(WidgetType.Custom);
+    component.onSelect(CardTypes.Empty);
+    component.onSelect(CardTypes.Custom);
 
     expect(emitSpy).toHaveBeenCalledTimes(2);
     expect(emitSpy.mock.calls[0][0]).toBeDefined();
     expect(emitSpy.mock.calls[1][0]).toBeDefined();
   });
 
-  it('emits a fully initialized widget model', () => {
-    const emitSpy = jest.spyOn(component.newWidget, 'emit');
+  it('emits a fully initialized card model', () => {
+    const emitSpy = jest.spyOn(component.newCard, 'emit');
 
-    component.onSelect(WidgetType.Empty);
+    component.onSelect(CardTypes.Empty);
 
-    const widget = emitSpy.mock.calls[0]?.[0] as CardModel | undefined;
+    const card = emitSpy.mock.calls[0]?.[0] as CardModel | undefined;
 
-    expect(widget).toBeDefined();
+    expect(card).toBeDefined();
 
-    if (!widget) {
-      throw new Error('Expected widget payload to be emitted.');
+    if (!card) {
+      throw new Error('Expected card payload to be emitted.');
     }
 
-    widget.componentSettings ??= modalServiceMock.componentSettings();
-    widget.iconData ??= modalServiceMock.iconSettings();
+    card.componentSettings ??= modalServiceMock.componentSettings();
+    card.iconData ??= modalServiceMock.iconSettings();
 
-    expect(widget.componentSettings).toEqual({
+    expect(card.componentSettings).toEqual({
       width: 250,
       height: 250,
       imageHidden: false,
       titleHidden: false,
     });
-    expect(widget.iconData).toEqual({
+    expect(card.iconData).toEqual({
       id: undefined,
       type: '',
       name: '',

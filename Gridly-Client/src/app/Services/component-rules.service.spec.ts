@@ -34,12 +34,12 @@ describe('ComponentRulesService', () => {
     expect(service.hasRequiredFields(componentWithIconData)).toBe(true);
     expect(service.hasValidName(componentWithIconData.name)).toBe(true);
     expect(service.hasValidUrl(componentWithIconData.url)).toBe(true);
-    expect(service.hasValidComponentData(componentWithIconData)).toBe(true);
+    expect(service.hasValidCardData(componentWithIconData)).toBe(true);
 
     expect(service.hasRequiredFields({ ...componentWithIconData, name: '' })).toBe(false);
     expect(service.hasValidName('Alpha-1')).toBe(false);
     expect(service.hasValidUrl('not-a-url')).toBe(false);
-    expect(service.hasValidComponentData({ ...componentWithIconData, url: 'not-a-url' })).toBe(false);
+    expect(service.hasValidCardData({ ...componentWithIconData, url: 'not-a-url' })).toBe(false);
   });
 
   it('recognizes icon data, icon urls, and material icons when visible', () => {
@@ -56,7 +56,7 @@ describe('ComponentRulesService', () => {
 
   it('tolerates nullish and partially initialized component data', () => {
     expect(service.hasRequiredFields(undefined)).toBe(false);
-    expect(service.hasValidComponentData(null)).toBe(false);
+    expect(service.hasValidCardData(null)).toBe(false);
     expect(service.hasIconData({ ...componentWithIconData, iconData: undefined })).toBe(false);
     expect(service.hasIconUrl({ ...componentWithIconUrl, componentSettings: undefined })).toBe(true);
     expect(service.hasMaterialIcon({ ...componentWithIconData, componentSettings: undefined })).toBe(true);

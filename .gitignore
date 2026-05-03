@@ -45,7 +45,7 @@ testem.log
 /typings
 
 # Files I wanna ignore
-Assets/ComponentData/*.json
+Assets/CardData/*.json
 Assets/VersionData/*.json
 Assets/Icons/*
 Assets/Db/*

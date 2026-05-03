@@ -13,14 +13,4 @@ import {TextStringsUtil} from "./Constants/text.strings.util";
 export class AppComponent {
   title = TextStringsUtil.ClientTitle;
   isEditMode = false;
-
-  onAddWidget(): void {
-    // TODO Add widget logic
-    console.log('Add Widget');
-  }
-
-  onSave(): void {
-    // Todo save logic
-    console.log('Save');
-  }
 }

@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../../../Directives/base-modal.component';
-import { WidgetType } from '../../../Types/widget.type.enum';
-import { WidgetOptionsModal } from '../../../Models/WidgetOptionsModal';
+import { CardTypes } from '../../../Types/card.types.enum';
+import { CardOptionModel } from '../../../Models/WidgetOptionsModal';
 import { CardModel } from '../../../Models/card.Model';
 
 @Component({
@@ -16,16 +16,16 @@ export class AddCardDialogComponent
   extends BaseModalComponent
 {
   @Input() open = false;
-  @Input() widgetOptions: WidgetOptionsModal[] = [];
+  @Input() cardOptions: CardOptionModel[] = [];
 
-  @Output() newWidget = new EventEmitter<CardModel>();
+  @Output() newCard = new EventEmitter<CardModel>();
 
-  onSelect(type: WidgetType) {
+  onSelect(type: CardTypes) {
     switch (type) {
-      case WidgetType.Custom:
-        return this.newWidget.emit(new CardModel());
+      case CardTypes.Custom:
+        return this.newCard.emit(new CardModel());
       default:
-        return this.newWidget.emit(new CardModel());
+        return this.newCard.emit(new CardModel());
     }
   }
 }

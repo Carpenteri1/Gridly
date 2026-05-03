@@ -4,7 +4,7 @@ import { CardModel } from '../../Models/card.Model';
 import { ComponentService } from '../../Services/component.service';
 import { ComponentRulesService } from '../../Services/component-rules.service';
 import { GridService } from '../../Services/grid.service';
-import { CardComponent } from './card-component.component';
+import { CardComponent } from './card.component';
 
 type CardComponentTestHarness = CardComponent & {
   edit(card: CardModel): void;

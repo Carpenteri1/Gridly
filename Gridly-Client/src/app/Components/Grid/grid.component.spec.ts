@@ -5,7 +5,7 @@ import { CardModel } from '../../Models/card.Model';
 import { ComponentService } from '../../Services/component.service';
 import { GridService } from '../../Services/grid.service';
 import { GridComponent } from './grid.component';
-import { CardComponent } from '../Card/card-component.component';
+import { CardComponent } from '../Card/card.component';
 
 type GridComponentTestHarness = GridComponent & {
   Drop(event: unknown): void;

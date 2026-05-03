@@ -8,7 +8,7 @@ import { HeaderComponent } from './header.component';
 
 type HeaderComponentTestHarness = HeaderComponent & {
   add(component: CardModel): Promise<void>;
-  addWidgetDialogActive: boolean;
+  addDialogActive: boolean;
   reloadPage(): void;
   setEditMode(): void;
 };
@@ -62,13 +62,13 @@ describe('HeaderComponent', () => {
   it('delegates add and edit mode actions to the injected services', async () => {
     const card = new CardModel();
 
-    (component as HeaderComponentTestHarness).addWidgetDialogActive = true;
+    (component as HeaderComponentTestHarness).addDialogActive = true;
 
     await (component as HeaderComponentTestHarness).add(card);
     (component as HeaderComponentTestHarness).setEditMode();
 
     expect(componentServiceMock.add).toHaveBeenCalledWith(card);
-    expect((component as HeaderComponentTestHarness).addWidgetDialogActive).toBe(false);
+    expect((component as HeaderComponentTestHarness).addDialogActive).toBe(false);
     expect(gridServiceMock.toggle).toHaveBeenCalled();
   });
 

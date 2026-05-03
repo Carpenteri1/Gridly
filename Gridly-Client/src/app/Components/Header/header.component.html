@@ -11,14 +11,14 @@
       <ul class="navbar-nav align-items-lg-center gap-2 ms-lg-3"  >
         @if(showMenu()){
           <li class="nav-item">
-            <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1" (click)="addWidgetDialogActive = true">
+            <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1" (click)="addDialogActive = true">
               <i class="bi bi-plus-lg me-1"></i>
-              <span>{{TextStringsUtil.MenuAddWidgetButtonTitle}}</span>
+              <span>{{TextStringsUtil.MenuAddCardButtonTitle}}</span>
             </button>
             <app-add-card-dialog
-              [open]="addWidgetDialogActive"
-              [widgetOptions]="widgetOptions"
-              (newWidget)="add($event)">
+              [open]="addDialogActive"
+              [cardOptions]="cardOptions"
+              (newCard)="add($event)">
             </app-add-card-dialog>
           </li>
            <li class="nav-item">

@@ -3,7 +3,7 @@ import { TextStringsUtil } from "../../Constants/text.strings.util";
 import { CommonModule } from "@angular/common";
 import { VersionService } from "../../Services/version.service";
 import { AddCardDialogComponent } from "../Dialog/AddCardDialog/add-card-dialog.component";
-import { WidgetType } from "../../Types/widget.type.enum";
+import { CardTypes } from "../../Types/card.types.enum";
 import { CardModel } from "../../Models/card.Model";
 import { ComponentService } from "../../Services/component.service";
 import { GridService } from "../../Services/grid.service";
@@ -26,17 +26,17 @@ export class HeaderComponent {
   showMenu = signal(false);
 
   protected readonly TextStringsUtil = TextStringsUtil;
-  protected addWidgetDialogActive = false;
+  protected addDialogActive = false;
   //TODO move to dialog
-  protected widgetOptions = [
-    { type: WidgetType.Empty, label: 'Add empty widget', description: '', icon: 'bi bi-box' },
-    { type: WidgetType.Custom, label: 'Add custom widget', description: '', icon: 'bi bi-box-fill' },
+  protected cardOptions = [
+    { type: CardTypes.Empty, label: 'Add empty card', description: '', icon: 'bi bi-box' },
+    { type: CardTypes.Custom, label: 'Add custom card', description: '', icon: 'bi bi-box-fill' },
   ];
 
 
   /* TODO variants later maybe
 
-  widgetOptions = [
+  cardOptions = [
     { type: 'chart', label: 'Chart', description: 'Visualize trends', icon: 'bi bi-graph-up' },
     { type: 'table', label: 'Table', description: 'Tabular data', icon: 'bi bi-table' },
     { type: 'kpi',   label: 'KPI',   description: 'Single metric',   icon: 'bi bi-speedometer2' },
@@ -44,7 +44,7 @@ export class HeaderComponent {
   ];*/
 
   protected async add(component: CardModel): Promise<void> {
-    this.addWidgetDialogActive = !this.addWidgetDialogActive;
+    this.addDialogActive = !this.addDialogActive;
     await this.#componentService.add(component);
   }
 

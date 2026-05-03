@@ -25,7 +25,7 @@ export class ComponentRulesService {
       RegexStringsUtil.urlPattern.test(url);
   }
 
-  hasValidComponentData(component: CardModel | null | undefined): boolean {
+  hasValidCardData(component: CardModel | null | undefined): boolean {
     if (component === undefined ||
       component === null ||
       component.name === '' ||

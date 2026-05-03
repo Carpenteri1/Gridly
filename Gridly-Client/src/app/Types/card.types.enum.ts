@@ -1,4 +1,4 @@
-export enum WidgetType {
+export enum CardTypes {
     Empty = 'Empty',
     Custom = 'Custom',
   }

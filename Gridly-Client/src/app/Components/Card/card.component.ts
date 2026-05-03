@@ -13,8 +13,8 @@ import { GridService } from '../../Services/grid.service';
 
 @Component({
   selector: 'app-card-component',
-  templateUrl: './card-component.component.html',
-  styleUrl: './card-component.component.css',
+  templateUrl: './card.component.html',
+  styleUrl: './card.component.css',
   standalone: true,
   imports: [
     CommonModule,

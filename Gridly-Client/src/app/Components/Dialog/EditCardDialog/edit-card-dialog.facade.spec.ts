@@ -32,27 +32,27 @@ describe('EditCardDialogFacade', () => {
   });
 
   it('validates submit readiness from the current form data', () => {
-    facade.componentData.name = '';
-    facade.componentData.url = '';
+    facade.card.name = '';
+    facade.card.url = '';
     expect(facade.canSubmit).toBe(false);
 
-    facade.componentData.name = 'Widget';
-    facade.componentData.url = 'https://widget.example';
+    facade.card.name = 'Card';
+    facade.card.url = 'https://card.example';
     expect(facade.canSubmit).toBe(true);
     expect(componentRulesServiceMock.hasRequiredFields).toHaveBeenLastCalledWith({
-      ...facade.componentData,
-      name: 'Widget',
-      url: 'https://widget.example',
+      ...facade.card,
+      name: 'Card',
+      url: 'https://card.example',
     });
   });
 
   it('keeps whitespace-only values blocked when checking submit readiness', () => {
-    facade.componentData.name = '   ';
-    facade.componentData.url = '\t';
+    facade.card.name = '   ';
+    facade.card.url = '\t';
 
     expect(facade.canSubmit).toBe(false);
     expect(componentRulesServiceMock.hasRequiredFields).toHaveBeenLastCalledWith({
-      ...facade.componentData,
+      ...facade.card,
       name: '',
       url: '',
     });
@@ -67,10 +67,10 @@ describe('EditCardDialogFacade', () => {
   it('stores a selected material icon on the component payload', () => {
     facade.setIcon('settings');
 
-    expect(facade.componentData.iconData?.materialIcon).toBe('settings');
+    expect(facade.card.iconData?.materialIcon).toBe('settings');
   });
 
-  it('resets and builds the submit payload with the widget id', () => {
+  it('resets and builds the submit payload with the card id', () => {
     facade.reset({ name: 'Alpha', url: 'https://alpha.example' });
     const payload = facade.buildSubmitPayload(42);
 

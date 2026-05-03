@@ -35,9 +35,9 @@ export class TextStringsUtil {
   static readonly ModalDeleteComponentHeaderTitle = "Warning";
   static readonly ModalDeleteComponentAcceptBtnTitle = "Delete";
   static readonly ModalDeleteComponentCancelBtnTitle = "Cancel";
-  static readonly ModalDeleteComponentDescription = "You sure you want to delete this widget?";
+  static readonly ModalDeleteComponentDescription = "You sure you want to delete this card?";
 
-  static readonly MenuAddWidgetButtonTitle = "Add Widget";
+  static readonly MenuAddCardButtonTitle = "Add Card";
   static readonly MenuEditButtonTitle = "Edit";
   static readonly MenuExitEditButtonTitle = "Exit Edit";
   static readonly MenuDropDownDragTitle = "Move Components";
@@ -52,9 +52,9 @@ export class TextStringsUtil {
 
   static readonly ClientTitle = "Gridly";
 
-  static readonly AddWidgetDescription = "Pick widget type for your dashboard";
-  static readonly AddWidgetTitle = "Add Widget";
+  static readonly AddCardDescription = "Pick card type for your dashboard";
+  static readonly AddCardTitle = "Add Card";
 
-  static readonly EmptyWidgetTitle = "Empty Widget";
-  static readonly EmptyWidgetDescription = "Click to customize";
+  static readonly EmptyCardTitle = "Empty Card";
+  static readonly EmptyCardDescription = "Click to customize";
 }
