@@ -21,7 +21,7 @@
     "@angular/material": "21.2.10",
     "@angular/platform-browser": "21.2.10",
     "@angular/platform-browser-dynamic": "21.2.10",
-    "@angular/platform-server": "21.2.19",
+    "@angular/platform-server": "21.2.10",
     "@angular/router": "21.2.10",
     "@angular/ssr": "21.2.10",
     "bootstrap": "^5.3.8",
@@ -38,7 +38,7 @@
     "@eslint/js": "^10.0.1",
     "angular-eslint": "^21.3.1",
     "eslint": "^10.2.1",
-    "jest": "^30.2.0",
+    "jest": "^30.0.0",
     "jest-environment-jsdom": "^30.2.0",
     "jest-preset-angular": "^16.1.4",
     "typescript-eslint": "^8.59.0"
