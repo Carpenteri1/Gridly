@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ComponentService } from '../../Services/component.service';
 import { ComponentRulesService } from '../../Services/component-rules.service';
 import { TextStringsUtil } from '../../Constants/text.strings.util';
-import { ComponentModel } from '../../Models/Component.Model';
+import { CardModel } from '../../Models/Card.Model';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { PromptModalComponent } from '../ModalComponents/PromptModal/prompt-modal.component';
 import { EditWidgetModalComponent } from '../ModalComponents/EditWidgetModal/edit-widget-modal.component';
@@ -12,9 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { GridService } from '../../Services/grid.service';
 
 @Component({
-  selector: 'app-item',
-  templateUrl: './item.component.html',
-  styleUrl: './item.component.css',
+  selector: 'app-card',
+  templateUrl: './card.component.html',
+  styleUrl: './card.component.css',
   standalone: true,
   imports: [
     CommonModule,
@@ -25,8 +25,8 @@ import { GridService } from '../../Services/grid.service';
     MatIconModule
   ],
 })
-export class ItemComponent {
-  @Input({ required: true }) component!: ComponentModel;
+export class CardComponent {
+  @Input({ required: true }) card!: CardModel;
 
   #componentService = inject(ComponentService);
   #componentRulesService = inject(ComponentRulesService);
@@ -37,22 +37,22 @@ export class ItemComponent {
   readonly inEditMode = this.#gridService.editMode;
 
   handleModalChange(modalId: number): void {
-    if (modalId === this.component.id) {
+    if (modalId === this.card.id) {
       this.isEditModalOpen = false;
       this.isDeleteModalOpen = false;
     }
   }
 
-  protected edit(component: ComponentModel): void {
-    void this.#componentService.edit(component);
+  protected edit(card: CardModel): void {
+    void this.#componentService.edit(card);
   }
 
   protected remove(id: number): void {
     void this.#componentService.delete(id);
   }
 
-  protected hasMaterialIcon(item: ComponentModel): boolean {
-    return this.#componentRulesService.hasMaterialIcon(item);
+  protected hasMaterialIcon(card: CardModel): boolean {
+    return this.#componentRulesService.hasMaterialIcon(card);
   }
 
   openEditDialog(): void {

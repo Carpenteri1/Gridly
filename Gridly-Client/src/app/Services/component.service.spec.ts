@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { ComponentModel } from '../Models/Component.Model';
+import { CardModel } from '../Models/Card.Model';
 import { ComponentEndpointService } from './endpoints/component.endpoint.service';
 import { ComponentService } from './component.service';
 
 describe('ComponentService', () => {
   let service: ComponentService;
 
-  const componentA: ComponentModel = {
+  const componentA: CardModel = {
     id: 1,
     indexPosition: 1,
     name: 'Alpha',
@@ -15,7 +15,7 @@ describe('ComponentService', () => {
     iconData: { name: 'dashboard', type: 'svg', base64Data: 'abc', materialIcon: 'dashboard' },
     componentSettings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
   };
-  const componentB: ComponentModel = {
+  const componentB: CardModel = {
     id: 2,
     indexPosition: 2,
     name: 'Beta',

@@ -26,7 +26,7 @@
         <button
         appMakeResizable
         [canResize]="inEditMode()"
-        [targetId]="component.id"
+        [targetId]="card.id"
         type="button"
         class="btn edit-button resize-button">
         <i class="bi bi-arrows-angle-expand"></i>
@@ -37,33 +37,33 @@
 </div>
       <a
         class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2"
-        [href]="component.url"
+        [href]="card.url"
         target="_blank"
         rel="noreferrer">
         <span>
-        @if (hasMaterialIcon(component)) 
+        @if (hasMaterialIcon(card)) 
         {
-          <mat-icon class="component-mat-icon-size">
-            {{component.iconData?.materialIcon}}
+          <mat-icon class="card-mat-icon-size">
+            {{card.iconData?.materialIcon}}
           </mat-icon>
         }
         </span>
-        <p>{{component.id}}</p>
-        <h5 [hidden]="component.componentSettings?.titleHidden" class="fw-bold">{{component.name || TextStringsUtil.EmptyWidgetTitle}}</h5>
-        <p class="text-center">{{component.url}}</p>
+        <p>{{card.id}}</p>
+        <h5 [hidden]="card.componentSettings?.titleHidden" class="fw-bold">{{card.name || TextStringsUtil.EmptyWidgetTitle}}</h5>
+        <p class="text-center">{{card.url}}</p>
       </a>
   <app-edit-widget-modal
     [open]="isEditModalOpen"
-    [modalId]="component.id"
-    [id]="component.id"
-    [component]="component"
+    [modalId]="card.id"
+    [id]="card.id"
+    [card]="card"
     (editedComponent)="edit($event)"
     (openChange)="handleModalChange($event)">
   </app-edit-widget-modal>
   <app-prompt-modal
     [open]="isDeleteModalOpen"
-    [modalId]="component.id"
-    [id]="component.id"
-    (remove)="remove(component.id)"
+    [modalId]="card.id"
+    [id]="card.id"
+    (remove)="remove(card.id)"
     (openChange)="handleModalChange($event)">
   </app-prompt-modal>

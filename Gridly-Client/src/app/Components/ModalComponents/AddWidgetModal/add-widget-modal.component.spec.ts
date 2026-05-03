@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModalService } from '../../../Services/modal.service';
-import { ComponentModel } from '../../../Models/Component.Model';
+import { CardModel } from '../../../Models/Card.Model';
 import { IconModel } from '../../../Models/Icon.Model';
 import { AddWidgetModalComponent } from './add-widget-modal.component';
 import { WidgetType } from '../../../Types/widget.type.enum';
@@ -54,7 +54,7 @@ describe('AddWidgetModalComponent', () => {
 
     component.onSelect(WidgetType.Empty);
 
-    const widget = emitSpy.mock.calls[0]?.[0] as ComponentModel | undefined;
+    const widget = emitSpy.mock.calls[0]?.[0] as CardModel | undefined;
 
     expect(widget).toBeDefined();
 

@@ -1,22 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { ComponentModel } from '../../Models/Component.Model';
+import { CardModel } from '../../Models/Card.Model';
 import { ComponentService } from '../../Services/component.service';
 import { ComponentRulesService } from '../../Services/component-rules.service';
 import { GridService } from '../../Services/grid.service';
-import { ItemComponent } from './item.component';
+import { CardComponent } from './card.component';
 
-type ItemComponentTestHarness = ItemComponent & {
-  edit(component: ComponentModel): void;
+type CardComponentTestHarness = CardComponent & {
+  edit(card: CardModel): void;
   remove(id: number): void;
-  hasMaterialIcon(item: ComponentModel): boolean;
+  hasMaterialIcon(card: CardModel): boolean;
 };
 
-describe('ItemComponent', () => {
-  let fixture: ComponentFixture<ItemComponent>;
-  let component: ItemComponent;
+describe('CardComponent', () => {
+  let fixture: ComponentFixture<CardComponent>;
+  let cardComponent: CardComponent;
 
-  const currentComponent: ComponentModel = {
+  const currentCard: CardModel = {
     id: 7,
     indexPosition: 1,
     name: 'Weather',
@@ -31,7 +31,7 @@ describe('ItemComponent', () => {
   };
 
   const componentServiceMock = {
-    currentComponents: jest.fn(() => [currentComponent]),
+    currentComponents: jest.fn(() => [currentCard]),
     delete: jest.fn(),
     edit: jest.fn(),
   };
@@ -47,7 +47,7 @@ describe('ItemComponent', () => {
     jest.clearAllMocks();
 
     await TestBed.configureTestingModule({
-      imports: [ItemComponent],
+      imports: [CardComponent],
       providers: [
         { provide: ComponentService, useValue: componentServiceMock },
         { provide: ComponentRulesService, useValue: componentRulesServiceMock },
@@ -55,13 +55,13 @@ describe('ItemComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ItemComponent);
-    component = fixture.componentInstance;
-    fixture.componentRef.setInput('component', currentComponent);
+    fixture = TestBed.createComponent(CardComponent);
+    cardComponent = fixture.componentInstance;
+    fixture.componentRef.setInput('card', currentCard);
     fixture.detectChanges();
   });
 
-  it('renders the current component name and material icon', () => {
+  it('renders the current card name and material icon', () => {
     const element = fixture.nativeElement as HTMLElement;
 
     expect(element.querySelector('mat-icon')?.textContent).toContain('cloud');
@@ -69,34 +69,34 @@ describe('ItemComponent', () => {
   });
 
   it('opens the edit and delete dialogs from the component methods', () => {
-    component.openEditDialog();
-    component.openDeleteDialog();
+    cardComponent.openEditDialog();
+    cardComponent.openDeleteDialog();
 
-    expect(component.isEditModalOpen).toBe(true);
-    expect(component.isDeleteModalOpen).toBe(true);
+    expect(cardComponent.isEditModalOpen).toBe(true);
+    expect(cardComponent.isDeleteModalOpen).toBe(true);
   });
 
   it('closes both dialogs when the matching modal id is emitted', () => {
-    component.isEditModalOpen = true;
-    component.isDeleteModalOpen = true;
+    cardComponent.isEditModalOpen = true;
+    cardComponent.isDeleteModalOpen = true;
 
-    component.handleModalChange(7);
+    cardComponent.handleModalChange(7);
 
-    expect(component.isEditModalOpen).toBe(false);
-    expect(component.isDeleteModalOpen).toBe(false);
+    expect(cardComponent.isEditModalOpen).toBe(false);
+    expect(cardComponent.isDeleteModalOpen).toBe(false);
   });
 
   it('delegates edit and remove actions to the component service', () => {
-    (component as ItemComponentTestHarness).edit(currentComponent);
-    (component as ItemComponentTestHarness).remove(7);
+    (cardComponent as CardComponentTestHarness).edit(currentCard);
+    (cardComponent as CardComponentTestHarness).remove(7);
 
-    expect(componentServiceMock.edit).toHaveBeenCalledWith(currentComponent);
+    expect(componentServiceMock.edit).toHaveBeenCalledWith(currentCard);
     expect(componentServiceMock.delete).toHaveBeenCalledWith(7);
   });
   
   it('hasMaterialIcon returns the value from the component rules service', () => {
-    const result = (component as ItemComponentTestHarness).hasMaterialIcon(currentComponent);
-    expect(componentRulesServiceMock.hasMaterialIcon).toHaveBeenCalledWith(currentComponent);
+    const result = (cardComponent as CardComponentTestHarness).hasMaterialIcon(currentCard);
+    expect(componentRulesServiceMock.hasMaterialIcon).toHaveBeenCalledWith(currentCard);
     expect(result).toBe(true);
   });
 

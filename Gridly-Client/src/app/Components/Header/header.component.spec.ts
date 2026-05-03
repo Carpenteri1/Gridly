@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { ComponentModel } from '../../Models/Component.Model';
+import { CardModel } from '../../Models/Card.Model';
 import { ComponentService } from '../../Services/component.service';
 import { GridService } from '../../Services/grid.service';
 import { VersionService } from '../../Services/version.service';
 import { HeaderComponent } from './header.component';
 
 type HeaderComponentTestHarness = HeaderComponent & {
-  add(component: ComponentModel): Promise<void>;
+  add(component: CardModel): Promise<void>;
   addWidgetDialogActive: boolean;
   reloadPage(): void;
   setEditMode(): void;
@@ -60,7 +60,7 @@ describe('HeaderComponent', () => {
   });
 
   it('delegates add and edit mode actions to the injected services', async () => {
-    const newComponent = new ComponentModel();
+    const newComponent = new CardModel();
 
     (component as HeaderComponentTestHarness).addWidgetDialogActive = true;
 

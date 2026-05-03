@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import {UrlStringsUtil} from "../../Constants/url.strings.util";
-import {ComponentModel} from "../../Models/Component.Model";
+import {CardModel} from "../../Models/Card.Model";
 import {Observable, take} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import { EditComponentModel } from '../../Models/editComponent.Model';
@@ -14,26 +14,26 @@ export class ComponentEndpointService{
 
 
   delete(id: number) {
-    return this.http.delete<ComponentModel>(UrlStringsUtil.ComponentUrlDelete+id).pipe(take(1));
+    return this.http.delete<CardModel>(UrlStringsUtil.ComponentUrlDelete+id).pipe(take(1));
   }
 
-  get(): Observable<ComponentModel[]> {
-    return this.http.get<ComponentModel[]>(UrlStringsUtil.ComponentUrlGet).pipe(take(1));
+  get(): Observable<CardModel[]> {
+    return this.http.get<CardModel[]>(UrlStringsUtil.ComponentUrlGet).pipe(take(1));
   }
 
-  getById(id: number): Observable<ComponentModel> {
-    return this.http.get<ComponentModel>(UrlStringsUtil.ComponentUrlGetById+id).pipe(take(1));
+  getById(id: number): Observable<CardModel> {
+    return this.http.get<CardModel>(UrlStringsUtil.ComponentUrlGetById+id).pipe(take(1));
   }
 
-  add(newComponent: ComponentModel): Observable<ComponentModel> {
-    return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlSave, newComponent).pipe(take(1));
+  add(newComponent: CardModel): Observable<CardModel> {
+    return this.http.post<CardModel>(UrlStringsUtil.ComponentUrlSave, newComponent).pipe(take(1));
   }
 
-  edit(componentModel: EditComponentModel): Observable<ComponentModel> {
-    return this.http.post<ComponentModel>(UrlStringsUtil.ComponentUrlEdit, componentModel).pipe(take(1));
+  edit(componentModel: EditComponentModel): Observable<CardModel> {
+    return this.http.post<CardModel>(UrlStringsUtil.ComponentUrlEdit, componentModel).pipe(take(1));
   }
 
-  batchEdit(editedComponent: EditComponentModel[]): Observable<ComponentModel[]> {
-    return this.http.post<ComponentModel[]>(UrlStringsUtil.ComponentsBatchUrlEdit, editedComponent).pipe(take(1));
+  batchEdit(editedComponent: EditComponentModel[]): Observable<CardModel[]> {
+    return this.http.post<CardModel[]>(UrlStringsUtil.ComponentsBatchUrlEdit, editedComponent).pipe(take(1));
   }
 }

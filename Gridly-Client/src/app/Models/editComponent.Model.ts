@@ -1,6 +1,6 @@
-import {ComponentModel} from "./Component.Model";
+import {CardModel} from "./Card.Model";
 
 export class EditComponentModel {
-  editComponent!: ComponentModel;
+  editComponent!: CardModel;
   selectedDropDownIconValue!: number;
 }

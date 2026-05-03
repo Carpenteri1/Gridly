@@ -25,7 +25,7 @@
   font-size: 12px;
 }
 
-.item-icon-center{
+.card-icon-center{
   margin:auto;
 }
 
@@ -43,7 +43,7 @@
   transform: rotate(45deg) !important;
 }
 
-.component-mat-icon-size{
+.card-mat-icon-size{
   font-size: 80px;
   width: 80px;
   height: 80px;

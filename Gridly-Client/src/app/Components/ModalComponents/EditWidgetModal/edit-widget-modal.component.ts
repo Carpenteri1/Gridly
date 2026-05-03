@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../../../Directives/base-modal.component';
-import { ComponentModel } from '../../../Models/Component.Model';
+import { CardModel } from '../../../Models/Card.Model';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -21,7 +21,7 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
   @Input() open = false;
   @Input() modalId = 0;
   @Input() id = 0;
-  @Input() component?: ComponentModel;
+  @Input() card?: CardModel;
   @Output() openChange = new EventEmitter<number>();
   @Output() editedComponent = new EventEmitter();
   
@@ -34,7 +34,7 @@ export class EditWidgetModalComponent extends BaseModalComponent implements OnCh
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['open']?.currentValue === true) {
-      this.facade.reset(this.component ?? undefined);
+      this.facade.reset(this.card ?? undefined);
     }
   }
 

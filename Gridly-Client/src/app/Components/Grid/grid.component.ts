@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComponentService } from "../../Services/component.service";
-import { ItemComponent } from "../Item/item.component";
+import { CardComponent } from "../Card/card.component";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
-import { ComponentModel } from '../../Models/Component.Model';
+import { CardModel } from '../../Models/Card.Model';
 import { GridService } from '../../Services/grid.service';
 @Component({
   selector: 'app-grid',
-  imports: [CommonModule, CdkDropList, CdkDrag, ItemComponent],
+  imports: [CommonModule, CdkDropList, CdkDrag, CardComponent],
   templateUrl: './grid.component.html',
   standalone: true,
   styleUrls: ['./grid.component.css'],
@@ -20,7 +20,7 @@ export class GridComponent {
   readonly components$ = this.#componentService.components$;
   readonly inEditMode = this.#gridService.editMode;
 
-  protected Drop(event: CdkDragDrop<ComponentModel[]>): void {
+  protected Drop(event: CdkDragDrop<CardModel[]>): void {
     if (!this.inEditMode()) return;
     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
   }

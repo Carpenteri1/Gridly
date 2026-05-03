@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { RegexStringsUtil } from '../Constants/regex.strings.util';
-import { ComponentModel } from '../Models/Component.Model';
+import { CardModel } from '../Models/Card.Model';
 
 @Injectable({ providedIn: 'root' })
 export class ComponentRulesService {
-  hasRequiredFields(component: ComponentModel | null | undefined): boolean {
+  hasRequiredFields(component: CardModel | null | undefined): boolean {
     return component !== undefined &&
       component !== null &&
       component.name !== '' &&
@@ -25,7 +25,7 @@ export class ComponentRulesService {
       RegexStringsUtil.urlPattern.test(url);
   }
 
-  hasValidComponentData(component: ComponentModel | null | undefined): boolean {
+  hasValidComponentData(component: CardModel | null | undefined): boolean {
     if (component === undefined ||
       component === null ||
       component.name === '' ||
@@ -36,7 +36,7 @@ export class ComponentRulesService {
       this.hasValidUrl(component.url);
   }
 
-  hasIconData(component: ComponentModel | null | undefined): boolean {
+  hasIconData(component: CardModel | null | undefined): boolean {
     return component !== undefined &&
       component !== null &&
       component.iconData !== undefined &&
@@ -46,7 +46,7 @@ export class ComponentRulesService {
       !component.componentSettings?.imageHidden;
   }
 
-  hasIconUrl(component: ComponentModel | null | undefined): boolean {
+  hasIconUrl(component: CardModel | null | undefined): boolean {
     return component !== undefined &&
       component !== null &&
       component.iconUrl !== undefined &&
@@ -55,7 +55,7 @@ export class ComponentRulesService {
       !component.componentSettings?.imageHidden;
   }
 
-  hasMaterialIcon(component: ComponentModel | null | undefined): boolean {
+  hasMaterialIcon(component: CardModel | null | undefined): boolean {
     return component !== undefined &&
       component !== null &&
       component.iconData?.materialIcon !== undefined &&

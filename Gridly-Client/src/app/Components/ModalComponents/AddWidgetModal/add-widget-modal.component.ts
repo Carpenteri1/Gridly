@@ -3,7 +3,7 @@ import { ModalDirective } from '../../../Directives/modal.directive';
 import { BaseModalComponent } from '../../../Directives/base-modal.component';
 import { WidgetType } from '../../../Types/widget.type.enum';
 import { WidgetOptionsModal } from '../../../Models/WidgetOptionsModal';
-import { ComponentModel } from '../../../Models/Component.Model';
+import { CardModel } from '../../../Models/Card.Model';
 
 @Component({
   selector: 'app-add-widget-modal',
@@ -18,14 +18,14 @@ export class AddWidgetModalComponent
   @Input() open = false;
   @Input() widgetOptions: WidgetOptionsModal[] = [];
 
-  @Output() newWidget = new EventEmitter<ComponentModel>();
+  @Output() newWidget = new EventEmitter<CardModel>();
 
   onSelect(type: WidgetType) {
     switch (type) {
       case WidgetType.Custom:
-        return this.newWidget.emit(new ComponentModel());
+        return this.newWidget.emit(new CardModel());
       default:
-        return this.newWidget.emit(new ComponentModel());
+        return this.newWidget.emit(new CardModel());
     }
   }
 }

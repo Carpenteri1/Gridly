@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { ComponentModel } from '../Models/Component.Model';
+import { CardModel } from '../Models/Card.Model';
 import { ComponentRulesService } from './component-rules.service';
 
 describe('ComponentRulesService', () => {
   let service: ComponentRulesService;
 
-  const componentWithIconData: ComponentModel = {
+  const componentWithIconData: CardModel = {
     id: 1,
     indexPosition: 1,
     name: 'Alpha',
@@ -13,7 +13,7 @@ describe('ComponentRulesService', () => {
     iconData: { name: 'dashboard', type: 'svg', base64Data: 'abc', materialIcon: 'dashboard' },
     componentSettings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
   };
-  const componentWithIconUrl: ComponentModel = {
+  const componentWithIconUrl: CardModel = {
     id: 2,
     indexPosition: 2,
     name: 'Beta',

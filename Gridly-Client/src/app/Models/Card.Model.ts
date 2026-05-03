@@ -1,7 +1,7 @@
 import {ComponentSettingsModel} from "./ComponentSettings.Model";
 import {IconModel} from "./Icon.Model";
 
-export class ComponentModel {
+export class CardModel {
   id!: number;
   indexPosition!: number;
   name!: string;

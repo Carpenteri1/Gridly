@@ -4,7 +4,7 @@ import { CommonModule } from "@angular/common";
 import { VersionService } from "../../Services/version.service";
 import { AddWidgetModalComponent } from "../ModalComponents/AddWidgetModal/add-widget-modal.component";
 import { WidgetType } from "../../Types/widget.type.enum";
-import { ComponentModel } from "../../Models/Component.Model";
+import { CardModel } from "../../Models/Card.Model";
 import { ComponentService } from "../../Services/component.service";
 import { GridService } from "../../Services/grid.service";
 
@@ -43,7 +43,7 @@ export class HeaderComponent {
     { type: 'note',  label: 'Note',  description: 'Plain text note', icon: 'bi bi-sticky' }
   ];*/
 
-  protected async add(component: ComponentModel): Promise<void> {
+  protected async add(component: CardModel): Promise<void> {
     this.addWidgetDialogActive = !this.addWidgetDialogActive;
     await this.#componentService.add(component);
   }

@@ -1,8 +1,8 @@
 @if (components$ | async; as components) {
   <div class="grid-layout" cdkDropList cdkDropListOrientation="horizontal" [cdkDropListData]="components" (cdkDropListDropped)="Drop($event)">
-    @for(component of components; track component.id) {
-    <div class="shadow-sm grid-item-style" cdkDrag [cdkDragDisabled]="!inEditMode()" [id]="component.id.toString()">
-      <app-item [component]="component"></app-item>
+    @for(card of components; track card.id) {
+    <div class="shadow-sm grid-item-style" cdkDrag [cdkDragDisabled]="!inEditMode()" [id]="card.id.toString()">
+      <app-card [card]="card"></app-card>
     </div>
     }
   </div>
