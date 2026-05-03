@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { IconService } from '../../../Services/Icon.service';
+import { ComponentRulesService } from '../../../Services/component-rules.service';
 import { EditWidgetModalFacade } from './edit-widget-modal.facade';
 
 describe('EditWidgetModalFacade', () => {
@@ -11,12 +12,19 @@ describe('EditWidgetModalFacade', () => {
     search: jest.fn(),
   };
 
+  const componentRulesServiceMock = {
+    hasRequiredFields: jest.fn((component: { name?: string; url?: string }) =>
+      Boolean(component.name?.trim().length) && Boolean(component.url?.trim().length)
+    ),
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
     TestBed.configureTestingModule({
       providers: [
         EditWidgetModalFacade,
         { provide: IconService, useValue: iconServiceMock },
+        { provide: ComponentRulesService, useValue: componentRulesServiceMock },
       ],
     });
 
@@ -31,6 +39,23 @@ describe('EditWidgetModalFacade', () => {
     facade.componentData.name = 'Widget';
     facade.componentData.url = 'https://widget.example';
     expect(facade.canSubmit).toBe(true);
+    expect(componentRulesServiceMock.hasRequiredFields).toHaveBeenLastCalledWith({
+      ...facade.componentData,
+      name: 'Widget',
+      url: 'https://widget.example',
+    });
+  });
+
+  it('keeps whitespace-only values blocked when checking submit readiness', () => {
+    facade.componentData.name = '   ';
+    facade.componentData.url = '\t';
+
+    expect(facade.canSubmit).toBe(false);
+    expect(componentRulesServiceMock.hasRequiredFields).toHaveBeenLastCalledWith({
+      ...facade.componentData,
+      name: '',
+      url: '',
+    });
   });
 
   it('forwards icon searches to the icon service', () => {

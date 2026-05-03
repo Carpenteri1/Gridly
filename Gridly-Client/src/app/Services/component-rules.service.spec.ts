@@ -1,0 +1,64 @@
+import { TestBed } from '@angular/core/testing';
+import { ComponentModel } from '../Models/Component.Model';
+import { ComponentRulesService } from './component-rules.service';
+
+describe('ComponentRulesService', () => {
+  let service: ComponentRulesService;
+
+  const componentWithIconData: ComponentModel = {
+    id: 1,
+    indexPosition: 1,
+    name: 'Alpha',
+    url: 'https://alpha.example',
+    iconData: { name: 'dashboard', type: 'svg', base64Data: 'abc', materialIcon: 'dashboard' },
+    componentSettings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
+  };
+  const componentWithIconUrl: ComponentModel = {
+    id: 2,
+    indexPosition: 2,
+    name: 'Beta',
+    url: 'https://beta.example',
+    iconUrl: 'https://cdn.example/icon.png',
+    componentSettings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
+  };
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [ComponentRulesService],
+    });
+
+    service = TestBed.inject(ComponentRulesService);
+  });
+
+  it('checks required fields and shared name/url validation rules', () => {
+    expect(service.hasRequiredFields(componentWithIconData)).toBe(true);
+    expect(service.hasValidName(componentWithIconData.name)).toBe(true);
+    expect(service.hasValidUrl(componentWithIconData.url)).toBe(true);
+    expect(service.hasValidComponentData(componentWithIconData)).toBe(true);
+
+    expect(service.hasRequiredFields({ ...componentWithIconData, name: '' })).toBe(false);
+    expect(service.hasValidName('Alpha-1')).toBe(false);
+    expect(service.hasValidUrl('not-a-url')).toBe(false);
+    expect(service.hasValidComponentData({ ...componentWithIconData, url: 'not-a-url' })).toBe(false);
+  });
+
+  it('recognizes icon data, icon urls, and material icons when visible', () => {
+    expect(service.hasIconData(componentWithIconData)).toBe(true);
+    expect(service.hasMaterialIcon(componentWithIconData)).toBe(true);
+    expect(service.hasIconUrl(componentWithIconUrl)).toBe(true);
+  });
+
+  it('rejects icon sources when they are hidden or invalid', () => {
+    expect(service.hasIconData({ ...componentWithIconData, componentSettings: { ...componentWithIconData.componentSettings!, imageHidden: true } })).toBe(false);
+    expect(service.hasMaterialIcon({ ...componentWithIconData, iconData: { ...componentWithIconData.iconData!, materialIcon: '' } })).toBe(false);
+    expect(service.hasIconUrl({ ...componentWithIconUrl, iconUrl: 'icon.png' })).toBe(false);
+  });
+
+  it('tolerates nullish and partially initialized component data', () => {
+    expect(service.hasRequiredFields(undefined)).toBe(false);
+    expect(service.hasValidComponentData(null)).toBe(false);
+    expect(service.hasIconData({ ...componentWithIconData, iconData: undefined })).toBe(false);
+    expect(service.hasIconUrl({ ...componentWithIconUrl, componentSettings: undefined })).toBe(true);
+    expect(service.hasMaterialIcon({ ...componentWithIconData, componentSettings: undefined })).toBe(true);
+  });
+});

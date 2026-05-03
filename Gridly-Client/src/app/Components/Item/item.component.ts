@@ -1,6 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComponentService } from '../../Services/component.service';
+import { ComponentRulesService } from '../../Services/component-rules.service';
 import { TextStringsUtil } from '../../Constants/text.strings.util';
 import { ComponentModel } from '../../Models/Component.Model';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
@@ -28,6 +29,7 @@ export class ItemComponent {
   @Input({ required: true }) component!: ComponentModel;
 
   #componentService = inject(ComponentService);
+  #componentRulesService = inject(ComponentRulesService);
   #gridService = inject(GridService);
 
   isEditModalOpen = false;
@@ -50,7 +52,7 @@ export class ItemComponent {
   }
 
   protected hasMaterialIcon(item: ComponentModel): boolean {
-    return this.#componentService.MaterialIconSet(item);
+    return this.#componentRulesService.hasMaterialIcon(item);
   }
 
   openEditDialog(): void {

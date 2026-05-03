@@ -1,14 +1,11 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ComponentService } from './component.service';
-import { ComponentModel } from '../Models/Component.Model';
 import { IconModel } from '../Models/Icon.Model';
 import { ImageExtensionsType } from '../Types/image.extensions.type.enum';
 
 @Injectable({ providedIn: 'root' })
 export class ModalService {
   readonly resetFile$ = new Subject<void>();
-  #componentService = inject(ComponentService);
   readonly #supportedImageExtensions: readonly string[] = [
     ImageExtensionsType.Svg,
     ImageExtensionsType.Png,
@@ -41,14 +38,6 @@ export class ModalService {
 
   private notifyComponentToResetFileInput(): void {
     this.resetFile$.next();
-  }
-
-  noEmptyInputFields(component: ComponentModel): boolean {
-    return (
-      this.#componentService.CheckComponentData(component) &&
-      (this.#componentService.IconDataSet(component) ||
-        this.#componentService.IconUrlSet(component))
-    );
   }
 
   private isSupportedImage(file: File | null): boolean {

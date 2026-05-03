@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { ComponentModel } from '../../Models/Component.Model';
 import { ComponentService } from '../../Services/component.service';
+import { ComponentRulesService } from '../../Services/component-rules.service';
 import { GridService } from '../../Services/grid.service';
 import { ItemComponent } from './item.component';
 
@@ -33,9 +34,10 @@ describe('ItemComponent', () => {
     currentComponents: jest.fn(() => [currentComponent]),
     delete: jest.fn(),
     edit: jest.fn(),
-    IconDataSet: jest.fn(() => false),
-    IconUrlSet: jest.fn(() => false),
-    MaterialIconSet: jest.fn(() => true),
+  };
+
+  const componentRulesServiceMock = {
+    hasMaterialIcon: jest.fn(() => true),
   };
 
   const editMode = signal(true);
@@ -48,6 +50,7 @@ describe('ItemComponent', () => {
       imports: [ItemComponent],
       providers: [
         { provide: ComponentService, useValue: componentServiceMock },
+        { provide: ComponentRulesService, useValue: componentRulesServiceMock },
         { provide: GridService, useValue: gridServiceMock },
       ],
     }).compileComponents();
@@ -91,9 +94,9 @@ describe('ItemComponent', () => {
     expect(componentServiceMock.delete).toHaveBeenCalledWith(7);
   });
   
-  it('hasMaterialIcon returns the value from the component service', () => {
+  it('hasMaterialIcon returns the value from the component rules service', () => {
     const result = (component as ItemComponentTestHarness).hasMaterialIcon(currentComponent);
-    expect(componentServiceMock.MaterialIconSet).toHaveBeenCalledWith(currentComponent);
+    expect(componentRulesServiceMock.hasMaterialIcon).toHaveBeenCalledWith(currentComponent);
     expect(result).toBe(true);
   });
 

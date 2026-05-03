@@ -52,12 +52,20 @@ describe('ComponentService', () => {
   });
 
   it('loads components once on construction', () => {
+    expect(service.currentComponents()).toEqual([componentA, componentB]);
     expect(endpointMock.get).toHaveBeenCalledTimes(2);
   });
 
-  it('delegates add, edit, and delete to the endpoint service', async () => {
+  it('refreshes the component stream on demand', () => {
+    service.refresh();
+
+    expect(endpointMock.get).toHaveBeenCalledTimes(3);
+  });
+
+  it('delegates add, edit, delete, and getById to the endpoint service', async () => {
     await service.add(componentB);
     await service.edit(componentB);
+    await expect(service.getById(1)).resolves.toEqual(componentA);
     await service.delete(1);
 
     expect(endpointMock.add).toHaveBeenCalledWith(componentB);
@@ -65,18 +73,8 @@ describe('ComponentService', () => {
       editComponent: componentB,
       selectedDropDownIconValue: 2,
     });
+    expect(endpointMock.getById).toHaveBeenCalledWith(1);
     expect(endpointMock.delete).toHaveBeenCalledWith(1);
-  });
-
-  it('recognizes icon rendering modes correctly', () => {
-    expect(service.IconDataSet(componentA)).toBe(true);
-    expect(service.MaterialIconSet(componentA)).toBe(true);
-    expect(service.IconUrlSet(componentB)).toBe(true);
-  });
-
-  it('validates component base data with the shared regex rules', () => {
-    expect(service.CheckComponentData(componentA)).toBe(true);
-    expect(service.CheckComponentData({ ...componentA, url: 'not-a-url' })).toBe(false);
-    expect(service.CheckComponentData({ ...componentA, name: '' })).toBe(false);
+    expect(endpointMock.get).toHaveBeenCalledTimes(5);
   });
 });

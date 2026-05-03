@@ -4,6 +4,7 @@ import { SearchIconsResultDto } from '../../../DTOs/SearchIconsResultDto';
 import { ComponentModel } from '../../../Models/Component.Model';
 import { IconService } from '../../../Services/Icon.service';
 import { IconModel } from '../../../Models/Icon.Model';
+import { ComponentRulesService } from '../../../Services/component-rules.service';
 
 @Injectable()
 export class EditWidgetModalFacade {
@@ -11,13 +12,18 @@ export class EditWidgetModalFacade {
   componentData: ComponentModel = new ComponentModel();
 
   #iconService = inject(IconService);
+  #componentRulesService = inject(ComponentRulesService);
 
   constructor() {
     this.icons$ = this.#iconService.icons$;
   }
 
   get canSubmit(): boolean {
-    return this.componentData.name.trim().length > 0 && this.componentData.url.trim().length > 0;
+    return this.#componentRulesService.hasRequiredFields({
+      ...this.componentData,
+      name: this.componentData.name.trim(),
+      url: this.componentData.url.trim(),
+    });
   }
 
   onSearch(input: string): void {
