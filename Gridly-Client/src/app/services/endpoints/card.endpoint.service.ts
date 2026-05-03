@@ -37,3 +37,5 @@ export class CardEnpointService{
     return this.http.post<CardModel[]>(UrlStringsUtil.ComponentsBatchUrlEdit, editedComponent).pipe(take(1));
   }
 }
+
+export { CardEnpointService as ComponentEndpointService };

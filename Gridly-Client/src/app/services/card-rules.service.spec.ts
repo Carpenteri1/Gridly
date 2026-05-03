@@ -11,7 +11,7 @@ describe('ComponentRulesService', () => {
     name: 'Alpha',
     url: 'https://alpha.example',
     iconData: { name: 'dashboard', type: 'svg', base64Data: 'abc', materialIcon: 'dashboard' },
-    componentSettings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
+    settings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
   };
   const componentWithIconUrl: CardModel = {
     id: 2,
@@ -19,7 +19,7 @@ describe('ComponentRulesService', () => {
     name: 'Beta',
     url: 'https://beta.example',
     iconUrl: 'https://cdn.example/icon.png',
-    componentSettings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
+    settings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
   };
 
   beforeEach(() => {
@@ -49,7 +49,7 @@ describe('ComponentRulesService', () => {
   });
 
   it('rejects icon sources when they are hidden or invalid', () => {
-    expect(service.hasIconData({ ...componentWithIconData, componentSettings: { ...componentWithIconData.componentSettings!, imageHidden: true } })).toBe(false);
+    expect(service.hasIconData({ ...componentWithIconData, settings: { ...componentWithIconData.settings!, imageHidden: true } })).toBe(false);
     expect(service.hasMaterialIcon({ ...componentWithIconData, iconData: { ...componentWithIconData.iconData!, materialIcon: '' } })).toBe(false);
     expect(service.hasIconUrl({ ...componentWithIconUrl, iconUrl: 'icon.png' })).toBe(false);
   });
@@ -58,7 +58,7 @@ describe('ComponentRulesService', () => {
     expect(service.hasRequiredFields(undefined)).toBe(false);
     expect(service.hasValidCardData(null)).toBe(false);
     expect(service.hasIconData({ ...componentWithIconData, iconData: undefined })).toBe(false);
-    expect(service.hasIconUrl({ ...componentWithIconUrl, componentSettings: undefined })).toBe(true);
-    expect(service.hasMaterialIcon({ ...componentWithIconData, componentSettings: undefined })).toBe(true);
+    expect(service.hasIconUrl({ ...componentWithIconUrl, settings: undefined })).toBe(true);
+    expect(service.hasMaterialIcon({ ...componentWithIconData, settings: undefined })).toBe(true);
   });
 });

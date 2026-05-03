@@ -13,12 +13,16 @@ export class CardService {
 
   readonly componentId = new ReplaySubject<number>(1);
   readonly cards$: Observable<CardModel[]>;
+  readonly components$: Observable<CardModel[]>;
 
   readonly currentcard: Signal<CardModel[] | undefined>;
+  readonly currentComponents: Signal<CardModel[] | undefined>;
 
   constructor() {
     this.cards$ = this.get$;
+    this.components$ = this.cards$;
     this.currentcard = toSignal(this.cards$);
+    this.currentComponents = this.currentcard;
     this.refresh();
   }
 

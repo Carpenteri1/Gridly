@@ -27,10 +27,11 @@ describe('CardComponent', () => {
       base64Data: '',
       materialIcon: 'cloud',
     },
-    componentSettings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
+    settings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
   };
 
   const cardServiceMock = {
+    currentcard: jest.fn(() => [currentCard]),
     currentComponents: jest.fn(() => [currentCard]),
     delete: jest.fn(),
     edit: jest.fn(),

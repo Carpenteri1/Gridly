@@ -9,6 +9,7 @@ import { DeleteCardDialogComponent } from '../dialogs/deleteCardDialog/delete-ca
 import { ResizableDirective } from '../../directives/resizable.directive';
 import { MatIconModule } from '@angular/material/icon';
 import { GridService } from '../../services/grid.service';
+import { ComponentRulesService } from '../../services/card-rules.service';
 
 @Component({
   selector: 'app-card-component',
@@ -29,6 +30,7 @@ export class CardComponent {
 
   #cardService = inject(CardService);
   #gridService = inject(GridService);
+  #componentRulesService = inject(ComponentRulesService);
 
   isEditModalOpen = false;
   isDeleteModalOpen = false;
@@ -49,9 +51,8 @@ export class CardComponent {
     void this.#cardService.delete(id);
   }
 
-  protected hasMaterialIcon(item: CardModel): boolean {;
-    return item != undefined;
-    //this.#cardService.MaterialIconSet(item);
+  protected hasMaterialIcon(item: CardModel): boolean {
+    return this.#componentRulesService.hasMaterialIcon(item);
   }
 
   openEditDialog(): void {

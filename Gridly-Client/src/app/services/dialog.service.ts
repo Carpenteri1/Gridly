@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IconModel } from '../models/icon.Model';
+import { SettingsModel } from '../models/settings.Model';
 import { ImageExtensionsType } from '../types/image.extensions.type.enum';
 
 @Injectable({ providedIn: 'root' })
@@ -34,6 +35,25 @@ export class ModalService {
 
   resetImageData(): void {
     this.notifyComponentToResetFileInput();
+  }
+
+  componentSettings(): SettingsModel {
+    return {
+      width: 250,
+      height: 250,
+      imageHidden: false,
+      titleHidden: false,
+    };
+  }
+
+  iconSettings(): IconModel {
+    return {
+      id: undefined,
+      type: '',
+      name: '',
+      base64Data: '',
+      materialIcon: 'add_box',
+    };
   }
 
   private notifyComponentToResetFileInput(): void {
