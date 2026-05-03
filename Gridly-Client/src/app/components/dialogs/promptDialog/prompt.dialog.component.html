@@ -1,0 +1,22 @@
+<dialog #dlg appModalWindow [open]="open" [modalId]="modalId" [id]="id" (openChange)="openChange.emit($event)" class="ew-dialog">
+  <div class="ew-card">
+    <header class="ew-header">
+      <h3 id="ew-title" class="m-0">Edit {{modalId}}</h3>
+      <button type="button" class="btn" aria-label="Close" (click)="close()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </header>
+    <div class="ew-body">
+      <form (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="name-input" class="form-label">{{TextStringsUtil.ModalDeleteComponentTitle}}</label>
+          <p> {{TextStringsUtil.ModalDeleteComponentDescription}}</p>
+        </div>
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="button" class="btn btn-secondary" (click)="close()">{{TextStringsUtil.ModalDeleteComponentCancelBtnTitle}}</button>
+          <button type="submit" class="btn btn-primary">{{TextStringsUtil.ModalDeleteComponentAcceptBtnTitle}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</dialog>

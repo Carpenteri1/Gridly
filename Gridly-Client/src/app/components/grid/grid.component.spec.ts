@@ -2,10 +2,9 @@ import { Component, Input, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable, of } from 'rxjs';
 import { CardModel } from '../../models/card.Model';
-import { ComponentService } from '../../services/component.service';
+import { CardService } from '../../services/card.service';
 import { GridService } from '../../services/grid.service';
 import { GridComponent } from './grid.component';
-import { CardComponent } from '../card/card.component';
 
 type GridComponentTestHarness = GridComponent & {
   Drop(event: unknown): void;
@@ -25,7 +24,7 @@ describe('GridComponent', () => {
   let cards: CardModel[];
   let editMode: ReturnType<typeof signal<boolean>>;
 
-  const componentServiceMock = {} as { components$: Observable<CardModel[]> };
+  const cardServiceMock = {} as { components$: Observable<CardModel[]> };
   const gridServiceMock = {} as { editMode: () => boolean };
 
   beforeEach(async () => {
@@ -33,19 +32,19 @@ describe('GridComponent', () => {
       { id: 1, indexPosition: 1, name: 'One', url: 'https://one.example' },
       { id: 2, indexPosition: 2, name: 'Two', url: 'https://two.example' },
     ];
-    componentServiceMock.components$ = of(cards);
+    cardServiceMock.components$ = of(cards);
     editMode = signal(true);
     gridServiceMock.editMode = editMode.asReadonly();
 
     TestBed.overrideComponent(GridComponent, {
-      remove: { imports: [CardComponent] },
+      remove: { imports: [CardService] },
       add: { imports: [MockCardComponentComponent] },
     });
 
     await TestBed.configureTestingModule({
       imports: [GridComponent],
       providers: [
-        { provide: ComponentService, useValue: componentServiceMock },
+        { provide: CardService, useValue: cardServiceMock },
         { provide: GridService, useValue: gridServiceMock },
       ],
     }).compileComponents();

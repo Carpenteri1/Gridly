@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { IconService } from '../../../services/Icon.service';
-import { ComponentRulesService } from '../../../services/component-rules.service';
+import { ComponentRulesService } from '../../../services/card-rules.service';
 import { EditCardDialogFacade } from './edit-card-dialog.facade';
 
 describe('EditCardDialogFacade', () => {

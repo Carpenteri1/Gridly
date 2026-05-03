@@ -4,7 +4,7 @@ import { SearchIconsResultDto } from '../../../dtos/searchIconsResultDto';
 import { CardModel } from '../../../models/card.Model';
 import { IconService } from '../../../services/Icon.service';
 import { IconModel } from '../../../models/icon.Model';
-import { ComponentRulesService } from '../../../services/component-rules.service';
+import { ComponentRulesService } from '../../../services/card-rules.service';
 
 @Injectable()
 export class EditCardDialogFacade {

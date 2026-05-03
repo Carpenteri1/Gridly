@@ -9,7 +9,7 @@ import { EditCardModel } from '../../models/editCard.Model';
   providedIn: 'root'
 })
 
-export class ComponentEndpointService{
+export class CardEnpointService{
   private http = inject(HttpClient);
 
 

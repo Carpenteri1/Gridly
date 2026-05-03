@@ -15,7 +15,7 @@ export class CardModel {
     };
   iconUrl?: string;
   materialIcon?: string;
-  componentSettings? : SettingsModel |
+  settings? : SettingsModel |
     {
       width:250,
       height:250,

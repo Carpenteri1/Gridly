@@ -49,7 +49,7 @@
         }
         </span>
         <p>{{card.id}}</p>
-        <h5 [hidden]="card.componentSettings?.titleHidden" class="fw-bold">{{card.name || TextStringsUtil.EmptyCardTitle}}</h5>
+        <h5 [hidden]="card.settings?.titleHidden" class="fw-bold">{{card.name || TextStringsUtil.EmptyCardTitle}}</h5>
         <p class="text-center">{{card.url}}</p>
       </a>
   <app-edit-card-dialog

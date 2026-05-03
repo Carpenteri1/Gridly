@@ -1,6 +1,6 @@
 import { Directive, ViewChild, inject } from '@angular/core';
 import { ModalDirective } from './modal.directive';
-import { ModalService } from '../services/modal.service';
+import { ModalService } from '../services/dialog.service';
 import { TextStringsUtil } from '../constants/text.strings.util';
 
 @Directive()

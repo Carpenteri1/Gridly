@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { CardModel } from '../../models/card.Model';
-import { ComponentService } from '../../services/component.service';
+import { CardService } from '../../services/card.service';
 import { GridService } from '../../services/grid.service';
 import { VersionService } from '../../services/version.service';
 import { HeaderComponent } from './header.component';
@@ -17,7 +17,7 @@ describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
   let component: HeaderComponent;
 
-  const componentServiceMock = {
+  const cardServiceMock = {
     add: jest.fn(),
     component$: of(undefined),
   };
@@ -31,14 +31,14 @@ describe('HeaderComponent', () => {
   };
 
   beforeEach(async () => {
-    componentServiceMock.add.mockResolvedValue(undefined);
-    componentServiceMock.add.mockClear();
+    cardServiceMock.add.mockResolvedValue(undefined);
+    cardServiceMock.add.mockClear();
     gridServiceMock.toggle.mockClear();
 
     await TestBed.configureTestingModule({
       imports: [HeaderComponent],
       providers: [
-        { provide: ComponentService, useValue: componentServiceMock },
+        { provide: CardService, useValue: cardServiceMock },
         { provide: VersionService, useValue: versionServiceMock },
         { provide: GridService, useValue: gridServiceMock },
       ],
@@ -67,7 +67,7 @@ describe('HeaderComponent', () => {
     await (component as HeaderComponentTestHarness).add(card);
     (component as HeaderComponentTestHarness).setEditMode();
 
-    expect(componentServiceMock.add).toHaveBeenCalledWith(card);
+    expect(cardServiceMock.add).toHaveBeenCalledWith(card);
     expect((component as HeaderComponentTestHarness).addDialogActive).toBe(false);
     expect(gridServiceMock.toggle).toHaveBeenCalled();
   });

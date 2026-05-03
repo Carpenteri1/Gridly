@@ -2,10 +2,10 @@ import { Component, inject, signal } from "@angular/core";
 import { TextStringsUtil } from "../../constants/text.strings.util";
 import { CommonModule } from "@angular/common";
 import { VersionService } from "../../services/version.service";
-import { AddCardDialogComponent } from "../dialog/addCardDialog/add-card-dialog.component";
+import { AddCardDialogComponent } from "../dialogs/addCardDialog/add-card-dialog.component";
 import { CardTypes } from "../../types/card.types.enum";
 import { CardModel } from "../../models/card.Model";
-import { ComponentService } from "../../services/component.service";
+import { CardService } from "../../services/card.service";
 import { GridService } from "../../services/grid.service";
 
 @Component({
@@ -17,7 +17,7 @@ import { GridService } from "../../services/grid.service";
 })
 export class HeaderComponent {
 
-  #componentService = inject(ComponentService);
+  #cardService = inject(CardService);
   #versionService = inject(VersionService);
   #gridService = inject(GridService);
 
@@ -45,7 +45,7 @@ export class HeaderComponent {
 
   protected async add(component: CardModel): Promise<void> {
     this.addDialogActive = !this.addDialogActive;
-    await this.#componentService.add(component);
+    await this.#cardService.add(component);
   }
 
   //componentService.EditComponentsData(componentService.Components)

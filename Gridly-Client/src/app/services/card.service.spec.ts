@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { CardModel } from '../models/card.Model';
-import { ComponentEndpointService } from './endpoints/component.endpoint.service';
-import { ComponentService } from './component.service';
+import { ComponentEndpointService } from './endpoints/card.endpoint.service';
+import { CardService } from './card.service';
 
-describe('ComponentService', () => {
-  let service: ComponentService;
+describe('CardService', () => {
+  let service: CardService;
 
   const componentA: CardModel = {
     id: 1,
@@ -43,12 +43,12 @@ describe('ComponentService', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        ComponentService,
+        CardService,
         { provide: ComponentEndpointService, useValue: endpointMock },
       ],
     });
 
-    service = TestBed.inject(ComponentService);
+    service = TestBed.inject(CardService);
   });
 
   it('loads components once on construction', () => {

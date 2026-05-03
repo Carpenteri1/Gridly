@@ -1,103 +1,66 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { signal } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CardService } from '../../services/card.service';
+import { TextStringsUtil } from '../../constants/text.strings.util';
 import { CardModel } from '../../models/card.Model';
-import { ComponentService } from '../../services/component.service';
-import { ComponentRulesService } from '../../services/component-rules.service';
+import { CdkDragHandle } from '@angular/cdk/drag-drop';
+import { EditCardDialogComponent } from '../dialogs/editCardDialog/edit-card-dialog.component';
+import { DeleteCardDialogComponent } from '../dialogs/deleteCardDialog/delete-card-dialog.component';
+import { ResizableDirective } from '../../directives/resizable.directive';
+import { MatIconModule } from '@angular/material/icon';
 import { GridService } from '../../services/grid.service';
-import { CardComponent } from './card.component';
 
-type CardComponentTestHarness = CardComponent & {
-  edit(card: CardModel): void;
-  remove(id: number): void;
-  hasMaterialIcon(card: CardModel): boolean;
-};
+@Component({
+  selector: 'app-card-component',
+  templateUrl: './card.component.html',
+  styleUrl: './card.component.css',
+  standalone: true,
+  imports: [
+    CommonModule,
+    CdkDragHandle,
+    EditCardDialogComponent,
+    DeleteCardDialogComponent,
+    ResizableDirective,
+    MatIconModule
+  ],
+})
+export class CardComponent {
+  @Input({ required: true }) card!: CardModel;
 
-describe('CardComponent', () => {
-  let fixture: ComponentFixture<CardComponent>;
-  let card: CardComponent;
+  #cardService = inject(CardService);
+  #gridService = inject(GridService);
 
-  const currentCard: CardModel = {
-    id: 7,
-    indexPosition: 1,
-    name: 'Weather',
-    url: 'https://weather.example',
-    iconData: {
-      name: '',
-      type: '',
-      base64Data: '',
-      materialIcon: 'cloud',
-    },
-    componentSettings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
-  };
+  isEditModalOpen = false;
+  isDeleteModalOpen = false;
+  readonly inEditMode = this.#gridService.editMode;
 
-  const componentServiceMock = {
-    currentComponents: jest.fn(() => [currentCard]),
-    delete: jest.fn(),
-    edit: jest.fn(),
-  };
+  handleModalChange(modalId: number): void {
+    if (modalId === this.card.id) {
+      this.isEditModalOpen = false;
+      this.isDeleteModalOpen = false;
+    }
+  }
 
-  const componentRulesServiceMock = {
-    hasMaterialIcon: jest.fn(() => true),
-  };
+  protected edit(card: CardModel): void {
+    void this.#cardService.edit(card);
+  }
 
-  const editMode = signal(true);
-  const gridServiceMock = { editMode: editMode.asReadonly() };
+  protected remove(id: number): void {
+    void this.#cardService.delete(id);
+  }
 
-  beforeEach(async () => {
-    jest.clearAllMocks();
+  protected hasMaterialIcon(item: CardModel): boolean {;
+    return item != undefined;
+    //this.#cardService.MaterialIconSet(item);
+  }
 
-    await TestBed.configureTestingModule({
-      imports: [CardComponent],
-      providers: [
-        { provide: ComponentService, useValue: componentServiceMock },
-        { provide: ComponentRulesService, useValue: componentRulesServiceMock },
-        { provide: GridService, useValue: gridServiceMock },
-      ],
-    }).compileComponents();
+  openEditDialog(): void {
+    this.isEditModalOpen = true;
+  }
 
-    fixture = TestBed.createComponent(CardComponent);
-    card = fixture.componentInstance;
-    fixture.componentRef.setInput('card', currentCard);
-    fixture.detectChanges();
-  });
+  openDeleteDialog(): void {
+    this.isDeleteModalOpen = true;
+  }
 
-  it('renders the current card name and material icon', () => {
-    const element = fixture.nativeElement as HTMLElement;
-
-    expect(element.querySelector('mat-icon')?.textContent).toContain('cloud');
-    expect(element.textContent).toContain('Weather');
-  });
-
-  it('opens the edit and delete dialogs from the component methods', () => {
-    card.openEditDialog();
-    card.openDeleteDialog();
-
-    expect(card.isEditModalOpen).toBe(true);
-    expect(card.isDeleteModalOpen).toBe(true);
-  });
-
-  it('closes both dialogs when the matching modal id is emitted', () => {
-    card.isEditModalOpen = true;
-    card.isDeleteModalOpen = true;
-
-    card.handleModalChange(7);
-
-    expect(card.isEditModalOpen).toBe(false);
-    expect(card.isDeleteModalOpen).toBe(false);
-  });
-
-  it('delegates edit and remove actions to the component service', () => {
-    (card as CardComponentTestHarness).edit(currentCard);
-    (card as CardComponentTestHarness).remove(7);
-
-    expect(componentServiceMock.edit).toHaveBeenCalledWith(currentCard);
-    expect(componentServiceMock.delete).toHaveBeenCalledWith(7);
-  });
-  
-  it('hasMaterialIcon returns the value from the component rules service', () => {
-    const result = (card as CardComponentTestHarness).hasMaterialIcon(currentCard);
-    expect(componentRulesServiceMock.hasMaterialIcon).toHaveBeenCalledWith(currentCard);
-    expect(result).toBe(true);
-  });
-
-});
+  protected readonly TextStringsUtil = TextStringsUtil;
+}

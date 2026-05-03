@@ -43,7 +43,7 @@ export class ComponentRulesService {
       component.iconData.name !== '' &&
       component.iconData.type !== undefined &&
       component.iconData.base64Data !== '' &&
-      !component.componentSettings?.imageHidden;
+      !component.settings?.imageHidden;
   }
 
   hasIconUrl(component: CardModel | null | undefined): boolean {
@@ -52,7 +52,7 @@ export class ComponentRulesService {
       component.iconUrl !== undefined &&
       component.iconUrl !== '' &&
       RegexStringsUtil.iconUrlPattern.test(component.iconUrl) &&
-      !component.componentSettings?.imageHidden;
+      !component.settings?.imageHidden;
   }
 
   hasMaterialIcon(component: CardModel | null | undefined): boolean {
@@ -60,6 +60,6 @@ export class ComponentRulesService {
       component !== null &&
       component.iconData?.materialIcon !== undefined &&
       component.iconData.materialIcon !== '' &&
-      !component.componentSettings?.imageHidden;
+      !component.settings?.imageHidden;
   }
 }
