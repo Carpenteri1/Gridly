@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { ModalDirective } from '../../../directives/modal.directive';
+import { DialogDirective } from '../../../directives/dialog.directive';
 import { BaseModalComponent } from '../../../directives/base-modal.component';
 import { CardTypes } from '../../../types/card.types.enum';
 import { CardOptionModel } from '../../../models/cardOptions.Model';
@@ -9,7 +9,7 @@ import { DialogService } from '../../../services/dialog_services/dialog.service'
 @Component({
   selector: 'app-add-card-dialog',
   standalone: true,
-  imports: [ModalDirective],
+  imports: [DialogDirective, DialogDirective],
   templateUrl: './add-card-dialog.component.html',
   styleUrls: ['./add-card-dialog.component.css'],
 })

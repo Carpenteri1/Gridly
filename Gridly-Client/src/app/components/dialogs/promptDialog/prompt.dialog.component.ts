@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ModalDirective } from '../../../directives/modal.directive';
 import { BaseModalComponent } from '../../../directives/base-modal.component';
 
 @Component({
@@ -8,11 +7,11 @@ import { BaseModalComponent } from '../../../directives/base-modal.component';
   templateUrl: './prompt.dialog.component.html',
   styleUrls: ['../../../css/shared.modal.css'],
   standalone: true,
-  imports: [FormsModule, ModalDirective],
+  imports: [FormsModule],
 })
 export class PromptModalComponent extends BaseModalComponent {
   @Input() open = false;
-  @Input() modalId = 0;
+  @Input() cardId = 0;
   @Input() id = 0;
   @Output() openChange = new EventEmitter<number>();
   @Output() remove = new EventEmitter<{id: number}>();

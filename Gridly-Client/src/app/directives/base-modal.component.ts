@@ -1,11 +1,11 @@
 import { Directive, ViewChild, inject } from '@angular/core';
-import { ModalDirective } from './modal.directive';
 import { DialogService } from '../services/dialog_services/dialog.service';
 import { TextStringsUtil } from '../constants/text.strings.util';
+import { DialogDirective } from './dialog.directive';
 
 @Directive()
 export abstract class BaseModalComponent {
-  @ViewChild(ModalDirective) modalDirective!: ModalDirective;
+  @ViewChild(DialogDirective) modalDirective!: DialogDirective;
 
   protected readonly TextStringsUtil = TextStringsUtil;
   protected readonly dialogService = inject(DialogService);

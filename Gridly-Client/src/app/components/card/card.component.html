@@ -54,15 +54,15 @@
   </a>
   <app-edit-card-dialog
     [open]="isEditDialogOpen"
-    [modalId]="card.id"
+    [cardId]="card.id"
     [id]="card.id"
     [card]="card"
-    (editedComponent)="edit($event)"
+    (editCard)="edit($event)"
     (openChange)="handleDialogChange($event)">
   </app-edit-card-dialog>
   <app-delete-card-dialog
     [open]="isDeleteDialogOpen"
-    [modalId]="card.id"
+    [cardId]="card.id"
     [id]="card.id"
     (remove)="remove(card.id)"
     (openChange)="handleDialogChange($event)">

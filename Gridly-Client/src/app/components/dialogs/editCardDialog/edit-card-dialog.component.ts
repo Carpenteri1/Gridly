@@ -1,17 +1,17 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ModalDirective } from '../../../directives/modal.directive';
 import { BaseModalComponent } from '../../../directives/base-modal.component';
 import { CardModel } from '../../../models/card.Model';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { EditCardDialogFacade } from './edit-card-dialog.facade';
+import { DialogDirective } from '../../../directives/dialog.directive';
 
 @Component({
   selector: 'app-edit-card-dialog',
-  imports: [CommonModule, FormsModule, ModalDirective, MatIconModule, MatSelectModule, MatInputModule],  
+  imports: [CommonModule, FormsModule, DialogDirective, MatIconModule, MatSelectModule, MatInputModule],  
   templateUrl: './edit-card-dialog.component.html',
   styleUrls: ['../../../css/shared.modal.css', './edit-card-dialog.component.css'],
   providers: [EditCardDialogFacade],
@@ -19,11 +19,11 @@ import { EditCardDialogFacade } from './edit-card-dialog.facade';
 })
 export class EditCardDialogComponent extends BaseModalComponent implements OnChanges {
   @Input() open = false;
-  @Input() modalId = 0;
+  @Input() cardId = 0;
   @Input() id = 0;
   @Input() card?: CardModel;
   @Output() openChange = new EventEmitter<number>();
-  @Output() editedComponent = new EventEmitter();
+  @Output() editCard = new EventEmitter();
   
   readonly facade: EditCardDialogFacade;
 
@@ -41,6 +41,6 @@ export class EditCardDialogComponent extends BaseModalComponent implements OnCha
   onSubmit(): void {
     const payload = this.facade.buildSubmitPayload(this.id);
     this.close();
-    this.editedComponent.emit(payload);
+    this.editCard.emit(payload);
   }
 }

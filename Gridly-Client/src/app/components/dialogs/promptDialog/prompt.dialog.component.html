@@ -1,7 +1,7 @@
-<dialog #dlg appModalWindow [open]="open" [modalId]="modalId" [id]="id" (openChange)="openChange.emit($event)" class="ew-dialog">
+<dialog #dlg appModalWindow [open]="open" [id]="id" class="ew-dialog">
   <div class="ew-card">
     <header class="ew-header">
-      <h3 id="ew-title" class="m-0">Edit {{modalId}}</h3>
+      <h3 id="ew-title" class="m-0">Edit {{cardId}}</h3>
       <button type="button" class="btn" aria-label="Close" (click)="close()">
         <i class="bi bi-x-lg"></i>
       </button>
