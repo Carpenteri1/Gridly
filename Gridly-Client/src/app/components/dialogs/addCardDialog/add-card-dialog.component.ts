@@ -25,7 +25,7 @@ export class AddCardDialogComponent
 
   onSelect(type: CardTypes) {
     const card = new CardModel();
-    card.settings = this.#dialogService.cardSettings();
+    card.settings = this.#dialogService.settings();
     card.iconData = this.#dialogService.icon();
 
     switch (type) {

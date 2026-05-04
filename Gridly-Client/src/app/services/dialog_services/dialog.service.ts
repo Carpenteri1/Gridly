@@ -37,7 +37,7 @@ export class DialogService {
     this.notifyComponentToResetFileInput();
   }
 
-  cardSettings(): SettingsModel {
+  settings(): SettingsModel {
     return {
       width: 250,
       height: 250,

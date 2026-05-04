@@ -24,10 +24,7 @@ describe('AddCardDialogComponent', () => {
       name: '',
       base64Data: '',
       materialIcon: 'add_box',
-    } as IconModel),
-    cardSettings() {
-      return this.settings();
-    },
+    } as IconModel)
   };
 
   beforeEach(async () => {

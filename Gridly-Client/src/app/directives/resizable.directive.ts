@@ -82,8 +82,8 @@ export class ResizableDirective {
     const newWidth = Math.max(250, this.startWidth + deltaX);
     const newHeight = Math.max(250, this.startHeight + deltaY);
 
-    const adjustedWidth = this.Adjustcardsize(newWidth);
-    const adjustedHeight = this.Adjustcardsize(newHeight);
+    const adjustedWidth = this.AdjustCardsize(newWidth);
+    const adjustedHeight = this.AdjustCardsize(newHeight);
     
     card.settings = {
       ...card.settings,
@@ -154,7 +154,7 @@ export class ResizableDirective {
     this.ShowCursor();
   }
 
-  private Adjustcardsize(value: number): number {
+  private AdjustCardsize(value: number): number {
     if (value <= 300) return 250;
     if (value <= 500) return 300;
     if (value <= 700) return 500;
