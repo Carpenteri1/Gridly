@@ -52,7 +52,7 @@ describe('CardService', () => {
   });
 
   it('loads components once on construction', () => {
-    expect(service.currentComponents()).toEqual([cardA, cardB]);
+    expect(service.currentCards()).toEqual([cardA, cardB]);
     expect(endpointMock.get).toHaveBeenCalledTimes(2);
   });
 

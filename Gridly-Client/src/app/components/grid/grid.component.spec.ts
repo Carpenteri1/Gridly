@@ -16,7 +16,7 @@ type GridComponentTestHarness = GridComponent & {
   template: '',
   standalone: true,
 })
-class MockCardComponentComponent {
+class MockCardComponent {
   @Input({ required: true }) card!: CardModel;
 }
 
@@ -40,7 +40,7 @@ describe('GridComponent', () => {
 
     TestBed.overrideComponent(GridComponent, {
       remove: { imports: [CardComponent] },
-      add: { imports: [MockCardComponentComponent] },
+      add: { imports: [MockCardComponent] },
     });
 
     await TestBed.configureTestingModule({

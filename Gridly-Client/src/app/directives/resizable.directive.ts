@@ -14,8 +14,6 @@ export class ResizableDirective {
   @Input() targetId!: number;
 
   #cardService = inject(CardService);
-  
-  private cards = this.#cardService.currentcard();
 
   private isResizing = false;
   private startX = 0;
@@ -32,7 +30,7 @@ export class ResizableDirective {
     event.preventDefault();
     event.stopPropagation();
 
-    const card = this.cards?.find((currentcard) => currentcard.id === this.targetId);
+    const card = this.#cardService.currentCards()?.find((currentcard) => currentcard.id === this.targetId);
     if (!card) return;
 
     this.gridItemElement = this.el.nativeElement.closest('.grid-item-style') as HTMLElement;
@@ -73,7 +71,7 @@ export class ResizableDirective {
 
   @HostListener('document:pointermove', ['$event'])
   OnPointerMove(event: PointerEvent): void {
-    const card = this.cards?.find((currentcard) => currentcard.id === this.targetId);
+    const card = this.#cardService.currentCards()?.find((currentcard) => currentcard.id === this.targetId);
     if (!this.isResizing || !this.gridItemElement || !card) return;
 
     if (this.pointerId !== null && event.pointerId !== this.pointerId) return;

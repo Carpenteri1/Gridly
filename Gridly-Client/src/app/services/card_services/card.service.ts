@@ -1,5 +1,5 @@
 import { inject, Injectable, Signal } from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom, Observable, ReplaySubject, shareReplay, startWith, Subject, switchMap } from 'rxjs';
 import { CardModel } from '../../models/card.Model';
 import { EditCardModel } from '../../models/editCard.Model';
@@ -13,16 +13,12 @@ export class CardService {
 
   readonly componentId = new ReplaySubject<number>(1);
   readonly cards$: Observable<CardModel[]>;
-  readonly components$: Observable<CardModel[]>;
 
-  readonly currentcard: Signal<CardModel[] | undefined>;
-  readonly currentComponents: Signal<CardModel[] | undefined>;
+  readonly currentCards: Signal<CardModel[] | undefined>;
 
   constructor() {
     this.cards$ = this.get$;
-    this.components$ = this.cards$;
-    this.currentcard = toSignal(this.cards$);
-    this.currentComponents = this.currentcard;
+    this.currentCards = toSignal(this.get$);
     this.refresh();
   }
 
