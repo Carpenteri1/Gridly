@@ -27,7 +27,7 @@
     <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.map" />
     <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
     <_ContentIncludedByDefault Remove="Gridly-Client\dist\Gridly-Client\prerendered-routes.json" />
-    <_ContentIncludedByDefault Remove="Assets\ComponentData\componentData.json" />
+    <_ContentIncludedByDefault Remove="Assets\CardData\CardData.json" />
     <_ContentIncludedByDefault Remove="Assets\VersionData\versionData.json" />
     <_ContentIncludedByDefault Remove="wwwroot\index.html" />
     <_ContentIncludedByDefault Remove="wwwroot\main.js" />

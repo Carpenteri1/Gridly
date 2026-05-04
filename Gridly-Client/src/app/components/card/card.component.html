@@ -1,0 +1,69 @@
+<div class="row h-10">
+  @if (inEditMode())
+  {
+      <div class="col">
+        <button type="button" 
+        (click)="openEditDialog()" 
+        class="btn edit-button start-50" style="margin-left: 0.5em;">
+          <i class="bi bi-pencil-square" ></i>
+        </button>
+      </div>
+      <div class="col">
+        <button
+          cdkDragHandle
+          class="btn edit-button" style="margin-left: 0.5em;">
+          <i class="bi bi-arrows-move"></i>
+        </button>
+      </div>
+      <div class="col d-flex justify-content-end">
+        <button
+        (click)="openDeleteDialog()" 
+          class="btn edit-button">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="col d-flex justify-content-end">
+        <button
+        appMakeResizable
+        [canResize]="inEditMode()"
+        [targetId]="card.id"
+        type="button"
+        class="btn edit-button resize-button">
+        <i class="bi bi-arrows-angle-expand"></i>
+      </button>
+      </div>
+
+  }
+</div>
+      <a
+        class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2"
+        [href]="card.url"
+        target="_blank"
+        rel="noreferrer">
+        <span>
+        @if (hasMaterialIcon(card)) 
+        {
+          <mat-icon class="card-mat-icon-size">
+            {{card.iconData?.materialIcon}}
+          </mat-icon>
+        }
+        </span>
+        <p>{{card.id}}</p>
+        <h5 [hidden]="card.settings?.titleHidden" class="fw-bold">{{card.name || TextStringsUtil.EmptyCardTitle}}</h5>
+        <p class="text-center">{{card.url}}</p>
+  </a>
+  <app-edit-card-dialog
+    [open]="isEditDialogOpen"
+    [cardId]="card.id"
+    [id]="card.id"
+    [card]="card"
+    (editCard)="edit($event)"
+    (openChange)="handleDialogChange($event)">
+  </app-edit-card-dialog>
+  <app-delete-card-dialog
+    [open]="isDeleteDialogOpen"
+    [cardId]="card.id"
+    [id]="card.id"
+    (remove)="remove(card.id)"
+    (openChange)="handleDialogChange($event)">
+  </app-delete-card-dialog>
