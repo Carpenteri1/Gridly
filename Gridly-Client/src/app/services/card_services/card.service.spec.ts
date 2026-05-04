@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { CardModel } from '../models/card.Model';
-import { ComponentEndpointService } from './endpoints/card.endpoint.service';
+import { CardModel } from '../../models/card.Model';
+import { CardEnpointService } from '../endpoint_services/card.endpoint.service';
 import { CardService } from './card.service';
 
 describe('CardService', () => {
@@ -13,7 +13,7 @@ describe('CardService', () => {
     name: 'Alpha',
     url: 'https://alpha.example',
     iconData: { name: 'dashboard', type: 'svg', base64Data: 'abc', materialIcon: 'dashboard' },
-    componentSettings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
+    settings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
   };
   const cardB: CardModel = {
     id: 2,
@@ -21,7 +21,7 @@ describe('CardService', () => {
     name: 'Beta',
     url: 'https://beta.example',
     iconUrl: 'https://cdn.example/icon.png',
-    componentSettings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
+    settings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
   };
 
   const endpointMock = {
@@ -44,7 +44,7 @@ describe('CardService', () => {
     TestBed.configureTestingModule({
       providers: [
         CardService,
-        { provide: ComponentEndpointService, useValue: endpointMock },
+        { provide: CardEnpointService, useValue: endpointMock },
       ],
     });
 

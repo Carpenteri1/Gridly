@@ -1,15 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-import { ModalService } from './dialog.service';
+import { DialogService } from './dialog.service';
 
-describe('ModalService', () => {
-  let service: ModalService;
+describe('DialogService', () => {
+  let service: DialogService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ModalService],
+      providers: [DialogService],
     });
 
-    service = TestBed.inject(ModalService);
+    service = TestBed.inject(DialogService);
   });
 
   it('emits a reset event when image data is cleared', () => {

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { IconService } from '../../../services/Icon.service';
-import { ComponentRulesService } from '../../../services/card-rules.service';
+import { IconService } from '../../../services/icon_services/Icon.service';
+import { CardRulesService } from '../../../services/card_services/card-rules.service';
 import { EditCardDialogFacade } from './edit-card-dialog.facade';
 
 describe('EditCardDialogFacade', () => {
@@ -12,7 +12,7 @@ describe('EditCardDialogFacade', () => {
     search: jest.fn(),
   };
 
-  const componentRulesServiceMock = {
+  const CardRulesServiceMock = {
     hasRequiredFields: jest.fn((component: { name?: string; url?: string }) =>
       Boolean(component.name?.trim().length) && Boolean(component.url?.trim().length)
     ),
@@ -24,7 +24,7 @@ describe('EditCardDialogFacade', () => {
       providers: [
         EditCardDialogFacade,
         { provide: IconService, useValue: iconServiceMock },
-        { provide: ComponentRulesService, useValue: componentRulesServiceMock },
+        { provide: CardRulesService, useValue: CardRulesServiceMock },
       ],
     });
 
@@ -39,7 +39,7 @@ describe('EditCardDialogFacade', () => {
     facade.card.name = 'Card';
     facade.card.url = 'https://card.example';
     expect(facade.canSubmit).toBe(true);
-    expect(componentRulesServiceMock.hasRequiredFields).toHaveBeenLastCalledWith({
+    expect(CardRulesServiceMock.hasRequiredFields).toHaveBeenLastCalledWith({
       ...facade.card,
       name: 'Card',
       url: 'https://card.example',
@@ -51,7 +51,7 @@ describe('EditCardDialogFacade', () => {
     facade.card.url = '\t';
 
     expect(facade.canSubmit).toBe(false);
-    expect(componentRulesServiceMock.hasRequiredFields).toHaveBeenLastCalledWith({
+    expect(CardRulesServiceMock.hasRequiredFields).toHaveBeenLastCalledWith({
       ...facade.card,
       name: '',
       url: '',

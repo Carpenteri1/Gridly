@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { CardModel } from '../../models/card.Model';
-import { CardService } from '../../services/card.service';
-import { ComponentRulesService } from '../../services/card-rules.service';
-import { GridService } from '../../services/grid.service';
+import { CardService } from '../../services/card_services/card.service';
+import { CardRulesService } from '../../services/card_services/card-rules.service';
+import { GridService } from '../../services/grid_services/grid.service';
 import { CardComponent } from './card.component';
 
 type CardComponentFixture = CardComponent & {
@@ -21,12 +21,7 @@ describe('CardComponent', () => {
     indexPosition: 1,
     name: 'Weather',
     url: 'https://weather.example',
-    iconData: {
-      name: '',
-      type: '',
-      base64Data: '',
-      materialIcon: 'cloud',
-    },
+    iconData: { name: '', type: '', base64Data: '', materialIcon: 'cloud' },
     settings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
   };
 
@@ -36,7 +31,7 @@ describe('CardComponent', () => {
     edit: jest.fn(),
   };
 
-  const cardComponentRulesServiceMock = {
+  const cardRulesServiceMock = {
     hasMaterialIcon: jest.fn(() => true),
   };
 
@@ -50,7 +45,7 @@ describe('CardComponent', () => {
       imports: [CardComponent],
       providers: [
         { provide: CardService, useValue: cardServiceMock },
-        { provide: ComponentRulesService, useValue: cardComponentRulesServiceMock },
+        { provide: CardRulesService, useValue: cardRulesServiceMock },
         { provide: GridService, useValue: gridServiceMock },
       ],
     }).compileComponents();
@@ -96,7 +91,7 @@ describe('CardComponent', () => {
   
   it('hasMaterialIcon returns the value from the component rules service', () => {
     const result = (createCardComponent as CardComponentFixture).hasMaterialIcon(currentCard);
-    expect(cardComponentRulesServiceMock.hasMaterialIcon).toHaveBeenCalledWith(currentCard);
+    expect(cardRulesServiceMock.hasMaterialIcon).toHaveBeenCalledWith(currentCard);
     expect(result).toBe(true);
   });
 

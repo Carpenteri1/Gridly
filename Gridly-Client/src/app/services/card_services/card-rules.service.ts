@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { RegexStringsUtil } from '../constants/regex.strings.util';
-import { CardModel } from '../models/card.Model';
+import { RegexStringsUtil } from '../../constants/regex.strings.util';
+import { CardModel } from '../../models/card.Model';
 
 @Injectable({ providedIn: 'root' })
-export class ComponentRulesService {
+export class CardRulesService {
   private getSettings(component: CardModel | null | undefined) {
-    return component?.settings ?? component?.componentSettings;
+    return component?.settings ?? component?.settings;
   }
 
   hasRequiredFields(component: CardModel | null | undefined): boolean {

@@ -4,7 +4,7 @@ import { BaseModalComponent } from '../../../directives/base-modal.component';
 import { CardTypes } from '../../../types/card.types.enum';
 import { CardOptionModel } from '../../../models/cardOptions.Model';
 import { CardModel } from '../../../models/card.Model';
-import { ModalService } from '../../../services/dialog.service';
+import { DialogService } from '../../../services/dialog_services/dialog.service';
 
 @Component({
   selector: 'app-add-card-dialog',
@@ -16,7 +16,7 @@ import { ModalService } from '../../../services/dialog.service';
 export class AddCardDialogComponent
   extends BaseModalComponent
 {
-  #modalService = inject(ModalService);
+  #dialogService = inject(DialogService);
 
   @Input() open = false;
   @Input() cardOptions: CardOptionModel[] = [];
@@ -25,9 +25,8 @@ export class AddCardDialogComponent
 
   onSelect(type: CardTypes) {
     const card = new CardModel();
-    card.settings = this.#modalService.cardSettings();
-    card.componentSettings = card.settings;
-    card.iconData = this.#modalService.icon();
+    card.settings = this.#dialogService.cardSettings();
+    card.iconData = this.#dialogService.icon();
 
     switch (type) {
       case CardTypes.Custom:

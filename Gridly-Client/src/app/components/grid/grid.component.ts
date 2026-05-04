@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardService } from "../../services/card.service";
+import { CardService } from "../../services/card_services/card.service";
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from "@angular/cdk/drag-drop";
 import { CardModel } from '../../models/card.Model';
-import { GridService } from '../../services/grid.service';
+import { GridService } from '../../services/grid_services/grid.service';
 import { CardComponent } from '../card/card.component';
 @Component({
   selector: 'app-grid',

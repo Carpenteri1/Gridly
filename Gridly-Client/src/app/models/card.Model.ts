@@ -22,11 +22,4 @@ export class CardModel {
       imageHidden:false,
       titleHidden:false
     };
-  componentSettings?: SettingsModel |
-    {
-      width:250,
-      height:250,
-      imageHidden:false,
-      titleHidden:false
-    };
 }

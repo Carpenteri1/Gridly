@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { CardModel } from '../models/card.Model';
-import { ComponentRulesService } from './card-rules.service';
+import { CardModel } from '../../models/card.Model';
+import { CardRulesService } from './card-rules.service';
 
-describe('ComponentRulesService', () => {
-  let service: ComponentRulesService;
+describe('CardRulesService', () => {
+  let service: CardRulesService;
 
   const componentWithIconData: CardModel = {
     id: 1,
@@ -24,10 +24,10 @@ describe('ComponentRulesService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ComponentRulesService],
+      providers: [CardRulesService],
     });
 
-    service = TestBed.inject(ComponentRulesService);
+    service = TestBed.inject(CardRulesService);
   });
 
   it('checks required fields and shared name/url validation rules', () => {
@@ -59,6 +59,6 @@ describe('ComponentRulesService', () => {
     expect(service.hasValidCardData(null)).toBe(false);
     expect(service.hasIconData({ ...componentWithIconData, iconData: undefined })).toBe(false);
     expect(service.hasIconUrl({ ...componentWithIconUrl, settings: undefined })).toBe(true);
-    expect(service.hasMaterialIcon({ ...componentWithIconData, settings: undefined })).toBe(true);
+    expect(service.hasMaterialIcon({ ...componentWithIconData, settings : undefined })).toBe(true);
   });
 });

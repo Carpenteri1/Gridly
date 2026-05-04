@@ -1,6 +1,6 @@
 import { Directive, ViewChild, inject } from '@angular/core';
 import { ModalDirective } from './modal.directive';
-import { ModalService } from '../services/dialog.service';
+import { DialogService } from '../services/dialog_services/dialog.service';
 import { TextStringsUtil } from '../constants/text.strings.util';
 
 @Directive()
@@ -8,7 +8,7 @@ export abstract class BaseModalComponent {
   @ViewChild(ModalDirective) modalDirective!: ModalDirective;
 
   protected readonly TextStringsUtil = TextStringsUtil;
-  protected readonly modalService = inject(ModalService);
+  protected readonly dialogService = inject(DialogService);
 
 
   close(): void {
@@ -26,11 +26,11 @@ export abstract class BaseModalComponent {
   }
 
   onFileUpload(event: Event): Promise<unknown> {
-    return this.modalService.onFileUpload(event);
+    return this.dialogService.onFileUpload(event);
   }
 
   resetImageData(): void {
-    this.modalService.resetImageData();
+    this.dialogService.resetImageData();
   }
 
   get isOpen(): boolean {

@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { CardModel } from '../../models/card.Model';
-import { CardService } from '../../services/card.service';
-import { GridService } from '../../services/grid.service';
-import { VersionService } from '../../services/version.service';
+import { CardService } from '../../services/card_services/card.service';
+import { GridService } from '../../services/grid_services/grid.service';
+import { VersionService } from '../../services/version_services/version.service';
 import { HeaderComponent } from './header.component';
 
 type HeaderComponentTestHarness = HeaderComponent & {
-  add(component: CardModel): Promise<void>;
+  add(cardComponent: CardModel): Promise<void>;
   addDialogActive: boolean;
   reloadPage(): void;
   setEditMode(): void;
@@ -15,7 +15,7 @@ type HeaderComponentTestHarness = HeaderComponent & {
 
 describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
-  let component: HeaderComponent;
+  let headerComponent: HeaderComponent;
 
   const cardServiceMock = {
     add: jest.fn(),
@@ -45,30 +45,30 @@ describe('HeaderComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);
-    component = fixture.componentInstance;
+    headerComponent = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('toggles the menu signal through the public method', () => {
-    expect(component.showMenu()).toBe(false);
+    expect(headerComponent.showMenu()).toBe(false);
 
-    component.toggleMenu();
-    expect(component.showMenu()).toBe(true);
+    headerComponent.toggleMenu();
+    expect(headerComponent.showMenu()).toBe(true);
 
-    component.toggleMenu();
-    expect(component.showMenu()).toBe(false);
+    headerComponent.toggleMenu();
+    expect(headerComponent.showMenu()).toBe(false);
   });
 
   it('delegates add and edit mode actions to the injected services', async () => {
     const card = new CardModel();
 
-    (component as HeaderComponentTestHarness).addDialogActive = true;
+    (headerComponent as HeaderComponentTestHarness).addDialogActive = true;
 
-    await (component as HeaderComponentTestHarness).add(card);
-    (component as HeaderComponentTestHarness).setEditMode();
+    await (headerComponent as HeaderComponentTestHarness).add(card);
+    (headerComponent as HeaderComponentTestHarness).setEditMode();
 
     expect(cardServiceMock.add).toHaveBeenCalledWith(card);
-    expect((component as HeaderComponentTestHarness).addDialogActive).toBe(false);
+    expect((headerComponent as HeaderComponentTestHarness).addDialogActive).toBe(false);
     expect(gridServiceMock.toggle).toHaveBeenCalled();
   });
 

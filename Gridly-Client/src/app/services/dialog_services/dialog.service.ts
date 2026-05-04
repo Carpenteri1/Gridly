@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { IconModel } from '../models/icon.Model';
-import { SettingsModel } from '../models/settings.Model';
-import { ImageExtensionsType } from '../types/image.extensions.type.enum';
+import { IconModel } from '../../models/icon.Model';
+import { SettingsModel } from '../../models/settings.Model';
+import { ImageExtensionsType } from '../../types/image.extensions.type.enum';
 
 @Injectable({ providedIn: 'root' })
-export class ModalService {
+export class DialogService {
   readonly resetFile$ = new Subject<void>();
   readonly #supportedImageExtensions: readonly string[] = [
     ImageExtensionsType.Svg,

@@ -1,12 +1,12 @@
 import { Component, inject, signal } from "@angular/core";
 import { TextStringsUtil } from "../../constants/text.strings.util";
 import { CommonModule } from "@angular/common";
-import { VersionService } from "../../services/version.service";
+import { VersionService } from "../../services/version_services/version.service";
 import { AddCardDialogComponent } from "../dialogs/addCardDialog/add-card-dialog.component";
 import { CardTypes } from "../../types/card.types.enum";
 import { CardModel } from "../../models/card.Model";
-import { CardService } from "../../services/card.service";
-import { GridService } from "../../services/grid.service";
+import { CardService } from "../../services/card_services/card.service";
+import { GridService } from "../../services/grid_services/grid.service";
 
 @Component({
   selector: 'app-header',
@@ -43,9 +43,9 @@ export class HeaderComponent {
     { type: 'note',  label: 'Note',  description: 'Plain text note', icon: 'bi bi-sticky' }
   ];*/
 
-  protected async add(component: CardModel): Promise<void> {
+  protected async add(card: CardModel): Promise<void> {
     this.addDialogActive = !this.addDialogActive;
-    await this.#cardService.add(component);
+    await this.#cardService.add(card);
   }
 
   //componentService.EditComponentsData(componentService.Components)

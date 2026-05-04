@@ -1,6 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardService } from '../../services/card.service';
+import { CardService } from '../../services/card_services/card.service';
 import { TextStringsUtil } from '../../constants/text.strings.util';
 import { CardModel } from '../../models/card.Model';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
@@ -8,8 +8,8 @@ import { EditCardDialogComponent } from '../dialogs/editCardDialog/edit-card-dia
 import { DeleteCardDialogComponent } from '../dialogs/deleteCardDialog/delete-card-dialog.component';
 import { ResizableDirective } from '../../directives/resizable.directive';
 import { MatIconModule } from '@angular/material/icon';
-import { GridService } from '../../services/grid.service';
-import { ComponentRulesService } from '../../services/card-rules.service';
+import { GridService } from '../../services/grid_services/grid.service';
+import { CardRulesService } from '../../services/card_services/card-rules.service';
 
 @Component({
   selector: 'app-card-component',
@@ -30,7 +30,7 @@ export class CardComponent {
 
   #cardService = inject(CardService);
   #gridService = inject(GridService);
-  #componentRulesService = inject(ComponentRulesService);
+  #CardRulesService = inject(CardRulesService);
 
   isEditDialogOpen = false;
   isDeleteDialogOpen = false;
@@ -52,7 +52,7 @@ export class CardComponent {
   }
 
   protected hasMaterialIcon(item: CardModel): boolean {
-    return this.#componentRulesService.hasMaterialIcon(item);
+    return this.#CardRulesService.hasMaterialIcon(item);
   }
 
   openEditDialog(): void {

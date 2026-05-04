@@ -1,5 +1,5 @@
 import { Directive, ElementRef, HostListener, inject, Input, Renderer2 } from '@angular/core';
-import { CardService } from "../services/card.service";
+import { CardService } from "../services/card_services/card.service";
 
 @Directive({
   standalone: true,

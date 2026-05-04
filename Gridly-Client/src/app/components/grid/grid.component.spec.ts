@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable, of } from 'rxjs';
 import { CardModel } from '../../models/card.Model';
 import { CardComponent } from '../card/card.component';
-import { CardService } from '../../services/card.service';
-import { GridService } from '../../services/grid.service';
+import { CardService } from '../../services/card_services/card.service';
+import { GridService } from '../../services/grid_services/grid.service';
 import { GridComponent } from './grid.component';
 
 type GridComponentTestHarness = GridComponent & {

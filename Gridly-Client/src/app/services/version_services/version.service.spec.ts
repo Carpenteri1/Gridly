@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { VersionEndpointService } from './endpoints/version.endpoint.service';
+import { VersionEndpointService } from '../endpoint_services/version.endpoint.service';
 import { VersionService } from './version.service';
 
 describe('VersionService', () => {

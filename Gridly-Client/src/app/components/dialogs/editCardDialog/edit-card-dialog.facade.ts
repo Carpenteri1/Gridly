@@ -2,9 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SearchIconsResultDto } from '../../../dtos/searchIconsResultDto';
 import { CardModel } from '../../../models/card.Model';
-import { IconService } from '../../../services/Icon.service';
+import { IconService } from '../../../services/icon_services/Icon.service';
 import { IconModel } from '../../../models/icon.Model';
-import { ComponentRulesService } from '../../../services/card-rules.service';
+import { CardRulesService } from '../../../services/card_services/card-rules.service';
 
 @Injectable()
 export class EditCardDialogFacade {
@@ -12,14 +12,14 @@ export class EditCardDialogFacade {
   card: CardModel = new CardModel();
 
   #iconService = inject(IconService);
-  #componentRulesService = inject(ComponentRulesService);
+  #CardRulesService = inject(CardRulesService);
 
   constructor() {
     this.icons$ = this.#iconService.icons$;
   }
 
   get canSubmit(): boolean {
-    return this.#componentRulesService.hasRequiredFields({
+    return this.#CardRulesService.hasRequiredFields({
       ...this.card,
       name: this.card.name.trim(),
       url: this.card.url.trim(),

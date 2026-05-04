@@ -1,6 +1,6 @@
 import { inject, Injectable, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { SearchIconsResultDto } from '../dtos/searchIconsResultDto';
+import { SearchIconsResultDto } from '../../dtos/searchIconsResultDto';
 import {
   BehaviorSubject,
   Observable,
@@ -12,7 +12,7 @@ import {
   shareReplay,
   switchMap,
 } from 'rxjs';
-import { IconEndpointService } from './endpoints/icon.endpoint.service';
+import { IconEndpointService } from '../endpoint_services/icon.endpoint.service';
 
 @Injectable({ providedIn: 'root' })
 export class IconService {

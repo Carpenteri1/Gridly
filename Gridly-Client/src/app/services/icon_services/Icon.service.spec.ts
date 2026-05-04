@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { IconEndpointService } from './endpoints/icon.endpoint.service';
+import { IconEndpointService } from '../endpoint_services/icon.endpoint.service';
 import { IconService } from './Icon.service';
 
 describe('IconService', () => {

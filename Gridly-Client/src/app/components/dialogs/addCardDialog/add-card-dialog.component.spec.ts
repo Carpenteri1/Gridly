@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ModalService } from '../../../services/dialog.service';
+import { DialogService } from '../../../services/dialog_services/dialog.service';
 import { CardModel } from '../../../models/card.Model';
 import { IconModel } from '../../../models/icon.Model';
 import { AddCardDialogComponent } from './add-card-dialog.component';
@@ -33,7 +33,7 @@ describe('AddCardDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AddCardDialogComponent],
-      providers: [{ provide: ModalService, useValue: dialogServiceMock }],
+      providers: [{ provide: DialogService, useValue: dialogServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddCardDialogComponent);
@@ -65,10 +65,10 @@ describe('AddCardDialogComponent', () => {
       throw new Error('Expected card payload to be emitted.');
     }
 
-    card.componentSettings ??= dialogServiceMock.settings();
+    card.settings ??= dialogServiceMock.settings();
     card.iconData ??= dialogServiceMock.icon();
 
-    expect(card.componentSettings).toEqual({
+    expect(card.settings).toEqual({
       width: 250,
       height: 250,
       imageHidden: false,
