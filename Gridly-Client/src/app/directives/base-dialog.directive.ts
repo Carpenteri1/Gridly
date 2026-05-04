@@ -4,7 +4,7 @@ import { TextStringsUtil } from '../constants/text.strings.util';
 import { DialogDirective } from './dialog.directive';
 
 @Directive()
-export abstract class BaseModalComponent {
+export abstract class BaseDialogComponent {
   @ViewChild(DialogDirective) modalDirective!: DialogDirective;
 
   protected readonly TextStringsUtil = TextStringsUtil;

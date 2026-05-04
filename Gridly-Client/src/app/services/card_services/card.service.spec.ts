@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { CardModel } from '../../models/card.Model';
-import { CardEnpointService } from '../endpoint_services/card.endpoint.service';
+import { CardEndpointService } from '../endpoint_services/card.endpoint.service';
 import { CardService } from './card.service';
 
 describe('CardService', () => {
@@ -44,7 +44,7 @@ describe('CardService', () => {
     TestBed.configureTestingModule({
       providers: [
         CardService,
-        { provide: CardEnpointService, useValue: endpointMock },
+        { provide: CardEndpointService, useValue: endpointMock },
       ],
     });
 

@@ -63,7 +63,7 @@ describe('CardComponent', () => {
     expect(element.textContent).toContain('Weather');
   });
 
-  it('opens the edit and delete dialogs from the component methods', () => {
+  it('opens the edit and delete dialogs from the card methods', () => {
     createCardComponent.openEditDialog();
     createCardComponent.openDeleteDialog();
 
@@ -71,7 +71,7 @@ describe('CardComponent', () => {
     expect(createCardComponent.isDeleteDialogOpen).toBe(true);
   });
 
-  it('closes both dialogs when the matching modal id is emitted', () => {
+  it('closes both dialogs when the matching dialog id is emitted', () => {
     createCardComponent.isEditDialogOpen = true;
     createCardComponent.isDeleteDialogOpen = true;
 
@@ -81,7 +81,7 @@ describe('CardComponent', () => {
     expect(createCardComponent.isDeleteDialogOpen).toBe(false);
   });
 
-  it('delegates edit and remove actions to the component service', () => {
+  it('delegates edit and remove actions to the card service', () => {
     (createCardComponent as CardComponentFixture).edit(currentCard);
     (createCardComponent as CardComponentFixture).remove(7);
 
@@ -89,7 +89,7 @@ describe('CardComponent', () => {
     expect(cardServiceMock.delete).toHaveBeenCalledWith(7);
   });
   
-  it('hasMaterialIcon returns the value from the component rules service', () => {
+  it('hasMaterialIcon returns the value from the card rules service', () => {
     const result = (createCardComponent as CardComponentFixture).hasMaterialIcon(currentCard);
     expect(cardRulesServiceMock.hasMaterialIcon).toHaveBeenCalledWith(currentCard);
     expect(result).toBe(true);

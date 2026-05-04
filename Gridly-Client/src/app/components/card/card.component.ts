@@ -36,8 +36,8 @@ export class CardComponent {
   isDeleteDialogOpen = false;
   readonly inEditMode = this.#gridService.editMode;
 
-  handleDialogChange(modalId: number): void {
-    if (modalId === this.card.id) {
+  handleDialogChange(dialogId: number): void {
+    if (dialogId === this.card.id) {
       this.isEditDialogOpen = false;
       this.isDeleteDialogOpen = false;
     }

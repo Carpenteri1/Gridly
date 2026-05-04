@@ -3,11 +3,11 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom, Observable, ReplaySubject, shareReplay, startWith, Subject, switchMap } from 'rxjs';
 import { CardModel } from '../../models/card.Model';
 import { EditCardModel } from '../../models/editCard.Model';
-import { CardEnpointService } from '../endpoint_services/card.endpoint.service';
+import { CardEndpointService } from '../endpoint_services/card.endpoint.service';
 
 @Injectable({ providedIn: 'root' })
 export class CardService {
-  #api = inject(CardEnpointService);
+  #api = inject(CardEndpointService);
 
   private readonly refreshTrigger = new Subject<void>();
 

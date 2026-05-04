@@ -9,33 +9,31 @@ import { EditCardModel } from '../../models/editCard.Model';
   providedIn: 'root'
 })
 
-export class CardEnpointService{
+export class CardEndpointService{
   private http = inject(HttpClient);
 
 
   delete(id: number) {
-    return this.http.delete<CardModel>(UrlStringsUtil.ComponentUrlDelete+id).pipe(take(1));
+    return this.http.delete<CardModel>(UrlStringsUtil.CardUrlDelete+id).pipe(take(1));
   }
 
   get(): Observable<CardModel[]> {
-    return this.http.get<CardModel[]>(UrlStringsUtil.ComponentUrlGet).pipe(take(1));
+    return this.http.get<CardModel[]>(UrlStringsUtil.CardUrlGet).pipe(take(1));
   }
 
   getById(id: number): Observable<CardModel> {
-    return this.http.get<CardModel>(UrlStringsUtil.ComponentUrlGetById+id).pipe(take(1));
+    return this.http.get<CardModel>(UrlStringsUtil.CardUrlGetById+id).pipe(take(1));
   }
 
-  add(newComponent: CardModel): Observable<CardModel> {
-    return this.http.post<CardModel>(UrlStringsUtil.ComponentUrlSave, newComponent).pipe(take(1));
+  add(card: CardModel): Observable<CardModel> {
+    return this.http.post<CardModel>(UrlStringsUtil.CardUrlSave, card).pipe(take(1));
   }
 
-  edit(componentModel: EditCardModel): Observable<CardModel> {
-    return this.http.post<CardModel>(UrlStringsUtil.ComponentUrlEdit, componentModel).pipe(take(1));
+  edit(card: EditCardModel): Observable<CardModel> {
+    return this.http.post<CardModel>(UrlStringsUtil.CardUrlEdit, card).pipe(take(1));
   }
 
-  batchEdit(editedComponent: EditCardModel[]): Observable<CardModel[]> {
-    return this.http.post<CardModel[]>(UrlStringsUtil.ComponentsBatchUrlEdit, editedComponent).pipe(take(1));
+  batchEdit(cards: EditCardModel[]): Observable<CardModel[]> {
+    return this.http.post<CardModel[]>(UrlStringsUtil.CardsBatchUrlEdit, cards).pipe(take(1));
   }
 }
-
-export { CardEnpointService as ComponentEndpointService };

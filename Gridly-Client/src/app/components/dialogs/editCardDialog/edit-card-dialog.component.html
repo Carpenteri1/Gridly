@@ -10,7 +10,7 @@
     <div class="ew-body">
       <form (ngSubmit)="onSubmit()">
         <mat-form-field class="mb-3 w-100 gap-2 form-control">
-          <mat-label for="name-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputNameTitle}}</mat-label>
+          <mat-label for="name-input" class="form-label">{{TextStringsUtil.DialogEditCardInputNameTitle}}</mat-label>
           <input 
             type="text" 
             matInput
@@ -23,7 +23,7 @@
         </mat-form-field>
 
         <mat-form-field class="mb-3 w-100 gap-2 form-control">
-          <mat-label for="url-input" class="form-label">{{TextStringsUtil.ModalEditComponentInputUrlTitle}}</mat-label>
+          <mat-label for="url-input" class="form-label">{{TextStringsUtil.DialogEditCardInputUrlTitle}}</mat-label>
           <input 
             matInput
             type="text" 
@@ -36,7 +36,7 @@
         </mat-form-field>
 
         <mat-form-field class="mb-3 w-100 gap-2 form-control">
-          <mat-label>{{TextStringsUtil.ModalEditComponentInputSearchIconTitle}}</mat-label>
+          <mat-label>{{TextStringsUtil.DialogEditCardInputSearchIconTitle}}</mat-label>
         <div class="d-flex">
           <input 
             matInput
@@ -89,8 +89,8 @@
         </div>
 -->
         <div class="d-flex justify-content-end gap-2 mt-4">
-          <button type="button" class="btn btn-secondary" (click)="close()">{{TextStringsUtil.ModalEditComponentCancelBtnTitle}}</button>
-          <button type="submit" class="btn btn-primary">{{TextStringsUtil.ModalEditComponentAcceptBtnTitle}}</button>
+          <button type="button" class="btn btn-secondary" (click)="close()">{{TextStringsUtil.DialogEditCardCancelBtnTitle}}</button>
+          <button type="submit" class="btn btn-primary">{{TextStringsUtil.DialogEditCardAcceptBtnTitle}}</button>
         </div>
       </form>
     </div>
