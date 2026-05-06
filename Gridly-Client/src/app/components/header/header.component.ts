@@ -1,4 +1,4 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { TextStringsUtil } from "../../constants/text.strings.util";
 import { CommonModule } from "@angular/common";
 import { VersionService } from "../../services/version_services/version.service";
@@ -23,10 +23,10 @@ export class HeaderComponent {
 
   version$ = this.#versionService.version$;
 
-  showMenu = signal(false);
+  readonly TextStringsUtil = TextStringsUtil;
+  addDialogActive = false;
+  editActive = this.#gridService.inEditMode;
 
-  protected readonly TextStringsUtil = TextStringsUtil;
-  protected addDialogActive = false;
   //TODO move to dialog
   protected cardOptions = [
     { type: CardTypes.Empty, label: 'Add empty card', description: '', icon: 'bi bi-box' },
@@ -48,13 +48,8 @@ export class HeaderComponent {
     await this.#cardService.add(card);
   }
 
-  //componentService.EditComponentsData(componentService.Components)
-  //TODO get all components and activate edit mode
-  protected setEditMode(): void {
-    this.#gridService.toggle();
-  }
 
   toggleMenu(): void {
-    this.showMenu.update((showMenu) => !showMenu);
+    this.#gridService.toggle();
   }
 }
