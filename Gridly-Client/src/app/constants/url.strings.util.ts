@@ -2,7 +2,7 @@ export class UrlStringsUtil {
   static readonly VersionUrl = '/api/version/';
   static readonly GetVersionUrl = this.VersionUrl;
 
-  static readonly CardUrl = '/api/component/';
+  static readonly CardUrl = '/api/card/';
   static readonly CardUrlDelete = this.CardUrl+'delete/';
   static readonly CardUrlGet = this.CardUrl+'get';
   static readonly CardUrlGetById = this.CardUrl+'getbyid/';

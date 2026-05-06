@@ -11,7 +11,7 @@ export class CardService {
 
   private readonly refreshTrigger = new Subject<void>();
 
-  readonly componentId = new ReplaySubject<number>(1);
+  readonly cardId = new ReplaySubject<number>(1);
   readonly cards$: Observable<CardModel[]>;
 
   readonly currentCards: Signal<CardModel[] | undefined>;
@@ -23,15 +23,15 @@ export class CardService {
   }
 
   private batchEdit$ = (cards: EditCardModel[]) => this.#api.batchEdit(cards);
-  private edit$ = (component: EditCardModel) => this.#api.edit(component);
+  private edit$ = (card: EditCardModel) => this.#api.edit(card);
   private getById$ = (id: number) => this.#api.getById(id);
   private delete$ = (id: number) => this.#api.delete(id);
-  private add$ = (component: CardModel) => this.#api.add(component);
+  private add$ = (card: CardModel) => this.#api.add(card);
   private get$ = this.refreshTrigger.pipe(startWith(void 0),switchMap(() => this.#api.get()),shareReplay(1));
 
-  edit = (component: CardModel) => firstValueFrom(this.edit$({editComponent: component, selectedDropDownIconValue: 2} as EditCardModel)).then(() => this.refresh());
+  edit = (card: CardModel) => firstValueFrom(this.edit$({editComponent: card, selectedDropDownIconValue: 2} as EditCardModel)).then(() => this.refresh());
   getById = (id: number) => firstValueFrom(this.getById$(id));
-  add = (component: CardModel) => firstValueFrom(this.add$(component)).then(() => this.refresh());
+  add = (card: CardModel) => firstValueFrom(this.add$(card)).then(() => this.refresh());
   delete = (id: number) => firstValueFrom(this.delete$(id)).then(() => this.refresh());
 
   refresh(): void {

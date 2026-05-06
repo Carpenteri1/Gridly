@@ -30,7 +30,7 @@ export class CardComponent {
 
   #cardService = inject(CardService);
   #gridService = inject(GridService);
-  #CardRulesService = inject(CardRulesService);
+  #cardRulesService = inject(CardRulesService);
 
   isEditDialogOpen = false;
   isDeleteDialogOpen = false;
@@ -52,7 +52,7 @@ export class CardComponent {
   }
 
   protected hasMaterialIcon(item: CardModel): boolean {
-    return this.#CardRulesService.hasMaterialIcon(item);
+    return this.#cardRulesService.hasMaterialIcon(item);
   }
 
   openEditDialog(): void {

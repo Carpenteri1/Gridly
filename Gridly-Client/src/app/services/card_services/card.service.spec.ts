@@ -51,12 +51,12 @@ describe('CardService', () => {
     service = TestBed.inject(CardService);
   });
 
-  it('loads components once on construction', () => {
+  it('loads cards once on construction', () => {
     expect(service.currentCards()).toEqual([cardA, cardB]);
     expect(endpointMock.get).toHaveBeenCalledTimes(2);
   });
 
-  it('refreshes the component stream on demand', () => {
+  it('refreshes the card stream on demand', () => {
     service.refresh();
 
     expect(endpointMock.get).toHaveBeenCalledTimes(3);
