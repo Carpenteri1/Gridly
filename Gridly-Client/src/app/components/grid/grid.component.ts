@@ -23,5 +23,8 @@ export class GridComponent {
   protected Drop(event: CdkDragDrop<CardModel[]>): void {
     if (!this.inEditMode()) return;
     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    event.container.data.forEach((card, index) => {
+      card.indexPosition = index + 1;
+    });
   }
 }

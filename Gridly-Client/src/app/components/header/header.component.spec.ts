@@ -10,7 +10,7 @@ type HeaderComponentTestHarness = HeaderComponent & {
   add(card: CardModel): Promise<void>;
   addDialogActive: boolean;
   reloadPage(): void;
-  setEditMode(): void;
+  setEditMode(): Promise<void>;
 };
 
 describe('HeaderComponent', () => {
@@ -19,6 +19,8 @@ describe('HeaderComponent', () => {
 
   const cardServiceMock = {
     add: jest.fn(),
+    currentCards: jest.fn(),
+    saveOrder: jest.fn(),
     component$: of(undefined),
   };
 
@@ -27,13 +29,16 @@ describe('HeaderComponent', () => {
   };
 
   const gridServiceMock = {
-    toggle: jest.fn(),
+    setEditMode: jest.fn(),
   };
 
   beforeEach(async () => {
     cardServiceMock.add.mockResolvedValue(undefined);
+    cardServiceMock.currentCards.mockReturnValue([]);
+    cardServiceMock.saveOrder.mockResolvedValue(undefined);
     cardServiceMock.add.mockClear();
-    gridServiceMock.toggle.mockClear();
+    cardServiceMock.saveOrder.mockClear();
+    gridServiceMock.setEditMode.mockClear();
 
     await TestBed.configureTestingModule({
       imports: [HeaderComponent],
@@ -54,22 +59,28 @@ describe('HeaderComponent', () => {
 
     headerComponent.toggleMenu();
     expect(headerComponent.showMenu()).toBe(true);
+    expect(gridServiceMock.setEditMode).toHaveBeenLastCalledWith(true);
 
     headerComponent.toggleMenu();
     expect(headerComponent.showMenu()).toBe(false);
+    expect(gridServiceMock.setEditMode).toHaveBeenLastCalledWith(false);
   });
 
-  it('delegates add and edit mode actions to the injected services', async () => {
+  it('delegates add and save actions to the injected services', async () => {
     const card = new CardModel();
+    const currentCards = [card];
 
     (headerComponent as HeaderComponentTestHarness).addDialogActive = true;
+    cardServiceMock.currentCards.mockReturnValue(currentCards);
 
     await (headerComponent as HeaderComponentTestHarness).add(card);
-    (headerComponent as HeaderComponentTestHarness).setEditMode();
+    await (headerComponent as HeaderComponentTestHarness).setEditMode();
 
     expect(cardServiceMock.add).toHaveBeenCalledWith(card);
+    expect(cardServiceMock.saveOrder).toHaveBeenCalledWith(currentCards);
     expect((headerComponent as HeaderComponentTestHarness).addDialogActive).toBe(false);
-    expect(gridServiceMock.toggle).toHaveBeenCalled();
+    expect(headerComponent.showMenu()).toBe(false);
+    expect(gridServiceMock.setEditMode).toHaveBeenCalledWith(false);
   });
 
   it('renders the client title', () => {

@@ -6,4 +6,7 @@ export class GridService {
   readonly editMode = this.inEditMode.asReadonly();
 
   toggle = () => this.inEditMode.update((value) => !value);
+  setEditMode(enabled: boolean): void {
+    this.inEditMode.set(enabled);
+  }
 }

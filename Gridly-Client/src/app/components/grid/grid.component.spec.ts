@@ -72,6 +72,7 @@ describe('GridComponent', () => {
     (gridComponent as GridComponentTestHarness).Drop(event);
 
     expect(cards.map((card) => card.id)).toEqual([2, 1]);
+    expect(cards.map((card) => card.indexPosition)).toEqual([1, 2]);
   });
 
   it('does not reorder items when edit mode is disabled', () => {

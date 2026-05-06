@@ -33,6 +33,9 @@ export class CardService {
   getById = (id: number) => firstValueFrom(this.getById$(id));
   add = (card: CardModel) => firstValueFrom(this.add$(card)).then(() => this.refresh());
   delete = (id: number) => firstValueFrom(this.delete$(id)).then(() => this.refresh());
+  saveOrder = (cards: CardModel[]) =>
+    firstValueFrom(this.batchEdit$(cards.map((card) => ({ editCard: card, selectedDropDownIconValue: 2 } as EditCardModel))))
+      .then(() => this.refresh());
 
   refresh(): void {
     this.refreshTrigger.next();
