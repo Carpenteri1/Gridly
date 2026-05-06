@@ -9,7 +9,7 @@ public sealed class IconRepositoryTests : IDisposable
     private readonly string _tempDirectory = Path.Combine(Path.GetTempPath(), $"gridly-icons-{Guid.NewGuid():N}");
 
     [Fact]
-    public void FindUnusedIcons_ReturnsOnlyFilesNotReferencedByComponents()
+    public void FindUnusedIcons_ReturnsOnlyFilesNotReferencedByCards()
     {
         Directory.CreateDirectory(_tempDirectory);
         var usedIcon = CreateFile("used.svg");
@@ -19,15 +19,15 @@ public sealed class IconRepositoryTests : IDisposable
             Icons = new[] { new FileInfo(usedIcon), new FileInfo(unusedIcon) }
         };
         var repository = new IconRepository(null!, fileService);
-        var components = new[]
+        var cards = new[]
         {
-            new ComponentModel
+            new CardModel
             {
                 IconData = new IconModel { Name = "used", Type = "svg" }
             }
         };
 
-        var result = repository.FindUnusedIcons(components);
+        var result = repository.FindUnusedIcons(cards);
 
         Assert.Single(result);
         Assert.Equal("unused.png", result[0]);
@@ -43,15 +43,15 @@ public sealed class IconRepositoryTests : IDisposable
             Icons = new[] { new FileInfo(usedIcon) }
         };
         var repository = new IconRepository(null!, fileService);
-        var components = new[]
+        var cards = new[]
         {
-            new ComponentModel
+            new CardModel
             {
                 IconData = new IconModel { Name = "used", Type = "svg" }
             }
         };
 
-        var result = repository.FindUnusedIcons(components);
+        var result = repository.FindUnusedIcons(cards);
 
         Assert.Empty(result);
     }
@@ -61,7 +61,7 @@ public sealed class IconRepositoryTests : IDisposable
     {
         var repository = new IconRepository(null!, new FakeFileService());
 
-        var result = repository.FindUnusedIcons(Array.Empty<ComponentModel>());
+        var result = repository.FindUnusedIcons(Array.Empty<CardModel>());
 
         Assert.Empty(result);
     }

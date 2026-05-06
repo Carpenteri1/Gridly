@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BaseModalComponent } from '../../../directives/base-modal.component';
+import { BaseDialogComponent } from '../../../directives/base-dialog.directive';
 
 @Component({
   selector: 'app-prompt-dialog',
   templateUrl: './prompt.dialog.component.html',
-  styleUrls: ['../../../css/shared.modal.css'],
+  styleUrls: ['../../../css/shared.dialog.css'],
   standalone: true,
   imports: [FormsModule],
 })
-export class PromptModalComponent extends BaseModalComponent {
+export class PromptDialogComponent extends BaseDialogComponent {
   @Input() open = false;
   @Input() cardId = 0;
   @Input() id = 0;

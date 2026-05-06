@@ -2,8 +2,8 @@ using System.Text.Json.Serialization;
 
 namespace Gridly.Models;
 
-public class EditComponentModel  
+public class EditCardModel  
 {
-    [JsonPropertyName("editComponent")] public ComponentModel? EditComponent { get; set; }
+    [JsonPropertyName("editCard")] public CardModel? EditCard { get; set; }
     [JsonPropertyName("selectedDropDownIconValue")] public int? SelectedDropDownIconValue { get; set; }
 }

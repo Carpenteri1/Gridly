@@ -30,14 +30,14 @@ export class CardComponent {
 
   #cardService = inject(CardService);
   #gridService = inject(GridService);
-  #CardRulesService = inject(CardRulesService);
+  #cardRulesService = inject(CardRulesService);
 
   isEditDialogOpen = false;
   isDeleteDialogOpen = false;
   readonly inEditMode = this.#gridService.editMode;
 
-  handleDialogChange(modalId: number): void {
-    if (modalId === this.card.id) {
+  handleDialogChange(dialogId: number): void {
+    if (dialogId === this.card.id) {
       this.isEditDialogOpen = false;
       this.isDeleteDialogOpen = false;
     }
@@ -52,7 +52,7 @@ export class CardComponent {
   }
 
   protected hasMaterialIcon(item: CardModel): boolean {
-    return this.#CardRulesService.hasMaterialIcon(item);
+    return this.#cardRulesService.hasMaterialIcon(item);
   }
 
   openEditDialog(): void {

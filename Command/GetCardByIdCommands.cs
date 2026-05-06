@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Gridly.Command;
 
-public class GetByIdComponentCommands : IRequest<ComponentModel>
+public class GetCardByIdCommands : IRequest<CardModel>
 {
     public int Id { get; set; }
 }

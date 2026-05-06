@@ -13,8 +13,8 @@ describe('EditCardDialogFacade', () => {
   };
 
   const CardRulesServiceMock = {
-    hasRequiredFields: jest.fn((component: { name?: string; url?: string }) =>
-      Boolean(component.name?.trim().length) && Boolean(component.url?.trim().length)
+    hasRequiredFields: jest.fn((card: { name?: string; url?: string }) =>
+      Boolean(card.name?.trim().length) && Boolean(card.url?.trim().length)
     ),
   };
 
@@ -64,7 +64,7 @@ describe('EditCardDialogFacade', () => {
     expect(iconServiceMock.search).toHaveBeenCalledWith('mail');
   });
 
-  it('stores a selected material icon on the component payload', () => {
+  it('stores a selected material icon on the card payload', () => {
     facade.setIcon('settings');
 
     expect(facade.card.iconData?.materialIcon).toBe('settings');

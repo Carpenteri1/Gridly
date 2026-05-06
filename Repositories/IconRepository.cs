@@ -50,14 +50,14 @@ public class IconRepository(IDbConnection connection, IFileService fileService) 
         return s;
     }
     
-    public List<string> FindUnusedIcons(IEnumerable<ComponentModel> components)
+    public List<string> FindUnusedIcons(IEnumerable<CardModel> cards)
     {
         var unusedIcons = new List<string>();
         var iconFiles = fileService.GetAllIcons();
         
         foreach (var icon in iconFiles)
         {
-            if (!components.Any(x => x.IconData != null 
+            if (!cards.Any(x => x.IconData != null 
                                      && $"{x.IconData.Name}.{x.IconData.Type}" == icon.Name))
             {
                 unusedIcons.Add(icon.Name);

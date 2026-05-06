@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { CardModel } from '../../models/card.Model';
-import { CardEnpointService } from '../endpoint_services/card.endpoint.service';
+import { CardEndpointService } from '../endpoint_services/card.endpoint.service';
 import { CardService } from './card.service';
 
 describe('CardService', () => {
@@ -44,19 +44,19 @@ describe('CardService', () => {
     TestBed.configureTestingModule({
       providers: [
         CardService,
-        { provide: CardEnpointService, useValue: endpointMock },
+        { provide: CardEndpointService, useValue: endpointMock },
       ],
     });
 
     service = TestBed.inject(CardService);
   });
 
-  it('loads components once on construction', () => {
+  it('loads cards once on construction', () => {
     expect(service.currentCards()).toEqual([cardA, cardB]);
     expect(endpointMock.get).toHaveBeenCalledTimes(2);
   });
 
-  it('refreshes the component stream on demand', () => {
+  it('refreshes the card stream on demand', () => {
     service.refresh();
 
     expect(endpointMock.get).toHaveBeenCalledTimes(3);
@@ -70,7 +70,7 @@ describe('CardService', () => {
 
     expect(endpointMock.add).toHaveBeenCalledWith(cardB);
     expect(endpointMock.edit).toHaveBeenCalledWith({
-      editComponent: cardB,
+      editCard: cardB,
       selectedDropDownIconValue: 2,
     });
     expect(endpointMock.getById).toHaveBeenCalledWith(1);

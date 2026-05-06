@@ -3,29 +3,29 @@ using Gridly.Factories;
 
 namespace Gridly.Tests.Factories;
 
-public class ComponentFactoryTests
+public class CardFactoryTests
 {
     [Fact]
-    public void Create_MapsDtoFieldsToComponentModel()
+    public void Create_MapsDtoFieldsToCardModel()
     {
-        var dto = new ComponentDtoModel
+        var dto = new CardDtoModel
         {
-            ComponentId = 12,
+            CardId = 12,
             IndexPosition = 3,
-            ComponentName = "Docs",
+            CardName = "Docs",
             Url = "https://example.test",
             IconUrl = "/icons/docs.svg"
         };
 
-        var result = ComponentFactory.Create(dto);
+        var result = CardFactory.Create(dto);
 
-        Assert.Equal(dto.ComponentId, result.Id);
+        Assert.Equal(dto.CardId, result.Id);
         Assert.Equal(dto.IndexPosition, result.IndexPosition);
-        Assert.Equal(dto.ComponentName, result.Name);
+        Assert.Equal(dto.CardName, result.Name);
         Assert.Equal(dto.Url, result.Url);
         Assert.Equal(dto.IconUrl, result.IconUrl);
         Assert.NotNull(result.IconData);
-        Assert.NotNull(result.ComponentSettings);
+        Assert.NotNull(result.Settings);
     }
 
     [Fact]
@@ -33,11 +33,11 @@ public class ComponentFactoryTests
     {
         var dtos = new[]
         {
-            new ComponentDtoModel { ComponentId = 1, ComponentName = "First" },
-            new ComponentDtoModel { ComponentId = 2, ComponentName = "Second" }
+            new CardDtoModel { CardId = 1, CardName = "First" },
+            new CardDtoModel { CardId = 2, CardName = "Second" }
         };
 
-        var result = ComponentFactory.CreateMany(dtos).ToArray();
+        var result = CardFactory.CreateMany(dtos).ToArray();
 
         Assert.Equal(2, result.Length);
         Assert.Equal(1, result[0].Id);
@@ -47,24 +47,24 @@ public class ComponentFactoryTests
     }
 
     [Fact]
-    public void Create_MapsIconAndComponentSettings()
+    public void Create_MapsIconAndSettings()
     {
-        var dto = new ComponentDtoModel
+        var dto = new CardDtoModel
         {
-            ComponentId = 8,
+            CardId = 8,
             IconId = 21,
             IconName = "grid",
             Type = "svg",
             Base64Data = "Zm9v",
             MaterialIcon = "dashboard",
-            ComponentSettingsId = 13,
+            SettingsId = 13,
             Width = 500,
             Height = 300,
             TitleHidden = true,
             ImageHidden = false
         };
 
-        var result = ComponentFactory.Create(dto);
+        var result = CardFactory.Create(dto);
 
         Assert.NotNull(result.IconData);
         Assert.Equal(21, result.IconData.Id);
@@ -73,12 +73,12 @@ public class ComponentFactoryTests
         Assert.Equal("Zm9v", result.IconData.Base64Data);
         Assert.Equal("dashboard", result.IconData.MaterialIcon);
 
-        Assert.NotNull(result.ComponentSettings);
-        Assert.Equal(13, result.ComponentSettings.Id);
-        Assert.Equal(8, result.ComponentSettings.ComponentId);
-        Assert.Equal(500, result.ComponentSettings.Width);
-        Assert.Equal(300, result.ComponentSettings.Height);
-        Assert.True(result.ComponentSettings.TitleHidden);
-        Assert.False(result.ComponentSettings.ImageHidden);
+        Assert.NotNull(result.Settings);
+        Assert.Equal(13, result.Settings.Id);
+        Assert.Equal(8, result.Settings.CardId);
+        Assert.Equal(500, result.Settings.Width);
+        Assert.Equal(300, result.Settings.Height);
+        Assert.True(result.Settings.TitleHidden);
+        Assert.False(result.Settings.ImageHidden);
     }
 }

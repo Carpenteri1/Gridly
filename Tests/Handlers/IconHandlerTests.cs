@@ -5,7 +5,7 @@ using Gridly.Tests.Infrastructure;
 
 namespace Gridly.Tests.Handlers;
 
-using SearchIconsHandler = global::ComponentHandler;
+using SearchIconsHandler = global::CardHandler;
 
 public class IconHandlerTests
 {

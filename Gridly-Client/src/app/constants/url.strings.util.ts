@@ -2,13 +2,13 @@ export class UrlStringsUtil {
   static readonly VersionUrl = '/api/version/';
   static readonly GetVersionUrl = this.VersionUrl;
 
-  static readonly ComponentUrl = '/api/component/';
-  static readonly ComponentUrlDelete = this.ComponentUrl+'delete/';
-  static readonly ComponentUrlGet = this.ComponentUrl+'get';
-  static readonly ComponentUrlGetById = this.ComponentUrl+'getbyid/';
-  static readonly ComponentUrlSave = this.ComponentUrl+'save';
-  static readonly ComponentUrlEdit = this.ComponentUrl+'edit';
-  static readonly ComponentsBatchUrlEdit = this.ComponentUrl+'batch/edit';
+  static readonly CardUrl = '/api/card/';
+  static readonly CardUrlDelete = this.CardUrl+'delete/';
+  static readonly CardUrlGet = this.CardUrl+'get';
+  static readonly CardUrlGetById = this.CardUrl+'getbyid/';
+  static readonly CardUrlSave = this.CardUrl+'save';
+  static readonly CardUrlEdit = this.CardUrl+'edit';
+  static readonly CardsBatchUrlEdit = this.CardUrl+'batch/edit';
 
   static readonly IconUrl = '/api/icon/';
   static readonly IconUrlSearch = this.IconUrl+'search?value=';

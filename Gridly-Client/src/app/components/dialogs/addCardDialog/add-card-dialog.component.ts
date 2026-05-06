@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { DialogDirective } from '../../../directives/dialog.directive';
-import { BaseModalComponent } from '../../../directives/base-modal.component';
+import { BaseDialogComponent } from '../../../directives/base-dialog.directive';
 import { CardTypes } from '../../../types/card.types.enum';
 import { CardOptionModel } from '../../../models/cardOptions.Model';
 import { CardModel } from '../../../models/card.Model';
@@ -14,7 +14,7 @@ import { DialogService } from '../../../services/dialog_services/dialog.service'
   styleUrls: ['./add-card-dialog.component.css'],
 })
 export class AddCardDialogComponent
-  extends BaseModalComponent
+  extends BaseDialogComponent
 {
   #dialogService = inject(DialogService);
 

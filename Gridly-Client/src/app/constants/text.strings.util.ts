@@ -2,53 +2,53 @@ export class TextStringsUtil {
 
   static readonly NewVersionAvailableHeaderInfoText = "There is a new version available!";
 
-  static readonly GridComponentResizeTitle = "Resize components";
-  static readonly GridComponentCancelToolTip = "Cancel changes done with drag and resize";
-  static readonly GridComponentMovePositionTitle = "Move components position";
-  static readonly GridComponentMovePositionSaveToolTip = "Save changes done with drag and resize!";
+  static readonly GridcardResizeTitle = "Resize cards";
+  static readonly GridcardCancelToolTip = "Cancel changes done with drag and resize";
+  static readonly GridcardMovePositionTitle = "Move cards position";
+  static readonly GridcardMovePositionSaveToolTip = "Save changes done with drag and resize!";
 
-  static readonly GridComponentIconNotFoundMessage = "Icon not found";
+  static readonly GridcardIconNotFoundMessage = "Icon not found";
 
   static readonly StickCancelButtonTitle = "Cancel";
   static readonly StickSaveButtonTitle = "Save";
 
-  static readonly ModalEditComponentTitle = "Edit";
-  static readonly ModalEditComponentAcceptBtnTitle = "Edit";
-  static readonly ModalEditComponentCancelBtnTitle = "Cancel";
-  static readonly ModalEditComponentInputNameTitle = "Edit Component: Title";
-  static readonly ModalEditComponentInputUrlTitle = "Edit Component URL: http://127.0.0.1";
-  static readonly ModalEditComponentInputSearchIconTitle = "Search for Icon";
-  static readonly ModalEditComponentDropDownOptionTitleOne = "Upload New Image to Component";
-  static readonly ModalEditComponentDropDownOptionTitleTwo = "Link To Image";
-  static readonly ModalEditComponentLinkToImageTitle = "URL To Image"
+  static readonly DialogEditCardTitle = "Edit";
+  static readonly DialogEditCardAcceptBtnTitle = "Edit";
+  static readonly DialogEditCardCancelBtnTitle = "Cancel";
+  static readonly DialogEditCardInputNameTitle = "Edit card: Title";
+  static readonly DialogEditCardInputUrlTitle = "Edit card URL: http://127.0.0.1";
+  static readonly DialogEditCardInputSearchIconTitle = "Search for Icon";
+  static readonly DialogEditCardDropDownOptionTitleOne = "Upload New Image to card";
+  static readonly DialogEditCardDropDownOptionTitleTwo = "Link To Image";
+  static readonly DialogEditCardLinkToImageTitle = "URL To Image"
 
-  static readonly ModalAddComponentTitle = "Add";
-  static readonly ModalAddComponentAcceptBtnTitle = "Add";
-  static readonly ModalAddComponentCancelBtnTitle = "Cancel";
-  static readonly ModalAddComponentInputNameTitle = "Enter Component: Title";
-  static readonly ModalAddComponentInputUrlTitle = "Enter Component URL: http://127.0.0.1";
-  static readonly ModalAddComponentDropDownOptionTitleOne = "Upload Image To Component";
-  static readonly ModalAddComponentDropDownOptionTitleTwo = "Link To Image";
-  static readonly ModalAddComponentLinkToImageTitle = "URL To Image"
+  static readonly DialogAddCardTitle = "Add";
+  static readonly DialogAddCardAcceptBtnTitle = "Add";
+  static readonly DialogAddCardCancelBtnTitle = "Cancel";
+  static readonly DialogAddCardInputNameTitle = "Enter card: Title";
+  static readonly DialogAddCardInputUrlTitle = "Enter card URL: http://127.0.0.1";
+  static readonly DialogAddCardDropDownOptionTitleOne = "Upload Image To card";
+  static readonly DialogAddCardDropDownOptionTitleTwo = "Link To Image";
+  static readonly DialogAddCardLinkToImageTitle = "URL To Image"
 
-  static readonly ModalDeleteComponentTitle = "Delete";
-  static readonly ModalDeleteComponentHeaderTitle = "Warning";
-  static readonly ModalDeleteComponentAcceptBtnTitle = "Delete";
-  static readonly ModalDeleteComponentCancelBtnTitle = "Cancel";
-  static readonly ModalDeleteComponentDescription = "You sure you want to delete this card?";
+  static readonly DialogDeleteCardTitle = "Delete";
+  static readonly DialogDeleteCardHeaderTitle = "Warning";
+  static readonly DialogDeleteCardAcceptBtnTitle = "Delete";
+  static readonly DialogDeleteCardCancelBtnTitle = "Cancel";
+  static readonly DialogDeleteCardDescription = "You sure you want to delete this card?";
 
   static readonly MenuAddCardButtonTitle = "Add Card";
   static readonly MenuEditButtonTitle = "Edit";
   static readonly MenuExitEditButtonTitle = "Exit Edit";
-  static readonly MenuDropDownDragTitle = "Move Components";
-  static readonly MenuDropDownResizeTitle = "Resize Components";
+  static readonly MenuDropDownDragTitle = "Move cards";
+  static readonly MenuDropDownResizeTitle = "Resize cards";
 
-  static readonly ComponentAddedFailedEndPointMessage = "Component added failed";
-  static readonly ComponentGetByIdFailedEndPointMessage = "Component get by id failed";
-  static readonly ComponentDeletionFailedEndPointMessage = "Component deletion failed";
-  static readonly ComponentBatchEditFailedEndPointMessage = "Batch edit components failed";
-  static readonly ComponentEditFailedEndPointMessage = "Edit component failed";
-  static readonly GetComponentsFailedEndPointMessage = "Get components failed";
+  static readonly CardAddedFailedEndPointMessage = "Failed to add new card";
+  static readonly CardGetByIdFailedEndPointMessage = "Failed to get card by id";
+  static readonly CardDeletionFailedEndPointMessage = "Failed to delete card";
+  static readonly CardBatchEditFailedEndPointMessage = "Failed to edit cards in batch";
+  static readonly CardEditFailedEndPointMessage = "Failed to edit card";
+  static readonly GetCardFailedEndPointMessage = "Failed to get cards";
 
   static readonly ClientTitle = "Gridly";
 

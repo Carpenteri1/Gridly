@@ -13,7 +13,7 @@ public class IconFactoryTests
         Assert.Equal(string.Empty, result.Name);
         Assert.Equal(string.Empty, result.Type);
         Assert.Equal(string.Empty, result.Base64Data);
-        Assert.Equal("add_box e146", result.MaterialIcon);
+        Assert.Equal("add_box", result.MaterialIcon);
     }
 
     [Fact]
@@ -48,6 +48,6 @@ public class IconFactoryTests
 
         var result = IconFactory.Create(icon);
 
-        Assert.Equal("add_box e146", result.MaterialIcon);
+        Assert.Equal("add_box", result.MaterialIcon);
     }
 }

@@ -7,7 +7,7 @@ import { CardTypes } from '../../../types/card.types.enum';
 
 describe('AddCardDialogComponent', () => {
   let fixture: ComponentFixture<AddCardDialogComponent>;
-  let component: AddCardDialogComponent;
+  let dialogComponent: AddCardDialogComponent;
 
   const dialogServiceMock = {
     onFileUpload: jest.fn(),
@@ -34,15 +34,15 @@ describe('AddCardDialogComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddCardDialogComponent);
-    component = fixture.componentInstance;
+    dialogComponent = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('emits a new card payload for both supported card types', () => {
-    const emitSpy = jest.spyOn(component.newCard, 'emit');
+    const emitSpy = jest.spyOn(dialogComponent.newCard, 'emit');
 
-    component.onSelect(CardTypes.Empty);
-    component.onSelect(CardTypes.Custom);
+    dialogComponent.onSelect(CardTypes.Empty);
+    dialogComponent.onSelect(CardTypes.Custom);
 
     expect(emitSpy).toHaveBeenCalledTimes(2);
     expect(emitSpy.mock.calls[0][0]).toBeDefined();
@@ -50,9 +50,9 @@ describe('AddCardDialogComponent', () => {
   });
 
   it('emits a fully initialized card model', () => {
-    const emitSpy = jest.spyOn(component.newCard, 'emit');
+    const emitSpy = jest.spyOn(dialogComponent.newCard, 'emit');
 
-    component.onSelect(CardTypes.Empty);
+    dialogComponent.onSelect(CardTypes.Empty);
 
     const card = emitSpy.mock.calls[0]?.[0] as CardModel | undefined;
 

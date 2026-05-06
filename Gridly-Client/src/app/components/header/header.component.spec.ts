@@ -7,7 +7,7 @@ import { VersionService } from '../../services/version_services/version.service'
 import { HeaderComponent } from './header.component';
 
 type HeaderComponentTestHarness = HeaderComponent & {
-  add(cardComponent: CardModel): Promise<void>;
+  add(card: CardModel): Promise<void>;
   addDialogActive: boolean;
   reloadPage(): void;
   setEditMode(): void;

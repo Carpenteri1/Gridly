@@ -54,7 +54,7 @@ describe('CardRulesService', () => {
     expect(service.hasIconUrl({ ...componentWithIconUrl, iconUrl: 'icon.png' })).toBe(false);
   });
 
-  it('tolerates nullish and partially initialized component data', () => {
+  it('tolerates nullish and partially initialized card data', () => {
     expect(service.hasRequiredFields(undefined)).toBe(false);
     expect(service.hasValidCardData(null)).toBe(false);
     expect(service.hasIconData({ ...componentWithIconData, iconData: undefined })).toBe(false);

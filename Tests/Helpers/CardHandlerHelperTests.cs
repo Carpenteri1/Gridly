@@ -4,12 +4,12 @@ using Gridly.Tests.Infrastructure;
 
 namespace Gridly.Tests.Helpers;
 
-public class ComponentHandlerHelperTests
+public class CardHandlerHelperTests
 {
     [Fact]
     public void IconDataHasValue_ReturnsTrue_WhenAllFieldsExist()
     {
-        var helper = new ComponentHandlerHelper(new FakeFileService());
+        var helper = new CardHandlerHelper(new FakeFileService());
         var icon = new IconModel { Name = "grid", Type = "svg", Base64Data = "Zm9v" };
 
         var result = helper.IconDataHasValue(icon);
@@ -20,7 +20,7 @@ public class ComponentHandlerHelperTests
     [Fact]
     public void IconDataHasValue_ReturnsFalse_WhenIconIsNull()
     {
-        var helper = new ComponentHandlerHelper(new FakeFileService());
+        var helper = new CardHandlerHelper(new FakeFileService());
 
         var result = helper.IconDataHasValue(null!);
 
@@ -37,7 +37,7 @@ public class ComponentHandlerHelperTests
         string? type,
         string? base64Data)
     {
-        var helper = new ComponentHandlerHelper(new FakeFileService());
+        var helper = new CardHandlerHelper(new FakeFileService());
         var icon = new IconModel
         {
             Name = name!,
@@ -54,23 +54,23 @@ public class ComponentHandlerHelperTests
     public void UploadIcon_DelegatesToFileService()
     {
         var fileService = new FakeFileService { UploadIconResult = true };
-        var helper = new ComponentHandlerHelper(fileService);
-        var component = new ComponentModel { IconData = new IconModel { Name = "grid", Type = "svg", Base64Data = "Zm9v" } };
+        var helper = new CardHandlerHelper(fileService);
+        var Card = new CardModel { IconData = new IconModel { Name = "grid", Type = "svg", Base64Data = "Zm9v" } };
 
-        var result = helper.UploadIcon(component);
+        var result = helper.UploadIcon(Card);
 
         Assert.True(result);
-        Assert.Same(component.IconData, fileService.UploadedIcon);
+        Assert.Same(Card.IconData, fileService.UploadedIcon);
     }
 
     [Fact]
     public void DeleteIcon_DelegatesToFileService()
     {
         var fileService = new FakeFileService { DeleteIconResult = true };
-        var helper = new ComponentHandlerHelper(fileService);
-        var component = new ComponentModel { IconData = new IconModel { Name = "grid", Type = "svg" } };
+        var helper = new CardHandlerHelper(fileService);
+        var Card = new CardModel { IconData = new IconModel { Name = "grid", Type = "svg" } };
 
-        var result = helper.DeleteIcon(component);
+        var result = helper.DeleteIcon(Card);
 
         Assert.True(result);
         Assert.Equal(("grid", "svg"), fileService.DeletedIcon);
@@ -79,15 +79,15 @@ public class ComponentHandlerHelperTests
     [Fact]
     public void SetIndexValues_ReassignsSequentialOneBasedIndexes()
     {
-        var helper = new ComponentHandlerHelper(new FakeFileService());
-        var components = new List<ComponentModel>
+        var helper = new CardHandlerHelper(new FakeFileService());
+        var cards = new List<CardModel>
         {
             new() { Id = 11, IndexPosition = 99 },
             new() { Id = 17, IndexPosition = 42 },
             new() { Id = 23, IndexPosition = null }
         };
 
-        var result = helper.SetIndexValues(components).ToArray();
+        var result = helper.SetIndexValues(cards).ToArray();
 
         Assert.Equal(new int?[] { 1, 2, 3 }, result.Select(x => x.IndexPosition).ToArray());
         Assert.Equal(new[] { 11, 17, 23 }, result.Select(x => x.Id).ToArray());
