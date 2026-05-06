@@ -40,6 +40,7 @@ describe('CardService', () => {
     endpointMock.add.mockReturnValue(of(cardB));
     endpointMock.edit.mockReturnValue(of(cardB));
     endpointMock.delete.mockReturnValue(of(cardA));
+    endpointMock.batchEdit.mockReturnValue(of([cardA, cardB]));
 
     TestBed.configureTestingModule({
       providers: [
@@ -62,11 +63,12 @@ describe('CardService', () => {
     expect(endpointMock.get).toHaveBeenCalledTimes(3);
   });
 
-  it('delegates add, edit, delete, and getById to the endpoint service', async () => {
+  it('delegates add, edit, delete, getById, and saveLayout to the endpoint service', async () => {
     await service.add(cardB);
     await service.edit(cardB);
     await expect(service.getById(1)).resolves.toEqual(cardA);
     await service.delete(1);
+    await service.saveLayout([cardA, cardB]);
 
     expect(endpointMock.add).toHaveBeenCalledWith(cardB);
     expect(endpointMock.edit).toHaveBeenCalledWith({
@@ -75,6 +77,10 @@ describe('CardService', () => {
     });
     expect(endpointMock.getById).toHaveBeenCalledWith(1);
     expect(endpointMock.delete).toHaveBeenCalledWith(1);
-    expect(endpointMock.get).toHaveBeenCalledTimes(5);
+    expect(endpointMock.batchEdit).toHaveBeenCalledWith([
+      { editCard: cardA, selectedDropDownIconValue: 2 },
+      { editCard: cardB, selectedDropDownIconValue: 2 },
+    ]);
+    expect(endpointMock.get).toHaveBeenCalledTimes(6);
   });
 });

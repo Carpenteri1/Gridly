@@ -50,11 +50,19 @@ export class HeaderComponent {
 
   //componentService.EditComponentsData(componentService.Components)
   //TODO get all components and activate edit mode
-  protected setEditMode(): void {
-    this.#gridService.toggle();
+  protected async setEditMode(): Promise<void> {
+    const cards = this.#cardService.currentCards();
+    if (cards !== undefined) {
+      await this.#cardService.saveLayout(cards);
+    }
+
+    this.#gridService.setEditMode(false);
+    this.showMenu.set(false);
   }
 
   toggleMenu(): void {
-    this.showMenu.update((showMenu) => !showMenu);
+    const next = !this.showMenu();
+    this.showMenu.set(next);
+    this.#gridService.setEditMode(next);
   }
 }

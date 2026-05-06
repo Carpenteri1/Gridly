@@ -31,8 +31,8 @@ describe('GridComponent', () => {
 
   beforeEach(async () => {
     cards = [
-      { id: 1, indexPosition: 1, name: 'One', url: 'https://one.example' },
-      { id: 2, indexPosition: 2, name: 'Two', url: 'https://two.example' },
+      { id: 1, indexPosition: 1, name: 'One', url: 'https://one.example', settings: { width: 300, height: 500 } },
+      { id: 2, indexPosition: 2, name: 'Two', url: 'https://two.example', settings: { width: 250, height: 250 } },
     ];
     cardServiceMock.cards$ = of(cards);
     editMode = signal(true);
@@ -60,6 +60,14 @@ describe('GridComponent', () => {
     const items = fixture.nativeElement.querySelectorAll('app-card-component');
 
     expect(items).toHaveLength(2);
+  });
+
+  it('applies persisted card dimensions to the grid item styles', () => {
+    const items = fixture.nativeElement.querySelectorAll('.grid-item-style');
+
+    expect((items[0] as HTMLElement).style.width).toBe('300px');
+    expect((items[0] as HTMLElement).style.height).toBe('500px');
+    expect((items[0] as HTMLElement).style.flexBasis).toBe('300px');
   });
 
   it('reorders items when drag-drop happens in edit mode', () => {
