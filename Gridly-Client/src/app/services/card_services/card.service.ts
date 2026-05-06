@@ -29,7 +29,7 @@ export class CardService {
   private add$ = (card: CardModel) => this.#api.add(card);
   private get$ = this.refreshTrigger.pipe(startWith(void 0),switchMap(() => this.#api.get()),shareReplay(1));
 
-  edit = (card: CardModel) => firstValueFrom(this.edit$({editComponent: card, selectedDropDownIconValue: 2} as EditCardModel)).then(() => this.refresh());
+  edit = (card: CardModel) => firstValueFrom(this.edit$({editCard: card, selectedDropDownIconValue: 2} as EditCardModel)).then(() => this.refresh());
   getById = (id: number) => firstValueFrom(this.getById$(id));
   add = (card: CardModel) => firstValueFrom(this.add$(card)).then(() => this.refresh());
   delete = (id: number) => firstValueFrom(this.delete$(id)).then(() => this.refresh());

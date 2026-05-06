@@ -5,11 +5,11 @@ namespace Gridly.Factories
 {
     public class IconConnectedFactory
     {
-        public static IconConnectedDtoModel Create(int componentId, int iconId)
+        public static IconConnectedDtoModel Create(int cardId, int iconId)
         => new IconConnectedDtoModel
         {
             IconId = iconId,
-            ComponentId = componentId,
+            CardId = cardId,
         };
     }
 }

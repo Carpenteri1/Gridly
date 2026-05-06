@@ -15,24 +15,24 @@ public class IconConnectedRepository(IDbConnection connection) : IIconConnectedR
         return await _dbCommandRunner.Execute(QueryStrings.InsertToConnectedIconQuery, model);
     }
 
-    public async Task<IEnumerable<IconConnectedDtoModel>> GetManyById(int? componentId, int? iconId)
+    public async Task<IEnumerable<IconConnectedDtoModel>> GetManyById(int? cardId, int? iconId)
     {
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.SelectIconConnectedQuery);
         
-        if(componentId != null)
-            builder.Where(QueryStrings.WhereIconConnectedComponentIdForeignKeyEqualIdWithAlias, new {ComponentId = componentId});
+        if(cardId != null)
+            builder.Where(QueryStrings.WhereIconConnectedCardIdForeignKeyEqualIdWithAlias, new {CardId = cardId});
         if(iconId != null)
             builder.Where(QueryStrings.WhereIconConnectedIconIdForeignKeyEqualIdWithAlias, new {IconId = iconId});
 
         return await _dbCommandRunner.SelectMany<IconConnectedDtoModel>(template.RawSql, template.Parameters);
     }
 
-    public async Task<bool> Delete(int componentId)
+    public async Task<bool> Delete(int cardId)
     {
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.DeleteFromIconsConnectedQuery);
-        builder.Where(QueryStrings.WhereComponentIdForeignKeyEqualId, new {ComponentId = componentId});
+        builder.Where(QueryStrings.WhereCardIdForeignKeyEqualId, new {CardId = cardId});
         return await _dbCommandRunner.Execute(template.RawSql, template.Parameters) != null;
     }
 }

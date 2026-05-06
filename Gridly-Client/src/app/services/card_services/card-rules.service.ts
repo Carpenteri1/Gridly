@@ -49,7 +49,7 @@ export class CardRulesService {
       card.iconData.base64Data !== '' &&
       !this.getSettings(card)?.imageHidden;
   }
-
+  
   hasIconUrl(card: CardModel | null | undefined): boolean {
     return card !== undefined &&
       card !== null &&

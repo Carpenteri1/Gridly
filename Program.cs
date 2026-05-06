@@ -16,8 +16,8 @@ builder.Services.AddScoped<DbInitializer>();
 builder.Services.AddScoped<System.Data.IDbConnection>(sp =>
     new SqliteConnection(builder.Configuration.GetConnectionString("GridlyDb")));
 builder.Services.AddScoped<IVersionEndPoint, VersionEndPoint>();
-builder.Services.AddScoped<IComponentRepository,ComponentRepository>();
-builder.Services.AddScoped<IComponentSettingsRepository,ComponentSettingsRepository>();
+builder.Services.AddScoped<ICardRepository,CardRepository>();
+builder.Services.AddScoped<ISettingsRepository,SettingsRepository>();
 builder.Services.AddScoped<IIconRepository,IconRepository>();
 builder.Services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
 

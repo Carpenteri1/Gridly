@@ -3,14 +3,14 @@ using Gridly.Models;
 
 namespace Gridly.Factories;
 
-public static class ComponentFactory
+public static class CardFactory
 {
-    public static ComponentModel Create(ComponentDtoModel dto) 
+    public static CardModel Create(CardDtoModel dto) 
         => new()
         {
-            Id = dto.ComponentId,
+            Id = dto.CardId,
             IndexPosition = dto. IndexPosition,
-            Name = dto.ComponentName,
+            Name = dto.CardName,
             Url = dto.Url,
             IconUrl = dto.IconUrl,
             IconData = new IconModel
@@ -21,10 +21,10 @@ public static class ComponentFactory
                 Base64Data = dto.Base64Data,
                 MaterialIcon = dto.MaterialIcon
             },
-            ComponentSettings = new ComponentSettingsModel
+            Settings = new SettingsModel
             {
-                Id = dto.ComponentSettingsId,
-                ComponentId = dto.ComponentId,
+                Id = dto.SettingsId,
+                CardId = dto.CardId,
                 Width = dto.Width,
                 Height = dto.Height,
                 TitleHidden = dto.TitleHidden,
@@ -32,6 +32,6 @@ public static class ComponentFactory
             }
         };
 
-    public static IEnumerable<ComponentModel> CreateMany(IEnumerable<ComponentDtoModel> dtos) 
+    public static IEnumerable<CardModel> CreateMany(IEnumerable<CardDtoModel> dtos) 
         => dtos.Select(Create);
 }

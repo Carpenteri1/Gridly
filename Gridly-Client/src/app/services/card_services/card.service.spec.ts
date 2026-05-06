@@ -70,7 +70,7 @@ describe('CardService', () => {
 
     expect(endpointMock.add).toHaveBeenCalledWith(cardB);
     expect(endpointMock.edit).toHaveBeenCalledWith({
-      editComponent: cardB,
+      editCard: cardB,
       selectedDropDownIconValue: 2,
     });
     expect(endpointMock.getById).toHaveBeenCalledWith(1);

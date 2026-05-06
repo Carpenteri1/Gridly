@@ -11,7 +11,7 @@ namespace Gridly.Factories
            Name = icon?.Name ?? string.Empty,
            Type = icon?.Type ?? string.Empty,
            Base64Data = icon?.Base64Data ?? string.Empty,
-           MaterialIcon = icon?.MaterialIcon ?? "add_box e146"
+           MaterialIcon = icon?.MaterialIcon ?? "add_box"
        };
     }
 }

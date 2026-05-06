@@ -5,8 +5,8 @@ namespace Gridly.Factories
 {
     public static class SettingsFactory
     {
-        public static ComponentSettingsModel Create(ComponentSettingsModel? settings)
-       => new ComponentSettingsModel
+        public static SettingsModel Create(SettingsModel? settings)
+       => new SettingsModel
        {
             Width = settings?.Width ?? 250,
             Height = settings?.Height ?? 250,
