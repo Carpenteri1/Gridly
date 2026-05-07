@@ -27,7 +27,7 @@ describe('GridComponent', () => {
   let editMode: ReturnType<typeof signal<boolean>>;
 
   const cardServiceMock = {} as { cards$: Observable<CardModel[]> };
-  const gridServiceMock = {} as { editMode: () => boolean };
+  const gridServiceMock = {} as { inEditMode: () => boolean };
 
   beforeEach(async () => {
     cards = [
@@ -36,7 +36,7 @@ describe('GridComponent', () => {
     ];
     cardServiceMock.cards$ = of(cards);
     editMode = signal(true);
-    gridServiceMock.editMode = editMode.asReadonly();
+    gridServiceMock.inEditMode = editMode.asReadonly();
 
     TestBed.overrideComponent(GridComponent, {
       remove: { imports: [CardComponent] },
@@ -62,7 +62,7 @@ describe('GridComponent', () => {
     expect(items).toHaveLength(2);
   });
 
-  it('reorders items when drag-drop happens in edit mode', () => {
+  it('reorders card when drag-drop happens in edit mode', () => {
     const event = {
       container: { data: cards },
       previousIndex: 0,
@@ -74,7 +74,7 @@ describe('GridComponent', () => {
     expect(cards.map((card) => card.id)).toEqual([2, 1]);
   });
 
-  it('does not reorder items when edit mode is disabled', () => {
+  it('does not reorder card when edit mode is disabled', () => {
     editMode.set(false);
 
     const event = {

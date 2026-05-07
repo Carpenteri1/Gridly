@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
 import { of } from 'rxjs';
 import { CardModel } from '../../models/card.Model';
 import { CardService } from '../../services/card_services/card.service';
@@ -9,13 +10,12 @@ import { HeaderComponent } from './header.component';
 type HeaderComponentTestHarness = HeaderComponent & {
   add(card: CardModel): Promise<void>;
   addDialogActive: boolean;
-  reloadPage(): void;
-  setEditMode(): void;
 };
 
 describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
   let headerComponent: HeaderComponent;
+  const editMode = signal(false);
 
   const cardServiceMock = {
     add: jest.fn(),
@@ -27,13 +27,16 @@ describe('HeaderComponent', () => {
   };
 
   const gridServiceMock = {
-    toggle: jest.fn(),
+    inEditMode: editMode.asReadonly(),
+    toggleEdit: jest.fn(() => editMode.update((value) => !value)),
+    setEditMode: jest.fn((value: boolean) => editMode.set(value)),
   };
 
   beforeEach(async () => {
     cardServiceMock.add.mockResolvedValue(undefined);
     cardServiceMock.add.mockClear();
-    gridServiceMock.toggle.mockClear();
+    gridServiceMock.toggleEdit.mockClear();
+    gridServiceMock.setEditMode.mockClear();
 
     await TestBed.configureTestingModule({
       imports: [HeaderComponent],
@@ -49,27 +52,39 @@ describe('HeaderComponent', () => {
     fixture.detectChanges();
   });
 
-  it('toggles the menu signal through the public method', () => {
-    expect(headerComponent.showMenu()).toBe(false);
+  it('toggles edit mode through the public method', () => {
+    expect(headerComponent.editActive()).toBe(false);
 
     headerComponent.toggleMenu();
-    expect(headerComponent.showMenu()).toBe(true);
+
+    expect(gridServiceMock.toggleEdit).toHaveBeenCalledTimes(1);
+    expect(headerComponent.editActive()).toBe(true);
 
     headerComponent.toggleMenu();
-    expect(headerComponent.showMenu()).toBe(false);
+
+    expect(gridServiceMock.toggleEdit).toHaveBeenCalledTimes(2);
+    expect(headerComponent.editActive()).toBe(false); 
   });
 
-  it('delegates add and edit mode actions to the injected services', async () => {
+  it('delegates add actions to the injected service and closes the dialog', async () => {
     const card = new CardModel();
 
     (headerComponent as HeaderComponentTestHarness).addDialogActive = true;
 
     await (headerComponent as HeaderComponentTestHarness).add(card);
-    (headerComponent as HeaderComponentTestHarness).setEditMode();
 
     expect(cardServiceMock.add).toHaveBeenCalledWith(card);
     expect((headerComponent as HeaderComponentTestHarness).addDialogActive).toBe(false);
-    expect(gridServiceMock.toggle).toHaveBeenCalled();
+  });
+
+  it('Inject service and set edit mode', () => {
+    expect(headerComponent.editActive()).toBe(false);
+
+    gridServiceMock.setEditMode(true);
+    expect(gridServiceMock.inEditMode()).toBe(true);
+  
+    gridServiceMock.setEditMode(false);
+    expect(gridServiceMock.inEditMode()).toBe(false);
   });
 
   it('renders the client title', () => {

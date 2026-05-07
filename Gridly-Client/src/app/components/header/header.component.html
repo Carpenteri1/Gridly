@@ -7,9 +7,9 @@
       <h1 class="h4 fw-bold gradient-text m-0">{{TextStringsUtil.ClientTitle}}</h1>
     </div>
 
-    <div class="navbar-collapse collapse justify-content-end" [class.show]="showMenu()" id="mainNavbar" animate.enter="enter-animation">
+    <div class="navbar-collapse collapse justify-content-end" [class.show]="editActive()" id="mainNavbar" animate.enter="enter-animation">
       <ul class="navbar-nav align-items-lg-center gap-2 ms-lg-3"  >
-        @if(showMenu()){
+        @if(editActive()){
           <li class="nav-item">
             <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1" (click)="addDialogActive = true">
               <i class="bi bi-plus-lg me-1"></i>
@@ -23,7 +23,7 @@
           </li>
            <li class="nav-item">
              <button class="btn btn-primary btn-sm d-flex align-items-center gap-1"
-                     (click)="setEditMode()">
+                     (click)="toggleMenu()">
                <i class="bi bi-save"></i>
                <span>Save</span>
              </button>
@@ -32,10 +32,10 @@
 
         <li class="nav-item">
           <button class="btn btn-sm d-flex align-items-center gap-1"
-                  [ngClass]="showMenu() ? 'btn-primary' : 'btn-outline-secondary'"
+                  [ngClass]="editActive() ? 'btn-primary' : 'btn-outline-secondary'"
                   (click)="toggleMenu()">
             <i class="bi bi-pencil"></i>
-            <span>{{ showMenu() ?
+            <span>{{ editActive() ?
               TextStringsUtil.MenuExitEditButtonTitle :
               TextStringsUtil.MenuEditButtonTitle }}</span>
           </button>

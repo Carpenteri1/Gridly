@@ -36,7 +36,7 @@ describe('CardComponent', () => {
   };
 
   const editMode = signal(true);
-  const gridServiceMock = { editMode: editMode.asReadonly() };
+  const gridServiceMock = { inEditMode: editMode.asReadonly() };
 
   beforeEach(async () => {
     jest.clearAllMocks();

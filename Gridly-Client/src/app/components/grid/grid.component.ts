@@ -17,11 +17,11 @@ export class GridComponent {
   #cardService = inject(CardService);
   #gridService = inject(GridService);
 
-  readonly cards$ = this.#cardService.cards$;
-  readonly inEditMode = this.#gridService.editMode;
+  protected readonly cards$ = this.#cardService.cards$;
+  protected readonly editActive = this.#gridService.inEditMode;
 
   protected Drop(event: CdkDragDrop<CardModel[]>): void {
-    if (!this.inEditMode()) return;
+    if (!this.editActive()) return;
     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
   }
 }
