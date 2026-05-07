@@ -28,13 +28,15 @@ describe('HeaderComponent', () => {
 
   const gridServiceMock = {
     inEditMode: editMode.asReadonly(),
-    toggle: jest.fn(() => editMode.update((value) => !value)),
+    toggleEdit: jest.fn(() => editMode.update((value) => !value)),
+    setEditMode: jest.fn((value: boolean) => editMode.set(value)),
   };
 
   beforeEach(async () => {
     cardServiceMock.add.mockResolvedValue(undefined);
     cardServiceMock.add.mockClear();
-    gridServiceMock.toggle.mockClear();
+    gridServiceMock.toggleEdit.mockClear();
+    gridServiceMock.setEditMode.mockClear();
 
     await TestBed.configureTestingModule({
       imports: [HeaderComponent],
@@ -55,12 +57,12 @@ describe('HeaderComponent', () => {
 
     headerComponent.toggleMenu();
 
-    expect(gridServiceMock.toggle).toHaveBeenCalledTimes(1);
+    expect(gridServiceMock.toggleEdit).toHaveBeenCalledTimes(1);
     expect(headerComponent.editActive()).toBe(true);
 
     headerComponent.toggleMenu();
 
-    expect(gridServiceMock.toggle).toHaveBeenCalledTimes(2);
+    expect(gridServiceMock.toggleEdit).toHaveBeenCalledTimes(2);
     expect(headerComponent.editActive()).toBe(false); 
   });
 
@@ -73,6 +75,16 @@ describe('HeaderComponent', () => {
 
     expect(cardServiceMock.add).toHaveBeenCalledWith(card);
     expect((headerComponent as HeaderComponentTestHarness).addDialogActive).toBe(false);
+  });
+
+  it('Inject service and set edit mode', () => {
+    expect(headerComponent.editActive()).toBe(false);
+
+    gridServiceMock.setEditMode(true);
+    expect(gridServiceMock.inEditMode()).toBe(true);
+  
+    gridServiceMock.setEditMode(false);
+    expect(gridServiceMock.inEditMode()).toBe(false);
   });
 
   it('renders the client title', () => {

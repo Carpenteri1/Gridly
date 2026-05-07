@@ -5,6 +5,7 @@ import { CardTypes } from '../../../types/card.types.enum';
 import { CardOptionModel } from '../../../models/cardOptions.Model';
 import { CardModel } from '../../../models/card.Model';
 import { DialogService } from '../../../services/dialog_services/dialog.service';
+import { GridService } from '../../../services/grid_services/grid.service';
 
 @Component({
   selector: 'app-add-card-dialog',
@@ -17,6 +18,7 @@ export class AddCardDialogComponent
   extends BaseDialogComponent
 {
   #dialogService = inject(DialogService);
+  #gridService = inject(GridService);
 
   @Input() open = false;
   @Input() cardOptions: CardOptionModel[] = [];
@@ -34,5 +36,7 @@ export class AddCardDialogComponent
       default:
         return this.newCard.emit(card);
     }
+    
+    this.#gridService.setEditMode(false);
   }
 }

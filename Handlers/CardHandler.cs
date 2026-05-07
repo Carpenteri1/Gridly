@@ -165,7 +165,16 @@ public class CardHandler(
         if (Card != command.EditCard)
         {
             Card.Name = command.EditCard.Name;
-            Card.Url = command.EditCard.Url;
+            if(command.EditCard.Url != null && 
+                command.EditCard.Url!= string.Empty &&
+                !command.EditCard.Url.Contains("http"))
+            {
+                Card.Url =  "https://" + command.EditCard.Url;
+            }
+            else
+            {
+                Card.Url = command.EditCard.Url;
+            }
         }
 
         if (Card.Settings is not null && command.EditCard.Settings is not null &&

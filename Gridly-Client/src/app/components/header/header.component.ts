@@ -50,6 +50,6 @@ export class HeaderComponent {
 
 
   toggleMenu(): void {
-    this.#gridService.toggle();
+    this.#gridService.toggleEdit();
   }
 }

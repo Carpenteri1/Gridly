@@ -13,7 +13,7 @@ export class TextStringsUtil {
   static readonly StickSaveButtonTitle = "Save";
 
   static readonly DialogEditCardTitle = "Edit";
-  static readonly DialogEditCardAcceptBtnTitle = "Edit";
+  static readonly DialogEditCardAcceptBtnTitle = "Save";
   static readonly DialogEditCardCancelBtnTitle = "Cancel";
   static readonly DialogEditCardInputNameTitle = "Edit card: Title";
   static readonly DialogEditCardInputUrlTitle = "Edit card URL: http://127.0.0.1";

@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { EditCardDialogFacade } from './edit-card-dialog.facade';
 import { DialogDirective } from '../../../directives/dialog.directive';
+import { GridService } from '../../../services/grid_services/grid.service';
 
 @Component({
   selector: 'app-edit-card-dialog',
@@ -25,6 +26,8 @@ export class EditCardDialogComponent extends BaseDialogComponent implements OnCh
   @Output() openChange = new EventEmitter<number>();
   @Output() editCard = new EventEmitter();
   
+  #gridService = inject(GridService);
+
   readonly facade: EditCardDialogFacade;
 
   constructor() {
@@ -42,5 +45,6 @@ export class EditCardDialogComponent extends BaseDialogComponent implements OnCh
     const payload = this.facade.buildSubmitPayload(this.id);
     this.close();
     this.editCard.emit(payload);
+    this.#gridService.setEditMode(false);
   }
 }
