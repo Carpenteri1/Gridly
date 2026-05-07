@@ -20,7 +20,7 @@ export class ResizableDirective {
   private startY = 0;
   private startWidth = 0;
   private startHeight = 0;
-  private gridItemElement: HTMLElement | null = null;
+  private cardElement: HTMLElement | null = null;
   private pointerId: number | null = null;
 
   @HostListener('pointerdown', ['$event'])
@@ -33,14 +33,14 @@ export class ResizableDirective {
     const card = this.#cardService.currentCards()?.find((currentcard) => currentcard.id === this.targetId);
     if (!card) return;
 
-    this.gridItemElement = this.el.nativeElement.closest('.grid-item-style') as HTMLElement;
+    this.cardElement = this.el.nativeElement.closest('.grid-item-style') as HTMLElement;
 
-    if (!this.gridItemElement) {
+    if (!this.cardElement) {
       let parent = this.el.nativeElement.parentElement;
       let depth = 0;
       while (parent && depth < 10) {
         if (parent.classList && parent.classList.contains('grid-item-style')) {
-          this.gridItemElement = parent as HTMLElement;
+          this.cardElement = parent as HTMLElement;
           break;
         }
         parent = parent.parentElement;
@@ -48,7 +48,7 @@ export class ResizableDirective {
       }
     }
     
-    if (!this.gridItemElement) {
+    if (!this.cardElement) {
       console.warn('Could not find grid-item-style element for card', this.targetId);
       return;
     }
@@ -72,7 +72,7 @@ export class ResizableDirective {
   @HostListener('document:pointermove', ['$event'])
   OnPointerMove(event: PointerEvent): void {
     const card = this.#cardService.currentCards()?.find((currentcard) => currentcard.id === this.targetId);
-    if (!this.isResizing || !this.gridItemElement || !card) return;
+    if (!this.isResizing || !this.cardElement || !card) return;
 
     if (this.pointerId !== null && event.pointerId !== this.pointerId) return;
 
@@ -91,9 +91,9 @@ export class ResizableDirective {
       height: adjustedHeight
     };
     
-    this.renderer.setStyle(this.gridItemElement, 'height', adjustedHeight + 'px');
-    this.renderer.setStyle(this.gridItemElement, 'width', adjustedWidth + 'px');
-    this.renderer.setStyle(this.gridItemElement, 'flex', '0 0 ' + adjustedWidth + 'px');
+    this.renderer.setStyle(this.cardElement, 'height', adjustedHeight + 'px');
+    this.renderer.setStyle(this.cardElement, 'width', adjustedWidth + 'px');
+    this.renderer.setStyle(this.cardElement, 'flex', '0 0 ' + adjustedWidth + 'px');
   }
 
   @HostListener('document:pointerup')
@@ -150,7 +150,7 @@ export class ResizableDirective {
     this.startY = 0;
     this.startWidth = 0;
     this.startHeight = 0;
-    this.gridItemElement = null;
+    this.cardElement = null;
     this.ShowCursor();
   }
 
