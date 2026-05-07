@@ -38,6 +38,7 @@ export class TextStringsUtil {
   static readonly DialogDeleteCardDescription = "You sure you want to delete this card?";
 
   static readonly MenuAddCardButtonTitle = "Add Card";
+  static readonly MenuSaveButtonTitle = "Save";
   static readonly MenuEditButtonTitle = "Edit";
   static readonly MenuExitEditButtonTitle = "Exit Edit";
   static readonly MenuDropDownDragTitle = "Move cards";

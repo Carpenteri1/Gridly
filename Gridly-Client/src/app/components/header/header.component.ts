@@ -33,9 +33,7 @@ export class HeaderComponent {
     { type: CardTypes.Custom, label: 'Add custom card', description: '', icon: 'bi bi-box-fill' },
   ];
 
-
   /* TODO variants later maybe
-
   cardOptions = [
     { type: 'chart', label: 'Chart', description: 'Visualize trends', icon: 'bi bi-graph-up' },
     { type: 'table', label: 'Table', description: 'Tabular data', icon: 'bi bi-table' },
@@ -48,8 +46,13 @@ export class HeaderComponent {
     await this.#cardService.add(card);
   }
 
-
   toggleMenu(): void {
     this.#gridService.toggleEdit();
   }
+
+  save(): void {
+    this.toggleMenu();
+    this.#cardService.batchEdit(this.#cardService.currentCards() as CardModel[]);
+  }
+
 }
