@@ -29,6 +29,7 @@ export class AddCardDialogComponent
     const card = new CardModel();
     card.settings = this.#dialogService.settings();
     card.iconData = this.#dialogService.icon();
+    this.#gridService.setEditMode(false);
 
     switch (type) {
       case CardTypes.Custom:
@@ -37,6 +38,5 @@ export class AddCardDialogComponent
         return this.newCard.emit(card);
     }
     
-    this.#gridService.setEditMode(false);
   }
 }
