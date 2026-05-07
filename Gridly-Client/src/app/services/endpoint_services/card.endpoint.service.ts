@@ -33,7 +33,7 @@ export class CardEndpointService{
     return this.http.post<CardModel>(UrlStringsUtil.CardUrlEdit, card).pipe(take(1));
   }
 
-  batchEdit(cards: EditCardModel[]): Observable<CardModel[]> {
+  batchEdit(cards: CardModel[]): Observable<CardModel[]> {
     return this.http.post<CardModel[]>(UrlStringsUtil.CardsBatchUrlEdit, cards).pipe(take(1));
   }
 }
