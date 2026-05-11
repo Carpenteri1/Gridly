@@ -1,5 +1,5 @@
 import { Directive, ElementRef, HostListener, inject, Input, Renderer2 } from '@angular/core';
-import { CardService } from "../services/card_services/card.service";
+import { CardModel } from '../models/card.Model';
 
 @Directive({
   standalone: true,
@@ -11,9 +11,7 @@ export class ResizableDirective {
   private renderer = inject(Renderer2);
 
   @Input() canResize!: boolean;
-  @Input() targetId!: number;
-
-  #cardService = inject(CardService);
+  @Input({ required: true }) targetCard!: CardModel;
 
   private isResizing = false;
   private startX = 0;
@@ -25,21 +23,18 @@ export class ResizableDirective {
 
   @HostListener('pointerdown', ['$event'])
   OnPointerDown(event: PointerEvent): void {
-    if (!this.canResize || !this.targetId) return;
+    if (!this.canResize || !this.targetCard) return;
 
     event.preventDefault();
     event.stopPropagation();
 
-    const card = this.#cardService.currentCards()?.find((currentcard) => currentcard.id === this.targetId);
-    if (!card) return;
-
-    this.cardElement = this.el.nativeElement.closest('.grid-item-style') as HTMLElement;
+    this.cardElement = this.el.nativeElement.closest('.grid-card-style') as HTMLElement;
 
     if (!this.cardElement) {
       let parent = this.el.nativeElement.parentElement;
       let depth = 0;
       while (parent && depth < 10) {
-        if (parent.classList && parent.classList.contains('grid-item-style')) {
+        if (parent.classList && parent.classList.contains('grid-card-style')) {
           this.cardElement = parent as HTMLElement;
           break;
         }
@@ -49,7 +44,7 @@ export class ResizableDirective {
     }
     
     if (!this.cardElement) {
-      console.warn('Could not find grid-item-style element for card', this.targetId);
+      console.warn('Could not find grid-card-style element for card', this.targetCard.id);
       return;
     }
 
@@ -62,8 +57,8 @@ export class ResizableDirective {
 
     this.startX = event.clientX;
     this.startY = event.clientY;
-    this.startWidth = card.settings?.width ?? 250;
-    this.startHeight = card.settings?.height ?? 250;
+    this.startWidth = this.targetCard.settings?.width ?? 250;
+    this.startHeight = this.targetCard.settings?.height ?? 250;
     this.isResizing = true;
 
     this.HideCursor();
@@ -71,8 +66,7 @@ export class ResizableDirective {
 
   @HostListener('document:pointermove', ['$event'])
   OnPointerMove(event: PointerEvent): void {
-    const card = this.#cardService.currentCards()?.find((currentcard) => currentcard.id === this.targetId);
-    if (!this.isResizing || !this.cardElement || !card) return;
+    if (!this.isResizing || !this.cardElement || !this.targetCard) return;
 
     if (this.pointerId !== null && event.pointerId !== this.pointerId) return;
 
@@ -85,8 +79,8 @@ export class ResizableDirective {
     const adjustedWidth = this.AdjustCardsize(newWidth);
     const adjustedHeight = this.AdjustCardsize(newHeight);
     
-    card.settings = {
-      ...card.settings,
+    this.targetCard.settings = {
+      ...this.targetCard.settings,
       width: adjustedWidth,
       height: adjustedHeight
     };
