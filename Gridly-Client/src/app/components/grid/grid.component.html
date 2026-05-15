@@ -1,11 +1,12 @@
 @if (cards$ | async; as cards) {
-  <div class="grid-layout" cdkDropList cdkDropListOrientation="horizontal" [cdkDropListData]="cards" (cdkDropListDropped)="Drop($event)">
+  <div class="grid-layout" cdkDropList cdkDropListOrientation="horizontal" [cdkDropListDisabled]="!editActive()" [cdkDropListData]="cards" (cdkDropListDropped)="Drop($event)">
     @for (card of cards; track card.id) {
     <div
       class="shadow-sm grid-card-style"
       [style.height.px]="card.settings?.height"
       [style.width.px]="card.settings?.width"
       cdkDrag
+      [cdkDragDisabled]="!editActive()"
       [id]="card.id.toString()">
       <app-card-component [card]="card"></app-card-component>
     </div>
