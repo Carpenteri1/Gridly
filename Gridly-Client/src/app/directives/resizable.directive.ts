@@ -1,5 +1,6 @@
 import { Directive, ElementRef, HostListener, inject, Input, Renderer2 } from '@angular/core';
 import { CardModel } from '../models/card.Model';
+import { CardService } from '../services/card_services/card.service';
 
 @Directive({
   standalone: true,
@@ -9,6 +10,7 @@ import { CardModel } from '../models/card.Model';
 export class ResizableDirective {
   private el = inject(ElementRef);
   private renderer = inject(Renderer2);
+  #cardService = inject(CardService);
 
   @Input() canResize!: boolean;
   @Input({ required: true }) targetCard!: CardModel;
@@ -42,7 +44,7 @@ export class ResizableDirective {
         depth++;
       }
     }
-    
+
     if (!this.cardElement) {
       console.warn('Could not find grid-card-style element for card', this.targetCard.id);
       return;
@@ -78,13 +80,16 @@ export class ResizableDirective {
 
     const adjustedWidth = this.AdjustCardsize(newWidth);
     const adjustedHeight = this.AdjustCardsize(newHeight);
-    
+
     this.targetCard.settings = {
-      ...this.targetCard.settings,
       width: adjustedWidth,
-      height: adjustedHeight
+      height: adjustedHeight,
+      imageHidden: this.targetCard.settings?.imageHidden ?? false,
+      titleHidden: this.targetCard.settings?.titleHidden ?? false
     };
-    
+
+    this.#cardService.update(this.targetCard);
+
     this.renderer.setStyle(this.cardElement, 'height', adjustedHeight + 'px');
     this.renderer.setStyle(this.cardElement, 'width', adjustedWidth + 'px');
     this.renderer.setStyle(this.cardElement, 'flex', '0 0 ' + adjustedWidth + 'px');

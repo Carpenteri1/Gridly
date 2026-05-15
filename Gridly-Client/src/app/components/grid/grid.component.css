@@ -2,8 +2,8 @@
   padding: 1em;
   margin-top: 3em;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, max-content));
-  grid-auto-rows: minmax(250px, max-content);
+  grid-template-columns: repeat(auto-fit, min(250px));
+  grid-auto-rows: min(250px);
   row-gap: 4em;
   column-gap: 1em;
   justify-content: left;

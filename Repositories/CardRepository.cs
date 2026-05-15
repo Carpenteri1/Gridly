@@ -37,7 +37,9 @@ public class CardRepository(IDbConnection connection) : ICardRepository
                 c.Id,
                 c.IndexPosition,
                 Width = c.Settings?.Width ?? 250,
-                Height = c.Settings?.Height ?? 250
+                Height = c.Settings?.Height ?? 250,
+                TitleHidden = c.Settings?.TitleHidden ?? false,
+                ImageHidden = c.Settings?.ImageHidden ?? false
             })
             .ToList();
 
