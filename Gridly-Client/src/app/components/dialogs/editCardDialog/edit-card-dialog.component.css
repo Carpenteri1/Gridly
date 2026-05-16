@@ -1,0 +1,89 @@
+.ew-card {
+  min-width: min(92vw, 600px);
+  border-radius: .75rem;
+  border: 1px solid rgba(0,0,0,.1);
+  box-shadow: 0 1rem 3rem rgba(0,0,0,.175);
+  overflow: hidden;
+  color: white;
+}
+
+.ew-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .75rem 1rem; border-bottom: 1px solid rgba(0,0,0,.1);
+}
+.ew-body { padding: 1rem; }
+
+.option-btn:hover {
+  border-color: var(--bs-primary);
+}
+.option-icon { font-size: 2rem; color: var(--bs-primary); }
+
+dialog.ew-dialog {
+  border: none;
+  padding: 0;
+  max-height: 90dvh;
+  max-width: 32%;
+  background-color: #1f2123;
+  animation: fade-in 2000ms;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.form-control, .form-select {
+  color: rgba(255,255,255,.5);
+}
+
+dialog.ew-dialog::backdrop {
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(2px);
+}
+
+.form-control:focus, .form-select:focus {
+  color: rgba(255,255,255,.5);
+}
+
+mat-option {
+  background-color: #2d2f31 !important;
+}
+
+mat-select {
+  padding-top:8px;
+}
+
+mat-option:last-child {
+  border-radius: 0 0 10px 10px ;
+}
+
+#dropDownButton {
+  border: none;
+  background-color: transparent !important;
+  color: white !important;
+}
+
+button {
+  color: white;
+  border:none;
+}
+
+/* Remove materials SHENANIGANS */
+
+/* Remove mat-select default icon */
+:host ::ng-deep .mat-mdc-select-trigger {
+  display: none !important;
+}
+
+/* Remove the underline/border-bottom from mat-form-field */
+:host ::ng-deep .mdc-line-ripple,
+:host ::ng-deep .mdc-line-ripple::before,
+:host ::ng-deep .mdc-line-ripple::after {
+  border-bottom-color: transparent !important;
+}
+
+/* Remove the bottom border on the form field container */
+:host ::ng-deep .mat-mdc-form-field-underline,
+:host ::ng-deep .mat-mdc-form-field-bottom-align {
+  display: none !important;
+}

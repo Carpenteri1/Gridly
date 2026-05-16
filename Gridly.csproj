@@ -1,9 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,30 +27,35 @@
     <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.map" />
     <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
     <_ContentIncludedByDefault Remove="Gridly-Client\dist\Gridly-Client\prerendered-routes.json" />
-    <_ContentIncludedByDefault Remove="Assets\ComponentData\componentData.json" />
+    <_ContentIncludedByDefault Remove="Assets\CardData\CardData.json" />
+    <_ContentIncludedByDefault Remove="Assets\VersionData\versionData.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\index.html" />
+    <_ContentIncludedByDefault Remove="wwwroot\main.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\media\bootstrap-icons.woff" />
+    <_ContentIncludedByDefault Remove="wwwroot\media\bootstrap-icons.woff2" />
+    <_ContentIncludedByDefault Remove="wwwroot\polyfills.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\styles.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Main\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Main\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\index.html" />
-    <None Include="wwwroot\main.js" />
-    <None Include="wwwroot\media\bootstrap-icons.woff" />
-    <None Include="wwwroot\media\bootstrap-icons.woff2" />
-    <None Include="wwwroot\polyfills.js" />
-    <None Include="wwwroot\scripts.js" />
-    <None Include="wwwroot\styles.css" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
     <PackageReference Include="dapper" Version="2.1.66" />
     <PackageReference Include="dapper.sqlbuilder" Version="2.1.66" />
     <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0-preview.1.25080.5" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
   </ItemGroup>
 
 </Project>

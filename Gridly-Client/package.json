@@ -1,25 +1,48 @@
 {
   "name": "gridly-client",
-  "version": "v1.1.6-alpha",
+  "version": "v2.0.0-alpha",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
     "build": "ng build",
+    "lint": "ng lint",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "node-run": "node dist/gridly-client/server/server.mjs"
+    "test": "jest --runInBand",
+    "node-run": "node dist/gridly-client/server/server.mjs",
+    "start": "gulp build-angular-net",
+    "start-angular": "gulp build-angular"
   },
   "private": true,
   "dependencies": {
-    "@angular-devkit/build-angular": "^20.3.2",
-    "@angular/material": "^20.2.4",
-    "@angular/platform-server": "^20.3.1",
-    "@angular/ssr": "^20.3.2",
+    "@angular-devkit/build-angular": "21.2.9",
+    "@angular/common": "21.2.10",
+    "@angular/compiler": "21.2.10",
+    "@angular/core": "21.2.10",
+    "@angular/cdk": "21.2.9",
+    "@angular/forms": "21.2.10",
+    "@angular/material": "21.2.9",
+    "@angular/platform-browser": "21.2.10",
+    "@angular/platform-browser-dynamic": "21.2.10",
+    "@angular/platform-server": "21.2.10",
+    "@angular/router": "21.2.10",
+    "@angular/ssr": "21.2.9",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "gulp": "^5.0.1",
     "gulp-clean": "^0.4.0",
     "gulp-exec": "^5.0.0",
-    "zone.js": "^0.15.1"
+    "rxjs": "^7.8.2",
+    "zone.js": "^0.16.1"
+  },
+  "devDependencies": {
+    "@angular/cli": "21.2.9",
+    "@angular/compiler-cli": "21.2.10",
+    "@types/jest": "^30.0.0",
+    "@eslint/js": "^10.0.1",
+    "angular-eslint": "^21.3.1",
+    "eslint": "10.3.0",
+    "jest": "30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
+    "jest-preset-angular": "^16.1.4",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.59.1"
   }
 }

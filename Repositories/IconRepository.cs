@@ -15,7 +15,15 @@ public class IconRepository(IDbConnection connection, IFileService fileService) 
     {
         return await _dbCommandRunner.Execute(QueryStrings.InsertToIconQuery, icon);
     }
-    
+
+    public async Task<IconModel> Edit(IconModel icon)
+    {
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(QueryStrings.UpdateIconQuery, icon);
+        builder.Where(QueryStrings.WhereIdEqualsId, new { Id = icon.Id });
+        return await _dbCommandRunner.Execute(template.RawSql, icon);
+    }
+
     public async Task<IconModel> GetByFullName(IconModel icon)
     {
         var builder = new SqlBuilder();
@@ -37,19 +45,19 @@ public class IconRepository(IDbConnection connection, IFileService fileService) 
     { 
         var builder = new SqlBuilder();                                                       
         var template = builder.AddTemplate(QueryStrings.DeleteFromIconQuery); 
-        builder.Where(QueryStrings.WhereIconIdForeignKeyEqualId, new { Id});
+        builder.Where(QueryStrings.WhereIdEqualsId, new { Id});
         var s = await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
         return s;
     }
     
-    public List<string> FindUnusedIcons(IEnumerable<ComponentModel> components)
+    public List<string> FindUnusedIcons(IEnumerable<CardModel> cards)
     {
         var unusedIcons = new List<string>();
         var iconFiles = fileService.GetAllIcons();
         
         foreach (var icon in iconFiles)
         {
-            if (!components.Any(x => x.IconData != null 
+            if (!cards.Any(x => x.IconData != null 
                                      && $"{x.IconData.Name}.{x.IconData.Type}" == icon.Name))
             {
                 unusedIcons.Add(icon.Name);

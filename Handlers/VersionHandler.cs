@@ -18,9 +18,11 @@ public class VersionHandler(
         if (cashedVersion == null)
         {
             var (success, version) = await versionEndPoint.GetVersion();
-            if(success)
-                memoryCashingService.Store("version", version);
-            return success ? Results.Ok(version) : Results.NotFound();
+            if (success)
+            {
+                memoryCashingService.Store("version", version!);
+                cashedVersion = version;
+            }
         }
 
         return cashedVersion != null ? Results.Ok(cashedVersion) : Results.NotFound();
@@ -30,8 +32,8 @@ public class VersionHandler(
     {
         var (success, remoteVersion) = await versionEndPoint.GetLatestVersion();
         if(success)
-            memoryCashingService.Store<VersionModel>("version", remoteVersion);
+            memoryCashingService.Store("version", remoteVersion!);
         
-        return success != null ? Results.Ok(remoteVersion) : Results.NotFound();
+        return success ? Results.Ok(remoteVersion) : Results.NotFound();
     }
 }

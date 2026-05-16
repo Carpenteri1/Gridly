@@ -9,6 +9,9 @@ bin/
 obj/
 Gridly-Client/publish/
 Gridly-Client/dist
+Gridly-Client/package-lock.json
+.vs/*
+Gridly.csproj.lscache
 
 # Node
 Gridly-Client/node_modules
@@ -25,13 +28,12 @@ yarn-error.log
 *.sublime-workspace
 
 # Visual Studio Code
-.vscode/*
-.vscode/
 !.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
 !.vscode/extensions.json
 .history/*
+
+# Cursor
+.cursor/*
 
 # Miscellaneous
 Gridly-Client/.angular/cache
@@ -44,11 +46,14 @@ testem.log
 /typings
 
 # Files I wanna ignore
-Assets/ComponentData/*.json
+Assets/CardData/*.json
 Assets/VersionData/*.json
 Assets/Icons/*
+Assets/Db/*
+wwwroot
 !Assets/Icons/.gitkeep
 !Assets/Icons/favicon.ico
+!Assets/Db/.gitkeep
 
 # System files
 .DS_Store

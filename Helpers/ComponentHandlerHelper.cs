@@ -3,28 +3,25 @@ using Gridly.Services;
 
 namespace Gridly.helpers;
 
-public class ComponentHandlerHelper(IComponentRepository componentRepository, IIconRepository iconRepository, IFileService fileService)
+public class CardHandlerHelper(IFileService fileService)
 {
-    private IEnumerable<ComponentModel> Components { get; set; }
-
     public bool IconDataHasValue(IconModel iconModel) =>
         iconModel != null &&
         !string.IsNullOrEmpty(iconModel.Name) &&
         !string.IsNullOrEmpty(iconModel.Type) &&
         !string.IsNullOrEmpty(iconModel.Base64Data);
     
-    public bool UploadIcon(ComponentModel component) 
-        =>  fileService.UploadIcon(component.IconData);
+    public bool UploadIcon(CardModel Card) 
+        =>  fileService.UploadIcon(Card.IconData);
             
-    public bool DeleteIcon(ComponentModel component) =>
-        fileService.DeleteIcon(component.IconData.Name, component.IconData.Type);   
-    
-    private async Task<IEnumerable<ComponentModel>> GetComponents()
+    public bool DeleteIcon(CardModel Card) =>
+        fileService.DeleteIcon(Card.IconData.Name, Card.IconData.Type);
+
+    public IEnumerable<CardModel> SetIndexValues(List<CardModel> cards)
     {
-        if (Components == null || !Components.Any())
-        {
-            Components = await componentRepository.Get();            
-        }
-        return Components;
+        for (int i = 0; i < cards.Count(); i++)
+            cards[i].IndexPosition = i +1;
+        
+        return cards;
     }
 }

@@ -4,7 +4,7 @@ namespace Gridly.Repositories;
 
 public interface IIconConnectedRepository
 {
-    public Task<IEnumerable<IconConnectedDtoModel>> GetManyById(int? componentId, int? iconId);
+    public Task<IEnumerable<IconConnectedDtoModel>> GetManyById(int? cardId, int? iconId);
     public Task<IconConnectedDtoModel> Insert(IconConnectedDtoModel model);
-    public Task<bool> Delete(int componentId);
+    public Task<bool> Delete(int cardId);
 }
