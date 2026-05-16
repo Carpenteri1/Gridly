@@ -50,7 +50,7 @@ Assets/CardData/*.json
 Assets/VersionData/*.json
 Assets/Icons/*
 Assets/Db/*
-wwwroot
+/wwwroot/
 !Assets/Icons/.gitkeep
 !Assets/Icons/favicon.ico
 !Assets/Db/.gitkeep
