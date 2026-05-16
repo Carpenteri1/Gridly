@@ -30,7 +30,7 @@ jobs:
     - name: Move built angular files to wwwroot
       run: |
         mkdir -p wwwroot
-        mv Gridly-Client/dist/browser wwwroot        
+        mv Gridly-Client/dist/Gridly-Client/browser/* wwwroot/
       
     - name: Move to root folder
       run: cd ..
