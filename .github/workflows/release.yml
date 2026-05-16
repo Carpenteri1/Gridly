@@ -35,15 +35,15 @@ jobs:
 
     - name: Copy wwwroot and remove unnecessary files
       run: |
-            cp -r bin/Release/net8.0/win-x64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net8.0/win-x64/
-            cp -r bin/Release/net8.0/linux-x64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-x64/
-            cp -r bin/Release/net8.0/linux-arm/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-arm/
-            cp -r bin/Release/net8.0/linux-arm64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-arm64/
+            cp -r bin/Release/net10.0/win-x64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net10.0/win-x64/
+            cp -r bin/Release/net10.0/linux-x64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net10.0/linux-x64/
+            cp -r bin/Release/net10.0/linux-arm/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net10.0/linux-arm/
+            cp -r bin/Release/net10.0/linux-arm64/publish/wwwroot /home/runner/work/Gridly/Gridly/bin/Release/net10.0/linux-arm64/
 
-            rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/win-x64/publish
-            rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-x64/publish
-            rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-arm/publish
-            rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net8.0/linux-arm64/publish
+            rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net10.0/win-x64/publish
+            rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net10.0/linux-x64/publish
+            rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net10.0/linux-arm/publish
+            rm -fr /home/runner/work/Gridly/Gridly/bin/Release/net10.0/linux-arm64/publish
    
     - name: Install zip tool
       run: | 
@@ -53,7 +53,7 @@ jobs:
       run: |
           echo "TAG_VERSION=${{ env.TAG_VERSION }}"
           ZIP_WINDOWS_NAME="Gridly-Windows-$TAG_VERSION.zip"
-          cd bin/Release/net8.0/
+          cd bin/Release/net10.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_WINDOWS_NAME win-x64
           echo "ZIP_WINDOWS_NAME=$ZIP_WINDOWS_NAME" >> $GITHUB_ENV
 
@@ -61,7 +61,7 @@ jobs:
       run: |
           echo "TAG_VERSION=${{ env.TAG_VERSION }}"
           ZIP_Linux_NAME="Gridly-Linux-$TAG_VERSION.zip"
-          cd bin/Release/net8.0/
+          cd bin/Release/net10.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_NAME linux-x64
           echo "ZIP_Linux_NAME=$ZIP_Linux_NAME" >> $GITHUB_ENV
 
@@ -69,7 +69,7 @@ jobs:
       run: |
           echo "TAG_VERSION=${{ env.TAG_VERSION }}"
           ZIP_Linux_arm_NAME="Gridly-Linux-arm-$TAG_VERSION.zip"
-          cd bin/Release/net8.0/
+          cd bin/Release/net10.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_arm_NAME linux-arm
           echo "ZIP_Linux_arm_NAME=$ZIP_Linux_arm_NAME" >> $GITHUB_ENV
 
@@ -77,7 +77,7 @@ jobs:
       run: |
           echo "TAG_VERSION=${{ env.TAG_VERSION }}"
           ZIP_Linux_arm64_NAME="Gridly-Linux-arm64-$TAG_VERSION.zip"
-          cd bin/Release/net8.0/
+          cd bin/Release/net10.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_arm64_NAME linux-arm64
           echo "ZIP_Linux_arm64_NAME=$ZIP_Linux_arm64_NAME" >> $GITHUB_ENV
         
