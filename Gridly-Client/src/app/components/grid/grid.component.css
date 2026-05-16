@@ -1,15 +1,15 @@
 .grid-layout{
   padding: 1em;
   margin-top: 3em;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, max-content));
-  grid-auto-rows: minmax(250px, max-content);
-  row-gap: 4em;
-  column-gap: 1em;
-  justify-content: left;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+  align-content: flex-start;
+  min-height: 100%;
 }
 
-.grid-item-style {
+.grid-card-style {
   background-color: #141517;
   border-bottom: 20px;
   border-radius: 10px;

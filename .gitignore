@@ -11,6 +11,7 @@ Gridly-Client/publish/
 Gridly-Client/dist
 Gridly-Client/package-lock.json
 .vs/*
+Gridly.csproj.lscache
 
 # Node
 Gridly-Client/node_modules

@@ -53,13 +53,13 @@ describe('CardService', () => {
 
   it('loads cards once on construction', () => {
     expect(service.currentCards()).toEqual([cardA, cardB]);
-    expect(endpointMock.get).toHaveBeenCalledTimes(2);
+    expect(endpointMock.get).toHaveBeenCalledTimes(1);
   });
 
   it('refreshes the card stream on demand', () => {
     service.refresh();
 
-    expect(endpointMock.get).toHaveBeenCalledTimes(3);
+    expect(endpointMock.get).toHaveBeenCalledTimes(2);
   });
 
   it('delegates add, edit, delete, and getById to the endpoint service', async () => {
@@ -75,6 +75,27 @@ describe('CardService', () => {
     });
     expect(endpointMock.getById).toHaveBeenCalledWith(1);
     expect(endpointMock.delete).toHaveBeenCalledWith(1);
-    expect(endpointMock.get).toHaveBeenCalledTimes(5);
+    expect(endpointMock.get).toHaveBeenCalledTimes(4);
+  });
+
+  it('stores resized card settings before batch saving', async () => {
+    endpointMock.batchEdit.mockReturnValue(of([cardA, cardB]));
+
+    const resizedCard: CardModel = {
+      ...cardA,
+      settings: {
+        ...cardA.settings!,
+        width: 500,
+        height: 300,
+      },
+    };
+
+    service.update(resizedCard);
+    await service.batchEdit(service.currentCards());
+
+    expect(endpointMock.batchEdit).toHaveBeenCalledWith([
+      resizedCard,
+      cardB,
+    ]);
   });
 });

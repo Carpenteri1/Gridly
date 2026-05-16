@@ -1,6 +1,6 @@
 import { Component, Input, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { CardModel } from '../../models/card.Model';
 import { CardComponent } from '../card/card.component';
 import { CardService } from '../../services/card_services/card.service';
@@ -24,6 +24,7 @@ describe('GridComponent', () => {
   let fixture: ComponentFixture<GridComponent>;
   let gridComponent: GridComponent;
   let cards: CardModel[];
+  let cardsSubject: BehaviorSubject<CardModel[]>;
   let editMode: ReturnType<typeof signal<boolean>>;
 
   const cardServiceMock = {} as { cards$: Observable<CardModel[]> };
@@ -34,7 +35,8 @@ describe('GridComponent', () => {
       { id: 1, indexPosition: 1, name: 'One', url: 'https://one.example' },
       { id: 2, indexPosition: 2, name: 'Two', url: 'https://two.example' },
     ];
-    cardServiceMock.cards$ = of(cards);
+    cardsSubject = new BehaviorSubject<CardModel[]>(cards);
+    cardServiceMock.cards$ = cardsSubject.asObservable();
     editMode = signal(true);
     gridServiceMock.inEditMode = editMode.asReadonly();
 
@@ -86,5 +88,20 @@ describe('GridComponent', () => {
     (gridComponent as GridComponentTestHarness).Drop(event);
 
     expect(cards.map((card) => card.id)).toEqual([1, 2]);
+  });
+
+  it('keeps the card DOM element stable when a resized card object is emitted', () => {
+    const firstCardElement = fixture.nativeElement.querySelector('.grid-card-style') as HTMLElement;
+
+    cardsSubject.next([
+      {
+        ...cards[0],
+        settings: { width: 500, height: 300, imageHidden: false, titleHidden: false },
+      },
+      cards[1],
+    ]);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.grid-card-style')).toBe(firstCardElement);
   });
 });

@@ -10,5 +10,5 @@ public class CardModel
     [JsonPropertyName("url")] public string? Url { get; set; }
     [JsonPropertyName("iconData")] public IconModel? IconData { get; set; }
     [JsonPropertyName("iconUrl")] public string? IconUrl { get; set; }
-    [JsonPropertyName("cardSettings")] public SettingsModel? Settings { get; set; }
+    [JsonPropertyName("settings")] public SettingsModel? Settings { get; set; }
 }
