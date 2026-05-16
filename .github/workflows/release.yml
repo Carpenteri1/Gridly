@@ -17,8 +17,23 @@ jobs:
       
     - name: Set tag version
       run: |
-        echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
-        echo "Tagname set to $TAG_NAME"
+        TAG_VERSION="${GITHUB_REF##*/}"
+        echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
+        echo "Tag version set to $TAG_VERSION"
+    
+    - name: build angular
+      run: |
+        cd Gridly-Client
+        npm install
+        npm run build
+
+    - name: Move built angular files to wwwroot
+      run: |
+        mkdir -p wwwroot
+        mv Gridly-Client/dist/browser wwwroot        
+      
+    - name: Move to root folder
+      run: cd ..
         
     - name: Restore dependencies
       run: dotnet restore
@@ -51,7 +66,6 @@ jobs:
          
     - name: Package Windows build into ZIP
       run: |
-          echo "TAG_VERSION=${{ env.TAG_VERSION }}"
           ZIP_WINDOWS_NAME="Gridly-Windows-$TAG_VERSION.zip"
           cd bin/Release/net10.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_WINDOWS_NAME win-x64
@@ -59,7 +73,6 @@ jobs:
 
     - name: Package Linux build into ZIP
       run: |
-          echo "TAG_VERSION=${{ env.TAG_VERSION }}"
           ZIP_Linux_NAME="Gridly-Linux-$TAG_VERSION.zip"
           cd bin/Release/net10.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_NAME linux-x64
@@ -67,7 +80,6 @@ jobs:
 
     - name: Package Linux arm build into ZIP
       run: |
-          echo "TAG_VERSION=${{ env.TAG_VERSION }}"
           ZIP_Linux_arm_NAME="Gridly-Linux-arm-$TAG_VERSION.zip"
           cd bin/Release/net10.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_arm_NAME linux-arm
@@ -75,7 +87,6 @@ jobs:
 
     - name: Package Linux arm x64 build into ZIP
       run: |
-          echo "TAG_VERSION=${{ env.TAG_VERSION }}"
           ZIP_Linux_arm64_NAME="Gridly-Linux-arm64-$TAG_VERSION.zip"
           cd bin/Release/net10.0/
           zip -r /home/runner/work/Gridly/Gridly/$ZIP_Linux_arm64_NAME linux-arm64
