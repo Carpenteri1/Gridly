@@ -1,6 +1,6 @@
 import { inject, Injectable, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, firstValueFrom, Observable, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, ReplaySubject, take } from 'rxjs';
 import { CardModel } from '../../models/card.Model';
 import { EditCardModel } from '../../models/editCard.Model';
 import { CardEndpointService } from '../endpoint_services/card.endpoint.service';
@@ -31,7 +31,7 @@ export class CardService {
   batchEdit = (cards: CardModel[]) => firstValueFrom(this.batchEdit$(cards)).then(() => this.refresh());
   edit = (card: CardModel) => firstValueFrom(this.edit$({editCard: card, selectedDropDownIconValue: 2} as EditCardModel)).then(() => this.refresh());
   getById = (id: number) => firstValueFrom(this.getById$(id));
-  add = (card: CardModel) => firstValueFrom(this.add$(card)).then(() => this.refresh());
+  add = (card: CardModel) =>  firstValueFrom(this.add$(card)).then(() => this.refresh());
   delete = (id: number) => firstValueFrom(this.delete$(id)).then(() => this.refresh());
 
   update = (card: CardModel): void => {
@@ -53,6 +53,8 @@ export class CardService {
   };
 
   refresh(): void {
-    this.#api.get().subscribe((cards) => this.cardsSubject.next(cards));
+    this.#api.get().pipe(take(1))
+      .subscribe((cards) =>
+        this.cardsSubject.next(cards));
   }
 }

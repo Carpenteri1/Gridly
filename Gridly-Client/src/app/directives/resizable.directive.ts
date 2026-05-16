@@ -45,10 +45,7 @@ export class ResizableDirective {
       }
     }
 
-    if (!this.cardElement) {
-      console.warn('Could not find grid-card-style element for card', this.targetCard.id);
-      return;
-    }
+    if (!this.cardElement) return;
 
     try {
       this.el.nativeElement.setPointerCapture(event.pointerId);
