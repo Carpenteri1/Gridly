@@ -11,7 +11,6 @@ Gridly-Client/publish/
 Gridly-Client/dist
 Gridly-Client/package-lock.json
 .vs/*
-Gridly.csproj.lscache
 
 # Node
 Gridly-Client/node_modules
@@ -26,6 +25,8 @@ yarn-error.log
 *.launch
 .settings/
 *.sublime-workspace
+Gridly.csproj.lscache
+Gridly.csproj.user
 
 # Visual Studio Code
 !.vscode/settings.json

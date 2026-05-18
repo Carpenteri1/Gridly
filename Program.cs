@@ -3,24 +3,31 @@ using Gridly.EndPoints;
 using Gridly.Repositories;
 using Gridly.Services;
 using Gridly.Data;
-using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.FileProviders;
+using System.Data;
 
-var builder = WebApplication.CreateBuilder(args);
+var appDirectory = Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+Directory.SetCurrentDirectory(appDirectory);
+
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = appDirectory
+});
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 await builder.Services.AddTokenBucketRateLimiter();
 
 builder.Services.AddScoped<DbInitializer>();
-builder.Services.AddScoped<System.Data.IDbConnection>(sp =>
-    new SqliteConnection(builder.Configuration.GetConnectionString("GridlyDb")));
+builder.Services.AddScoped(sp =>
+      sp.GetRequiredService<IDbConnectionServices>().CreateConnection());
 builder.Services.AddScoped<IVersionEndPoint, VersionEndPoint>();
 builder.Services.AddScoped<ICardRepository,CardRepository>();
 builder.Services.AddScoped<ISettingsRepository,SettingsRepository>();
 builder.Services.AddScoped<IIconRepository,IconRepository>();
 builder.Services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
 
+builder.Services.AddSingleton<IDbConnectionServices,DbConnectionServices>();
 builder.Services.AddSingleton<IMemoryCashingService, MemoryCashingServices>();
 builder.Services.AddSingleton<IHttpClientServices, HttpClientServices>();
 builder.Services.AddSingleton<IFileService, FileService>();
@@ -31,12 +38,6 @@ builder.Services.AddMediatR(cfg =>
 var app = builder.Build();
 
 app.UseStaticFiles();
-
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Assets/Icons")),
-    RequestPath = "/Assets/Icons"
-});
 
 app.MapDefaultControllerRoute().RequireRateLimiting("fixed");
 
