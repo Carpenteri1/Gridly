@@ -8,7 +8,7 @@ import { GridService } from '../../services/grid_services/grid.service';
 import { GridComponent } from './grid.component';
 
 type GridComponentTestHarness = GridComponent & {
-  Drop(event: unknown): void;
+  Drop(event: unknown, rows: CardModel[][], rowIndex: number): void;
 };
 
 @Component({
@@ -27,7 +27,11 @@ describe('GridComponent', () => {
   let cardsSubject: BehaviorSubject<CardModel[]>;
   let editMode: ReturnType<typeof signal<boolean>>;
 
-  const cardServiceMock = {} as { cards$: Observable<CardModel[]> };
+  const cardServiceMock = {} as {
+    cards$: Observable<CardModel[]>;
+    setRows: jest.Mock;
+    toRows: jest.Mock;
+  };
   const gridServiceMock = {} as { inEditMode: () => boolean };
 
   beforeEach(async () => {
@@ -37,6 +41,8 @@ describe('GridComponent', () => {
     ];
     cardsSubject = new BehaviorSubject<CardModel[]>(cards);
     cardServiceMock.cards$ = cardsSubject.asObservable();
+    cardServiceMock.setRows = jest.fn();
+    cardServiceMock.toRows = jest.fn((cardsToGroup: CardModel[]) => [cardsToGroup]);
     editMode = signal(true);
     gridServiceMock.inEditMode = editMode.asReadonly();
 
@@ -66,28 +72,43 @@ describe('GridComponent', () => {
 
   it('reorders card when drag-drop happens in edit mode', () => {
     const event = {
-      container: { data: cards },
+      previousContainer: { id: 'card-row-0' },
       previousIndex: 0,
       currentIndex: 1,
+      item: { data: cards[0] },
     } as never;
 
-    (gridComponent as GridComponentTestHarness).Drop(event);
+    (gridComponent as GridComponentTestHarness).Drop(event, [cards], 0);
 
-    expect(cards.map((card) => card.id)).toEqual([2, 1]);
+    expect(cardServiceMock.setRows).toHaveBeenCalledWith([[cards[1], cards[0]]], 0);
   });
 
   it('does not reorder card when edit mode is disabled', () => {
     editMode.set(false);
 
     const event = {
-      container: { data: cards },
+      previousContainer: { id: 'card-row-0' },
       previousIndex: 0,
       currentIndex: 1,
+      item: { data: cards[0] },
     } as never;
 
-    (gridComponent as GridComponentTestHarness).Drop(event);
+    (gridComponent as GridComponentTestHarness).Drop(event, [cards], 0);
 
-    expect(cards.map((card) => card.id)).toEqual([1, 2]);
+    expect(cardServiceMock.setRows).not.toHaveBeenCalled();
+  });
+
+  it('moves a card into a new row', () => {
+    const event = {
+      previousContainer: { id: 'card-row-0' },
+      previousIndex: 1,
+      currentIndex: 0,
+      item: { data: cards[1] },
+    } as never;
+
+    (gridComponent as GridComponentTestHarness).Drop(event, [cards], 1);
+
+    expect(cardServiceMock.setRows).toHaveBeenCalledWith([[cards[0]], [cards[1]]], 0);
   });
 
   it('keeps the card DOM element stable when a resized card object is emitted', () => {

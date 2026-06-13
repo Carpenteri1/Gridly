@@ -8,6 +8,8 @@ import { CardEndpointService } from '../endpoint_services/card.endpoint.service'
 @Injectable({ providedIn: 'root' })
 export class CardService {
   #api = inject(CardEndpointService);
+  private readonly cardGap = 16;
+  private readonly defaultCardWidth = 250;
 
   private readonly cardsSubject = new BehaviorSubject<CardModel[]>([]);
 
@@ -34,7 +36,7 @@ export class CardService {
   add = (card: CardModel) =>  firstValueFrom(this.add$(card)).then(() => this.refresh());
   delete = (id: number) => firstValueFrom(this.delete$(id)).then(() => this.refresh());
 
-  update = (card: CardModel): void => {
+  update = (card: CardModel, maxRowWidth = 0): void => {
     const updatedCards = this.currentCards().map((currentCard) => {
       if (currentCard.id !== card.id) return currentCard;
 
@@ -49,8 +51,75 @@ export class CardService {
         },
       };
     });
-    this.cardsSubject.next(updatedCards);
+    this.cardsSubject.next(this.flattenRows(this.toRows(updatedCards, maxRowWidth)));
   };
+
+  setRows(rows: CardModel[][], maxRowWidth = 0): void {
+    this.cardsSubject.next(this.flattenRows(this.normalizeRows(rows, maxRowWidth)));
+  }
+
+  toRows(cards: CardModel[], maxRowWidth = 0): CardModel[][] {
+    const hasRowData = cards.some((card) => card.rowPosition !== undefined) ||
+      new Set(cards.map((card) => card.indexPosition)).size !== cards.length;
+
+    if (!hasRowData) {
+      return this.normalizeRows([
+        [...cards].sort((a, b) => a.indexPosition - b.indexPosition),
+      ], maxRowWidth);
+    }
+
+    const rows = new Map<number, CardModel[]>();
+    cards.forEach((card) => {
+      const rowIndex = Math.max((card.indexPosition ?? 1) - 1, 0);
+      rows.set(rowIndex, [...(rows.get(rowIndex) ?? []), card]);
+    });
+
+    return this.normalizeRows(
+      [...rows.entries()]
+        .sort(([first], [second]) => first - second)
+        .map(([, row]) => [...row].sort((a, b) => (a.rowPosition ?? 0) - (b.rowPosition ?? 0))),
+      maxRowWidth,
+    );
+  }
+
+  private normalizeRows(rows: CardModel[][], maxRowWidth: number): CardModel[][] {
+    const normalizedRows = rows.map((row) => [...row]);
+
+    if (maxRowWidth > 0) {
+      for (let rowIndex = 0; rowIndex < normalizedRows.length; rowIndex++) {
+        const row = normalizedRows[rowIndex];
+        while (row.length > 1 && this.getRowWidth(row) > maxRowWidth) {
+          const overflowCard = row.pop();
+          if (!overflowCard) break;
+          normalizedRows[rowIndex + 1] = normalizedRows[rowIndex + 1] ?? [];
+          normalizedRows[rowIndex + 1].unshift(overflowCard);
+        }
+      }
+    }
+
+    return normalizedRows
+      .filter((row) => row.length > 0)
+      .map((row, rowIndex) =>
+        row.map((card, rowPosition) => ({
+          ...card,
+          indexPosition: rowIndex + 1,
+          rowPosition: rowPosition + 1,
+        })),
+      );
+  }
+
+  private flattenRows(rows: CardModel[][]): CardModel[] {
+    return rows.flatMap((row) => row);
+  }
+
+  private getRowWidth(row: CardModel[]): number {
+    const cardsWidth = row.reduce(
+      (width, card) => width + (card.settings?.width ?? this.defaultCardWidth),
+      0,
+    );
+
+    return cardsWidth + Math.max(row.length - 1, 0) * this.cardGap;
+  }
 
   refresh(): void {
     this.#api.get().pipe(take(1))

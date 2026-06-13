@@ -2,11 +2,21 @@
   padding: 1em;
   margin-top: 3em;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100%;
+}
+
+.grid-row {
+  display: flex;
+  flex-wrap: nowrap;
   gap: 16px;
   align-items: flex-start;
-  align-content: flex-start;
-  min-height: 100%;
+  min-height: 250px;
+}
+
+.grid-row-empty {
+  min-height: 48px;
 }
 
 .grid-card-style {
