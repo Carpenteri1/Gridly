@@ -32,7 +32,7 @@
         cdkDropListOrientation="horizontal"
         [id]="RowId(rows.length)"
         [cdkDropListConnectedTo]="RowIds(rows)"
-        [cdkDropListData]="[]"
+        [cdkDropListData]="emptyRowData"
         (cdkDropListDropped)="Drop($event, rows, rows.length)">
         <span></span>
       </div>

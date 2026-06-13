@@ -21,6 +21,7 @@ export class GridComponent implements AfterViewInit {
   @ViewChild('gridLayout') private gridLayout?: ElementRef<HTMLElement>;
 
   private readonly gridWidthSubject = new BehaviorSubject<number>(0);
+  protected readonly emptyRowData: CardModel[] = [];
   protected readonly rows$ = combineLatest([this.#cardService.cards$, this.gridWidthSubject]).pipe(
     map(([cards, maxRowWidth]) => this.#cardService.toRows(cards, maxRowWidth)),
   );
