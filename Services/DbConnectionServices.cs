@@ -14,19 +14,14 @@ public class DbConnectionServices : IDbConnectionServices
         {
             throw new InvalidOperationException("Connection string 'GridlyDb' is missing.");
         }
-
+        
         var sqliteBuilder = new SqliteConnectionStringBuilder(configuredConnectionString);
-        if (!Path.IsPathRooted(sqliteBuilder.DataSource))
-        {
-            sqliteBuilder.DataSource = Path.Combine(environment.ContentRootPath, sqliteBuilder.DataSource);
-        }
-
+        sqliteBuilder.DataSource = Path.Combine(environment.ContentRootPath, sqliteBuilder.DataSource);
         var dbDirectory = Path.GetDirectoryName(sqliteBuilder.DataSource);
         if (!string.IsNullOrWhiteSpace(dbDirectory))
         {
             Directory.CreateDirectory(dbDirectory);
         }
-
         connectionString = sqliteBuilder.ConnectionString;
     }
 

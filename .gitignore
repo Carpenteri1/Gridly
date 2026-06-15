@@ -27,6 +27,7 @@ yarn-error.log
 *.sublime-workspace
 Gridly.csproj.lscache
 Gridly.csproj.user
+Gridly.sln.*
 
 # Visual Studio Code
 !.vscode/settings.json
