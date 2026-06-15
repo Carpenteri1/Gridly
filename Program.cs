@@ -19,14 +19,14 @@ await builder.Services.AddTokenBucketRateLimiter();
 
 builder.Services.AddScoped<DbInitializer>();
 builder.Services.AddScoped(sp =>
-      sp.GetRequiredService<IDbConnectionServices>().CreateConnection());
+    sp.GetRequiredService<IDbConnectionServices>().CreateConnection());
+builder.Services.AddScoped<IDbConnectionServices,DbConnectionServices>();
 builder.Services.AddScoped<IVersionEndPoint, VersionEndPoint>();
 builder.Services.AddScoped<ICardRepository,CardRepository>();
 builder.Services.AddScoped<ISettingsRepository,SettingsRepository>();
 builder.Services.AddScoped<IIconRepository,IconRepository>();
 builder.Services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
 
-builder.Services.AddSingleton<IDbConnectionServices,DbConnectionServices>();
 builder.Services.AddSingleton<IMemoryCashingService, MemoryCashingServices>();
 builder.Services.AddSingleton<IHttpClientServices, HttpClientServices>();
 builder.Services.AddSingleton<IFileService, FileService>();
