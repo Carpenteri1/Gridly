@@ -3,7 +3,6 @@ using Gridly.EndPoints;
 using Gridly.Repositories;
 using Gridly.Services;
 using Gridly.Data;
-using System.Data;
 
 var appDirectory = Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
 Directory.SetCurrentDirectory(appDirectory);
