@@ -85,8 +85,6 @@ export class ResizableDirective {
       titleHidden: this.targetCard.settings?.titleHidden ?? false
     };
 
-    this.#cardService.update(this.targetCard, this.GetGridWidth());
-
     this.renderer.setStyle(this.cardElement, 'height', adjustedHeight + 'px');
     this.renderer.setStyle(this.cardElement, 'width', adjustedWidth + 'px');
     this.renderer.setStyle(this.cardElement, 'flex', '0 0 ' + adjustedWidth + 'px');
@@ -156,9 +154,5 @@ export class ResizableDirective {
     if (value <= 700) return 500;
     if (value <= 800) return 700;
     return 800;
-  }
-
-  private GetGridWidth(): number {
-    return this.cardElement?.closest('.grid-layout')?.clientWidth ?? 0;
   }
 }

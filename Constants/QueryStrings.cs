@@ -3,8 +3,8 @@ namespace Gridly.Constants;
 public class QueryStrings
 {
     public const string InsertToCardQuery = @"
-    INSERT INTO Card (IndexPosition, Name, Url, IconUrl) 
-    VALUES (@IndexPosition, @Name, @Url, @IconUrl);
+    INSERT INTO Card (IndexPosition, RowPosition, Name, Url, IconUrl) 
+    VALUES (@IndexPosition, @RowPosition, @Name, @Url, @IconUrl);
     SELECT * FROM Card WHERE Id = last_insert_rowid();";
 
     public const string InsertToSettingsQuery = @"
@@ -26,6 +26,7 @@ public class QueryStrings
      SELECT 
         co.Id AS CardId, 
         co.IndexPosition, 
+        co.RowPosition,
         co.Name AS CardName, 
         co.Url, 
         co.IconUrl, 
@@ -61,13 +62,14 @@ public class QueryStrings
     UPDATE Card
     SET Name = @Name, 
         IndexPosition = @IndexPosition,
+        RowPosition = @RowPosition,
         Url = @Url, 
         IconUrl = @IconUrl
         /**where**/";
 
     public const string UpdateBatchCardQuery = @"
     UPDATE Card 
-    SET IndexPosition = @IndexPosition
+    SET IndexPosition = @IndexPosition, RowPosition = @RowPosition
     WHERE Id = @Id;
 
     UPDATE Settings 

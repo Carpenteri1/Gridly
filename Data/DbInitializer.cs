@@ -19,6 +19,7 @@ public class DbInitializer
                 CREATE TABLE IF NOT EXISTS Card(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 IndexPosition INTEGER NOT NULL,
+                RowPosition INTEGER NOT NULL,
                 Name TEXT,
                 URL TEXT,
                 IconUrl TEXT);

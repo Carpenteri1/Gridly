@@ -15,7 +15,6 @@
             class="shadow-sm grid-card-style"
             [style.height.px]="card.settings?.height"
             [style.width.px]="card.settings?.width"
-            [style.flex]="'0 0 ' + (card.settings?.width ?? 250) + 'px'"
             cdkDrag
             [cdkDragData]="card"
             [cdkDragDisabled]="!editActive()"
