@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardService } from "../../services/card_services/card.service";
 import { CdkDrag, CdkDragDrop, CdkDropList } from "@angular/cdk/drag-drop";
