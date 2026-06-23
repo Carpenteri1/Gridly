@@ -1,6 +1,5 @@
 import { Directive, ElementRef, HostListener, inject, Input, Renderer2 } from '@angular/core';
 import { CardModel } from '../models/card.Model';
-import { CardService } from '../services/card_services/card.service';
 
 @Directive({
   standalone: true,
@@ -10,7 +9,6 @@ import { CardService } from '../services/card_services/card.service';
 export class ResizableDirective {
   private el = inject(ElementRef);
   private renderer = inject(Renderer2);
-  #cardService = inject(CardService);
 
   @Input() canResize!: boolean;
   @Input({ required: true }) targetCard!: CardModel;

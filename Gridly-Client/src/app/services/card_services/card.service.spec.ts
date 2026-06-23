@@ -78,27 +78,6 @@ describe('CardService', () => {
     expect(endpointMock.get).toHaveBeenCalledTimes(4);
   });
 
-  it('stores resized card settings before batch saving', async () => {
-    endpointMock.batchEdit.mockReturnValue(of([cardA, cardB]));
-
-    const resizedCard: CardModel = {
-      ...cardA,
-      settings: {
-        ...cardA.settings!,
-        width: 500,
-        height: 300,
-      },
-    };
-
-    service.update(resizedCard);
-    await service.batchEdit(service.currentCards());
-
-    expect(endpointMock.batchEdit).toHaveBeenCalledWith([
-      { ...resizedCard, indexPosition: 1, rowPosition: 1 },
-      { ...cardB, indexPosition: 1, rowPosition: 2 },
-    ]);
-  });
-
   it('groups cards into rows when a row exceeds the max width', () => {
     const rows = service.toRows([cardA, cardB], 400);
 

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardService } from "../../services/card_services/card.service";
 import { CdkDrag, CdkDragDrop, CdkDropList } from "@angular/cdk/drag-drop";
@@ -14,7 +14,7 @@ import { BehaviorSubject, combineLatest, map } from 'rxjs';
   styleUrls: ['./grid.component.css'],
 })
 
-export class GridComponent implements AfterViewInit {
+export class GridComponent {
   #cardService = inject(CardService);
   #gridService = inject(GridService);
 
@@ -26,15 +26,6 @@ export class GridComponent implements AfterViewInit {
     map(([cards, maxRowWidth]) => this.#cardService.toRows(cards, maxRowWidth)),
   );
   protected readonly editActive = this.#gridService.inEditMode;
-
-  ngAfterViewInit(): void {
-    queueMicrotask(() => this.updateGridWidth());
-  }
-
-  @HostListener('window:resize')
-  OnResize(): void {
-    this.updateGridWidth();
-  }
 
   protected Drop(event: CdkDragDrop<CardModel[]>, rows: CardModel[][], rowIndex: number): void {
     if (!this.editActive()) return;
@@ -62,10 +53,6 @@ export class GridComponent implements AfterViewInit {
 
   protected RowIds(rows: CardModel[][]): string[] {
     return [...rows, []].map((_, rowIndex) => this.RowId(rowIndex));
-  }
-
-  private updateGridWidth(): void {
-    this.gridWidthSubject.next(this.gridLayout?.nativeElement.clientWidth ?? 0);
   }
 
   private getRowIndex(rowId: string): number {
