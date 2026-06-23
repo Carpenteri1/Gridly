@@ -8,8 +8,6 @@ import { CardEndpointService } from '../endpoint_services/card.endpoint.service'
 @Injectable({ providedIn: 'root' })
 export class CardService {
   #api = inject(CardEndpointService);
-  private readonly cardGap = 16;
-  private readonly defaultCardWidth = 250;
 
   private readonly cardsSubject = new BehaviorSubject<CardModel[]>([]);
 
@@ -35,24 +33,6 @@ export class CardService {
   getById = (id: number) => firstValueFrom(this.getById$(id));
   add = (card: CardModel) =>  firstValueFrom(this.add$(card)).then(() => this.refresh());
   delete = (id: number) => firstValueFrom(this.delete$(id)).then(() => this.refresh());
-
-  update = (card: CardModel, maxRowWidth = 0): void => {
-    const updatedCards = this.currentCards().map((currentCard) => {
-      if (currentCard.id !== card.id) return currentCard;
-
-      return {
-        ...currentCard,
-        ...card,
-        settings: {
-          width: card.settings?.width ?? currentCard.settings?.width ?? 250,
-          height: card.settings?.height ?? currentCard.settings?.height ?? 250,
-          imageHidden: card.settings?.imageHidden ?? currentCard.settings?.imageHidden ?? false,
-          titleHidden: card.settings?.titleHidden ?? currentCard.settings?.titleHidden ?? false,
-        },
-      };
-    });
-    this.cardsSubject.next(this.flattenRows(this.toRows(updatedCards, maxRowWidth)));
-  };
 
   setRows(rows: CardModel[][], maxRowWidth = 0): void {
     this.cardsSubject.next(this.flattenRows(this.normalizeRows(rows, maxRowWidth)));
@@ -113,12 +93,11 @@ export class CardService {
   }
 
   private getRowWidth(row: CardModel[]): number {
-    const cardsWidth = row.reduce(
-      (width, card) => width + (card.settings?.width ?? this.defaultCardWidth),
-      0,
+    const cardsWidth = row.reduce((width, card) =>
+        width + card.settings!.width, 0,
     );
 
-    return cardsWidth + Math.max(row.length - 1, 0) * this.cardGap;
+    return cardsWidth + Math.max(row.length - 1, 0);
   }
 
   refresh(): void {
