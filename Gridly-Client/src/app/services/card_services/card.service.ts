@@ -35,19 +35,10 @@ export class CardService {
   delete = (id: number) => firstValueFrom(this.delete$(id)).then(() => this.refresh());
 
   setRows(rows: CardModel[][], maxRowWidth = 0): void {
-    this.cardsSubject.next(this.flattenRows(this.normalizeRows(rows, maxRowWidth)));
+    this.cardsSubject.next(this.normalizeRows(rows, maxRowWidth).flatMap((row) => row));
   }
 
   toRows(cards: CardModel[], maxRowWidth = 0): CardModel[][] {
-    const hasRowData = cards.some((card) => card.rowPosition !== undefined) ||
-      new Set(cards.map((card) => card.indexPosition)).size !== cards.length;
-
-    if (!hasRowData) {
-      return this.normalizeRows([
-        [...cards].sort((a, b) => a.indexPosition - b.indexPosition),
-      ], maxRowWidth);
-    }
-
     const rows = new Map<number, CardModel[]>();
     cards.forEach((card) => {
       const rowIndex = Math.max((card.indexPosition ?? 1) - 1, 0);
@@ -86,10 +77,6 @@ export class CardService {
           rowPosition: rowPosition + 1,
         })),
       );
-  }
-
-  private flattenRows(rows: CardModel[][]): CardModel[] {
-    return rows.flatMap((row) => row);
   }
 
   private getRowWidth(row: CardModel[]): number {
