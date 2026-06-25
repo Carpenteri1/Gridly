@@ -10,6 +10,7 @@ describe('CardService', () => {
   const cardA: CardModel = {
     id: 1,
     indexPosition: 1,
+    rowPosition: 1,
     name: 'Alpha',
     url: 'https://alpha.example',
     iconData: { name: 'dashboard', type: 'svg', base64Data: 'abc', materialIcon: 'dashboard' },
@@ -18,6 +19,7 @@ describe('CardService', () => {
   const cardB: CardModel = {
     id: 2,
     indexPosition: 2,
+    rowPosition: 1,
     name: 'Beta',
     url: 'https://beta.example',
     iconUrl: 'https://cdn.example/icon.png',
@@ -83,8 +85,18 @@ describe('CardService', () => {
 
     expect(rows.map((row) => row.map((card) => card.id))).toEqual([[1], [2]]);
     expect(rows.flat()).toEqual([
-      { ...cardA, indexPosition: 1, rowPosition: 1 },
-      { ...cardB, indexPosition: 2, rowPosition: 1 },
+      { ...cardA, indexPosition: 0, rowPosition: 1 },
+      { ...cardB, indexPosition: 0, rowPosition: 2 },
+    ]);
+  });
+
+  it('keeps cards from the same API row horizontal', () => {
+    const rows = service.toRows([cardB, cardA], 1000);
+
+    expect(rows.map((row) => row.map((card) => card.id))).toEqual([[1, 2]]);
+    expect(rows.flat()).toEqual([
+      { ...cardA, indexPosition: 0, rowPosition: 1 },
+      { ...cardB, indexPosition: 1, rowPosition: 1 },
     ]);
   });
 
@@ -92,8 +104,8 @@ describe('CardService', () => {
     service.setRows([[cardA], [cardB]], 1000);
 
     expect(service.currentCards()).toEqual([
-      { ...cardA, indexPosition: 1, rowPosition: 1 },
-      { ...cardB, indexPosition: 2, rowPosition: 1 },
+      { ...cardA, indexPosition: 0, rowPosition: 1 },
+      { ...cardB, indexPosition: 0, rowPosition: 2 },
     ]);
   });
 
@@ -101,8 +113,8 @@ describe('CardService', () => {
     service.setRows([[], [cardB, cardA]], 1000);
 
     expect(service.currentCards()).toEqual([
-      { ...cardB, indexPosition: 1, rowPosition: 1 },
-      { ...cardA, indexPosition: 1, rowPosition: 2 },
+      { ...cardB, indexPosition: 0, rowPosition: 1 },
+      { ...cardA, indexPosition: 1, rowPosition: 1 },
     ]);
   });
 });

@@ -44,7 +44,20 @@ export class GridComponent {
       updatedRows[rowIndex].splice(event.currentIndex, 0, movedCard);
     }
 
-    this.#cardService.setRows(updatedRows, this.gridWidthSubject.value);
+    const positionedRows = this.updateCardPositions(updatedRows);
+    this.#cardService.setRows(positionedRows, this.gridWidthSubject.value);
+  }
+
+  private updateCardPositions(rows: CardModel[][]): CardModel[][] {
+    return rows
+      .filter((row) => row.length > 0)
+      .map((row, rowIndex) =>
+        row.map((card, indexPosition) => ({
+          ...card,
+          indexPosition,
+          rowPosition: rowIndex + 1,
+        })),
+      );
   }
 
   protected RowId(rowIndex: number): string {

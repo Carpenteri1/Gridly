@@ -36,8 +36,8 @@ describe('GridComponent', () => {
 
   beforeEach(async () => {
     cards = [
-      { id: 1, indexPosition: 1, name: 'One', url: 'https://one.example' },
-      { id: 2, indexPosition: 2, name: 'Two', url: 'https://two.example' },
+      { id: 1, indexPosition: 0, rowPosition: 1, name: 'One', url: 'https://one.example' },
+      { id: 2, indexPosition: 1, rowPosition: 1, name: 'Two', url: 'https://two.example' },
     ];
     cardsSubject = new BehaviorSubject<CardModel[]>(cards);
     cardServiceMock.cards$ = cardsSubject.asObservable();
@@ -80,7 +80,12 @@ describe('GridComponent', () => {
 
     (gridComponent as GridComponentTestHarness).Drop(event, [cards], 0);
 
-    expect(cardServiceMock.setRows).toHaveBeenCalledWith([[cards[1], cards[0]]], 0);
+    expect(cardServiceMock.setRows).toHaveBeenCalledWith([
+      [
+        { ...cards[1], indexPosition: 0, rowPosition: 1 },
+        { ...cards[0], indexPosition: 1, rowPosition: 1 },
+      ],
+    ], 0);
   });
 
   it('does not reorder card when edit mode is disabled', () => {
@@ -108,7 +113,31 @@ describe('GridComponent', () => {
 
     (gridComponent as GridComponentTestHarness).Drop(event, [cards], 1);
 
-    expect(cardServiceMock.setRows).toHaveBeenCalledWith([[cards[0]], [cards[1]]], 0);
+    expect(cardServiceMock.setRows).toHaveBeenCalledWith([
+      [{ ...cards[0], indexPosition: 0, rowPosition: 1 }],
+      [{ ...cards[1], indexPosition: 0, rowPosition: 2 }],
+    ], 0);
+  });
+
+  it('updates indexes when a card moves into an existing row', () => {
+    const thirdCard = { id: 3, indexPosition: 0, rowPosition: 2, name: 'Three', url: 'https://three.example' };
+    const rows = [[cards[0], cards[1]], [thirdCard]];
+    const event = {
+      previousContainer: { id: 'card-row-0' },
+      previousIndex: 1,
+      currentIndex: 1,
+      item: { data: cards[1] },
+    } as never;
+
+    (gridComponent as GridComponentTestHarness).Drop(event, rows, 1);
+
+    expect(cardServiceMock.setRows).toHaveBeenCalledWith([
+      [{ ...cards[0], indexPosition: 0, rowPosition: 1 }],
+      [
+        { ...thirdCard, indexPosition: 0, rowPosition: 2 },
+        { ...cards[1], indexPosition: 1, rowPosition: 2 },
+      ],
+    ], 0);
   });
 
   it('keeps the card DOM element stable when a resized card object is emitted', () => {

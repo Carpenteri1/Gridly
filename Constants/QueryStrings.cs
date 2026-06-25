@@ -69,7 +69,8 @@ public class QueryStrings
 
     public const string UpdateBatchCardQuery = @"
     UPDATE Card 
-    SET IndexPosition = @IndexPosition, RowPosition = @RowPosition
+    SET IndexPosition = @IndexPosition, 
+        RowPosition = @RowPosition
     WHERE Id = @Id;
 
     UPDATE Settings 

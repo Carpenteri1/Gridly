@@ -10,6 +10,7 @@ public static class CardFactory
         {
             Id = dto.CardId,
             IndexPosition = dto. IndexPosition,
+            RowPosition = dto. RowPosition,
             Name = dto.CardName,
             Url = dto.Url,
             IconUrl = dto.IconUrl,

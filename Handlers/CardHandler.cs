@@ -220,14 +220,14 @@ public class CardHandler(
         var sortedCards = handlerHelper.SetIndexValues(commands);
         if(sortedCards == null) return Results.StatusCode(500);
         
-        return await cardRepository.BatchEdit(sortedCards) ? 
+        return await cardRepository.BatchEdit(sortedCards.OrderBy(c => c.RowPosition).ThenBy(x => x.IndexPosition)) ? 
             Results.Ok() : Results.StatusCode(500);                                         
     }
 
     public async Task<IResult> Handle(GetAllCardCommand command, CancellationToken cancellationToken)
     {
         var cards = await cardRepository.Get();
-        return Results.Ok(cards.OrderBy(c => c.IndexPosition));
+        return Results.Ok(cards.OrderBy(c => c.RowPosition).ThenBy(x => x.IndexPosition));
     }
     
     public async Task<CardModel?> Handle(GetCardByIdCommands command, CancellationToken cancellationToken) => 
