@@ -19,17 +19,8 @@ public class CardHandlerHelper(IFileService fileService)
 
     public IEnumerable<CardModel> SetIndexValues(List<CardModel> cards)
     {
-        var rows = cards.GroupBy(card => card.IndexPosition)
-            .Select(group => group.ToList())
-            .ToList();
-
-        foreach (var row in rows)
-        {
-            for (int i = 0; i < row.Count; i++)
-            {
-                row[i].IndexPosition = i +1;
-            }        
-        }
+        for (int i = 0; i < cards.Count; i++) 
+            cards[i].IndexPosition = i +1;
         
         return cards;
     }
