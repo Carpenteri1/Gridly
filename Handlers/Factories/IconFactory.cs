@@ -1,5 +1,4 @@
-﻿using Gridly.Dtos;
-using Gridly.Models;
+﻿using Gridly.Models;
 
 namespace Gridly.Factories
 {

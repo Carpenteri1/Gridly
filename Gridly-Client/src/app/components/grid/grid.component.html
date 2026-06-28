@@ -1,16 +1,15 @@
 @if (rows$ | async; as rows) {
   <div #gridLayout class="grid-layout">
-    @for (row of rows; track $index; let rowIndex = $index) {
-      <div
-        class="grid-row"
-        cdkDropList
-        cdkDropListOrientation="horizontal"
-        [id]="RowId(rowIndex)"
-        [cdkDropListConnectedTo]="RowIds(rows)"
-        [cdkDropListDisabled]="!editActive()"
-        [cdkDropListData]="row"
-        (cdkDropListDropped)="Drop($event, rows, rowIndex)">
-        @for (card of row; track card.id) {
+    @for (row of rows; track $index === row.id) {
+      <div class="grid-row"
+           [id]="RowId(row.rowPosition!)"
+           cdkDropList
+           cdkDropListOrientation="horizontal"
+           [cdkDropListConnectedTo]="RowIds(rows)"
+           [cdkDropListDisabled]="!editActive()"
+           [cdkDropListData]="row.cards"
+           (cdkDropListDropped)="Drop($event, rows ,row.rowPosition!)">
+        @for (card of row.cards; track card.id) {
           <div
             class="shadow-sm grid-card-style"
             [style.height.px]="card.settings?.height"
@@ -26,13 +25,13 @@
     }
     @if (editActive()) {
       <div
+        [id]="RowId(rows.length +1)"
         class="grid-row grid-row-empty"
         cdkDropList
         cdkDropListOrientation="horizontal"
-        [id]="RowId(rows.length)"
+        [cdkDropListData]="emptyRow"
         [cdkDropListConnectedTo]="RowIds(rows)"
-        [cdkDropListData]="emptyRowData"
-        (cdkDropListDropped)="Drop($event, rows, rows.length)">
+        (cdkDropListDropped)="Drop($event, rows, (rows.length +1))">
         <span></span>
       </div>
     }

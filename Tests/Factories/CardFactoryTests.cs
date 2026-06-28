@@ -12,7 +12,7 @@ public class CardFactoryTests
         {
             CardId = 12,
             IndexPosition = 3,
-            RowPosition = 1,
+            RowColumnId = 1,
             CardName = "Docs",
             Url = "https://example.test",
             IconUrl = "/icons/docs.svg"
@@ -22,7 +22,7 @@ public class CardFactoryTests
 
         Assert.Equal(dto.CardId, result.Id);
         Assert.Equal(dto.IndexPosition, result.IndexPosition);
-        Assert.Equal(dto.RowPosition, result.RowPosition);
+        Assert.Equal(dto.RowColumnId, result.RowColumnId);
         Assert.Equal(dto.CardName, result.Name);
         Assert.Equal(dto.Url, result.Url);
         Assert.Equal(dto.IconUrl, result.IconUrl);

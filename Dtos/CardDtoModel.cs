@@ -4,7 +4,7 @@ public class CardDtoModel
 {
     public int CardId { get; set; }
     public int IndexPosition { get; set; }
-    public int RowPosition { get; set; }
+    public int RowColumnId { get; set; }
     public string CardName { get; set; }
     public string Url { get; set; }
     public string IconUrl { get; set; }

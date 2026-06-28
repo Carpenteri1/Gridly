@@ -23,6 +23,7 @@ builder.Services.AddScoped(sp =>
 builder.Services.AddScoped<IDbConnectionServices,DbConnectionServices>();
 builder.Services.AddScoped<IVersionEndPoint, VersionEndPoint>();
 builder.Services.AddScoped<ICardRepository,CardRepository>();
+builder.Services.AddScoped<IColumnRowRepository,ColumnRowRepository>();
 builder.Services.AddScoped<ISettingsRepository,SettingsRepository>();
 builder.Services.AddScoped<IIconRepository,IconRepository>();
 builder.Services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();

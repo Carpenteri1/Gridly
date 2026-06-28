@@ -9,6 +9,7 @@ using MediatR;
 
 namespace Gridly.Handlers;
 public class CardHandler(
+    IColumnRowRepository columnRowRepository,
     ICardRepository cardRepository, 
     ISettingsRepository settingsRepository,
     IIconRepository iconRepository,
@@ -25,13 +26,31 @@ public class CardHandler(
 
     public async Task<IResult> Handle(SaveCardCommand command, CancellationToken cancellationToken)
     {
-        var storedCards = await cardRepository.Get();
+        var storedRows = await columnRowRepository.Get();
+        var rows = storedRows.ToList();
+        var Card = new CardModel();
         
-        if (storedCards == null || storedCards.Count() == 0 ) command.IndexPosition = 1;
-        else command.IndexPosition = storedCards.Count() + 1;
-        
-        var Card = await cardRepository.Insert(command);
+        if(rows.Any())
+        {
+            var rowWithRoom = GetRowWithRoom();
+            if (rowWithRoom != null)
+            {
+                command.RowColumnId = rowWithRoom.Id;
+                command.IndexPosition = rowWithRoom.Cards is null ? 1 : rowWithRoom.Cards.Count + 1;
+                if(command.IndexPosition == 1) 
+                    Card = await cardRepository.Insert(command);
+                else
+                    await cardRepository.Edit(command);
+            }
+            else await CreateNewRow(rowPosition: rows.Count + 1);
+        }
 
+        if (rows.Count == 0)
+        {
+            await CreateNewRow();
+            Card = await cardRepository.Insert(command);
+        }
+         
         command.Settings ??= SettingsFactory.Create(null);
         command.Settings.CardId = Card.Id;
         await settingsRepository.Insert(command.Settings);
@@ -40,8 +59,28 @@ public class CardHandler(
         Card.IconData = await iconRepository.Insert(Card.IconData);
 
         await iconConnectedRepository.Insert(IconConnectedFactory.Create(Card.Id, Card.IconData.Id));
-
+        
         return Results.Ok();
+                
+        ColumnRowModel GetRowWithRoom()
+        {
+            foreach (var row in rows)
+            {
+                if (row.Cards is null) return row;
+                
+                foreach (var card in row.Cards)
+                    if (row.RowWidth !> card.Settings.Width - 32)
+                        return row;   
+            }
+            return null;
+        }
+
+        async Task CreateNewRow(int rowPosition = 1)
+        {
+            var row = await columnRowRepository.Insert(ColumnRowFactory.Create(new ColumnRowDtoModel { RowPosition = rowPosition, RowWidth = 0, }));
+            command.RowColumnId = row.Id;
+            command.IndexPosition = 1;
+        }
     }
     
     public async Task<IResult> Handle(DeleteCardCommand command, CancellationToken cancellationToken)
@@ -53,7 +92,7 @@ public class CardHandler(
             await cardRepository.Delete(command.Id) is false)
             return Results.StatusCode(500);
         
-         var Card = cards.FirstOrDefault(x => x.Id == command.Id);
+        var Card = cards.FirstOrDefault(x => x.Id == command.Id);
         if (Card != null &&
          Card.IconData != null)
         {
@@ -220,14 +259,14 @@ public class CardHandler(
         var sortedCards = handlerHelper.SetIndexValues(commands);
         if(sortedCards == null) return Results.StatusCode(500);
         
-        return await cardRepository.BatchEdit(sortedCards.OrderBy(c => c.RowPosition).ThenBy(x => x.IndexPosition)) ? 
+        return await cardRepository.BatchEdit(sortedCards.OrderBy(c => c.RowColumnId).ThenBy(x => x.IndexPosition)) ? 
             Results.Ok() : Results.StatusCode(500);                                         
     }
 
     public async Task<IResult> Handle(GetAllCardCommand command, CancellationToken cancellationToken)
     {
         var cards = await cardRepository.Get();
-        return Results.Ok(cards.OrderBy(c => c.RowPosition).ThenBy(x => x.IndexPosition));
+        return Results.Ok(cards.OrderBy(c => c.RowColumnId).ThenBy(x => x.IndexPosition));
     }
     
     public async Task<CardModel?> Handle(GetCardByIdCommands command, CancellationToken cancellationToken) => 

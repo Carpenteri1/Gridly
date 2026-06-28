@@ -2,9 +2,14 @@ namespace Gridly.Constants;
 
 public class QueryStrings
 {
+    public const string InsertToRowQuery = @"
+    INSERT INTO RowColumn (RowPosition, RowWidth) 
+    VALUES (@RowPosition, @RowWidth);
+    SELECT * FROM RowColumn WHERE Id = last_insert_rowid();";
+    
     public const string InsertToCardQuery = @"
-    INSERT INTO Card (IndexPosition, RowPosition, Name, Url, IconUrl) 
-    VALUES (@IndexPosition, @RowPosition, @Name, @Url, @IconUrl);
+    INSERT INTO Card (RowColumnId, IndexPosition, Name, Url, IconUrl) 
+    VALUES (@RowColumnId, @IndexPosition, @Name, @Url, @IconUrl);
     SELECT * FROM Card WHERE Id = last_insert_rowid();";
 
     public const string InsertToSettingsQuery = @"
@@ -26,7 +31,7 @@ public class QueryStrings
      SELECT 
         co.Id AS CardId, 
         co.IndexPosition, 
-        co.RowPosition,
+        co.RowColumnId,
         co.Name AS CardName, 
         co.Url, 
         co.IconUrl, 
@@ -42,6 +47,10 @@ public class QueryStrings
         i.MaterialIcon AS MaterialIcon
         FROM Card co /**leftjoin**//**where**//**orderby**/";
 
+    public const string SelectRowQuery = @"
+    SELECT r.Id AS Id, r.RowPosition AS RowPosition, r.RowWidth AS RowWidth
+    FROM RowColumn r /**leftjoin**//**where**//**orderby**/";
+    
     public const string SelectIconQuery = @"
     SELECT i.Id, i.Name, i.Type, i.Base64Data, i.MaterialIcon 
     FROM Icon i /**leftjoin**//**where**/";
@@ -56,6 +65,12 @@ public class QueryStrings
         Type = @Type,
         Base64Data = @Base64Data, 
         MaterialIcon = @MaterialIcon
+        /**where**/";
+    
+    public const string UpdateRowQuery = @"
+    UPDATE RowColumn
+    SET RowPosition = @RowPosition, 
+        RowWidth = @RowWidth
         /**where**/";
 
     public const string UpdateCardQuery = @"
@@ -103,5 +118,6 @@ public class QueryStrings
     public const string WhereCardIdEqualsCardIdWithAlias = "co.Id = @cardId";
     public const string WhereIconNameEqualsNameWithAlias = "i.Name = @Name";
     public const string WhereIconTypeEqualsTypeWithAlias = "i.Type = @Type";
+    public const string RowPositionWithAlias = "r.RowPosition;";
     public const string IndexPositionWithAlias = "co.IndexPosition;";
 }

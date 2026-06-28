@@ -16,13 +16,19 @@ public class DbInitializer
     {
         await connection.ExecuteAsync(
             sql:@"
+                CREATE TABLE IF NOT EXISTS RowColumn(
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                RowPosition INTEGER NOT NULL,
+                RowWidth INTEGER NOT NULL);
+
                 CREATE TABLE IF NOT EXISTS Card(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 IndexPosition INTEGER NOT NULL,
-                RowPosition INTEGER NOT NULL,
+                RowColumnId INTEGER NOT NULL,
                 Name TEXT,
                 URL TEXT,
-                IconUrl TEXT);
+                IconUrl TEXT,
+                FOREIGN KEY(RowColumnId) REFERENCES RowColumn(Id) ON DELETE CASCADE);
 
                 CREATE TABLE IF NOT EXISTS IconsConnected(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
