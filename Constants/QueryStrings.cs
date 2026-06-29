@@ -77,7 +77,7 @@ public class QueryStrings
     UPDATE Card
     SET Name = @Name, 
         IndexPosition = @IndexPosition,
-        RowPosition = @RowPosition,
+        RowColumnId = @RowColumnId,
         Url = @Url, 
         IconUrl = @IconUrl
         /**where**/";
@@ -85,7 +85,7 @@ public class QueryStrings
     public const string UpdateBatchCardQuery = @"
     UPDATE Card 
     SET IndexPosition = @IndexPosition, 
-        RowPosition = @RowPosition
+        RowColumnId = @RowColumnId
     WHERE Id = @Id;
 
     UPDATE Settings 

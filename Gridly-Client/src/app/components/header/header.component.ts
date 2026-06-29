@@ -52,7 +52,7 @@ export class HeaderComponent {
 
   save(): void {
     this.toggleMenu();
-    this.#cardService.batchEdit(this.#cardService.currentCards());
+    this.#gridService.batchEdit(this.#gridService.currentRowColumns());
   }
 
 }

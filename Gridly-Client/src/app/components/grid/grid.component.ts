@@ -24,47 +24,46 @@ export class GridComponent {
   protected emptyRow: CardModel[] = [];
 
   protected Drop(event: CdkDragDrop<CardModel[]>, rows: RowColumnModel[], newRowPosition: number): void {
-    //TODO needs to remove a row if a row has only one card thats remove
-    // Update all rows to have the correct index position
     if (!this.editActive()) return;
 
     const droppedCard = event.item.data as CardModel;
-
-    if(rows.length >= newRowPosition)
-    {
-      const updatedRows = rows.map(row => {
-        const cards = [...row.cards];
-        const [movedCard] = cards.splice(event.previousIndex, 1);
-
-        cards.splice(event.currentIndex, 0, movedCard);
-
-        return {
-          ...row,
-          cards: cards.map((card, index) => ({
-            ...card,
-            rowPosition: newRowPosition,
-            indexPosition: index,
-          })),
-        };
-      });
-
-      this.#gridService.setRowsForView(updatedRows);
-      return;
-    }
-
-    droppedCard.indexPosition = 1;
-
-    const newRow: RowColumnModel = {
-      id: 0,
-      rowPosition: newRowPosition,
-      cards: [droppedCard],
-    };
-
-    const rowsWithoutCard = rows.map(row => ({...row,
+    const rowsWithoutDroppedCard = rows.map(row => ({
+      ...row,
       cards: row.cards.filter(card => card.id !== droppedCard.id),
     }));
 
-    this.#gridService.setRowsForView([...rowsWithoutCard, newRow]);
+    const targetRowIndex = rowsWithoutDroppedCard.findIndex(row => row.rowPosition === newRowPosition);
+
+    if (targetRowIndex >= 0) {
+      const targetCards = [...rowsWithoutDroppedCard[targetRowIndex].cards];
+      targetCards.splice(event.currentIndex, 0, droppedCard);
+      rowsWithoutDroppedCard[targetRowIndex] = {
+        ...rowsWithoutDroppedCard[targetRowIndex],
+        cards: targetCards,
+      };
+    } else {
+      rowsWithoutDroppedCard.push({
+        id: 0,
+        rowPosition: newRowPosition,
+        cards: [droppedCard],
+      });
+    }
+
+    this.#gridService.setRowsForView(this.updateRowPositions(rowsWithoutDroppedCard));
+  }
+
+  private updateRowPositions(rows: RowColumnModel[]): RowColumnModel[] {
+    return rows
+      .filter(row => row.cards.length > 0)
+      .map((row, rowIndex) => ({
+        ...row,
+        rowPosition: rowIndex + 1,
+        cards: row.cards.map((card, cardIndex) => ({
+          ...card,
+          rowPosition: rowIndex + 1,
+          indexPosition: cardIndex + 1,
+        })),
+      }));
   }
 
   protected RowId(rowIndex: number): string {

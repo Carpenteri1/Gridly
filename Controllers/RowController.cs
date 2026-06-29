@@ -16,4 +16,8 @@ public class RowController(IMediator meditor) : ControllerBase
     [HttpGet("get")]
     public async Task<IResult> Get() =>
         await meditor.Send(new GetAllRowColumnsCommands());
+    
+    [HttpPost("batch/edit")]
+    public async Task<IResult> Edit([FromBody] BatchEditRowColumnCommand commands) => 
+        await meditor.Send(commands);
 }

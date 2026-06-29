@@ -17,4 +17,7 @@ export class RowColumnEndpointService{
   add(rowColumn: RowColumnModel): Observable<RowColumnModel> {
     return this.http.post<RowColumnModel>(UrlStringsUtil.RowColumnUrlSave, rowColumn).pipe(take(1));
   }
+  batchEdit(cards: RowColumnModel[]): Observable<RowColumnModel[]> {
+    return this.http.post<RowColumnModel[]>(UrlStringsUtil.RowColumnUrlBatchEdit, cards).pipe(take(1));
+  }
 }

@@ -3,6 +3,7 @@ import {BehaviorSubject, firstValueFrom, Observable, take} from "rxjs";
 import {RowColumnModel} from "../../models/rowColumn.Model";
 import {RowColumnEndpointService} from "../endpoint_services/rowColumn.endpoint.service";
 import {toSignal} from "@angular/core/rxjs-interop";
+import {CardModel} from "../../models/card.Model";
 
 @Injectable({providedIn: 'root'})
 export class GridService {
@@ -22,10 +23,13 @@ export class GridService {
   }
 
   private add$ = (rowColumn: RowColumnModel) => this.#api.add(rowColumn);
+  private batchEdit$ = (rowColumn: RowColumnModel[]) => this.#api.batchEdit(rowColumn);
 
   add = (rowColumn: RowColumnModel) =>  firstValueFrom(this.add$(rowColumn)).then(() => this.refresh());
+  batchEdit = (rowColumn: RowColumnModel[]) => firstValueFrom(this.batchEdit$(rowColumn)).then(() => this.refresh());
 
   setEditMode = (value: boolean) => this._editMode.set(value);
+
   toggleEdit = () => this._editMode.update((value) => !value);
 
   refresh(): void {

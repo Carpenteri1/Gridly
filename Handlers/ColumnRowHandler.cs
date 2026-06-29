@@ -1,5 +1,4 @@
 using Gridly.Command;
-using Gridly.helpers;
 using Gridly.Models;
 using Gridly.Repositories;
 using Gridly.Services;
@@ -10,7 +9,8 @@ public class ColumnRowHandler(
     IColumnRowRepository columnRowRepository,
     ICardRepository cardRepository): 
     IRequestHandler<SaveColumnRowCommands, IResult>,
-    IRequestHandler<GetAllRowColumnsCommands, IResult>
+    IRequestHandler<GetAllRowColumnsCommands, IResult>,
+    IRequestHandler<BatchEditRowColumnCommand, IResult>
 {
     public async Task<IResult> Handle(SaveColumnRowCommands command, CancellationToken cancellationToken)
     {
@@ -32,9 +32,9 @@ public class ColumnRowHandler(
     
     public async Task<IResult> Handle(GetAllRowColumnsCommands command, CancellationToken cancellationToken)
     {
-        var rowColummns = (await columnRowRepository.Get())?.ToList();
+        var storedRowColumns = (await columnRowRepository.Get())?.ToList();
         var cards = await cardRepository.Get();
-        foreach (var row in rowColummns)
+        foreach (var row in storedRowColumns)
             foreach (var card in cards)
                 if (card.RowColumnId == row.Id)                          
                 {
@@ -44,6 +44,14 @@ public class ColumnRowHandler(
                     row.Cards.Add(card);                                
                 }
         
-        return rowColummns.Any() ? Results.Ok(rowColummns.ToList()) : Results.NoContent();    
+        return storedRowColumns.Any() ? Results.Ok(storedRowColumns.ToList()) : Results.NoContent();    
+    }
+
+    public async Task<IResult> Handle(BatchEditRowColumnCommand commands, CancellationToken cancellationToken)
+    {
+        var storedRowColumns = (await columnRowRepository.Get())?.ToList();
+        //TODO update rowid for all rows that dont match when updating, so give the cards on that row the current row id they are in.
+        
+        return storedRowColumns.Any() ? Results.Ok(storedRowColumns.ToList()) : Results.NoContent();    
     }
 }

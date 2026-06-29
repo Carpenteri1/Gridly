@@ -27,6 +27,12 @@ public class ColumnRowRepository(IDbConnection connection) : IColumnRowRepositor
         return Factories.ColumnRowFactory.CreateMany(Dtos);
     }
 
+    public Task<IEnumerable<ColumnRowModel>> BatchEdit(IEnumerable<ColumnRowModel> columnRows)
+    {
+        //TODO implement query
+        throw new NotImplementedException();
+    }
+
     public async Task<bool> Edit(ColumnRowModel columnRow)
     {
         var builder = new SqlBuilder();
