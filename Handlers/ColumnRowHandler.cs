@@ -19,14 +19,6 @@ public class ColumnRowHandler(
         if (rows == null)
             await columnRowRepository.Insert(command);
         
-        /*int totalCardWith = 0;
-        foreach (var row in rows)
-        {
-            if (row.RowPosition == command.RowPosition)
-            {
-                
-            }
-        }*/
         return Results.Ok();
     }
     
@@ -34,15 +26,16 @@ public class ColumnRowHandler(
     {
         var storedRowColumns = (await columnRowRepository.Get())?.ToList();
         var cards = await cardRepository.Get();
-        foreach (var row in storedRowColumns)
-            foreach (var card in cards)
-                if (card.RowColumnId == row.Id)                          
-                {
-                    if (row.Cards is null)
-                        row.Cards = new List<CardModel>();             
+        
+            foreach (var row in storedRowColumns)
+                foreach (var card in cards)
+                    if (card.RowColumnId == row.Id)                          
+                    {
+                        if (row.Cards is null)
+                            row.Cards = new List<CardModel>();             
                     
-                    row.Cards.Add(card);                                
-                }
+                        row.Cards.Add(card);                                
+                    }
         
         return storedRowColumns.Any() ? Results.Ok(storedRowColumns.ToList()) : Results.NoContent();    
     }
@@ -50,8 +43,47 @@ public class ColumnRowHandler(
     public async Task<IResult> Handle(BatchEditRowColumnCommand commands, CancellationToken cancellationToken)
     {
         var storedRowColumns = (await columnRowRepository.Get())?.ToList();
-        //TODO update rowid for all rows that dont match when updating, so give the cards on that row the current row id they are in.
         
-        return storedRowColumns.Any() ? Results.Ok(storedRowColumns.ToList()) : Results.NoContent();    
+        await InsertNewRow();
+        UpdateRowData();
+        
+        var flattCardList = storedRowColumns.SelectMany(x => x.Cards).ToList();
+        await cardRepository.BatchEdit(flattCardList);
+        
+        return storedRowColumns.Any() ? Results.Ok(storedRowColumns.ToList()) : Results.NoContent();  
+        
+        async Task InsertNewRow()
+        {    
+            if (storedRowColumns!.Count < commands.Count)                                                       
+            {                                                                                                  
+                await columnRowRepository.Insert(commands.Last());                                             
+                storedRowColumns = (await columnRowRepository.Get())?.ToList();                                
+            }
+            else if (storedRowColumns.Count > commands.Count)
+            {
+                var rowsMissing = storedRowColumns
+                    .ExceptBy(commands.Select(c => c.Id), x => x.Id)
+                    .Concat(commands.ExceptBy(storedRowColumns.Select(x => x.Id), c => c.Id));
+                
+                await columnRowRepository.BatchDelete(rowsMissing);
+                storedRowColumns = (await columnRowRepository.Get())?.ToList();
+            }
+        }
+
+        void UpdateRowData()
+        { 
+            foreach (var command in commands.ToList())                                                      
+                foreach (var updated in storedRowColumns)                                                   
+                {                                                                                           
+                    if (command.RowPosition == updated.RowPosition)                                         
+                    {                                                                                       
+                        foreach (var card in command.Cards)                                                 
+                        card.RowColumnId = updated.Id;                                                  
+                                                                                                        
+                        command.Id = updated.Id;                                                            
+                        updated.Cards = command.Cards;                                                      
+                    }                                                                                       
+                }                                                                                           
+        }
     }
 }

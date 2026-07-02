@@ -27,17 +27,17 @@ public class ColumnRowRepository(IDbConnection connection) : IColumnRowRepositor
         return Factories.ColumnRowFactory.CreateMany(Dtos);
     }
 
-    public Task<IEnumerable<ColumnRowModel>> BatchEdit(IEnumerable<ColumnRowModel> columnRows)
+    public async Task<bool> BatchDelete(IEnumerable<ColumnRowModel> columnRows)
     {
-        //TODO implement query
-        throw new NotImplementedException();
-    }
+        if (columnRows is null)
+            return false;
+        
+        var ids = columnRows.Select(r => r.Id).ToArray();
 
-    public async Task<bool> Edit(ColumnRowModel columnRow)
-    {
-        var builder = new SqlBuilder();
-        var template = builder.AddTemplate(QueryStrings.UpdateRowQuery,columnRow);
-        builder.Where(QueryStrings.WhereIdEqualsId,  new { Id = columnRow.Id });
-        return await _dbCommandRunner.Execute(template.RawSql,template.Parameters);
+        var result = await connection.ExecuteAsync(
+            QueryStrings.BatchDeleteRowColumnQuery,
+            new { Ids = ids });
+       
+        return result > 0;    
     }
 }

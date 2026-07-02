@@ -81,7 +81,7 @@ public class QueryStrings
         Url = @Url, 
         IconUrl = @IconUrl
         /**where**/";
-
+    
     public const string UpdateBatchCardQuery = @"
     UPDATE Card 
     SET IndexPosition = @IndexPosition, 
@@ -106,6 +106,25 @@ public class QueryStrings
     public const string DeleteFromCardQuery = "DELETE FROM Card /**where**/";
     public const string DeleteFromIconsConnectedQuery = "DELETE FROM IconsConnected /**where**/";
     public const string DeleteFromIconQuery = "DELETE FROM Icon /**where**/";
+    
+    public const string BatchDeleteRowColumnQuery = @"
+    DELETE FROM Settings
+    WHERE CardId IN (
+      SELECT Id FROM Card
+      WHERE RowColumnId IN @RowColumnIds
+    );
+
+    DELETE FROM IconsConnected
+    WHERE CardId IN (
+      SELECT Id FROM Card
+      WHERE RowColumnId IN @RowColumnIds
+    );
+
+    DELETE FROM Card
+    WHERE RowColumnId IN @RowColumnIds;
+
+    DELETE FROM RowColumn
+    WHERE Id IN @RowColumnIds;";
 
     public const string JoinIconDataQuery = "Icon i ON i.Id = ic.IconId";
     public const string JoinIconsConnectedDataQuery = "IconsConnected ic ON ic.CardId = co.Id";
