@@ -3,7 +3,6 @@ import {BehaviorSubject, firstValueFrom, Observable, take} from "rxjs";
 import {RowColumnModel} from "../../models/rowColumn.Model";
 import {RowColumnEndpointService} from "../endpoint_services/rowColumn.endpoint.service";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {CardModel} from "../../models/card.Model";
 
 @Injectable({providedIn: 'root'})
 export class GridService {

@@ -61,7 +61,7 @@ export class GridComponent {
         cards: row.cards.map((card, cardIndex) => ({
           ...card,
           rowPosition: rowIndex + 1,
-          indexPosition: cardIndex + 1,
+          indexPosition: cardIndex,
         })),
       }));
   }

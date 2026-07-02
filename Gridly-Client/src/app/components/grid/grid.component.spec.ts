@@ -81,9 +81,9 @@ describe('GridComponent', () => {
   });
 
   it('removes the source row and renumbers rows when its only card moves into an existing row', () => {
-    const movedCard = { id: 1, indexPosition: 0, rowPosition: 1, name: 'One', url: 'https://one.example' };
-    const secondCard = { id: 2, indexPosition: 0, rowPosition: 2, name: 'Two', url: 'https://two.example' };
-    const thirdCard = { id: 3, indexPosition: 1, rowPosition: 2, name: 'Three', url: 'https://three.example' };
+    const movedCard = { id: 1, indexPosition: 2, rowPosition: 1, name: 'One', url: 'https://one.example' };
+    const secondCard = { id: 2, indexPosition: 1, rowPosition: 2, name: 'Two', url: 'https://two.example' };
+    const thirdCard = { id: 3, indexPosition: 3, rowPosition: 2, name: 'Three', url: 'https://three.example' };
     const fourthCard = { id: 4, indexPosition: 0, rowPosition: 3, name: 'Four', url: 'https://four.example' };
     const rowColumns: RowColumnModel[] = [
       { id: 1, rowPosition: 1, cards: [movedCard] },
@@ -118,8 +118,8 @@ describe('GridComponent', () => {
   });
 
   it('removes the source row and renumbers rows when its only card moves into a new row', () => {
-    const movedCard = { id: 1, indexPosition: 0, rowPosition: 1, name: 'One', url: 'https://one.example' };
-    const secondCard = { id: 2, indexPosition: 0, rowPosition: 2, name: 'Two', url: 'https://two.example' };
+    const movedCard = { id: 1, indexPosition: 1, rowPosition: 1, name: 'One', url: 'https://one.example' };
+    const secondCard = { id: 2, indexPosition: 1, rowPosition: 2, name: 'Two', url: 'https://two.example' };
     const rowColumns: RowColumnModel[] = [
       { id: 1, rowPosition: 1, cards: [movedCard] },
       { id: 2, rowPosition: 2, cards: [secondCard] },
