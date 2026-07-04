@@ -27,6 +27,7 @@ export class GridComponent {
     if (!this.editActive()) return;
 
     const droppedCard = event.item.data as CardModel;
+    const sourceRow = rows.find(row => row.cards.some(card => card.id === droppedCard.id));
     const rowsWithoutDroppedCard = rows.map(row => ({
       ...row,
       cards: row.cards.filter(card => card.id !== droppedCard.id),
@@ -49,17 +50,18 @@ export class GridComponent {
       });
     }
 
-    this.#gridService.setRowsForView(this.updateRowPositions(rowsWithoutDroppedCard));
+    this.#gridService.setRowsForView(this.updateRowPositions(rowsWithoutDroppedCard, sourceRow));
   }
 
-  private updateRowPositions(rows: RowColumnModel[]): RowColumnModel[] {
+  private updateRowPositions(rows: RowColumnModel[], sourceRow?: RowColumnModel): RowColumnModel[] {
     return rows
-      .filter(row => row.cards.length > 0)
+      .filter(row => row.cards.length > 0 || row.id !== sourceRow?.id)
       .map((row, rowIndex) => ({
         ...row,
         rowPosition: rowIndex + 1,
         cards: row.cards.map((card, cardIndex) => ({
           ...card,
+          rowColumnId: row.id,
           rowPosition: rowIndex + 1,
           indexPosition: cardIndex,
         })),

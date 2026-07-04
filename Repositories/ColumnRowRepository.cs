@@ -36,8 +36,26 @@ public class ColumnRowRepository(IDbConnection connection) : IColumnRowRepositor
 
         var result = await connection.ExecuteAsync(
             QueryStrings.BatchDeleteRowColumnQuery,
-            new { Ids = ids });
+            new { RowColumnId = ids });
        
         return result > 0;    
+    }
+    
+    public async Task<bool> BatchEdit(IEnumerable<ColumnRowModel> columnRows)
+    {
+        if (columnRows is null)
+            return false;
+
+        var parameters = columnRows
+            .Select(r => new 
+            { 
+                r.Id,
+                r.RowPosition,
+                r.RowWidth
+            })
+            .ToList();
+
+        var result = await connection.ExecuteAsync(QueryStrings.UpdateBatchRowColumnQuery, parameters);
+        return result > 0;
     }
 }

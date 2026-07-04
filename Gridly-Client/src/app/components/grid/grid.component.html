@@ -1,6 +1,6 @@
 @if (rows$ | async; as rows) {
   <div #gridLayout class="grid-layout">
-    @for (row of rows; track $index === row.id) {
+    @for (row of rows; track row.id || row.rowPosition) {
       <div class="grid-row"
            [id]="RowId(row.rowPosition!)"
            cdkDropList

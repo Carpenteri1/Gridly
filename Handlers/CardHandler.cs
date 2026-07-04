@@ -85,31 +85,62 @@ public class CardHandler(
     
     public async Task<IResult> Handle(DeleteCardCommand command, CancellationToken cancellationToken)
     {
-        var cards = await cardRepository.Get();
-   
-        
+        var cards = (await cardRepository.Get())?.ToList() ?? new List<CardModel>();
+        var cardToDelete = cards.FirstOrDefault(x => x.Id == command.Id);
+
+        if (cardToDelete == null)
+            return Results.NotFound();
+
         if (await settingsRepository.Delete(command.Id) is false ||
             await cardRepository.Delete(command.Id) is false)
             return Results.StatusCode(500);
-        
-        var Card = cards.FirstOrDefault(x => x.Id == command.Id);
-        if (Card != null &&
-         Card.IconData != null)
+
+        if (cardToDelete.IconData != null)
         {
             var iconsConnected = 
-                await iconConnectedRepository.GetManyById(null,Card.IconData.Id);
+                await iconConnectedRepository.GetManyById(null,cardToDelete.IconData.Id);
             
             if (!iconsConnected.Any())
             {
-                await iconRepository.Delete(Card.IconData.Id);
+                await iconRepository.Delete(cardToDelete.IconData.Id);
                 await iconConnectedRepository.Delete(command.Id);
-                fileService.DeleteIcon(Card.IconData.Name, Card.IconData.Type);
+                fileService.DeleteIcon(cardToDelete.IconData.Name, cardToDelete.IconData.Type);
             }   
         }
         
-        cards = await cardRepository.Get();
-        var indexedCards = handlerHelper.SetIndexValues(cards.ToList());
+        cards = (await cardRepository.Get())?.ToList() ?? new List<CardModel>();
+        await DeleteEmptyRows(new[] { cardToDelete?.RowColumnId }, cards);
+
+        if (cards.Count == 0)
+            return Results.Ok();
+
+        var indexedCards = handlerHelper.SetIndexValues(cards);
         return await cardRepository.BatchEdit(indexedCards) == false ? Results.StatusCode(500) : Results.Ok();
+
+        async Task DeleteEmptyRows(IEnumerable<int?> affectedRowColumnIds, List<CardModel> remainingCards)
+        {
+            var rowsToDelete = affectedRowColumnIds
+                .Where(rowColumnId => rowColumnId is not null &&
+                                      remainingCards.All(card => card.RowColumnId != rowColumnId))
+                .Distinct()
+                .Select(rowColumnId => new ColumnRowModel { Id = rowColumnId!.Value })
+                .ToList();
+
+            if (rowsToDelete.Count == 0)
+                return;
+
+            await columnRowRepository.BatchDelete(rowsToDelete);
+
+            var rows = (await columnRowRepository.Get())?
+                .OrderBy(row => row.RowPosition)
+                .ToList() ?? new List<ColumnRowModel>();
+
+            for (var i = 0; i < rows.Count; i++)
+                rows[i].RowPosition = i + 1;
+
+            if (rows.Count > 0)
+                await columnRowRepository.BatchEdit(rows);
+        }
     }
     
     public async Task<IResult> Handle(EditCardCommand command, CancellationToken cancellationToken)
