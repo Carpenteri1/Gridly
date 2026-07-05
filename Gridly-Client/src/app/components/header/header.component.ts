@@ -46,11 +46,18 @@ export class HeaderComponent {
 
   toggleMenu(): void {
     this.#gridService.toggleEdit();
+    if (!this.#gridService.inEditMode()) {
+      this.reloadPage();
+    }
   }
 
   save(): void {
     this.toggleMenu();
     this.#gridService.batchSave(this.#gridService.currentRowColumns());
+  }
+
+  protected reloadPage(): void {
+    location.reload();
   }
 
 }
