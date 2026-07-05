@@ -3,6 +3,7 @@ using Gridly.Handlers;
 using Gridly.Models;
 using Gridly.Repositories;
 using Gridly.Services;
+using Gridly.Dtos;
 
 namespace Gridly.Tests.Handlers;
 
@@ -24,12 +25,18 @@ public class ColumnRowHandlerTests
         {
             Cards =
             [
-                new CardModel { Id = 10, RowColumnId = 1, IndexPosition = 0, Name = "Moved", Url = "https://moved.example" },
-                new CardModel { Id = 20, RowColumnId = 2, IndexPosition = 0, Name = "Kept", Url = "https://kept.example" },
+                new CardModel { Id = 10, RowColumnId = 1, IndexPosition = 1, Name = "Moved", Url = "https://moved.example" },
+                new CardModel { Id = 20, RowColumnId = 2, IndexPosition = 1, Name = "Kept", Url = "https://kept.example" },
             ],
         };
-        var handler = new ColumnRowHandler(columnRowRepository, cardRepository);
-        var command = new BatchEditRowColumnCommand
+        var handler = new ColumnRowHandler(
+            columnRowRepository,
+            cardRepository,
+            new FakeSettingsRepository(),
+            new FakeIconRepository(),
+            new FakeIconConnectedRepository(),
+            new FakeFileService());
+        var command = new BatchSaveColumnRowCommands
         {
             new()
             {
@@ -37,8 +44,8 @@ public class ColumnRowHandlerTests
                 RowPosition = 1,
                 Cards =
                 [
-                    new CardModel { Id = 10, RowColumnId = 1, IndexPosition = 0, Name = "Moved", Url = "https://moved.example" },
-                    new CardModel { Id = 20, RowColumnId = 2, IndexPosition = 1, Name = "Kept", Url = "https://kept.example" },
+                    new CardModel { Id = 10, RowColumnId = 1, IndexPosition = 1, Name = "Moved", Url = "https://moved.example" },
+                    new CardModel { Id = 20, RowColumnId = 2, IndexPosition = 2, Name = "Kept", Url = "https://kept.example" },
                 ],
             },
         };
@@ -48,9 +55,6 @@ public class ColumnRowHandlerTests
         Assert.Collection(columnRowRepository.DeletedRows, row =>
         {
             Assert.Equal(1, row.Id);
-            var card = Assert.Single(row.Cards);
-            Assert.Equal(10, card.Id);
-            Assert.Equal(1, card.RowColumnId);
         });
         Assert.Equal(["batch-edit-cards", "delete-rows"], operations);
         Assert.All(cardRepository.BatchEditedCards, card => Assert.Equal(2, card.RowColumnId));
@@ -143,5 +147,43 @@ public class ColumnRowHandlerTests
                 IconData = card.IconData,
                 Settings = card.Settings,
             };
+    }
+
+    private sealed class FakeSettingsRepository : ISettingsRepository
+    {
+        public Task<SettingsModel> Insert(SettingsModel settings) => Task.FromResult(settings);
+        public Task<SettingsModel> Edit(SettingsModel settings) => Task.FromResult(settings);
+        public Task<bool> Delete(int Id) => Task.FromResult(true);
+    }
+
+    private sealed class FakeIconRepository : IIconRepository
+    {
+        public Task<IconModel> Insert(IconModel icon) => Task.FromResult(icon);
+        public Task<IconModel> Edit(IconModel icon) => Task.FromResult(icon);
+        public Task<IconModel> GetById(int Id) => Task.FromResult(new IconModel { Id = Id });
+        public Task<IconModel> GetByFullName(IconModel icon) => Task.FromResult(icon);
+        public List<string> FindUnusedIcons(IEnumerable<CardModel> cards) => [];
+        public Task<bool> Delete(int Id) => Task.FromResult(true);
+    }
+
+    private sealed class FakeIconConnectedRepository : IIconConnectedRepository
+    {
+        public Task<IEnumerable<IconConnectedDtoModel>> GetManyById(int? cardId, int? iconId) =>
+            Task.FromResult<IEnumerable<IconConnectedDtoModel>>([]);
+
+        public Task<IconConnectedDtoModel> Insert(IconConnectedDtoModel model) => Task.FromResult(model);
+        public Task<bool> Delete(int cardId) => Task.FromResult(true);
+    }
+
+    private sealed class FakeFileService : IFileService
+    {
+        public bool FileExist(string filePath) => true;
+        public bool DeletedFile(string filePath) => true;
+        public bool WriteAllBitesToFile(string filePath, string content) => true;
+        public bool WriteToFile(string filePath, string content) => true;
+        public Task<string> ReadAllFromFileAsync(string filePath) => Task.FromResult(string.Empty);
+        public IEnumerable<FileInfo> GetAllIcons() => [];
+        public bool UploadIcon(IconModel iconModel) => true;
+        public bool DeleteIcon(string fileName, string fileType) => true;
     }
 }

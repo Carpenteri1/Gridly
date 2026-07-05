@@ -11,6 +11,11 @@ type GridComponentTestHarness = GridComponent & {
   Drop(event: unknown, rows: RowColumnModel[], rowIndex: number): void;
 };
 
+class MockResizeObserver {
+  observe = jest.fn();
+  disconnect = jest.fn();
+}
+
 @Component({
   selector: 'app-card-component',
   template: '',
@@ -32,12 +37,15 @@ describe('GridComponent', () => {
     rows$: BehaviorSubject<RowColumnModel[]>;
     inEditMode: () => boolean;
     setRowsForView: jest.Mock;
+    setAvailableRowWidth: jest.Mock;
+    normalizeRows: jest.Mock;
   };
 
   beforeEach(async () => {
+    (globalThis as typeof globalThis & { ResizeObserver: typeof ResizeObserver }).ResizeObserver = MockResizeObserver as never;
     cards = [
-      { id: 1, indexPosition: 0, rowPosition: 1, name: 'One', url: 'https://one.example' },
-      { id: 2, indexPosition: 1, rowPosition: 1, name: 'Two', url: 'https://two.example' },
+      { id: 1, indexPosition: 1, rowPosition: 1, name: 'One', url: 'https://one.example' },
+      { id: 2, indexPosition: 2, rowPosition: 1, name: 'Two', url: 'https://two.example' },
     ];
     rows = [
       { id: 1, rowPosition: 1, cards },
@@ -47,6 +55,20 @@ describe('GridComponent', () => {
     gridServiceMock.rows$ = rowsSubject;
     gridServiceMock.inEditMode = editMode.asReadonly();
     gridServiceMock.setRowsForView = jest.fn();
+    gridServiceMock.setAvailableRowWidth = jest.fn();
+    gridServiceMock.normalizeRows = jest.fn((rowsToNormalize: RowColumnModel[]) =>
+      rowsToNormalize
+        .filter(row => row.cards.length > 0)
+        .map((row, rowIndex) => ({
+          ...row,
+          rowPosition: rowIndex + 1,
+          cards: row.cards.map((card, cardIndex) => ({
+            ...card,
+            rowColumnId: row.id,
+            rowPosition: rowIndex + 1,
+            indexPosition: cardIndex + 1,
+          })),
+        })));
 
     TestBed.overrideComponent(GridComponent, {
       remove: { imports: [CardComponent] },
@@ -84,7 +106,7 @@ describe('GridComponent', () => {
     const movedCard = { id: 1, indexPosition: 2, rowColumnId: 1, rowPosition: 1, name: 'One', url: 'https://one.example' };
     const secondCard = { id: 2, indexPosition: 1, rowColumnId: 2, rowPosition: 2, name: 'Two', url: 'https://two.example' };
     const thirdCard = { id: 3, indexPosition: 3, rowColumnId: 2, rowPosition: 2, name: 'Three', url: 'https://three.example' };
-    const fourthCard = { id: 4, indexPosition: 0, rowColumnId: 3, rowPosition: 3, name: 'Four', url: 'https://four.example' };
+    const fourthCard = { id: 4, indexPosition: 1, rowColumnId: 3, rowPosition: 3, name: 'Four', url: 'https://four.example' };
     const rowColumns: RowColumnModel[] = [
       { id: 1, rowPosition: 1, cards: [movedCard] },
       { id: 2, rowPosition: 2, cards: [secondCard, thirdCard] },
@@ -102,16 +124,16 @@ describe('GridComponent', () => {
         id: 2,
         rowPosition: 1,
         cards: [
-          { ...secondCard, indexPosition: 0, rowColumnId: 2, rowPosition: 1 },
-          { ...movedCard, indexPosition: 1, rowColumnId: 2, rowPosition: 1 },
-          { ...thirdCard, indexPosition: 2, rowColumnId: 2, rowPosition: 1 },
+          { ...secondCard, indexPosition: 1, rowColumnId: 2, rowPosition: 1 },
+          { ...movedCard, indexPosition: 2, rowColumnId: 2, rowPosition: 1 },
+          { ...thirdCard, indexPosition: 3, rowColumnId: 2, rowPosition: 1 },
         ],
       },
       {
         id: 3,
         rowPosition: 2,
         cards: [
-          { ...fourthCard, indexPosition: 0, rowColumnId: 3, rowPosition: 2 },
+          { ...fourthCard, indexPosition: 1, rowColumnId: 3, rowPosition: 2 },
         ],
       },
     ]);
@@ -136,23 +158,23 @@ describe('GridComponent', () => {
         id: 2,
         rowPosition: 1,
         cards: [
-          { ...secondCard, indexPosition: 0, rowColumnId: 2, rowPosition: 1 },
+          { ...secondCard, indexPosition: 1, rowColumnId: 2, rowPosition: 1 },
         ],
       },
       {
         id: 0,
         rowPosition: 2,
         cards: [
-          { ...movedCard, indexPosition: 0, rowColumnId: 0, rowPosition: 2 },
+          { ...movedCard, indexPosition: 1, rowColumnId: 0, rowPosition: 2 },
         ],
       },
     ]);
   });
 
   it('updates rowColumnId when moving a card down into a lower existing row', () => {
-    const firstCard = { id: 1, indexPosition: 0, rowColumnId: 1, rowPosition: 1, name: 'One', url: 'https://one.example' };
+    const firstCard = { id: 1, indexPosition: 1, rowColumnId: 1, rowPosition: 1, name: 'One', url: 'https://one.example' };
     const movedCard = { id: 2, indexPosition: 1, rowColumnId: 1, rowPosition: 1, name: 'Two', url: 'https://two.example' };
-    const lowerCard = { id: 3, indexPosition: 0, rowColumnId: 2, rowPosition: 2, name: 'Three', url: 'https://three.example' };
+    const lowerCard = { id: 3, indexPosition: 1, rowColumnId: 2, rowPosition: 2, name: 'Three', url: 'https://three.example' };
     const rowColumns: RowColumnModel[] = [
       { id: 1, rowPosition: 1, cards: [firstCard, movedCard] },
       { id: 2, rowPosition: 2, cards: [lowerCard] },
@@ -169,15 +191,15 @@ describe('GridComponent', () => {
         id: 1,
         rowPosition: 1,
         cards: [
-          { ...firstCard, indexPosition: 0, rowColumnId: 1, rowPosition: 1 },
+          { ...firstCard, indexPosition: 1, rowColumnId: 1, rowPosition: 1 },
         ],
       },
       {
         id: 2,
         rowPosition: 2,
         cards: [
-          { ...lowerCard, indexPosition: 0, rowColumnId: 2, rowPosition: 2 },
-          { ...movedCard, indexPosition: 1, rowColumnId: 2, rowPosition: 2 },
+          { ...lowerCard, indexPosition: 1, rowColumnId: 2, rowPosition: 2 },
+          { ...movedCard, indexPosition: 2, rowColumnId: 2, rowPosition: 2 },
         ],
       },
     ]);

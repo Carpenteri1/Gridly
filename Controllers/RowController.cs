@@ -8,16 +8,11 @@ namespace Gridly.Controllers;
 [Route("/api/[controller]")]
 public class RowController(IMediator meditor) : ControllerBase
 {
-    [HttpPost("save")]
-    public async Task<IResult> Save([FromBody] SaveColumnRowCommands commands) =>
-        await meditor.Send(commands) is null ? 
-            Results.BadRequest() : Results.Ok();
+    [HttpPost("batchSave")]
+    public async Task<IResult> BatchSave([FromBody] BatchSaveColumnRowCommands commands) =>
+        await meditor.Send(commands);
     
     [HttpGet("get")]
     public async Task<IResult> Get() =>
         await meditor.Send(new GetAllRowColumnsCommands());
-    
-    [HttpPost("batch/edit")]
-    public async Task<IResult> Edit([FromBody] BatchEditRowColumnCommand commands) => 
-        await meditor.Send(commands);
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkDrag, CdkDragDrop, CdkDropList } from "@angular/cdk/drag-drop";
 import { CardModel } from '../../models/card.Model';
@@ -14,23 +14,34 @@ import { RowColumnModel } from "../../models/rowColumn.Model";
   styleUrls: ['./grid.component.css'],
 })
 
-export class GridComponent {
+export class GridComponent implements AfterViewInit, OnDestroy {
   #gridService = inject(GridService);
 
   @ViewChild('gridLayout') private gridLayout?: ElementRef<HTMLElement>;
+  private resizeObserver?: ResizeObserver;
 
   protected readonly rows$ = this.#gridService.rows$;
   protected readonly editActive = this.#gridService.inEditMode;
   protected emptyRow: CardModel[] = [];
 
+  //TODO look over this class. Somethings fishy in the structure
+  ngAfterViewInit(): void {
+    this.resizeObserver = new ResizeObserver(() => this.updateAvailableRowWidth());
+    this.resizeObserver.observe(this.gridLayout!.nativeElement);
+    this.updateAvailableRowWidth();
+  }
+
+  ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
+  }
+
   protected Drop(event: CdkDragDrop<CardModel[]>, rows: RowColumnModel[], newRowPosition: number): void {
     if (!this.editActive()) return;
 
     const droppedCard = event.item.data as CardModel;
-    const sourceRow = rows.find(row => row.cards.some(card => card.id === droppedCard.id));
     const rowsWithoutDroppedCard = rows.map(row => ({
       ...row,
-      cards: row.cards.filter(card => card.id !== droppedCard.id),
+      cards: row.cards.filter(card => !this.isSameCard(card, droppedCard)),
     }));
 
     const targetRowIndex = rowsWithoutDroppedCard.findIndex(row => row.rowPosition === newRowPosition);
@@ -50,36 +61,67 @@ export class GridComponent {
       });
     }
 
-    this.#gridService.setRowsForView(this.updateRowPositions(rowsWithoutDroppedCard, sourceRow));
+    this.#gridService.setRowsForView(this.#gridService.normalizeRows(rowsWithoutDroppedCard));
   }
 
-  private updateRowPositions(rows: RowColumnModel[], sourceRow?: RowColumnModel): RowColumnModel[] {
-    return rows
-      .filter(row => row.cards.length > 0 || row.id !== sourceRow?.id)
-      .map((row, rowIndex) => ({
-        ...row,
-        rowPosition: rowIndex + 1,
-        cards: row.cards.map((card, cardIndex) => ({
-          ...card,
-          rowColumnId: row.id,
-          rowPosition: rowIndex + 1,
-          indexPosition: cardIndex,
-        })),
-      }));
+  protected DropToNewRow(event: CdkDragDrop<CardModel[]>, rows: RowColumnModel[], newRowPosition: number): void {
+    if (!this.editActive()) return;
+
+    const droppedCard = event.item.data as CardModel;
+    const rowsWithoutDroppedCard = rows.map(row => ({
+      ...row,
+      cards: row.cards.filter(card => !this.isSameCard(card, droppedCard)),
+    }));
+
+    rowsWithoutDroppedCard.splice(newRowPosition - 1, 0, {
+      id: 0,
+      rowPosition: newRowPosition,
+      rowWidth: 0,
+      cards: [droppedCard],
+    });
+
+    this.#gridService.setRowsForView(this.#gridService.normalizeRows(rowsWithoutDroppedCard));
   }
 
   protected RowId(rowIndex: number): string {
     return `card-row-${rowIndex}`;
   }
 
+  protected InsertRowId(rowIndex: number): string {
+    return `card-row-insert-${rowIndex}`;
+  }
+
   protected RowIds(rows: RowColumnModel[]): string[] {
     return [
       ...rows.map(row => this.RowId(row.rowPosition!)),
+      ...Array.from({ length: rows.length + 1 }, (_, index) => this.InsertRowId(index + 1)),
       this.RowId(rows.length + 1),
     ];
   }
 
-  private getRowIndex(rowId: string): number {
-    return Number(rowId.replace('card-row-', ''));
+  protected InsertRowPositions(rows: RowColumnModel[]): number[] {
+    return Array.from({ length: rows.length + 1 }, (_, index) => index + 1);
+  }
+
+  protected CardTrack(card: CardModel, index: number): string {
+    return card.id > 0 ? card.id.toString() : `new-${card.rowPosition}-${card.indexPosition}-${index}`;
+  }
+
+  protected CardDomId(row: RowColumnModel, card: CardModel): string {
+    return card.id > 0 ? card.id.toString() : `new-card-${row.rowPosition}-${card.indexPosition}`;
+  }
+
+  private updateAvailableRowWidth(): void {
+    const row = this.gridLayout?.nativeElement.querySelector('.grid-row') as HTMLElement | null;
+    const element = row ?? this.gridLayout?.nativeElement;
+    if (!element) return;
+
+    const styles = getComputedStyle(element);
+    const horizontalPadding = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+    this.#gridService.setAvailableRowWidth(element.clientWidth - horizontalPadding);
+  }
+
+  private isSameCard(card: CardModel, other: CardModel): boolean {
+    return other.id === 0 ? card === other : card.id === other.id;
   }
 }

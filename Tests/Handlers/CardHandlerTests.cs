@@ -10,107 +10,10 @@ namespace Gridly.Tests.Handlers;
 
 public class CardHandlerTests
 {
-    [Fact]
-    public async Task HandleDelete_WhenDeletedCardWasLastInRow_DeletesEmptyRowAndRenumbersRows()
-    {
-        var columnRowRepository = new FakeColumnRowRepository
-        {
-            Rows =
-            [
-                new ColumnRowModel { Id = 1, RowPosition = 1, Cards = [] },
-                new ColumnRowModel { Id = 2, RowPosition = 2, Cards = [] },
-            ],
-        };
-        var cardRepository = new FakeCardRepository
-        {
-            Cards =
-            [
-                new CardModel { Id = 10, RowColumnId = 1, IndexPosition = 1, Name = "Delete", Url = "https://delete.example" },
-                new CardModel { Id = 20, RowColumnId = 2, IndexPosition = 1, Name = "Keep", Url = "https://keep.example" },
-            ],
-        };
-        var handler = CreateHandler(columnRowRepository, cardRepository);
-
-        var result = await handler.Handle(new DeleteCardCommand { Id = 10 }, CancellationToken.None);
-
-        ResultAssertions.AssertStatusCode(result, StatusCodes.Status200OK);
-        Assert.Collection(columnRowRepository.DeletedRows, row => Assert.Equal(1, row.Id));
-        Assert.Collection(columnRowRepository.BatchEditedRows, row =>
-        {
-            Assert.Equal(2, row.Id);
-            Assert.Equal(1, row.RowPosition);
-        });
-        Assert.Single(cardRepository.BatchEditedCards);
-    }
-
-    [Fact]
-    public async Task HandleDelete_WhenRowStillHasCards_DoesNotDeleteRow()
-    {
-        var columnRowRepository = new FakeColumnRowRepository
-        {
-            Rows =
-            [
-                new ColumnRowModel { Id = 1, RowPosition = 1, Cards = [] },
-            ],
-        };
-        var cardRepository = new FakeCardRepository
-        {
-            Cards =
-            [
-                new CardModel { Id = 10, RowColumnId = 1, IndexPosition = 1, Name = "Delete", Url = "https://delete.example" },
-                new CardModel { Id = 11, RowColumnId = 1, IndexPosition = 2, Name = "Keep", Url = "https://keep.example" },
-            ],
-        };
-        var handler = CreateHandler(columnRowRepository, cardRepository);
-
-        var result = await handler.Handle(new DeleteCardCommand { Id = 10 }, CancellationToken.None);
-
-        ResultAssertions.AssertStatusCode(result, StatusCodes.Status200OK);
-        Assert.Empty(columnRowRepository.DeletedRows);
-        Assert.Empty(columnRowRepository.BatchEditedRows);
-        Assert.Collection(cardRepository.BatchEditedCards, card =>
-        {
-            Assert.Equal(11, card.Id);
-            Assert.Equal(1, card.IndexPosition);
-        });
-    }
-
-    [Fact]
-    public async Task HandleDelete_WhenDeletingOnlyCard_SkipsCardBatchEditAndDeletesRow()
-    {
-        var columnRowRepository = new FakeColumnRowRepository
-        {
-            Rows =
-            [
-                new ColumnRowModel { Id = 1, RowPosition = 1, Cards = [] },
-            ],
-        };
-        var cardRepository = new FakeCardRepository
-        {
-            Cards =
-            [
-                new CardModel { Id = 10, RowColumnId = 1, IndexPosition = 1, Name = "Delete", Url = "https://delete.example" },
-            ],
-        };
-        var handler = CreateHandler(columnRowRepository, cardRepository);
-
-        var result = await handler.Handle(new DeleteCardCommand { Id = 10 }, CancellationToken.None);
-
-        ResultAssertions.AssertStatusCode(result, StatusCodes.Status200OK);
-        Assert.Collection(columnRowRepository.DeletedRows, row => Assert.Equal(1, row.Id));
-        Assert.Empty(cardRepository.BatchEditedCards);
-    }
-
     private static BackendCardHandler CreateHandler(
         IColumnRowRepository columnRowRepository,
         ICardRepository cardRepository) =>
-        new(
-            columnRowRepository,
-            cardRepository,
-            new FakeSettingsRepository(),
-            new FakeIconRepository(),
-            new FakeIconConnectedRepository(),
-            new FakeFileService());
+        new(cardRepository);
 
     private sealed class FakeColumnRowRepository : IColumnRowRepository
     {

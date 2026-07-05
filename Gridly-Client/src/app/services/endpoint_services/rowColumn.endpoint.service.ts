@@ -11,13 +11,10 @@ import {RowColumnModel} from "../../models/rowColumn.Model";
 export class RowColumnEndpointService{
   private http = inject(HttpClient);
 
-  get(): Observable<RowColumnModel[]> {
-    return this.http.get<RowColumnModel[]>(UrlStringsUtil.RowColumnUrlGet).pipe(take(1));
+  get(): Observable<RowColumnModel[] | null> {
+    return this.http.get<RowColumnModel[] | null>(UrlStringsUtil.RowColumnUrlGet).pipe(take(1));
   }
-  add(rowColumn: RowColumnModel): Observable<RowColumnModel> {
-    return this.http.post<RowColumnModel>(UrlStringsUtil.RowColumnUrlSave, rowColumn).pipe(take(1));
-  }
-  batchEdit(cards: RowColumnModel[]): Observable<RowColumnModel[]> {
-    return this.http.post<RowColumnModel[]>(UrlStringsUtil.RowColumnUrlBatchEdit, cards).pipe(take(1));
+  batchSave(rows: RowColumnModel[]): Observable<RowColumnModel[]> {
+    return this.http.post<RowColumnModel[]>(UrlStringsUtil.RowColumnUrlBatchSave, rows).pipe(take(1));
   }
 }

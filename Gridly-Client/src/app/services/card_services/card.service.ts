@@ -1,8 +1,7 @@
 import { inject, Injectable, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, firstValueFrom, Observable, ReplaySubject, take } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, take } from 'rxjs';
 import { CardModel } from '../../models/card.Model';
-import { EditCardModel } from '../../models/editCard.Model';
 import { CardEndpointService } from '../endpoint_services/card.endpoint.service';
 
 @Injectable({ providedIn: 'root' })
@@ -21,18 +20,6 @@ export class CardService {
     this.currentCards = toSignal(this.cards$, { initialValue: [] as CardModel[] });
     this.refresh();
   }
-
-  private batchEdit$ = (cards: CardModel[]) => this.#api.batchEdit(cards);
-  private edit$ = (card: EditCardModel) => this.#api.edit(card);
-  private getById$ = (id: number) => this.#api.getById(id);
-  private delete$ = (id: number) => this.#api.delete(id);
-  private add$ = (card: CardModel) => this.#api.add(card);
-
-  batchEdit = (cards: CardModel[]) => firstValueFrom(this.batchEdit$(cards)).then(() => this.refresh());
-  edit = (card: CardModel) => firstValueFrom(this.edit$({editCard: card, selectedDropDownIconValue: 2} as EditCardModel)).then(() => this.refresh());
-  getById = (id: number) => firstValueFrom(this.getById$(id));
-  add = (card: CardModel) =>  firstValueFrom(this.add$(card)).then(() => this.refresh());
-  delete = (id: number) => firstValueFrom(this.delete$(id)).then(() => this.refresh());
 
   setRows(rows: CardModel[][], maxRowWidth = 0): void {
     const normalizedRows = this.normalizeRows(rows, maxRowWidth);
@@ -81,7 +68,7 @@ export class CardService {
       .map((row, rowIndex) =>
         row.map((card, indexPosition) => ({
           ...card,
-          indexPosition,
+          indexPosition: indexPosition + 1,
           rowPosition: rowIndex + 1,
         })),
       );
@@ -106,7 +93,7 @@ export class CardService {
         width + card.settings!.width, 0,
     );
 
-    return cardsWidth + Math.max(row.length - 1, 0);
+    return cardsWidth + Math.max(row.length - 1, 0) * 32;
   }
 
   refresh(): void {

@@ -64,29 +64,13 @@ describe('CardService', () => {
     expect(endpointMock.get).toHaveBeenCalledTimes(2);
   });
 
-  it('delegates add, edit, delete, and getById to the endpoint service', async () => {
-    await service.add(cardB);
-    await service.edit(cardB);
-    await expect(service.getById(1)).resolves.toEqual(cardA);
-    await service.delete(1);
-
-    expect(endpointMock.add).toHaveBeenCalledWith(cardB);
-    expect(endpointMock.edit).toHaveBeenCalledWith({
-      editCard: cardB,
-      selectedDropDownIconValue: 2,
-    });
-    expect(endpointMock.getById).toHaveBeenCalledWith(1);
-    expect(endpointMock.delete).toHaveBeenCalledWith(1);
-    expect(endpointMock.get).toHaveBeenCalledTimes(4);
-  });
-
   it('groups cards into rows when a row exceeds the max width', () => {
     const rows = service.toRows([cardA, cardB], 400);
 
     expect(rows.map((row) => row.map((card) => card.id))).toEqual([[1], [2]]);
     expect(rows.flat()).toEqual([
-      { ...cardA, indexPosition: 0, rowPosition: 1 },
-      { ...cardB, indexPosition: 0, rowPosition: 2 },
+      { ...cardA, indexPosition: 1, rowPosition: 1 },
+      { ...cardB, indexPosition: 1, rowPosition: 2 },
     ]);
   });
 
@@ -95,8 +79,8 @@ describe('CardService', () => {
 
     expect(rows.map((row) => row.map((card) => card.id))).toEqual([[1, 2]]);
     expect(rows.flat()).toEqual([
-      { ...cardA, indexPosition: 0, rowPosition: 1 },
-      { ...cardB, indexPosition: 1, rowPosition: 1 },
+      { ...cardA, indexPosition: 1, rowPosition: 1 },
+      { ...cardB, indexPosition: 2, rowPosition: 1 },
     ]);
   });
 
@@ -104,8 +88,8 @@ describe('CardService', () => {
     service.setRows([[cardA], [cardB]], 1000);
 
     expect(service.currentCards()).toEqual([
-      { ...cardA, indexPosition: 0, rowPosition: 1 },
-      { ...cardB, indexPosition: 0, rowPosition: 2 },
+      { ...cardA, indexPosition: 1, rowPosition: 1 },
+      { ...cardB, indexPosition: 1, rowPosition: 2 },
     ]);
   });
 
@@ -113,8 +97,8 @@ describe('CardService', () => {
     service.setRows([[], [cardB, cardA]], 1000);
 
     expect(service.currentCards()).toEqual([
-      { ...cardB, indexPosition: 0, rowPosition: 1 },
-      { ...cardA, indexPosition: 1, rowPosition: 1 },
+      { ...cardB, indexPosition: 1, rowPosition: 1 },
+      { ...cardA, indexPosition: 2, rowPosition: 1 },
     ]);
   });
 });
