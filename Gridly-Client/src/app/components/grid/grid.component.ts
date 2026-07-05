@@ -39,29 +39,27 @@ export class GridComponent implements AfterViewInit, OnDestroy {
     if (!this.editActive()) return;
 
     const droppedCard = event.item.data as CardModel;
-    const rowsWithoutDroppedCard = rows.map(row => ({
+    const nextRows = rows.map(row => ({
       ...row,
       cards: row.cards.filter(card => !this.isSameCard(card, droppedCard)),
     }));
+    const targetRow = nextRows.find(row => row.rowPosition === newRowPosition);
 
-    const targetRowIndex = rowsWithoutDroppedCard.findIndex(row => row.rowPosition === newRowPosition);
-
-    if (targetRowIndex >= 0) {
-      const targetCards = [...rowsWithoutDroppedCard[targetRowIndex].cards];
-      targetCards.splice(event.currentIndex, 0, droppedCard);
-      rowsWithoutDroppedCard[targetRowIndex] = {
-        ...rowsWithoutDroppedCard[targetRowIndex],
-        cards: targetCards,
-      };
+    if (targetRow) {
+      targetRow.cards = [
+        ...targetRow.cards.slice(0, event.currentIndex),
+        droppedCard,
+        ...targetRow.cards.slice(event.currentIndex),
+      ];
     } else {
-      rowsWithoutDroppedCard.push({
+      nextRows.push({
         id: 0,
         rowPosition: newRowPosition,
         cards: [droppedCard],
       });
     }
 
-    this.#gridService.setRowsForView(this.#gridService.normalizeRows(rowsWithoutDroppedCard));
+    this.#gridService.setRowsForView(this.#gridService.normalizeRows(nextRows));
   }
 
   protected DropToNewRow(event: CdkDragDrop<CardModel[]>, rows: RowColumnModel[], newRowPosition: number): void {
