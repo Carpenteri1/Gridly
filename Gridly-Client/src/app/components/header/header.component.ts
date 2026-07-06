@@ -5,7 +5,6 @@ import { VersionService } from "../../services/version_services/version.service"
 import { AddCardDialogComponent } from "../dialogs/addCardDialog/add-card-dialog.component";
 import { CardTypes } from "../../types/card.types.enum";
 import { CardModel } from "../../models/card.Model";
-import { CardService } from "../../services/card_services/card.service";
 import { GridService } from "../../services/grid_services/grid.service";
 
 @Component({
@@ -17,7 +16,6 @@ import { GridService } from "../../services/grid_services/grid.service";
 })
 export class HeaderComponent {
 
-  #cardService = inject(CardService);
   #versionService = inject(VersionService);
   #gridService = inject(GridService);
 
@@ -41,18 +39,25 @@ export class HeaderComponent {
     { type: 'note',  label: 'Note',  description: 'Plain text note', icon: 'bi bi-sticky' }
   ];*/
 
-  protected async add(card: CardModel): Promise<void> {
-    this.addDialogActive = !this.addDialogActive;
-    await this.#cardService.add(card);
+  protected add(card: CardModel): void {
+    this.addDialogActive = false;
+    this.#gridService.addCardToFirstAvailableRow(card);
   }
 
   toggleMenu(): void {
     this.#gridService.toggleEdit();
+    if (!this.#gridService.inEditMode()) {
+      this.reloadPage();
+    }
   }
 
   save(): void {
     this.toggleMenu();
-    this.#cardService.batchEdit(this.#cardService.currentCards());
+    this.#gridService.batchSave(this.#gridService.currentRowColumns());
+  }
+
+  protected reloadPage(): void {
+    location.reload();
   }
 
 }

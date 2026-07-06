@@ -1,6 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardService } from '../../services/card_services/card.service';
 import { TextStringsUtil } from '../../constants/text.strings.util';
 import { CardModel } from '../../models/card.Model';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
@@ -28,7 +27,6 @@ import { CardRulesService } from '../../services/card_services/card-rules.servic
 export class CardComponent {
   @Input({ required: true }) card!: CardModel;
 
-  #cardService = inject(CardService);
   #gridService = inject(GridService);
   #cardRulesService = inject(CardRulesService);
 
@@ -44,11 +42,11 @@ export class CardComponent {
   }
 
   protected edit(card: CardModel): void {
-    void this.#cardService.edit(card);
+    this.#gridService.updateCardInView(this.card, card);
   }
 
-  protected remove(id: number): void {
-    void this.#cardService.delete(id);
+  protected remove(card: CardModel): void {
+    this.#gridService.removeCardFromView(card);
   }
 
   protected hasMaterialIcon(item: CardModel): boolean {

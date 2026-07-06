@@ -6,9 +6,10 @@ export class UrlStringsUtil {
   static readonly CardUrlDelete = this.CardUrl+'delete/';
   static readonly CardUrlGet = this.CardUrl+'get';
   static readonly CardUrlGetById = this.CardUrl+'getbyid/';
-  static readonly CardUrlSave = this.CardUrl+'save';
-  static readonly CardUrlEdit = this.CardUrl+'edit';
-  static readonly CardsBatchUrlEdit = this.CardUrl+'batch/edit';
+
+  static readonly RowColumnUrl = '/api/row/';
+  static readonly RowColumnUrlGet = this.RowColumnUrl+'get';
+  static readonly RowColumnUrlBatchSave = this.RowColumnUrl+'batchSave';
 
   static readonly IconUrl = '/api/icon/';
   static readonly IconUrlSearch = this.IconUrl+'search?value=';

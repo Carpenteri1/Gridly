@@ -1,14 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { CardModel } from '../../models/card.Model';
-import { CardService } from '../../services/card_services/card.service';
 import { CardRulesService } from '../../services/card_services/card-rules.service';
 import { GridService } from '../../services/grid_services/grid.service';
 import { CardComponent } from './card.component';
 
 type CardComponentFixture = CardComponent & {
   edit(card: CardModel): void;
-  remove(id: number): void;
+  remove(card: CardModel): void;
   hasMaterialIcon(card: CardModel): boolean;
 };
 
@@ -25,18 +24,16 @@ describe('CardComponent', () => {
     settings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
   };
 
-  const cardServiceMock = {
-    currentcard: jest.fn(() => [currentCard]),
-    delete: jest.fn(),
-    edit: jest.fn(),
-  };
-
   const cardRulesServiceMock = {
     hasMaterialIcon: jest.fn(() => true),
   };
 
   const editMode = signal(true);
-  const gridServiceMock = { inEditMode: editMode.asReadonly() };
+  const gridServiceMock = {
+    inEditMode: editMode.asReadonly(),
+    updateCardInView: jest.fn(),
+    removeCardFromView: jest.fn(),
+  };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -44,7 +41,6 @@ describe('CardComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CardComponent],
       providers: [
-        { provide: CardService, useValue: cardServiceMock },
         { provide: CardRulesService, useValue: cardRulesServiceMock },
         { provide: GridService, useValue: gridServiceMock },
       ],
@@ -81,12 +77,12 @@ describe('CardComponent', () => {
     expect(createCardComponent.isDeleteDialogOpen).toBe(false);
   });
 
-  it('delegates edit and remove actions to the card service', () => {
+  it('delegates edit and remove actions to the grid service', () => {
     (createCardComponent as CardComponentFixture).edit(currentCard);
-    (createCardComponent as CardComponentFixture).remove(7);
+    (createCardComponent as CardComponentFixture).remove(currentCard);
 
-    expect(cardServiceMock.edit).toHaveBeenCalledWith(currentCard);
-    expect(cardServiceMock.delete).toHaveBeenCalledWith(7);
+    expect(gridServiceMock.updateCardInView).toHaveBeenCalledWith(currentCard, currentCard);
+    expect(gridServiceMock.removeCardFromView).toHaveBeenCalledWith(currentCard);
   });
   
   it('hasMaterialIcon returns the value from the card rules service', () => {
