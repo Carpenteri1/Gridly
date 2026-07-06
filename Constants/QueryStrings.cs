@@ -66,12 +66,6 @@ public class QueryStrings
         Base64Data = @Base64Data, 
         MaterialIcon = @MaterialIcon
         /**where**/";
-    
-    public const string UpdateRowQuery = @"
-    UPDATE RowColumn
-    SET RowPosition = @RowPosition, 
-        RowWidth = @RowWidth
-        /**where**/";
 
     public const string UpdateCardQuery = @"
     UPDATE Card
@@ -93,7 +87,7 @@ public class QueryStrings
     WHERE CardId = @Id;
     ";
 
-        public const string UpdateBatchRowColumnQuery = @"
+    public const string UpdateBatchRowColumnQuery = @"
     UPDATE RowColumn 
     SET RowPosition = @RowPosition, 
     RowWidth = @RowWidth

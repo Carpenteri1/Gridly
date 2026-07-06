@@ -7,11 +7,8 @@ import {CardModel} from "../../models/card.Model";
 
 @Injectable({providedIn: 'root'})
 export class GridService {
-  private readonly cardGap = 32;
-  private readonly defaultCardWidth = 250;
   private readonly RowColumnSubject = new BehaviorSubject<RowColumnModel[]>([]);
   private readonly _editMode = signal(false);
-  private availableRowWidth = 0;
 
   readonly rows$: Observable<RowColumnModel[]>;
   readonly inEditMode = this._editMode.asReadonly();
@@ -42,34 +39,19 @@ export class GridService {
     this.RowColumnSubject.next(this.normalizeRows(rows));
   }
 
-  setAvailableRowWidth(width: number): void {
-    if (width <= 0 || width === this.availableRowWidth) return;
-
-    this.availableRowWidth = width;
-  }
-
   addCardToFirstAvailableRow(card: CardModel): void {
     const rows = this.cloneRows(this.currentRowColumns());
     const newCard = {
       ...card,
       id: 0,
       settings: {
-        width: card.settings?.width ?? this.defaultCardWidth,
-        height: card.settings?.height ?? this.defaultCardWidth,
-        imageHidden: card.settings?.imageHidden ?? false,
-        titleHidden: card.settings?.titleHidden ?? false,
+        width: card.settings?.width!,
+        height: card.settings?.height!,
+        imageHidden: card.settings?.imageHidden,
+        titleHidden: card.settings?.titleHidden,
       },
     };
 
-    const targetRow = rows.find((row) => this.cardFits(row.cards, newCard));
-
-    if (targetRow) {
-      targetRow.cards = [...targetRow.cards, {
-        ...newCard,
-        rowPosition: targetRow.rowPosition,
-        indexPosition: targetRow.cards.length + 1,
-      }];
-    } else {
       rows.push({
         id: 0,
         rowPosition: rows.length + 1,
@@ -80,7 +62,6 @@ export class GridService {
           indexPosition: 1,
         }],
       });
-    }
 
     this.RowColumnSubject.next(this.normalizeRows(rows));
   }
@@ -121,52 +102,6 @@ export class GridService {
           indexPosition: cardIndex + 1,
         })),
       }));
-  }
-
-  private reflowRows(rows: RowColumnModel[]): RowColumnModel[] {
-    if (this.availableRowWidth <= 0) return this.normalizeRows(rows);
-
-    const sortedRows = this.normalizeRows(rows);
-    const reflowedRows = sortedRows
-      .flatMap((row) => row.cards)
-      .reduce((result, card) => {
-        const currentRow = result[result.length - 1];
-
-        if (currentRow && this.cardFits(currentRow.cards, card)) {
-          currentRow.cards = [...currentRow.cards, card];
-        } else {
-          const rowIndex = result.length;
-          const existingRow = sortedRows[rowIndex];
-          result.push({
-            id: existingRow?.id ?? 0,
-            rowPosition: rowIndex + 1,
-            rowWidth: existingRow?.rowWidth ?? 0,
-            cards: [card],
-          });
-        }
-
-        return result;
-      }, [] as RowColumnModel[]);
-
-    return this.normalizeRows(reflowedRows);
-  }
-
-  private cardFits(rowCards: CardModel[], card: CardModel): boolean {
-    if (this.availableRowWidth <= 0) return true;
-
-    const currentWidth = this.getCardsWidth(rowCards);
-    const addedGap = rowCards.length > 0 ? this.cardGap : 0;
-    return currentWidth + addedGap + this.getCardWidth(card) <= this.availableRowWidth;
-  }
-
-  private getCardsWidth(cards: CardModel[]): number {
-    const cardsWidth = cards.reduce((width, card) => width + this.getCardWidth(card), 0);
-    const gapsWidth = Math.max(cards.length - 1, 0) * this.cardGap;
-    return cardsWidth + gapsWidth;
-  }
-
-  private getCardWidth(card: CardModel): number {
-    return card.settings?.width ?? this.defaultCardWidth;
   }
 
   private cloneRows(rows: RowColumnModel[]): RowColumnModel[] {

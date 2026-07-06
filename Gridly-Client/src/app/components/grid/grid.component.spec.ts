@@ -8,7 +8,7 @@ import { GridService } from '../../services/grid_services/grid.service';
 import { GridComponent } from './grid.component';
 
 type GridComponentTestHarness = GridComponent & {
-  Drop(event: unknown, rows: RowColumnModel[], rowIndex: number): void;
+  drop(event: unknown, rows: RowColumnModel[], rowIndex: number): void;
 };
 
 class MockResizeObserver {
@@ -97,7 +97,7 @@ describe('GridComponent', () => {
       item: { data: cards[0] },
     } as never;
 
-    (gridComponent as GridComponentTestHarness).Drop(event, rows, 1);
+    (gridComponent as GridComponentTestHarness).drop(event, rows, 1);
 
     expect(gridServiceMock.setRowsForView).not.toHaveBeenCalled();
   });
@@ -117,7 +117,7 @@ describe('GridComponent', () => {
       item: { data: movedCard },
     } as never;
 
-    (gridComponent as GridComponentTestHarness).Drop(event, rowColumns, 2);
+    (gridComponent as GridComponentTestHarness).drop(event, rowColumns, 2);
 
     expect(gridServiceMock.setRowsForView).toHaveBeenCalledWith([
       {
@@ -151,7 +151,7 @@ describe('GridComponent', () => {
       item: { data: movedCard },
     } as never;
 
-    (gridComponent as GridComponentTestHarness).Drop(event, rowColumns, 3);
+    (gridComponent as GridComponentTestHarness).drop(event, rowColumns, 3);
 
     expect(gridServiceMock.setRowsForView).toHaveBeenCalledWith([
       {
@@ -184,7 +184,7 @@ describe('GridComponent', () => {
       item: { data: movedCard },
     } as never;
 
-    (gridComponent as GridComponentTestHarness).Drop(event, rowColumns, 2);
+    (gridComponent as GridComponentTestHarness).drop(event, rowColumns, 2);
 
     expect(gridServiceMock.setRowsForView).toHaveBeenCalledWith([
       {

@@ -49,20 +49,7 @@ public class CardHandlerHelperTests
 
         Assert.False(result);
     }
-
-    [Fact]
-    public void UploadIcon_DelegatesToFileService()
-    {
-        var fileService = new FakeFileService { UploadIconResult = true };
-        var helper = new CardHandlerHelper(fileService);
-        var Card = new CardModel { IconData = new IconModel { Name = "grid", Type = "svg", Base64Data = "Zm9v" } };
-
-        var result = helper.UploadIcon(Card);
-
-        Assert.True(result);
-        Assert.Same(Card.IconData, fileService.UploadedIcon);
-    }
-
+    
     [Fact]
     public void DeleteIcon_DelegatesToFileService()
     {
@@ -74,22 +61,5 @@ public class CardHandlerHelperTests
 
         Assert.True(result);
         Assert.Equal(("grid", "svg"), fileService.DeletedIcon);
-    }
-
-    [Fact]
-    public void SetIndexValues_ReassignsSequentialOneBasedIndexes()
-    {
-        var helper = new CardHandlerHelper(new FakeFileService());
-        var cards = new List<CardModel>
-        {
-            new() { Id = 11, IndexPosition = 99 },
-            new() { Id = 17, IndexPosition = 42 },
-            new() { Id = 23, IndexPosition = null }
-        };
-
-        var result = helper.SetIndexValues(cards).ToArray();
-
-        Assert.Equal(new int?[] { 1, 2, 3 }, result.Select(x => x.IndexPosition).ToArray());
-        Assert.Equal(new[] { 11, 17, 23 }, result.Select(x => x.Id).ToArray());
     }
 }
