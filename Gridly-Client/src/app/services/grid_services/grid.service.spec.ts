@@ -65,34 +65,17 @@ describe('GridService', () => {
     expect(service.currentRowColumns()).toEqual([]);
   });
 
-  it('keeps adding cards to the first row with space before creating a new row', () => {
-    service.setAvailableRowWidth(600);
-
+  it('creates a new row for each added card', () => {
     service.addCardToFirstAvailableRow(createCard(0));
     service.addCardToFirstAvailableRow(createCard(0));
     service.addCardToFirstAvailableRow(createCard(0));
 
-    expect(service.currentRowColumns().map(row => row.cards.length)).toEqual([2, 1]);
-    expect(service.currentRowColumns()[0].cards.map(card => card.indexPosition)).toEqual([1, 2]);
-    expect(service.currentRowColumns()[1].cards[0].indexPosition).toBe(1);
+    expect(service.currentRowColumns().map(row => row.cards.length)).toEqual([1, 1, 1]);
+    expect(service.currentRowColumns().map(row => row.rowPosition)).toEqual([1, 2, 3]);
+    expect(service.currentRowColumns().map(row => row.cards[0].indexPosition)).toEqual([1, 1, 1]);
   });
 
-  it('skips full rows and adds to the first later row with space', () => {
-    const firstRowCards = [createCard(1), createCard(2)];
-    const secondRowCard = createCard(3);
-    service.setRowsForView([
-      { id: 1, rowPosition: 1, cards: firstRowCards },
-      { id: 2, rowPosition: 2, cards: [secondRowCard] },
-    ]);
-    service.setAvailableRowWidth(600);
-
-    service.addCardToFirstAvailableRow(createCard(0));
-
-    expect(service.currentRowColumns().map(row => row.cards.length)).toEqual([2, 2]);
-    expect(service.currentRowColumns()[1].cards[1].indexPosition).toBe(2);
-  });
-
-  it('does not reflow backend rows when measuring available row width', () => {
+  it('adds a new row after existing rows', () => {
     const firstRowCards = [createCard(1), createCard(2)];
     const secondRowCard = createCard(3);
     service.setRowsForView([
@@ -100,7 +83,20 @@ describe('GridService', () => {
       { id: 2, rowPosition: 2, cards: [secondRowCard] },
     ]);
 
-    service.setAvailableRowWidth(2000);
+    service.addCardToFirstAvailableRow(createCard(0));
+
+    expect(service.currentRowColumns().map(row => row.cards.length)).toEqual([2, 1, 1]);
+    expect(service.currentRowColumns()[2].rowPosition).toBe(3);
+    expect(service.currentRowColumns()[2].cards[0].indexPosition).toBe(1);
+  });
+
+  it('does not reflow existing rows when normalizing them for the view', () => {
+    const firstRowCards = [createCard(1), createCard(2)];
+    const secondRowCard = createCard(3);
+    service.setRowsForView([
+      { id: 1, rowPosition: 1, cards: firstRowCards },
+      { id: 2, rowPosition: 2, cards: [secondRowCard] },
+    ]);
 
     expect(service.currentRowColumns().map(row => row.cards.map(card => card.id))).toEqual([[1, 2], [3]]);
   });

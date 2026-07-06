@@ -45,8 +45,8 @@ export class GridService {
       ...card,
       id: 0,
       settings: {
-        width: card.settings?.width!,
-        height: card.settings?.height!,
+        width: card.settings?.width ?? 0,
+        height: card.settings?.height ?? 0,
         imageHidden: card.settings?.imageHidden,
         titleHidden: card.settings?.titleHidden,
       },
