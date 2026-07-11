@@ -27,6 +27,7 @@ builder.Services.AddScoped<IColumnRowRepository,ColumnRowRepository>();
 builder.Services.AddScoped<ISettingsRepository,SettingsRepository>();
 builder.Services.AddScoped<IIconRepository,IconRepository>();
 builder.Services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
+builder.Services.AddScoped<IWidgetRepository,WidgetRepository>();
 
 builder.Services.AddSingleton<IMemoryCashingService, MemoryCashingServices>();
 builder.Services.AddSingleton<IHttpClientServices, HttpClientServices>();

@@ -6,24 +6,25 @@
         <i class="bi bi-x-lg"></i>
       </button>
     </header>
-
-    <div class="aw-body">
-      <p class="text-muted mb-3">{{ TextStringsUtil.AddCardDescription }}</p>
-      <div class="row row-cols-1 row-cols-sm-2 g-3 py-2">
-        @for(cardOption of cardOptions; track cardOption.type){
-          <div class="col">
-            <button type="button"
-                    class="btn btn-outline-secondary w-100 h-100 d-flex flex-column align-items-center gap-2 p-4 option-btn"
-                    (click)="onSelect(cardOption.type)">
-              <i [class]="cardOption.icon + ' option-icon'"></i>
-              <div class="text-center">
-                <div class="fw-semibold">{{ cardOption.label }}</div>
-                <div class="text-muted small">{{ cardOption.description }}</div>
-              </div>
-            </button>
-          </div>
-        }
+    @if(widgetOptions$ | async; as options){
+      <div class="aw-body">
+        <p class="text-muted mb-3">{{ TextStringsUtil.AddCardDescription }}</p>
+        <div class="row row-cols-1 row-cols-sm-2 g-3 py-2">
+          @for(option of options; track option.widgetType){
+            <div class="col">
+              <button type="button"
+                      class="btn btn-outline-secondary w-100 h-100 d-flex flex-column align-items-center gap-2 p-4 option-btn"
+                      (click)="onSelect(option)">
+                <i [class]="option.icon + ' option-icon'"></i>
+                <div class="text-center">
+                  <div class="fw-semibold">{{ option.label }}</div>
+                  <div class="text-muted small">{{ option.description }}</div>
+                </div>
+              </button>
+            </div>
+          }
+        </div>
       </div>
-    </div>
+    }
   </div>
 </dialog>

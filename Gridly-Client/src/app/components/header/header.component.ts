@@ -3,7 +3,6 @@ import { TextStringsUtil } from "../../constants/text.strings.util";
 import { CommonModule } from "@angular/common";
 import { VersionService } from "../../services/version_services/version.service";
 import { AddCardDialogComponent } from "../dialogs/addCardDialog/add-card-dialog.component";
-import { CardTypes } from "../../types/card.types.enum";
 import { CardModel } from "../../models/card.Model";
 import { GridService } from "../../services/grid_services/grid.service";
 
@@ -24,20 +23,6 @@ export class HeaderComponent {
   readonly TextStringsUtil = TextStringsUtil;
   addDialogActive = false;
   editActive = this.#gridService.inEditMode;
-
-  //TODO move to dialog
-  protected cardOptions = [
-    { type: CardTypes.Empty, label: 'Add empty card', description: '', icon: 'bi bi-box' },
-    { type: CardTypes.Custom, label: 'Add custom card', description: '', icon: 'bi bi-box-fill' },
-  ];
-
-  /* TODO variants later maybe
-  cardOptions = [
-    { type: 'chart', label: 'Chart', description: 'Visualize trends', icon: 'bi bi-graph-up' },
-    { type: 'table', label: 'Table', description: 'Tabular data', icon: 'bi bi-table' },
-    { type: 'kpi',   label: 'KPI',   description: 'Single metric',   icon: 'bi bi-speedometer2' },
-    { type: 'note',  label: 'Note',  description: 'Plain text note', icon: 'bi bi-sticky' }
-  ];*/
 
   protected add(card: CardModel): void {
     this.addDialogActive = false;

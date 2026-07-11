@@ -4,6 +4,7 @@ import { CardModel } from '../../../models/card.Model';
 import { IconModel } from '../../../models/icon.Model';
 import { AddCardDialogComponent } from './add-card-dialog.component';
 import { CardTypes } from '../../../types/card.types.enum';
+import { Widget } from '../../../interfaces/widget.Interface';
 
 describe('AddCardDialogComponent', () => {
   let fixture: ComponentFixture<AddCardDialogComponent>;
@@ -27,6 +28,14 @@ describe('AddCardDialogComponent', () => {
     } as IconModel)
   };
 
+  const widget = (widgetType: CardTypes): Widget => ({
+    id: 1,
+    widgetType,
+    label: '',
+    description: '',
+    icon: '',
+  });
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AddCardDialogComponent],
@@ -41,8 +50,8 @@ describe('AddCardDialogComponent', () => {
   it('emits a new card payload for both supported card types', () => {
     const emitSpy = jest.spyOn(dialogComponent.newCard, 'emit');
 
-    dialogComponent.onSelect(CardTypes.Empty);
-    dialogComponent.onSelect(CardTypes.Custom);
+    dialogComponent.onSelect(widget(CardTypes.Empty));
+    dialogComponent.onSelect(widget(CardTypes.Custom));
 
     expect(emitSpy).toHaveBeenCalledTimes(2);
     expect(emitSpy.mock.calls[0][0]).toBeDefined();
@@ -52,7 +61,7 @@ describe('AddCardDialogComponent', () => {
   it('emits a fully initialized card model', () => {
     const emitSpy = jest.spyOn(dialogComponent.newCard, 'emit');
 
-    dialogComponent.onSelect(CardTypes.Empty);
+    dialogComponent.onSelect(widget(CardTypes.Empty));
 
     const card = emitSpy.mock.calls[0]?.[0] as CardModel | undefined;
 

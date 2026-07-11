@@ -6,9 +6,9 @@ namespace Gridly.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-public class CardController(IMediator meditor) : ControllerBase
+public class WidgetController(IMediator meditor) : ControllerBase
 {
     [HttpGet("get")]
     public async Task<IResult> Get() =>
-        await meditor.Send(new GetAllCardCommand());
+        await meditor.Send(new GetWidgetCommand());
 }

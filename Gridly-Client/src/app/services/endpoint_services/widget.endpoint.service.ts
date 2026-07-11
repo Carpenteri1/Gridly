@@ -1,17 +1,16 @@
 import { Injectable, inject } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {VersionModel} from "../../models/version.Model";
 import {UrlStringsUtil} from "../../constants/url.strings.util";
 import {Observable, take} from "rxjs";
+import {Widget} from "../../interfaces/widget.Interface";
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class VersionEndpointService{
+export class WidgetEndpointService{
   private http = inject(HttpClient);
-
-  get(): Observable<VersionModel> {
-    return this.http.get<VersionModel>(UrlStringsUtil.GetVersionUrl).pipe(take(1));
+  get(): Observable<Widget[]> {
+    return this.http.get<Widget[]>(UrlStringsUtil.GetWidgetUrl).pipe(take(1));
   }
 }
