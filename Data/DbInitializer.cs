@@ -78,19 +78,19 @@ public class DbInitializer
                 WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Name = 'Weather');
 
                 INSERT INTO Widget(WidgetType, Label, Description, Icon)
-                SELECT Id, 'Add weather widget', '', 'bi bi-clouds-fill'
+                SELECT Id, 'Weather widget', '', 'bi bi-clouds-fill'
                 FROM WidgetType 
                 WHERE Name = 'Weather' 
                   AND NOT EXISTS (SELECT 1 FROM Widget WHERE Label = 'Add weather widget');
 
                 INSERT INTO Widget(WidgetType, Label, Description, Icon)
-                SELECT Id, 'Add empty widget', '', 'bi bi-box'
+                SELECT Id, 'Empty widget', '', 'bi bi-box'
                 FROM WidgetType
                 WHERE Name = 'Empty'
                   AND NOT EXISTS (SELECT 1 FROM Widget WHERE Label = 'Add empty widget');
 
                 INSERT INTO Widget(WidgetType, Label, Description, Icon)
-                SELECT Id, 'Add custom widget', '', 'bi bi-box-fill'
+                SELECT Id, 'Custom widget', '', 'bi bi-box-fill'
                 FROM WidgetType
                 WHERE Name = 'Custom'
                   AND NOT EXISTS (SELECT 1 FROM Widget WHERE Label = 'Add custom widget');",
