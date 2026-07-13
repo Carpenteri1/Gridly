@@ -67,33 +67,33 @@ public class DbInitializer
 
                 INSERT INTO WidgetType(Name)
                 SELECT 'Empty'
-                WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Name = 'Empty');
+                WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Id = 1);
 
                 INSERT INTO WidgetType(Name)
                 SELECT 'Custom'
-                WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Name = 'Custom');
+                WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Id = 2);
 
                 INSERT INTO WidgetType(Name)
                 SELECT 'Weather'
-                WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Name = 'Weather');
+                WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Id = 3);
 
                 INSERT INTO Widget(WidgetType, Label, Description, Icon)
-                SELECT Id, 'Weather widget', '', 'bi bi-clouds-fill'
+                SELECT Id, 'Weather widget', '', 'clouds'
                 FROM WidgetType 
                 WHERE Name = 'Weather' 
-                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Label = 'Add weather widget');
+                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 1);
 
                 INSERT INTO Widget(WidgetType, Label, Description, Icon)
-                SELECT Id, 'Empty widget', '', 'bi bi-box'
+                SELECT Id, 'Empty widget', '', 'box'
                 FROM WidgetType
                 WHERE Name = 'Empty'
-                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Label = 'Add empty widget');
+                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 2);
 
                 INSERT INTO Widget(WidgetType, Label, Description, Icon)
-                SELECT Id, 'Custom widget', '', 'bi bi-box-fill'
+                SELECT Id, 'Custom widget', '', 'box_add'
                 FROM WidgetType
                 WHERE Name = 'Custom'
-                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Label = 'Add custom widget');",
+                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 3);",
             commandTimeout:150);
     }
 }

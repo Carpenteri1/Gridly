@@ -1,8 +1,13 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {ApplicationConfig, inject, provideEnvironmentInitializer, provideZoneChangeDetection} from '@angular/core';
 import {provideHttpClient} from "@angular/common/http";
+import {MatIconRegistry} from "@angular/material/icon";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideHttpClient()]
+    provideHttpClient(),
+    provideEnvironmentInitializer(() => {
+      inject(MatIconRegistry).setDefaultFontSetClass('material-symbols-outlined');
+    }),
+  ]
 };

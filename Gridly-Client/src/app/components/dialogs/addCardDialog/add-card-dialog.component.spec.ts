@@ -24,7 +24,7 @@ describe('AddCardDialogComponent', () => {
       type: '',
       name: '',
       base64Data: '',
-      materialIcon: 'add_box',
+      materialIcon: 'box',
     } as IconModel)
   };
 
@@ -85,7 +85,7 @@ describe('AddCardDialogComponent', () => {
       type: '',
       name: '',
       base64Data: '',
-      materialIcon: 'add_box',
+      materialIcon: 'box',
     });
   });
 });
