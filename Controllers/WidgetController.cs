@@ -11,4 +11,4 @@ public class WidgetController(IMediator meditor) : ControllerBase
     [HttpGet("get")]
     public async Task<IResult> Get() =>
         await meditor.Send(new GetWidgetCommand());
-}
+}   
