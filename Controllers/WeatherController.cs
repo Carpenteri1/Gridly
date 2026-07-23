@@ -12,8 +12,7 @@ public class WeatherController(IMediator mediator) : ControllerBase
 {
     [EnableRateLimiting(RateLimiterPolicySettings.WeatherPolicy)]
     [HttpGet("get")]
-    public async Task<IResult> Get([FromQuery] GetWeatherCommand command) =>
-        await mediator.Send(command);
+    public async Task<IResult> Get([FromQuery] GetWeatherCommand command) => await mediator.Send(command);
 
     [HttpPost("save")]
     public async Task<IResult> SaveSettings([FromBody] SaveWeatherCommand command) =>

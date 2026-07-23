@@ -22,6 +22,7 @@ builder.Services.AddScoped(sp =>
     sp.GetRequiredService<IDbConnectionServices>().CreateConnection());
 builder.Services.AddScoped<IDbConnectionServices,DbConnectionServices>();
 builder.Services.AddScoped<IVersionEndPoint, VersionEndPoint>();
+builder.Services.AddScoped<IWeatherEndPoint, WeatherEndPoint>();
 builder.Services.AddScoped<ICardRepository,CardRepository>();
 builder.Services.AddScoped<IColumnRowRepository,ColumnRowRepository>();
 builder.Services.AddScoped<ISettingsRepository,SettingsRepository>();

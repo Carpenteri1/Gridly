@@ -4,6 +4,7 @@ export class UrlStringsUtil {
   static readonly RowColumnUrl = '/api/row/';
   static readonly VersionUrl = '/api/version/';
   static readonly WidgetUrl = '/api/widget/';
+  static readonly WeatherUrl = '/api/weather/';
 
   static readonly CardUrlGet = this.CardUrl+'get';
 
@@ -16,6 +17,8 @@ export class UrlStringsUtil {
   static readonly GetVersionUrl = this.VersionUrl;
 
   static readonly GetWidgetUrl = this.WidgetUrl+'get';
+
+  static readonly GetWeatherUrl = this.WeatherUrl+'get';
 
   static readonly GitHubReleaseURL = 'https://github.com/Carpenteri1/Gridly/releases/tag/';
 }

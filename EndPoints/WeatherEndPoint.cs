@@ -8,20 +8,22 @@ namespace Gridly.EndPoints;
 
 public class WeatherEndPoint(
     IDataConverter<WeatherDtoModel> dataConverter,
-    IHttpClientServices httpClientServices,
-    WeatherApiOptions weatherApiOptions) : IWeatherEndPoint
+    IHttpClientServices httpClientServices) : IWeatherEndPoint
 {
     public async Task<(bool, WeatherModel?)> Get(string location)
     {
+        var APIKEY = string.Empty;
+        if (string.IsNullOrEmpty(APIKEY)) return (false, null);
+        //TODO add api key
         var url = string.Format(
             EndpointStrings.GetWeatherRemoteEndPoint,
             Uri.EscapeDataString(location),
-            weatherApiOptions.ApiKey);
+            APIKEY);
 
-        var (success, item) = await httpClientServices.Get(url);
+        var (success, jsonString) = await httpClientServices.Get(url);
         if (!success) return (false, null);
 
-        var dto = dataConverter.DeserializeJson(item);
+        var dto = dataConverter.DeserializeJson(jsonString);
         return dto is null ? (false, null) : (true, WeatherFactory.Create(dto));
     }
 }

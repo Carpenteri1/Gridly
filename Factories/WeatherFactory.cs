@@ -8,8 +8,10 @@ public class WeatherFactory
     public static WeatherModel Create(WeatherDtoModel dto)
         => new()
         {
-            Location = dto.Name,
-            Temperature = dto.Main.Temp,
-            Description = dto.Weather.FirstOrDefault()?.Description ?? string.Empty,
+            Location = dto.Location,
+            Address = dto.Address,
+            Timezone = dto.Timezone,
+            Description = dto.Description,
+            CurrentConditions = CurrentConditionsFactory.Create(dto.CurrentConditions),
         };
 }
