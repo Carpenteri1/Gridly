@@ -7,15 +7,15 @@ using MediatR;
 public class CardHandler(
     IHttpClientServices httpClientServices,
     IMemoryCashingService memoryCache) : 
-        IRequestHandler<GetIconCommand, IResult>,
-        IRequestHandler<SearchIconsCommand, IResult>
+        IRequestHandler<GetIconQuery, IResult>,
+        IRequestHandler<SearchIconsQuery, IResult>
 {
-    public async Task<IResult> Handle(GetIconCommand command, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(GetIconQuery query, CancellationToken cancellationToken)
     {
         return Results.Ok();
     }
 
-    public async Task<IResult> Handle(SearchIconsCommand command, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(SearchIconsQuery query, CancellationToken cancellationToken)
     {
         var data = memoryCache.Get<string[]>("mat-icons");
 
@@ -29,7 +29,7 @@ public class CardHandler(
         }
 
         var matches = data
-            .Where(icon => icon.Contains(command.Value, StringComparison.OrdinalIgnoreCase))
+            .Where(icon => icon.Contains(query.Value, StringComparison.OrdinalIgnoreCase))
             .Take(50)
             .ToArray();
 

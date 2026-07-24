@@ -14,12 +14,12 @@ public class ColumnRowHandler(
     IIconRepository iconRepository,
     IIconConnectedRepository iconConnectedRepository,
     IFileService fileService):
-    IRequestHandler<GetAllRowColumnsCommands, IResult>,
+    IRequestHandler<GetAllRowColumnsQuery, IResult>,
     IRequestHandler<BatchSaveColumnRowCommands, IResult>
 {
     private readonly CardHandlerHelper handlerHelper = new(fileService);
     
-    public async Task<IResult> Handle(GetAllRowColumnsCommands command, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(GetAllRowColumnsQuery query, CancellationToken cancellationToken)
     {
         var storedRowColumns = (await columnRowRepository.Get())?.ToList() ?? new List<ColumnRowModel>();
         var cards = (await cardRepository.Get())?.ToList() ?? new List<CardModel>();

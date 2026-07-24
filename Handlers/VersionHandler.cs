@@ -9,10 +9,10 @@ namespace Gridly.Handlers;
 public class VersionHandler(
     IVersionEndPoint versionEndPoint,
     IMemoryCashingService memoryCashingService) : 
-    IRequestHandler<GetVersionCommand, IResult>,
-    IRequestHandler<GetLatestVersionCommand, IResult>
+    IRequestHandler<GetVersionQuery, IResult>,
+    IRequestHandler<GetLatestVersionQuery, IResult>
 {
-    public async Task<IResult> Handle(GetVersionCommand request, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(GetVersionQuery request, CancellationToken cancellationToken)
     {
         var cashedVersion = memoryCashingService.Get<VersionModel>("version");
         if (cashedVersion == null)
@@ -28,7 +28,7 @@ public class VersionHandler(
         return cashedVersion != null ? Results.Ok(cashedVersion) : Results.NotFound();
     }
 
-    public async Task<IResult> Handle(GetLatestVersionCommand request, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(GetLatestVersionQuery request, CancellationToken cancellationToken)
     {
         var (success, remoteVersion) = await versionEndPoint.GetLatestVersion();
         if(success)
