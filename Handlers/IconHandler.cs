@@ -29,7 +29,7 @@ public class CardHandler(
         }
 
         var matches = data
-            .Where(icon => icon.Contains(query.Value, StringComparison.OrdinalIgnoreCase))
+            .Where(icon => icon.Contains(query.SearchTerm, StringComparison.OrdinalIgnoreCase))
             .Take(50)
             .ToArray();
 

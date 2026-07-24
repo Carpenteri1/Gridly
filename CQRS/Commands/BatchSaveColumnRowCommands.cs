@@ -1,6 +1,6 @@
 using Gridly.Models;
 using MediatR;
 
-namespace Gridly.Querys;
+namespace Gridly.Commands;
 
 public class BatchSaveColumnRowCommands : List<ColumnRowModel>, IRequest<IResult> {}

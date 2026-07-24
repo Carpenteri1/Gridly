@@ -13,7 +13,7 @@ import {MatIcon} from "@angular/material/icon";
 @Component({
   selector: 'app-add-card-dialog',
   standalone: true,
-  imports: [DialogDirective, DialogDirective, AsyncPipe, MatIcon],
+  imports: [DialogDirective, AsyncPipe, MatIcon],
   templateUrl: './add-card-dialog.component.html',
   styleUrls: ['./add-card-dialog.component.css'],
 })
@@ -38,8 +38,6 @@ export class AddCardDialogComponent
       case CardTypes.Empty:
         return this.newCard.emit(card);
         case CardTypes.Weather:
-          // TODO add weather data to card
-          //card.settings.widgetType = widgetType;
           return this.newCard.emit(card);
       default:
         return this.newCard.emit(card);

@@ -3,10 +3,10 @@ using System.Text.Json.Serialization;
 namespace Gridly.Models;
 public class CurrentConditionsModel
 {
-    [JsonPropertyName("conditions")] public string Conditions { get; set; }
-    [JsonPropertyName("temp")] public double Temp { get; set; }
-    [JsonPropertyName("feelslike")] public double FeelsLike { get; set; }
-    [JsonPropertyName("humidity")] public double Humidity { get; set; }
-    [JsonPropertyName("windspeed")] public double WindSpeed { get; set; }
-    [JsonPropertyName("winddir")] public double WindDir { get; set; }
+    public string Conditions { get; set; }
+    public double Temp { get; set; }
+    public double FeelsLike { get; set; }
+    public double Humidity { get; set; }
+    public double WindSpeed { get; set; }
+    public double WindDir { get; set; }
 };

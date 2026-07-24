@@ -15,13 +15,7 @@ public class WeatherHandler(IWeatherEndPoint weatherEndpoint) :
         //TODO Cashing and store in database, look up if location is stored already, if not return not found.   
         return Results.Ok();
     }
-
-    public async Task<IResult> Handle(SaveWeatherCommand command, CancellationToken cancellationToken)
-    {
-        // TODO implement
-        return Results.Ok();
-    }
-
+    
     public async Task<IResult> Handle(GetVisualCrossingDataQuery query, CancellationToken cancellationToken)
     {
         //TODO if not found in database, get from third party api and store in database and cache.   
@@ -29,5 +23,11 @@ public class WeatherHandler(IWeatherEndPoint weatherEndpoint) :
         if(!success) return Results.NotFound();
         
         return Results.Ok(weather);
+    }
+    
+    public async Task<IResult> Handle(SaveWeatherCommand command, CancellationToken cancellationToken)
+    {
+        // TODO implement
+        return Results.Ok();
     }
 }

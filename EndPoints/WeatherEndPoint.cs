@@ -16,7 +16,7 @@ public class WeatherEndPoint(
         if (string.IsNullOrEmpty(APIKEY)) return (false, null);
         //TODO add api key
         var url = string.Format(
-            EndpointStrings.GetWeatherRemoteEndPoint,
+            EndpointStrings.GetVisualCrossingWeatherData,
             Uri.EscapeDataString(location),
             APIKEY);
 

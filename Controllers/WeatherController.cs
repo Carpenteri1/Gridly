@@ -13,11 +13,11 @@ public class WeatherController(IMediator mediator) : ControllerBase
 {
     //[EnableRateLimiting(RateLimiterPolicySettings.WeatherPolicy)]
     [HttpGet("get")]
-    public async Task<IResult> Get([FromQuery] GetWeatherQuery command) => await mediator.Send(command);
+    public async Task<IResult> Get([FromQuery] GetWeatherQuery query) => await mediator.Send(query);
     
     [EnableRateLimiting(RateLimiterPolicySettings.WeatherPolicy)]
     [HttpGet("getvisualcrossingdata")]
-    public async Task<IResult> GetWeather([FromQuery] GetVisualCrossingDataQuery command) => await mediator.Send(command);
+    public async Task<IResult> GetWeather([FromQuery] GetVisualCrossingDataQuery query) => await mediator.Send(query);
 
     [HttpPost("save")]
     public async Task<IResult> SaveSettings([FromBody] SaveWeatherCommand command) =>
