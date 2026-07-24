@@ -46,7 +46,7 @@ export class DialogService {
     };
   }
 
-  icon(icon : string): IconModel {
+  setIcon(icon : string): IconModel {
     return {
       id: undefined,
       type: '',

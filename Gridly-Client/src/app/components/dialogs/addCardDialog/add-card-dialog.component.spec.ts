@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AsyncPipe } from '@angular/common';
 import { DialogService } from '../../../services/dialog_services/dialog.service';
 import { CardModel } from '../../../models/card.Model';
 import { IconModel } from '../../../models/icon.Model';
@@ -36,11 +37,13 @@ describe('AddCardDialogComponent', () => {
     icon: '',
   });
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [AddCardDialogComponent],
       providers: [{ provide: DialogService, useValue: dialogServiceMock }],
-    }).compileComponents();
+    }).overrideComponent(AddCardDialogComponent, {
+      add: { imports: [AsyncPipe] },
+    });
 
     fixture = TestBed.createComponent(AddCardDialogComponent);
     dialogComponent = fixture.componentInstance;
