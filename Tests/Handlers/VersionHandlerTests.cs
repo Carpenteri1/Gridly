@@ -16,7 +16,7 @@ public class VersionHandlerTests
         var endPoint = new FakeVersionEndPoint();
         var handler = new VersionHandler(endPoint, cache);
 
-        var result = await handler.Handle(new GetVersionCommand(), CancellationToken.None);
+        var result = await handler.Handle(new GetVersionQuery(), CancellationToken.None);
         var payload = ResultAssertions.AssertOk<VersionModel>(result);
 
         Assert.Equal(cachedVersion.Name, payload.Name);
@@ -31,7 +31,7 @@ public class VersionHandlerTests
         var cache = new FakeMemoryCashingService();
         var handler = new VersionHandler(endPoint, cache);
 
-        var result = await handler.Handle(new GetVersionCommand(), CancellationToken.None);
+        var result = await handler.Handle(new GetVersionQuery(), CancellationToken.None);
         var payload = ResultAssertions.AssertOk<VersionModel>(result);
 
         Assert.Equal(version.Name, payload.Name);
@@ -48,7 +48,7 @@ public class VersionHandlerTests
         var cache = new FakeMemoryCashingService();
         var handler = new VersionHandler(endPoint, cache);
 
-        var result = await handler.Handle(new GetVersionCommand(), CancellationToken.None);
+        var result = await handler.Handle(new GetVersionQuery(), CancellationToken.None);
 
         ResultAssertions.AssertStatusCode(result, StatusCodes.Status404NotFound);
         Assert.Equal(1, endPoint.GetVersionCallCount);
@@ -63,7 +63,7 @@ public class VersionHandlerTests
         var cache = new FakeMemoryCashingService();
         var handler = new VersionHandler(endPoint, cache);
 
-        var result = await handler.Handle(new GetLatestVersionCommand(), CancellationToken.None);
+        var result = await handler.Handle(new GetLatestVersionQuery(), CancellationToken.None);
         var payload = ResultAssertions.AssertOk<VersionModel>(result);
 
         Assert.Equal(version.Name, payload.Name);
@@ -78,7 +78,7 @@ public class VersionHandlerTests
         var cache = new FakeMemoryCashingService();
         var handler = new VersionHandler(endPoint, cache);
 
-        var result = await handler.Handle(new GetLatestVersionCommand(), CancellationToken.None);
+        var result = await handler.Handle(new GetLatestVersionQuery(), CancellationToken.None);
 
         ResultAssertions.AssertStatusCode(result, StatusCodes.Status404NotFound);
         Assert.Equal(1, endPoint.GetLatestVersionCallCount);

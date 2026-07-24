@@ -14,5 +14,5 @@ public class RowController(IMediator meditor) : ControllerBase
     
     [HttpGet("get")]
     public async Task<IResult> Get() =>
-        await meditor.Send(new GetAllRowColumnsCommands());
+        await meditor.Send(new GetAllRowColumnsQuery());
 }
