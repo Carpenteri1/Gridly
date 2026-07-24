@@ -19,6 +19,8 @@ export class UrlStringsUtil {
   static readonly GetWidgetUrl = this.WidgetUrl+'get';
 
   static readonly GetWeatherUrl = this.WeatherUrl+'get';
+  static readonly GetVisualCrossingDataURL = this.WeatherUrl+'getvisualcrossingdata';
+  static readonly GetUrl = this.WeatherUrl+'get';
 
   static readonly GitHubReleaseURL = 'https://github.com/Carpenteri1/Gridly/releases/tag/';
 }

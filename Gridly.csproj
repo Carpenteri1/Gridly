@@ -68,9 +68,6 @@
   <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="CQRS\Behavior\" />
-  </ItemGroup>
-
+  
+  
 </Project>

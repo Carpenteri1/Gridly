@@ -16,4 +16,9 @@ export class WeatherEndpointService{
     const params = new HttpParams().set('SearchTerm', 'The SearchTerm');
     return this.http.get<WeatherModel>(UrlStringsUtil.GetWeatherUrl,{params}).pipe(take(1));
   }
+  getvisualcrossingdata(): Observable<WeatherModel> {
+    //TODO SearchTerm will be added
+    const params = new HttpParams().set('SearchTerm', 'The SearchTerm');
+    return this.http.get<WeatherModel>(UrlStringsUtil.GetVisualCrossingDataURL,{params}).pipe(take(1));
+  }
 }

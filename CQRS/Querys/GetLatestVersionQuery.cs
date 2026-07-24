@@ -1,6 +1,6 @@
 using Gridly.Models;
 using MediatR;
 
-namespace Gridly.Command;
+namespace Gridly.Querys;
 
 public class GetLatestVersionQuery : VersionModel, IRequest<IResult> {}

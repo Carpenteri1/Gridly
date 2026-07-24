@@ -1,5 +1,5 @@
 using MediatR;
 
-namespace Gridly.Command;
+namespace Gridly.Querys;
 
 public class GetAllRowColumnsQuery : IRequest<IResult> {}

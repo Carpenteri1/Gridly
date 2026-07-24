@@ -1,4 +1,4 @@
-using Gridly.Command;
+using Gridly.Querys;
 using Gridly.Configuration;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

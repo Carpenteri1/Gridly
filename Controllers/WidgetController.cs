@@ -1,4 +1,4 @@
-using Gridly.Command;
+using Gridly.Querys;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,5 +10,5 @@ public class WidgetController(IMediator meditor) : ControllerBase
 {
     [HttpGet("get")]
     public async Task<IResult> Get() =>
-        await meditor.Send(new GetWidgetCommand());
+        await meditor.Send(new GetWidgetQuery());
 }   

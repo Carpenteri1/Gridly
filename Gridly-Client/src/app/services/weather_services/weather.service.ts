@@ -17,5 +17,7 @@ export class WeatherService {
   }
 
     private getWeather$ = () => this.#api.get();
-    getWeather = () => firstValueFrom(this.getWeather$());
+    private getWeather = () => firstValueFrom(this.getWeather$());
+    private getVisualCrossingData$ = () => this.#api.getvisualcrossingdata();
+    getVisualCrossingData = () => firstValueFrom(this.getVisualCrossingData$());
 }

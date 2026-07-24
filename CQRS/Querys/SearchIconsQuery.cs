@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Gridly.Command;
+namespace Gridly.Querys;
 
 public class SearchIconsQuery : IRequest<IResult> 
 {

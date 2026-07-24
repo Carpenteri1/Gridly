@@ -1,4 +1,4 @@
-using Gridly.Command;
+using Gridly.Querys;
 using Gridly.Handlers;
 using Gridly.Models;
 using Gridly.Repositories;
