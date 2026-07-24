@@ -17,7 +17,7 @@ public class IconHandlerTests
         var httpClient = new FakeHttpClientServices();
         var handler = new SearchIconsHandler(httpClient, cache);
 
-        var result = await handler.Handle(new SearchIconsCommand { Value = "GRID" }, CancellationToken.None);
+        var result = await handler.Handle(new SearchIconsQuery { Value = "GRID" }, CancellationToken.None);
         var payload = ResultAssertions.AssertOk<SearchIconsResultDto>(result);
 
         Assert.Single(payload.Icons);
@@ -35,7 +35,7 @@ public class IconHandlerTests
         };
         var handler = new SearchIconsHandler(httpClient, cache);
 
-        var result = await handler.Handle(new SearchIconsCommand { Value = "e00" }, CancellationToken.None);
+        var result = await handler.Handle(new SearchIconsQuery { Value = "e00" }, CancellationToken.None);
         var payload = ResultAssertions.AssertOk<SearchIconsResultDto>(result);
 
         Assert.Equal(3, payload.Icons.Length);
@@ -51,7 +51,7 @@ public class IconHandlerTests
         var httpClient = new FakeHttpClientServices { Response = (true, string.Empty) };
         var handler = new SearchIconsHandler(httpClient, cache);
 
-        var result = await handler.Handle(new SearchIconsCommand { Value = "grid" }, CancellationToken.None);
+        var result = await handler.Handle(new SearchIconsQuery { Value = "grid" }, CancellationToken.None);
 
         ResultAssertions.AssertStatusCode(result, StatusCodes.Status204NoContent);
         Assert.Equal(1, httpClient.CallCount);
@@ -67,7 +67,7 @@ public class IconHandlerTests
         var httpClient = new FakeHttpClientServices();
         var handler = new SearchIconsHandler(httpClient, cache);
 
-        var result = await handler.Handle(new SearchIconsCommand { Value = "grid_" }, CancellationToken.None);
+        var result = await handler.Handle(new SearchIconsQuery { Value = "grid_" }, CancellationToken.None);
         var payload = ResultAssertions.AssertOk<SearchIconsResultDto>(result);
 
         Assert.Equal(50, payload.Icons.Length);
