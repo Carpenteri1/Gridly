@@ -20,7 +20,7 @@ describe('AddCardDialogComponent', () => {
       imageHidden: false,
       titleHidden: false,
     }),
-    icon: () => ({
+    setIcon: () => ({
       id: undefined,
       type: '',
       name: '',
@@ -75,7 +75,7 @@ describe('AddCardDialogComponent', () => {
     }
 
     card.settings ??= dialogServiceMock.settings();
-    card.iconData ??= dialogServiceMock.icon();
+    card.iconData ??= dialogServiceMock.setIcon();
 
     expect(card.settings).toEqual({
       width: 250,
