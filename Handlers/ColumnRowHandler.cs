@@ -1,4 +1,5 @@
-using Gridly.Command;
+using Gridly.Commands;
+using Gridly.Querys;
 using Gridly.Factories;
 using Gridly.helpers;
 using Gridly.Models;

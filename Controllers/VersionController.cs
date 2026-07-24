@@ -1,4 +1,5 @@
-using Gridly.Command;
+using Gridly.Querys;
+using Gridly.Configuration;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -11,7 +12,7 @@ public class VersionController(IMediator mediator) : ControllerBase
 { 
      [HttpGet("get")]
      public async Task<IResult> Get() => await mediator.Send(new GetVersionQuery());
-     [EnableRateLimiting("TokenLimiter")]
+     [EnableRateLimiting(RateLimiterPolicySettings.VersionPolicy)]
      [HttpGet("latest")]
      public async Task<IResult> GetLatest() => await mediator.Send(new GetLatestVersionQuery());
 }

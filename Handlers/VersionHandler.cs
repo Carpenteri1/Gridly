@@ -1,4 +1,4 @@
-using Gridly.Command;
+using Gridly.Querys;
 using Gridly.EndPoints;
 using Gridly.Models;
 using Gridly.Services;
@@ -12,7 +12,7 @@ public class VersionHandler(
     IRequestHandler<GetVersionQuery, IResult>,
     IRequestHandler<GetLatestVersionQuery, IResult>
 {
-    public async Task<IResult> Handle(GetVersionQuery request, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(GetVersionQuery query, CancellationToken cancellationToken)
     {
         var cashedVersion = memoryCashingService.Get<VersionModel>("version");
         if (cashedVersion == null)
@@ -28,7 +28,7 @@ public class VersionHandler(
         return cashedVersion != null ? Results.Ok(cashedVersion) : Results.NotFound();
     }
 
-    public async Task<IResult> Handle(GetLatestVersionQuery request, CancellationToken cancellationToken)
+    public async Task<IResult> Handle(GetLatestVersionQuery query, CancellationToken cancellationToken)
     {
         var (success, remoteVersion) = await versionEndPoint.GetLatestVersion();
         if(success)

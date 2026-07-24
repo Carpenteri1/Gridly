@@ -51,7 +51,49 @@ public class DbInitializer
                 Height INT NOT NULL,
                 TitleHidden INTEGER,
                 ImageHidden INTEGER,
-                FOREIGN KEY(CardId) REFERENCES Card(Id));",
+                FOREIGN KEY(CardId) REFERENCES Card(Id));
+
+                 CREATE TABLE IF NOT EXISTS WidgetType(
+                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                 Name TEXT NOT NULL);
+                
+                 CREATE TABLE IF NOT EXISTS Widget(
+                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                 WidgetType INTEGER,
+                 Label TEXT NOT NULL,
+                 Description TEXT NOT NULL,
+                 Icon TEXT NOT NULL,
+                 FOREIGN KEY(WidgetType) REFERENCES WidgetType(Id));
+
+                INSERT INTO WidgetType(Name)
+                SELECT 'Empty'
+                WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Id = 1);
+
+                INSERT INTO WidgetType(Name)
+                SELECT 'Custom'
+                WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Id = 2);
+
+                INSERT INTO WidgetType(Name)
+                SELECT 'Weather'
+                WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Id = 3);
+
+                INSERT INTO Widget(WidgetType, Label, Description, Icon)
+                SELECT Id, 'Weather widget', '', 'clouds'
+                FROM WidgetType 
+                WHERE Name = 'Weather' 
+                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 1);
+
+                INSERT INTO Widget(WidgetType, Label, Description, Icon)
+                SELECT Id, 'Empty widget', '', 'box'
+                FROM WidgetType
+                WHERE Name = 'Empty'
+                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 2);
+
+                INSERT INTO Widget(WidgetType, Label, Description, Icon)
+                SELECT Id, 'Custom widget', '', 'box_add'
+                FROM WidgetType
+                WHERE Name = 'Custom'
+                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 3);",
             commandTimeout:150);
     }
 }

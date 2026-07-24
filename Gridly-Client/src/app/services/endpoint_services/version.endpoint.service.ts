@@ -11,7 +11,6 @@ import {Observable, take} from "rxjs";
 export class VersionEndpointService{
   private http = inject(HttpClient);
 
-
   get(): Observable<VersionModel> {
     return this.http.get<VersionModel>(UrlStringsUtil.GetVersionUrl).pipe(take(1));
   }

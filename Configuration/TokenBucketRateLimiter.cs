@@ -17,30 +17,3 @@ public class TokenBucketRateLimiterMiddleware
         await _next(context);
     }
 }
-
-public static class RequestRateLimiterExtensions 
-{
-    static readonly string Policy = "TokenLimiter"; 
-    public static async Task<IServiceCollection> AddTokenBucketRateLimiter(this IServiceCollection services) {
-        
-        var fixedRate = new FixedRateLimiterModel();
-        
-        services.AddRateLimiter(_ => _
-            .AddTokenBucketLimiter(Policy, opt =>
-            {
-                opt.TokenLimit = fixedRate.Limit;
-                opt.QueueLimit = fixedRate.QueueLimit;
-                opt.ReplenishmentPeriod = fixedRate.Window; 
-                opt.TokensPerPeriod = fixedRate.TokensPerPeriod;
-                opt.AutoReplenishment = true;
-            }));
-        return services;
-    }
-    
-    public static IApplicationBuilder UseTokenBucketRateLimiter(this IApplicationBuilder app)
-    {
-        app.UseRateLimiter();
-        app.UseMiddleware<TokenBucketRateLimiterMiddleware>();
-        return app;
-    }
-}

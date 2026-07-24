@@ -1,9 +1,7 @@
-using Gridly.Command;
 using Gridly.Dtos;
 using Gridly.Models;
 using Gridly.Repositories;
 using Gridly.Services;
-using Gridly.Tests.Infrastructure;
 using BackendCardHandler = Gridly.Handlers.CardHandler;
 
 namespace Gridly.Tests.Handlers;

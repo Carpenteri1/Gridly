@@ -46,13 +46,13 @@ export class DialogService {
     };
   }
 
-  icon(): IconModel {
+  setIcon(icon : string): IconModel {
     return {
       id: undefined,
       type: '',
       name: '',
       base64Data: '',
-      materialIcon: 'add_box',
+      materialIcon: icon,
     };
   }
 

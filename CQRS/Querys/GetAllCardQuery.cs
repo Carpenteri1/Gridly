@@ -1,5 +1,5 @@
 using MediatR;
 
-namespace Gridly.Command;
+namespace Gridly.Querys;
 
-public class GetAllCardCommand : IRequest<IResult> {}
+public class GetAllCardQuery : IRequest<IResult> {}

@@ -1,9 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AsyncPipe } from '@angular/common';
 import { DialogService } from '../../../services/dialog_services/dialog.service';
 import { CardModel } from '../../../models/card.Model';
 import { IconModel } from '../../../models/icon.Model';
 import { AddCardDialogComponent } from './add-card-dialog.component';
 import { CardTypes } from '../../../types/card.types.enum';
+import { Widget } from '../../../interfaces/widget.Interface';
 
 describe('AddCardDialogComponent', () => {
   let fixture: ComponentFixture<AddCardDialogComponent>;
@@ -18,20 +20,30 @@ describe('AddCardDialogComponent', () => {
       imageHidden: false,
       titleHidden: false,
     }),
-    icon: () => ({
+    setIcon: () => ({
       id: undefined,
       type: '',
       name: '',
       base64Data: '',
-      materialIcon: 'add_box',
+      materialIcon: 'box',
     } as IconModel)
   };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  const widget = (widgetType: CardTypes): Widget => ({
+    id: 1,
+    widgetType,
+    label: '',
+    description: '',
+    icon: '',
+  });
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [AddCardDialogComponent],
       providers: [{ provide: DialogService, useValue: dialogServiceMock }],
-    }).compileComponents();
+    }).overrideComponent(AddCardDialogComponent, {
+      add: { imports: [AsyncPipe] },
+    });
 
     fixture = TestBed.createComponent(AddCardDialogComponent);
     dialogComponent = fixture.componentInstance;
@@ -41,8 +53,8 @@ describe('AddCardDialogComponent', () => {
   it('emits a new card payload for both supported card types', () => {
     const emitSpy = jest.spyOn(dialogComponent.newCard, 'emit');
 
-    dialogComponent.onSelect(CardTypes.Empty);
-    dialogComponent.onSelect(CardTypes.Custom);
+    dialogComponent.onSelect(widget(CardTypes.Empty));
+    dialogComponent.onSelect(widget(CardTypes.Custom));
 
     expect(emitSpy).toHaveBeenCalledTimes(2);
     expect(emitSpy.mock.calls[0][0]).toBeDefined();
@@ -52,7 +64,7 @@ describe('AddCardDialogComponent', () => {
   it('emits a fully initialized card model', () => {
     const emitSpy = jest.spyOn(dialogComponent.newCard, 'emit');
 
-    dialogComponent.onSelect(CardTypes.Empty);
+    dialogComponent.onSelect(widget(CardTypes.Empty));
 
     const card = emitSpy.mock.calls[0]?.[0] as CardModel | undefined;
 
@@ -63,7 +75,7 @@ describe('AddCardDialogComponent', () => {
     }
 
     card.settings ??= dialogServiceMock.settings();
-    card.iconData ??= dialogServiceMock.icon();
+    card.iconData ??= dialogServiceMock.setIcon();
 
     expect(card.settings).toEqual({
       width: 250,
@@ -76,7 +88,7 @@ describe('AddCardDialogComponent', () => {
       type: '',
       name: '',
       base64Data: '',
-      materialIcon: 'add_box',
+      materialIcon: 'box',
     });
   });
 });
