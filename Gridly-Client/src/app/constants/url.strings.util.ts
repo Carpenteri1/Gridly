@@ -5,6 +5,7 @@ export class UrlStringsUtil {
   static readonly VersionUrl = '/api/version/';
   static readonly WidgetUrl = '/api/widget/';
   static readonly WeatherUrl = '/api/weather/';
+  static readonly ClockUrl = '/api/clock/';
 
   static readonly CardUrlGet = this.CardUrl+'get';
 
@@ -21,6 +22,9 @@ export class UrlStringsUtil {
   static readonly GetWeatherUrl = this.WeatherUrl+'get';
   static readonly GetVisualCrossingDataURL = this.WeatherUrl+'getvisualcrossingdata';
   static readonly GetUrl = this.WeatherUrl+'get';
+
+  static readonly GetClockUrl = this.ClockUrl+'get';
+  static readonly GetTimeApiDataUrl = this.ClockUrl+'gettimeapidata';
 
   static readonly GitHubReleaseURL = 'https://github.com/Carpenteri1/Gridly/releases/tag/';
 }

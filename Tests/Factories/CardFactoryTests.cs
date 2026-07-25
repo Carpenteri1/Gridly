@@ -54,6 +54,7 @@ public class CardFactoryTests
         var dto = new CardDtoModel
         {
             CardId = 8,
+            CardType = "Clock",
             IconId = 21,
             IconName = "grid",
             Type = "svg",
@@ -63,10 +64,14 @@ public class CardFactoryTests
             Width = 500,
             Height = 300,
             TitleHidden = true,
-            ImageHidden = false
+            ImageHidden = false,
+            TimeZone = "Europe/Stockholm",
+            DisplayFormat = "digital"
         };
 
         var result = CardFactory.Create(dto);
+
+        Assert.Equal("Clock", result.Type);
 
         Assert.NotNull(result.IconData);
         Assert.Equal(21, result.IconData.Id);
@@ -82,5 +87,7 @@ public class CardFactoryTests
         Assert.Equal(300, result.Settings.Height);
         Assert.True(result.Settings.TitleHidden);
         Assert.False(result.Settings.ImageHidden);
+        Assert.Equal("Europe/Stockholm", result.Settings.TimeZone);
+        Assert.Equal("digital", result.Settings.DisplayFormat);
     }
 }

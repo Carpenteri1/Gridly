@@ -78,4 +78,19 @@ describe('EditCardDialogFacade', () => {
     expect(payload.name).toBe('Alpha');
     expect(payload.url).toBe('https://alpha.example');
   });
+
+  it('preserves a Clock card type and timezone/format settings through reset and submit', () => {
+    facade.reset({
+      type: 'Clock',
+      name: 'Clock',
+      url: '',
+      settings: { width: 250, height: 250, imageHidden: false, titleHidden: false, timeZone: 'Europe/Stockholm', displayFormat: 'analog' },
+    });
+
+    const payload = facade.buildSubmitPayload(7);
+
+    expect(payload.type).toBe('Clock');
+    expect(payload.settings?.timeZone).toBe('Europe/Stockholm');
+    expect(payload.settings?.displayFormat).toBe('analog');
+  });
 });

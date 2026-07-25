@@ -40,7 +40,9 @@ public class CardRepository(IDbConnection connection) : ICardRepository
                 Width = c.Settings?.Width ?? 250,
                 Height = c.Settings?.Height ?? 250,
                 TitleHidden = c.Settings?.TitleHidden ?? false,
-                ImageHidden = c.Settings?.ImageHidden ?? false
+                ImageHidden = c.Settings?.ImageHidden ?? false,
+                TimeZone = c.Settings?.TimeZone,
+                DisplayFormat = c.Settings?.DisplayFormat
             })
             .ToList();
 

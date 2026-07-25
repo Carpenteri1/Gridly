@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { EditCardDialogFacade } from './edit-card-dialog.facade';
 import { DialogDirective } from '../../../directives/dialog.directive';
+import { CardTypes } from '../../../types/card.types.enum';
 
 @Component({
   selector: 'app-edit-card-dialog',
@@ -26,6 +27,8 @@ export class EditCardDialogComponent extends BaseDialogComponent implements OnCh
   @Output() editCard = new EventEmitter();
 
   readonly facade: EditCardDialogFacade;
+  protected readonly CardTypes = CardTypes;
+  protected readonly timeZoneOptions = Intl.supportedValuesOf('timeZone');
 
   constructor() {
     super();

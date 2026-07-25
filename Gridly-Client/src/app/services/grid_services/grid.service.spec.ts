@@ -57,6 +57,26 @@ describe('GridService', () => {
     ]);
   });
 
+  it('preserves timeZone and displayFormat settings when adding a Clock card', () => {
+    const clockCard: CardModel = {
+      id: 0,
+      indexPosition: 1,
+      type: 'Clock',
+      name: 'Clock',
+      url: '',
+      settings: {
+        width: 250, height: 250, imageHidden: false, titleHidden: false,
+        timeZone: 'Europe/Stockholm', displayFormat: 'analog',
+      },
+    };
+
+    service.addCardToFirstAvailableRow(clockCard);
+
+    const addedCard = service.currentRowColumns()[0].cards[0];
+    expect(addedCard.settings?.timeZone).toBe('Europe/Stockholm');
+    expect(addedCard.settings?.displayFormat).toBe('analog');
+  });
+
   it('treats an empty backend response as no rows', () => {
     endpointMock.get.mockReturnValue(of(null));
 

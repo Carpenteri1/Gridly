@@ -1,0 +1,43 @@
+.clock-widget {
+  color: inherit;
+  height: 100%;
+}
+
+.clock-digital-time {
+  font-size: 1.75rem;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+
+.clock-timezone-label {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.clock-face-circle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.clock-hand {
+  stroke: currentColor;
+  stroke-linecap: round;
+}
+
+.clock-hand-hour {
+  stroke-width: 3;
+}
+
+.clock-hand-minute {
+  stroke-width: 2;
+}
+
+.clock-hand-second {
+  stroke-width: 1;
+  stroke: #d9534f;
+}
+
+.clock-center-dot {
+  fill: currentColor;
+}

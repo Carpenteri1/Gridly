@@ -1,5 +1,6 @@
 using Gridly.EndPoints;
 using Gridly.Models;
+using Gridly.Repositories;
 using Gridly.Services;
 
 namespace Gridly.Tests.Infrastructure;
@@ -87,11 +88,54 @@ internal sealed class FakeHttpClientServices : IHttpClientServices
     public int CallCount { get; private set; }
     public string? LastUrl { get; private set; }
     public (bool Success, string Response) Response { get; set; }
+    public int GetWithStatusCodeCallCount { get; private set; }
+    public (int StatusCode, string Body) StatusCodeResponse { get; set; }
 
     public Task<(bool, string)> Get(string url)
     {
         CallCount++;
         LastUrl = url;
         return Task.FromResult((Response.Success, Response.Response));
+    }
+
+    public Task<(int StatusCode, string Body)> GetWithStatusCode(string url)
+    {
+        GetWithStatusCodeCallCount++;
+        LastUrl = url;
+        return Task.FromResult(StatusCodeResponse);
+    }
+}
+
+internal sealed class FakeClockEndPoint : IClockEndPoint
+{
+    public int GetCallCount { get; private set; }
+    public (ClockFetchStatus Status, ClockModel? Clock) Result { get; set; }
+
+    public Task<(ClockFetchStatus Status, ClockModel? Clock)> Get(string timeZone)
+    {
+        GetCallCount++;
+        return Task.FromResult(Result);
+    }
+}
+
+internal sealed class FakeClockRepository : IClockRepository
+{
+    private readonly Dictionary<string, (ClockModel? Clock, DateTime? FetchedAt)> _stored = new();
+
+    public int UpsertCallCount { get; private set; }
+    public string? LastUpsertedLocation { get; private set; }
+
+    public void Seed(string location, ClockModel clock, DateTime fetchedAt) =>
+        _stored[location] = (clock, fetchedAt);
+
+    public Task<(ClockModel? Clock, DateTime? FetchedAt)> Get(string location) =>
+        Task.FromResult(_stored.TryGetValue(location, out var value) ? value : (null, null));
+
+    public Task<bool> Upsert(string location, ClockModel clock)
+    {
+        UpsertCallCount++;
+        LastUpsertedLocation = location;
+        _stored[location] = (clock, DateTime.UtcNow);
+        return Task.FromResult(true);
     }
 }

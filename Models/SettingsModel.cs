@@ -10,4 +10,6 @@ public class SettingsModel
     [JsonPropertyName("height")] public int Height { get; set; }
     [JsonPropertyName("titleHidden")] public bool TitleHidden { get; set; }
     [JsonPropertyName("imageHidden")] public bool ImageHidden { get; set; }
+    [JsonPropertyName("timeZone")] public string? TimeZone { get; set; }
+    [JsonPropertyName("displayFormat")] public string? DisplayFormat { get; set; }
 }

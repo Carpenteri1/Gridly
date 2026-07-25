@@ -9,6 +9,8 @@ import { ResizableDirective } from '../../directives/resizable.directive';
 import { MatIconModule } from '@angular/material/icon';
 import { GridService } from '../../services/grid_services/grid.service';
 import { CardRulesService } from '../../services/card_services/card-rules.service';
+import { CardTypes } from '../../types/card.types.enum';
+import { ClockWidgetComponent } from '../widgets/clockWidget/clock-widget.component';
 
 @Component({
   selector: 'app-card-component',
@@ -21,11 +23,14 @@ import { CardRulesService } from '../../services/card_services/card-rules.servic
     EditCardDialogComponent,
     DeleteCardDialogComponent,
     ResizableDirective,
-    MatIconModule
+    MatIconModule,
+    ClockWidgetComponent
   ],
 })
 export class CardComponent {
   @Input({ required: true }) card!: CardModel;
+
+  protected readonly CardTypes = CardTypes;
 
   #gridService = inject(GridService);
   #cardRulesService = inject(CardRulesService);

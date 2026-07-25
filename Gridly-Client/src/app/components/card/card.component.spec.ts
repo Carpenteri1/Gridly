@@ -3,6 +3,8 @@ import { signal } from '@angular/core';
 import { CardModel } from '../../models/card.Model';
 import { CardRulesService } from '../../services/card_services/card-rules.service';
 import { GridService } from '../../services/grid_services/grid.service';
+import { ClockService } from '../../services/clock_services/clock.service';
+import { CardTypes } from '../../types/card.types.enum';
 import { CardComponent } from './card.component';
 
 type CardComponentFixture = CardComponent & {
@@ -35,6 +37,10 @@ describe('CardComponent', () => {
     removeCardFromView: jest.fn(),
   };
 
+  const clockServiceMock = {
+    resolveClockData: jest.fn(() => Promise.resolve({ timeZone: 'UTC', utcOffsetSeconds: 0, dstActive: false })),
+  };
+
   beforeEach(async () => {
     jest.clearAllMocks();
 
@@ -43,6 +49,7 @@ describe('CardComponent', () => {
       providers: [
         { provide: CardRulesService, useValue: cardRulesServiceMock },
         { provide: GridService, useValue: gridServiceMock },
+        { provide: ClockService, useValue: clockServiceMock },
       ],
     }).compileComponents();
 
@@ -89,6 +96,30 @@ describe('CardComponent', () => {
     const result = (createCardComponent as CardComponentFixture).hasMaterialIcon(currentCard);
     expect(cardRulesServiceMock.hasMaterialIcon).toHaveBeenCalledWith(currentCard);
     expect(result).toBe(true);
+  });
+
+  it('renders the clock widget for a Clock card instead of the default link markup', () => {
+    const clockCard: CardModel = {
+      id: 9,
+      indexPosition: 1,
+      type: CardTypes.Clock,
+      name: 'Clock',
+      url: '',
+      settings: { width: 250, height: 250, imageHidden: false, titleHidden: false, timeZone: 'UTC', displayFormat: 'digital' },
+    };
+
+    fixture.componentRef.setInput('card', clockCard);
+    fixture.detectChanges();
+
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('app-clock-widget')).not.toBeNull();
+    expect(element.querySelector('a[target="_blank"]')).toBeNull();
+  });
+
+  it('renders the default link markup for non-Clock cards', () => {
+    const element = fixture.nativeElement as HTMLElement;
+    expect(element.querySelector('app-clock-widget')).toBeNull();
+    expect(element.querySelector('a[target="_blank"]')).not.toBeNull();
   });
 
 });

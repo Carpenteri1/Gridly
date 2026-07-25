@@ -8,13 +8,13 @@ public class QueryStrings
     SELECT * FROM RowColumn WHERE Id = last_insert_rowid();";
     
     public const string InsertToCardQuery = @"
-    INSERT INTO Card (RowColumnId, IndexPosition, Name, Url, IconUrl) 
-    VALUES (@RowColumnId, @IndexPosition, @Name, @Url, @IconUrl);
+    INSERT INTO Card (RowColumnId, IndexPosition, Type, Name, Url, IconUrl)
+    VALUES (@RowColumnId, @IndexPosition, @Type, @Name, @Url, @IconUrl);
     SELECT * FROM Card WHERE Id = last_insert_rowid();";
 
     public const string InsertToSettingsQuery = @"
-    INSERT INTO Settings (CardId, Width, Height, TitleHidden, ImageHidden) 
-    VALUES (@CardId, @Width, @Height, @TitleHidden, @ImageHidden);
+    INSERT INTO Settings (CardId, Width, Height, TitleHidden, ImageHidden, TimeZone, DisplayFormat)
+    VALUES (@CardId, @Width, @Height, @TitleHidden, @ImageHidden, @TimeZone, @DisplayFormat);
     SELECT * FROM Settings WHERE Id = last_insert_rowid();";
 
     public const string InsertToIconQuery = @"
@@ -29,16 +29,19 @@ public class QueryStrings
 
     public const string SelectCardQuery = @"
      SELECT 
-        co.Id AS CardId, 
-        co.IndexPosition, 
+        co.Id AS CardId,
+        co.IndexPosition,
         co.RowColumnId,
-        co.Name AS CardName, 
-        co.Url, 
-        co.IconUrl, 
-        cs.ImageHidden AS ImageHidden, 
+        co.Type AS CardType,
+        co.Name AS CardName,
+        co.Url,
+        co.IconUrl,
+        cs.ImageHidden AS ImageHidden,
         cs.TitleHidden AS TitleHidden,
         cs.Width AS Width,
         cs.Height AS Height,
+        cs.TimeZone AS TimeZone,
+        cs.DisplayFormat AS DisplayFormat,
         cs.Id AS SettingsId,
         i.Id AS IconId,
         i.Type AS Type,
@@ -73,21 +76,21 @@ public class QueryStrings
 
     public const string UpdateCardQuery = @"
     UPDATE Card
-    SET Name = @Name, 
+    SET Name = @Name,
         IndexPosition = @IndexPosition,
         RowColumnId = @RowColumnId,
-        Url = @Url, 
+        Url = @Url,
         IconUrl = @IconUrl
         /**where**/";
-    
+
     public const string UpdateBatchCardQuery = @"
-    UPDATE Card 
-    SET IndexPosition = @IndexPosition, 
+    UPDATE Card
+    SET IndexPosition = @IndexPosition,
         RowColumnId = @RowColumnId
     WHERE Id = @Id;
 
-    UPDATE Settings 
-    SET Width = @Width, Height = @Height
+    UPDATE Settings
+    SET Width = @Width, Height = @Height, TimeZone = @TimeZone, DisplayFormat = @DisplayFormat
     WHERE CardId = @Id;
     ";
 
@@ -102,8 +105,10 @@ public class QueryStrings
     SET CardId = @Id,
         Width = @Width,
         Height = @Height,
-        TitleHidden = @TitleHidden, 
-        ImageHidden = @ImageHidden 
+        TitleHidden = @TitleHidden,
+        ImageHidden = @ImageHidden,
+        TimeZone = @TimeZone,
+        DisplayFormat = @DisplayFormat
         /**where**/";
 
     public const string DeleteFromSettingsQuery = "DELETE FROM Settings /**where**/";
@@ -114,6 +119,18 @@ public class QueryStrings
     public const string BatchDeleteRowColumnQuery = @"
     DELETE FROM RowColumn
     WHERE Id IN @RowColumnId;";
+
+    public const string UpsertClockDataQuery = @"
+    INSERT INTO ClockData (Location, JsonPayload, FetchedAt)
+    VALUES (@Location, @JsonPayload, @FetchedAt)
+    ON CONFLICT(Location) DO UPDATE SET
+        JsonPayload = excluded.JsonPayload,
+        FetchedAt = excluded.FetchedAt;";
+
+    public const string SelectClockDataQuery = @"
+    SELECT Id, Location, JsonPayload, FetchedAt
+    FROM ClockData
+    WHERE Location = @Location;";
 
     public const string JoinIconDataQuery = "Icon i ON i.Id = ic.IconId";
     public const string JoinIconsConnectedDataQuery = "IconsConnected ic ON ic.CardId = co.Id";

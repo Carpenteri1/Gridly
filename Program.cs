@@ -23,6 +23,8 @@ builder.Services.AddScoped(sp =>
 builder.Services.AddScoped<IDbConnectionServices,DbConnectionServices>();
 builder.Services.AddScoped<IVersionEndPoint, VersionEndPoint>();
 builder.Services.AddScoped<IWeatherEndPoint, WeatherEndPoint>();
+builder.Services.AddScoped<IClockEndPoint, ClockEndPoint>();
+builder.Services.AddScoped<IClockRepository, ClockRepository>();
 builder.Services.AddScoped<ICardRepository,CardRepository>();
 builder.Services.AddScoped<IColumnRowRepository,ColumnRowRepository>();
 builder.Services.AddScoped<ISettingsRepository,SettingsRepository>();

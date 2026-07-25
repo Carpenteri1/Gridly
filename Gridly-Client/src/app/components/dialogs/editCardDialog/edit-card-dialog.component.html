@@ -35,6 +35,29 @@
             required>
         </mat-form-field>
 
+        @if (facade.card.type === CardTypes.Clock && facade.card.settings) {
+          <div class="mb-3">
+            <label for="edit-clock-timezone-select" class="form-label">Timezone</label>
+            <select id="edit-clock-timezone-select" class="form-select"
+                    [(ngModel)]="facade.card.settings.timeZone" name="timeZone">
+              @for (tz of timeZoneOptions; track tz) {
+                <option [value]="tz">{{ tz }}</option>
+              }
+            </select>
+          </div>
+          <div class="mb-3">
+            <span class="form-label d-block">Display format</span>
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-outline-secondary"
+                      [class.active]="facade.card.settings.displayFormat === 'digital'"
+                      (click)="facade.card.settings.displayFormat = 'digital'">Digital</button>
+              <button type="button" class="btn btn-outline-secondary"
+                      [class.active]="facade.card.settings.displayFormat === 'analog'"
+                      (click)="facade.card.settings.displayFormat = 'analog'">Analog</button>
+            </div>
+          </div>
+        }
+
         <mat-form-field class="mb-3 w-100 gap-2 form-control">
           <mat-label>{{TextStringsUtil.DialogEditCardInputSearchIconTitle}}</mat-label>
         <div class="d-flex">

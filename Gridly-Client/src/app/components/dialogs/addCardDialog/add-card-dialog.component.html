@@ -6,7 +6,35 @@
         <i class="bi bi-x-lg"></i>
       </button>
     </header>
-    @if(widgetOptions$ | async; as options){
+    @if (selectedWidget(); as widget) {
+      <div class="aw-body">
+        <p class="text-muted mb-3">{{ widget.label }}</p>
+        <div class="mb-3">
+          <label for="clock-timezone-select" class="form-label">Timezone</label>
+          <select id="clock-timezone-select" class="form-select"
+                  [ngModel]="selectedTimeZone()" (ngModelChange)="selectedTimeZone.set($event)">
+            @for (tz of timeZoneOptions; track tz) {
+              <option [value]="tz">{{ tz }}</option>
+            }
+          </select>
+        </div>
+        <div class="mb-3">
+          <span class="form-label d-block">Display format</span>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-secondary"
+                    [class.active]="selectedDisplayFormat() === 'digital'"
+                    (click)="selectedDisplayFormat.set('digital')">Digital</button>
+            <button type="button" class="btn btn-outline-secondary"
+                    [class.active]="selectedDisplayFormat() === 'analog'"
+                    (click)="selectedDisplayFormat.set('analog')">Analog</button>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-secondary" (click)="cancelClockConfig()">{{ TextStringsUtil.DialogAddCardCancelBtnTitle }}</button>
+          <button type="button" class="btn btn-primary" (click)="confirmClock()">{{ TextStringsUtil.DialogAddCardAcceptBtnTitle }}</button>
+        </div>
+      </div>
+    } @else if(widgetOptions$ | async; as options){
       <div class="aw-body">
         <p class="text-muted mb-3">{{ TextStringsUtil.AddCardDescription }}</p>
         <div class="row row-cols-1 row-cols-sm-2 g-3 py-2">

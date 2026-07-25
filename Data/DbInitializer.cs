@@ -25,6 +25,7 @@ public class DbInitializer
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 IndexPosition INTEGER NOT NULL,
                 RowColumnId INTEGER NOT NULL,
+                Type TEXT,
                 Name TEXT,
                 URL TEXT,
                 IconUrl TEXT,
@@ -51,6 +52,8 @@ public class DbInitializer
                 Height INT NOT NULL,
                 TitleHidden INTEGER,
                 ImageHidden INTEGER,
+                TimeZone TEXT,
+                DisplayFormat TEXT,
                 FOREIGN KEY(CardId) REFERENCES Card(Id));
 
                  CREATE TABLE IF NOT EXISTS WidgetType(
@@ -65,6 +68,12 @@ public class DbInitializer
                  Icon TEXT NOT NULL,
                  FOREIGN KEY(WidgetType) REFERENCES WidgetType(Id));
 
+                CREATE TABLE IF NOT EXISTS ClockData(
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Location TEXT NOT NULL UNIQUE,
+                JsonPayload TEXT NOT NULL,
+                FetchedAt TEXT NOT NULL);
+
                 INSERT INTO WidgetType(Name)
                 SELECT 'Empty'
                 WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Id = 1);
@@ -77,10 +86,14 @@ public class DbInitializer
                 SELECT 'Weather'
                 WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Id = 3);
 
+                INSERT INTO WidgetType(Name)
+                SELECT 'Clock'
+                WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Id = 4);
+
                 INSERT INTO Widget(WidgetType, Label, Description, Icon)
                 SELECT Id, 'Weather widget', '', 'clouds'
-                FROM WidgetType 
-                WHERE Name = 'Weather' 
+                FROM WidgetType
+                WHERE Name = 'Weather'
                   AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 1);
 
                 INSERT INTO Widget(WidgetType, Label, Description, Icon)
@@ -93,7 +106,13 @@ public class DbInitializer
                 SELECT Id, 'Custom widget', '', 'box_add'
                 FROM WidgetType
                 WHERE Name = 'Custom'
-                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 3);",
+                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 3);
+
+                INSERT INTO Widget(WidgetType, Label, Description, Icon)
+                SELECT Id, 'Clock widget', '', 'schedule'
+                FROM WidgetType
+                WHERE Name = 'Clock'
+                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 4);",
             commandTimeout:150);
     }
 }

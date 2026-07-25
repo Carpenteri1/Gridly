@@ -10,7 +10,9 @@ namespace Gridly.Factories
             Width = settings?.Width ?? 250,
             Height = settings?.Height ?? 250,
             TitleHidden = settings?.TitleHidden ?? false,
-            ImageHidden = settings?.ImageHidden ?? false
+            ImageHidden = settings?.ImageHidden ?? false,
+            TimeZone = settings?.TimeZone,
+            DisplayFormat = settings?.DisplayFormat
        };
     }
 }

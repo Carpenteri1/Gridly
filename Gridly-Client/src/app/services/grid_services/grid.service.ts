@@ -49,6 +49,8 @@ export class GridService {
         height: card.settings?.height ?? 0,
         imageHidden: card.settings?.imageHidden,
         titleHidden: card.settings?.titleHidden,
+        timeZone: card.settings?.timeZone,
+        displayFormat: card.settings?.displayFormat,
       },
     };
 

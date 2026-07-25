@@ -5,6 +5,7 @@ public class CardDtoModel
     public int CardId { get; set; }
     public int IndexPosition { get; set; }
     public int RowColumnId { get; set; }
+    public string CardType { get; set; }
     public string CardName { get; set; }
     public string Url { get; set; }
     public string IconUrl { get; set; }
@@ -18,4 +19,6 @@ public class CardDtoModel
     public int Height { get; set; }
     public bool TitleHidden { get; set; }
     public bool ImageHidden { get; set; }
+    public string? TimeZone { get; set; }
+    public string? DisplayFormat { get; set; }
 }

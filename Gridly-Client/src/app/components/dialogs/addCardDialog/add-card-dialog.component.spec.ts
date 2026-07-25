@@ -91,4 +91,39 @@ describe('AddCardDialogComponent', () => {
       materialIcon: 'box',
     });
   });
+
+  it('shows the timezone/format picker instead of emitting immediately for Clock', () => {
+    const emitSpy = jest.spyOn(dialogComponent.newCard, 'emit');
+
+    dialogComponent.onSelect(widget(CardTypes.Clock));
+
+    expect(emitSpy).not.toHaveBeenCalled();
+  });
+
+  it('emits a Clock card with the selected timezone and display format on confirm', () => {
+    const emitSpy = jest.spyOn(dialogComponent.newCard, 'emit');
+
+    dialogComponent.onSelect(widget(CardTypes.Clock));
+    (dialogComponent as unknown as { selectedTimeZone: { set(v: string): void } })
+      .selectedTimeZone.set('Europe/Stockholm');
+    (dialogComponent as unknown as { selectedDisplayFormat: { set(v: string): void } })
+      .selectedDisplayFormat.set('analog');
+    dialogComponent.confirmClock();
+
+    expect(emitSpy).toHaveBeenCalledTimes(1);
+    const card = emitSpy.mock.calls[0][0] as CardModel;
+    expect(card.type).toBe(CardTypes.Clock);
+    expect(card.settings?.timeZone).toBe('Europe/Stockholm');
+    expect(card.settings?.displayFormat).toBe('analog');
+  });
+
+  it('discards the picker without emitting when the Clock config is cancelled', () => {
+    const emitSpy = jest.spyOn(dialogComponent.newCard, 'emit');
+
+    dialogComponent.onSelect(widget(CardTypes.Clock));
+    dialogComponent.cancelClockConfig();
+    dialogComponent.confirmClock();
+
+    expect(emitSpy).not.toHaveBeenCalled();
+  });
 });

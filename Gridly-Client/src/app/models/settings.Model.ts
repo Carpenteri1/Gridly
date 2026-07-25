@@ -3,4 +3,6 @@ export class SettingsModel {
   height!: number;
   imageHidden?: boolean = false;
   titleHidden?: boolean = false;
+  timeZone?: string;
+  displayFormat?: 'digital' | 'analog';
 }
