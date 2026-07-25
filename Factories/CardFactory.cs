@@ -13,6 +13,7 @@ public static class CardFactory
             RowColumnId = dto.RowColumnId,
             Name = dto.CardName,
             Url = dto.Url,
+            Type = dto.CardType,
             IconUrl = dto.IconUrl,
             IconData = new IconModel
             {

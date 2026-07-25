@@ -33,11 +33,11 @@ public class WeatherHandler(
         switch (status)
         {
             case WeatherFetchStatus.Success: 
-                await providerKeysRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, ProviderKeyStatusModel.Valid);
+                await providerKeysRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProviderKeyStatusEnum.Valid));
                 return Results.Ok(weather);
 
             case WeatherFetchStatus.InvalidApiKey:
-                await providerKeysRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, ProviderKeyStatusModel.Invalid);
+                await providerKeysRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProviderKeyStatusEnum.Invalid));
                 return Results.Problem(statusCode: StatusCodes.Status401Unauthorized, detail: "ApiKeyInvalid");
 
             case WeatherFetchStatus.NoApiKey:

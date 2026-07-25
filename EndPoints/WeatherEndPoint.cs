@@ -26,8 +26,8 @@ public class WeatherEndPoint(
 
         var (statusCode, body) = await httpClientServices.GetWithStatusCode(url);
 
-        if (statusCode is 401 or 403) return (WeatherFetchStatus.InvalidApiKey, null);
-        if (statusCode is < 200 or >= 300) return (WeatherFetchStatus.ProviderUnavailable, null);
+        if (statusCode is StatusCodes.Status401Unauthorized or StatusCodes.Status403Forbidden) return (WeatherFetchStatus.InvalidApiKey, null);
+        if (statusCode is < StatusCodes.Status200OK or >= StatusCodes.Status300MultipleChoices) return (WeatherFetchStatus.ProviderUnavailable, null);
 
         var dto = dataConverter.DeserializeJson(body);
         return dto is null

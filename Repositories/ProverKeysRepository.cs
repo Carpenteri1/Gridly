@@ -11,7 +11,7 @@ public class ProverKeysRepository(IDbConnection connection) : IProviderKeysRepos
 
     public async Task<ProviderKeyDtoModel?> Get(string provider) =>
         await _dbCommandRunner.Select<ProviderKeyDtoModel>(
-            QueryStrings.SelectProviderKeysQuery, new { Provider = provider });
+            QueryStrings.SelectProviderKeyQuery, new { Provider = provider });
 
     public async Task<bool> Upsert(string provider, string encryptedKey, string status)
     {
@@ -22,7 +22,7 @@ public class ProverKeysRepository(IDbConnection connection) : IProviderKeysRepos
             Status = status,
             LastValidatedAt = DateTime.UtcNow
         };
-        return await _dbCommandRunner.Execute(QueryStrings.UpsertProviderKeysQuery, parameters);
+        return await _dbCommandRunner.Execute(QueryStrings.UpsertProviderKeyQuery, parameters);
     }
 
     public async Task<bool> UpdateStatus(string provider, string status)
@@ -33,6 +33,6 @@ public class ProverKeysRepository(IDbConnection connection) : IProviderKeysRepos
             Status = status,
             LastValidatedAt = DateTime.UtcNow
         };
-        return await _dbCommandRunner.Execute(QueryStrings.UpdateProviderKeysStatusQuery, parameters);
+        return await _dbCommandRunner.Execute(QueryStrings.UpdateProviderKeyStatusQuery, parameters);
     }
 }

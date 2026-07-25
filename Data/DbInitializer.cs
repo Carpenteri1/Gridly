@@ -27,6 +27,7 @@ public class DbInitializer
                 RowColumnId INTEGER NOT NULL,
                 Name TEXT,
                 URL TEXT,
+                Type TEXT,
                 IconUrl TEXT,
                 FOREIGN KEY(RowColumnId) REFERENCES RowColumn(Id) ON DELETE CASCADE);
 

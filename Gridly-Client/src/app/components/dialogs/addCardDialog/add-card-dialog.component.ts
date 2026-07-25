@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { DialogDirective } from '../../../directives/dialog.directive';
 import { BaseDialogComponent } from '../../../directives/base-dialog.directive';
-import { CardTypes } from '../../../types/card.types.enum';
+import { CardTypes } from '../../../enums/card.types.enum';
 import { CardOptionModel } from '../../../models/cardOptions.Model';
 import { CardModel } from '../../../models/card.Model';
 import { DialogService } from '../../../services/dialog_services/dialog.service';
@@ -31,6 +31,7 @@ export class AddCardDialogComponent
   onSelect(widget: Widget) {
     const card = new CardModel();
     card.name = widget.label;
+    card.type = widget.widgetType;
     card.settings = this.#dialogService.settings();
     card.iconData = this.#dialogService.setIcon(widget.icon);
 
@@ -38,6 +39,7 @@ export class AddCardDialogComponent
       case CardTypes.Empty:
         return this.newCard.emit(card);
         case CardTypes.Weather:
+
           return this.newCard.emit(card);
       default:
         return this.newCard.emit(card);

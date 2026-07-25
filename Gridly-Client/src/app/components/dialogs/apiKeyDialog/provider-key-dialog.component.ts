@@ -1,29 +1,29 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BaseDialogComponent } from '../../../directives/base-dialog.directive';
 import { DialogDirective } from '../../../directives/dialog.directive';
-import { ApiKeyService } from '../../../services/api_key_services/api-key.service';
-import { ThirdPartyProvider } from '../../../types/third-party-provider.enum';
+import { ThirdPartyProvider } from '../../../enums/third-party-provider.enum';
+import { ProviderKeysService } from "../../../services/provider_key_services/provider-keys.service";
 
 @Component({
-  selector: 'app-api-key-dialog',
+  selector: 'app-provider-key-dialog',
   standalone: true,
   imports: [FormsModule, DialogDirective],
-  templateUrl: './api-key-dialog.component.html',
+  templateUrl: './provider-key-dialog.component.html',
   styleUrls: ['../../../css/shared.dialog.css'],
 })
-export class ApiKeyDialogComponent extends BaseDialogComponent {
+export class ProviderKeyDialogComponent extends BaseDialogComponent{
   @Input() open = false;
   @Input() id = 0;
   @Input() invalidKey = false;
   @Output() openChange = new EventEmitter<number>();
   @Output() keySaved = new EventEmitter<void>();
 
-  #apiKeyService = inject(ApiKeyService);
+  #providerKeysService = inject(ProviderKeysService);
 
-  rawKey = '';
+  rawKey!:string;
   saving = false;
-  errorMessage = '';
+  errorMessage!:string;
 
   onSubmit(): void {
     if (!this.rawKey.trim()) return;
@@ -31,11 +31,11 @@ export class ApiKeyDialogComponent extends BaseDialogComponent {
     this.saving = true;
     this.errorMessage = '';
 
-    this.#apiKeyService.save(this.rawKey, ThirdPartyProvider.VisualCrossing).subscribe({
+    this.#providerKeysService.save(this.rawKey, ThirdPartyProvider.VisualCrossing).subscribe({
       next: () => {
         this.saving = false;
         this.rawKey = '';
-        this.#apiKeyService.onKeySaved(ThirdPartyProvider.VisualCrossing);
+        this.#providerKeysService.onKeySaved(ThirdPartyProvider.VisualCrossing);
         this.close();
         this.keySaved.emit();
       },

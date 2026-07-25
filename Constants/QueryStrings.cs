@@ -8,8 +8,8 @@ public class QueryStrings
     SELECT * FROM RowColumn WHERE Id = last_insert_rowid();";
     
     public const string InsertToCardQuery = @"
-    INSERT INTO Card (RowColumnId, IndexPosition, Name, Url, IconUrl) 
-    VALUES (@RowColumnId, @IndexPosition, @Name, @Url, @IconUrl);
+    INSERT INTO Card (RowColumnId, IndexPosition, Name, Url, IconUrl, Type) 
+    VALUES (@RowColumnId, @IndexPosition, @Name, @Url, @IconUrl, @Type);
     SELECT * FROM Card WHERE Id = last_insert_rowid();";
 
     public const string InsertToSettingsQuery = @"
@@ -35,6 +35,7 @@ public class QueryStrings
         co.Name AS CardName, 
         co.Url, 
         co.IconUrl, 
+        co.Type AS CardType,
         cs.ImageHidden AS ImageHidden, 
         cs.TitleHidden AS TitleHidden,
         cs.Width AS Width,
@@ -77,7 +78,8 @@ public class QueryStrings
         IndexPosition = @IndexPosition,
         RowColumnId = @RowColumnId,
         Url = @Url, 
-        IconUrl = @IconUrl
+        IconUrl = @IconUrl,
+        Type = @Type
         /**where**/";
     
     public const string UpdateBatchCardQuery = @"
@@ -115,7 +117,7 @@ public class QueryStrings
     DELETE FROM RowColumn
     WHERE Id IN @RowColumnId;";
 
-    public const string UpsertProviderKeysQuery = @"
+    public const string UpsertProviderKeyQuery = @"
     INSERT INTO ProviderKeys (Provider, EncryptedKey, Status, LastValidatedAt)
     VALUES (@Provider, @EncryptedKey, @Status, @LastValidatedAt)
     ON CONFLICT(Provider) DO UPDATE SET
@@ -123,13 +125,13 @@ public class QueryStrings
         Status = excluded.Status,
         LastValidatedAt = excluded.LastValidatedAt;";
 
-    public const string UpdateProviderKeysStatusQuery = @"
+    public const string UpdateProviderKeyStatusQuery = @"
     UPDATE ProviderKeys
     SET Status = @Status,
         LastValidatedAt = @LastValidatedAt
     WHERE Provider = @Provider;";
 
-    public const string SelectProviderKeysQuery = @"
+    public const string SelectProviderKeyQuery = @"
     SELECT Id, Provider, EncryptedKey, Status, LastValidatedAt
     FROM ProviderKeys
     WHERE Provider = @Provider;";

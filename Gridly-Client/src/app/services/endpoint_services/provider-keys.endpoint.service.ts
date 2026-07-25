@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, take } from 'rxjs';
 import { UrlStringsUtil } from '../../constants/url.strings.util';
 import { ProviderKeyStatusModel } from '../../models/providerKeyStatus.Model';
-import { ThirdPartyProvider } from '../../types/third-party-provider.enum';
+import { ThirdPartyProvider } from '../../enums/third-party-provider.enum';
 
 @Injectable({
   providedIn: 'root'

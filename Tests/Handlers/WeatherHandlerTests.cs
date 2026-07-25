@@ -75,7 +75,7 @@ public class WeatherHandlerTests
 
         ResultAssertions.AssertStatusCode(result, StatusCodes.Status401Unauthorized);
         Assert.Equal(1, apiKeyRepository.UpdateStatusCallCount);
-        Assert.Equal(ProviderKeyStatusModel.Invalid, apiKeyRepository.LastUpdatedStatus);
+        Assert.Equal(nameof(ProviderKeyStatusEnum.Invalid), apiKeyRepository.LastUpdatedStatus);
     }
 
     [Fact]

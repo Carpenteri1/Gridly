@@ -19,14 +19,14 @@ public class ProviderKeyHandler(
         if (string.IsNullOrWhiteSpace(command.RawKey)) return Results.BadRequest();
 
         var encrypted = providerKeysProtectionService.Protect(command.RawKey);
-        var success = await providerKeysRepository.Upsert(command.Provider, encrypted, ProviderKeyStatusModel.Unknown);
+        var success = await providerKeysRepository.Upsert(command.Provider, encrypted, nameof(ProviderKeyStatusEnum.Unknown));
         return success ? Results.Ok() : Results.BadRequest();
     }
 
     public async Task<IResult> Handle(GetProviderKeyStatusQuery query, CancellationToken cancellationToken)
     {
         var apiKey = await providerKeysRepository.Get(query.Provider);
-        if (apiKey is null) return Results.Ok(new { exists = false, status = ProviderKeyStatusModel.Unknown });
+        if (apiKey is null) return Results.Ok(new { exists = false, status = nameof(ProviderKeyStatusEnum.Unknown) });
 
         var model = ProviderKeyFactory.Create(apiKey);
         return Results.Ok(new { exists = true, status = model.Status });

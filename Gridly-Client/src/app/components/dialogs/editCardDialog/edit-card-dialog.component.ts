@@ -11,7 +11,7 @@ import { DialogDirective } from '../../../directives/dialog.directive';
 
 @Component({
   selector: 'app-edit-card-dialog',
-  imports: [CommonModule, FormsModule, DialogDirective, MatIconModule, MatSelectModule, MatInputModule],  
+  imports: [CommonModule, FormsModule, DialogDirective, MatIconModule, MatSelectModule, MatInputModule],
   templateUrl: './edit-card-dialog.component.html',
   styleUrls: ['../../../css/shared.dialog.css', './edit-card-dialog.component.css'],
   providers: [EditCardDialogFacade],

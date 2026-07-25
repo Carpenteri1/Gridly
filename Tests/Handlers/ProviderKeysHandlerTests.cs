@@ -24,7 +24,7 @@ public class ProviderKeysHandlerTests
         Assert.Equal(1, repository.UpsertCallCount);
         Assert.NotNull(repository.StoredKey);
         Assert.Equal("protected:secret-key", repository.StoredKey!.EncryptedKey);
-        Assert.Equal(ProviderKeyStatusModel.Unknown, repository.StoredKey!.Status);
+        Assert.Equal(nameof(ProviderKeyStatusEnum.Unknown), repository.StoredKey!.Status);
     }
 
     [Fact]
@@ -56,14 +56,14 @@ public class ProviderKeysHandlerTests
     public async Task HandleGetApiKeyStatus_WhenKeyStored_ReturnsExistsTrueWithStatus()
     {
         var repository = new FakeProviderKeysRepository();
-        await repository.Upsert("VisualCrossing", "protected:secret-key", ProviderKeyStatusModel.Valid);
+        await repository.Upsert("VisualCrossing", "protected:secret-key", nameof(ProviderKeyStatusEnum.Valid));
         var handler = new ProviderKeyHandler(repository, new FakeProviderKeysProtectionService());
 
         var result = await handler.Handle(new GetProviderKeyStatusQuery { Provider = "VisualCrossing" }, CancellationToken.None);
         var payload = GetOkValue(result);
 
         Assert.True((bool)payload.GetType().GetProperty("exists")!.GetValue(payload)!);
-        Assert.Equal(ProviderKeyStatusModel.Valid, payload.GetType().GetProperty("status")!.GetValue(payload));
+        Assert.Equal(nameof(ProviderKeyStatusEnum.Valid), payload.GetType().GetProperty("status")!.GetValue(payload));
     }
 
     private static object GetOkValue(IResult result)

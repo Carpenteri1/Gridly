@@ -8,6 +8,7 @@ export class CardModel {
   iconUrl?: string;
   name!: string;
   url!: string;
+  type?:string;
   iconData?: IconModel;
-  settings? : SettingsModel;
+  settings?: SettingsModel;
 }
