@@ -1,5 +1,4 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BaseDialogComponent } from '../../../directives/base-dialog.directive';
 import { DialogDirective } from '../../../directives/dialog.directive';
@@ -9,7 +8,7 @@ import { ThirdPartyProvider } from '../../../types/third-party-provider.enum';
 @Component({
   selector: 'app-api-key-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, DialogDirective],
+  imports: [FormsModule, DialogDirective],
   templateUrl: './api-key-dialog.component.html',
   styleUrls: ['../../../css/shared.dialog.css'],
 })

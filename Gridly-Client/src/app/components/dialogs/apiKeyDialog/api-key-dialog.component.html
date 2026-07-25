@@ -10,8 +10,11 @@
       <form (ngSubmit)="onSubmit()">
         <div class="mb-3">
           <label for="api-key-input" class="form-label">{{TextStringsUtil.DialogApiKeyInputLabel}}</label>
-          <p *ngIf="invalidKey">{{TextStringsUtil.DialogApiKeyInvalidMessage}}</p>
-          <p *ngIf="!invalidKey">{{TextStringsUtil.DialogApiKeyDescription}}</p>
+          @if (invalidKey) {
+            <p>{{TextStringsUtil.DialogApiKeyInvalidMessage}}</p>
+          } @else {
+            <p>{{TextStringsUtil.DialogApiKeyDescription}}</p>
+          }
           <input
             type="password"
             id="api-key-input"
@@ -20,7 +23,9 @@
             [(ngModel)]="rawKey"
             autocomplete="off"
             required>
-          <p class="text-danger" *ngIf="errorMessage">{{errorMessage}}</p>
+          @if (errorMessage) {
+            <p class="text-danger">{{errorMessage}}</p>
+          }
         </div>
         <div class="d-flex justify-content-end gap-2 mt-4">
           <button type="button" class="btn btn-secondary" (click)="close()">{{TextStringsUtil.DialogApiKeyCancelBtnTitle}}</button>
