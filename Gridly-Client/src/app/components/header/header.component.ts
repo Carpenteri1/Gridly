@@ -36,9 +36,9 @@ export class HeaderComponent {
     }
   }
 
-  save(): void {
+  async save(): Promise<void> {
+    await this.#gridService.batchSave(this.#gridService.currentRowColumns());
     this.toggleMenu();
-    this.#gridService.batchSave(this.#gridService.currentRowColumns());
   }
 
   protected reloadPage(): void {
