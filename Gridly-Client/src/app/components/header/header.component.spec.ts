@@ -25,11 +25,12 @@ describe('HeaderComponent', () => {
     toggleEdit: jest.fn(() => editMode.update((value) => !value)),
     setEditMode: jest.fn((value: boolean) => editMode.set(value)),
     addCardToFirstAvailableRow: jest.fn(),
-    batchSave: jest.fn(),
+    batchSave: jest.fn(() => Promise.resolve()),
     currentRowColumns: jest.fn(() => []),
   };
 
   beforeEach(async () => {
+    editMode.set(false);
     gridServiceMock.toggleEdit.mockClear();
     gridServiceMock.setEditMode.mockClear();
     gridServiceMock.addCardToFirstAvailableRow.mockClear();
@@ -60,6 +61,17 @@ describe('HeaderComponent', () => {
 
     expect(gridServiceMock.toggleEdit).toHaveBeenCalledTimes(2);
     expect(headerComponent.editActive()).toBe(false); 
+  });
+
+  it('waits for the save to complete before exiting edit mode and reloading', async () => {
+    await headerComponent.save();
+
+    expect(gridServiceMock.batchSave).toHaveBeenCalledTimes(1);
+    expect(gridServiceMock.toggleEdit).toHaveBeenCalledTimes(1);
+
+    const batchSaveOrder = gridServiceMock.batchSave.mock.invocationCallOrder[0];
+    const toggleEditOrder = gridServiceMock.toggleEdit.mock.invocationCallOrder[0];
+    expect(batchSaveOrder).toBeLessThan(toggleEditOrder);
   });
 
   it('adds cards to the current grid rows and closes the dialog', () => {
