@@ -3,9 +3,9 @@ using Gridly.Models;
 
 namespace Gridly.Factories;
 
-public static class ApiKeyFactory
+public static class ProviderKeyFactory
 {
-    public static ApiKeyModel Create(ApiKeyDtoModel dto)
+    public static ProviderKeyModel Create(ProviderKeyDtoModel dto)
         => new()
         {
             Id = dto.Id,

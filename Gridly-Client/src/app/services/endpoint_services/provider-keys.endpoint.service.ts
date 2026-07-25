@@ -2,18 +2,18 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, take } from 'rxjs';
 import { UrlStringsUtil } from '../../constants/url.strings.util';
-import { ApiKeyStatusModel } from '../../models/apiKeyStatus.Model';
+import { ProviderKeyStatusModel } from '../../models/providerKeyStatus.Model';
 import { ThirdPartyProvider } from '../../types/third-party-provider.enum';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApiKeyEndpointService {
+export class ProviderKeysEndpointService {
   private http = inject(HttpClient);
 
-  getStatus(provider: ThirdPartyProvider): Observable<ApiKeyStatusModel> {
+  getStatus(provider: ThirdPartyProvider): Observable<ProviderKeyStatusModel> {
     const params = new HttpParams().set('Provider', provider);
-    return this.http.get<ApiKeyStatusModel>(UrlStringsUtil.GetApiKeyStatusUrl, { params }).pipe(take(1));
+    return this.http.get<ProviderKeyStatusModel>(UrlStringsUtil.GetApiKeyStatusUrl, { params }).pipe(take(1));
   }
 
   save(provider: ThirdPartyProvider, rawKey: string): Observable<void> {

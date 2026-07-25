@@ -12,7 +12,7 @@ public class VersionController(IMediator mediator) : ControllerBase
 { 
      [HttpGet("get")]
      public async Task<IResult> Get() => await mediator.Send(new GetVersionQuery());
-     [EnableRateLimiting(RateLimiterPolicySettings.VersionPolicy)]
+     [EnableRateLimiting(RateLimiterPolicySettings.VersionProviderPolicy)]
      [HttpGet("latest")]
      public async Task<IResult> GetLatest() => await mediator.Send(new GetLatestVersionQuery());
 }

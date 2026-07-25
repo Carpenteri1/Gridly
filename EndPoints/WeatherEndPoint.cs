@@ -10,15 +10,15 @@ namespace Gridly.EndPoints;
 public class WeatherEndPoint(
     IDataConverter<WeatherDtoModel> dataConverter,
     IHttpClientServices httpClientServices,
-    IApiKeyRepository apiKeyRepository,
-    IApiKeyProtectionService apiKeyProtectionService) : IWeatherEndPoint
+    IProviderKeysRepository providerKeysRepository,
+    IProviderKeysProtectionService providerKeysProtectionService) : IWeatherEndPoint
 {
     public async Task<(WeatherFetchStatus Status, WeatherModel? Weather)> Get(string location)
     {
-        var apiKey = await apiKeyRepository.Get(EndpointStrings.VisualCrossingProvider);
+        var apiKey = await providerKeysRepository.Get(EndpointStrings.VisualCrossingProvider);
         if (apiKey is null) return (WeatherFetchStatus.NoApiKey, null);
 
-        var rawKey = apiKeyProtectionService.Unprotect(apiKey.EncryptedKey);
+        var rawKey = providerKeysProtectionService.Unprotect(apiKey.EncryptedKey);
         var url = string.Format(
             EndpointStrings.GetVisualCrossingWeatherData,
             Uri.EscapeDataString(location),

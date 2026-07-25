@@ -65,6 +65,19 @@ public class DbInitializer
                  Icon TEXT NOT NULL,
                  FOREIGN KEY(WidgetType) REFERENCES WidgetType(Id));
 
+                CREATE TABLE IF NOT EXISTS ProviderKeys(
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Provider TEXT NOT NULL UNIQUE,
+                EncryptedKey TEXT NOT NULL,
+                Status TEXT NOT NULL,
+                LastValidatedAt TEXT);
+
+                CREATE TABLE IF NOT EXISTS WeatherData(
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Location TEXT NOT NULL UNIQUE,
+                JsonPayload TEXT NOT NULL,
+                FetchedAt TEXT NOT NULL);
+
                 INSERT INTO WidgetType(Name)
                 SELECT 'Empty'
                 WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Id = 1);
@@ -93,20 +106,7 @@ public class DbInitializer
                 SELECT Id, 'Custom widget', '', 'box_add'
                 FROM WidgetType
                 WHERE Name = 'Custom'
-                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 3);
-
-                CREATE TABLE IF NOT EXISTS ThirdPartyApiKey(
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                Provider TEXT NOT NULL UNIQUE,
-                EncryptedKey TEXT NOT NULL,
-                Status TEXT NOT NULL,
-                LastValidatedAt TEXT);
-
-                CREATE TABLE IF NOT EXISTS WeatherData(
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                Location TEXT NOT NULL UNIQUE,
-                JsonPayload TEXT NOT NULL,
-                FetchedAt TEXT NOT NULL);",
+                  AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 3);",
             commandTimeout:150);
     }
 }

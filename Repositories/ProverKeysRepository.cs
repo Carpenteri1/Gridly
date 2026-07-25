@@ -5,13 +5,13 @@ using Gridly.Dtos;
 
 namespace Gridly.Repositories;
 
-public class ApiKeyRepository(IDbConnection connection) : IApiKeyRepository
+public class ProverKeysRepository(IDbConnection connection) : IProviderKeysRepository
 {
     private DbCommandRunner _dbCommandRunner = new(connection);
 
-    public async Task<ApiKeyDtoModel?> Get(string provider) =>
-        await _dbCommandRunner.Select<ApiKeyDtoModel>(
-            QueryStrings.SelectThirdPartyApiKeyQuery, new { Provider = provider });
+    public async Task<ProviderKeyDtoModel?> Get(string provider) =>
+        await _dbCommandRunner.Select<ProviderKeyDtoModel>(
+            QueryStrings.SelectProviderKeysQuery, new { Provider = provider });
 
     public async Task<bool> Upsert(string provider, string encryptedKey, string status)
     {
@@ -22,7 +22,7 @@ public class ApiKeyRepository(IDbConnection connection) : IApiKeyRepository
             Status = status,
             LastValidatedAt = DateTime.UtcNow
         };
-        return await _dbCommandRunner.Execute(QueryStrings.UpsertThirdPartyApiKeyQuery, parameters);
+        return await _dbCommandRunner.Execute(QueryStrings.UpsertProviderKeysQuery, parameters);
     }
 
     public async Task<bool> UpdateStatus(string provider, string status)
@@ -33,6 +33,6 @@ public class ApiKeyRepository(IDbConnection connection) : IApiKeyRepository
             Status = status,
             LastValidatedAt = DateTime.UtcNow
         };
-        return await _dbCommandRunner.Execute(QueryStrings.UpdateThirdPartyApiKeyStatusQuery, parameters);
+        return await _dbCommandRunner.Execute(QueryStrings.UpdateProviderKeysStatusQuery, parameters);
     }
 }

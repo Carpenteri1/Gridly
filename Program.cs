@@ -30,13 +30,13 @@ builder.Services.AddScoped<ISettingsRepository,SettingsRepository>();
 builder.Services.AddScoped<IIconRepository,IconRepository>();
 builder.Services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
 builder.Services.AddScoped<IWidgetRepository,WidgetRepository>();
-builder.Services.AddScoped<IApiKeyRepository,ApiKeyRepository>();
+builder.Services.AddScoped<IProviderKeysRepository,ProverKeysRepository>();
 builder.Services.AddScoped<IWeatherRepository,WeatherRepository>();
 
 builder.Services.AddSingleton<IMemoryCashingService, MemoryCashingServices>();
 builder.Services.AddSingleton<IHttpClientServices, HttpClientServices>();
 builder.Services.AddSingleton<IFileService, FileService>();
-builder.Services.AddSingleton<IApiKeyProtectionService, ApiKeyProtectionService>();
+builder.Services.AddSingleton<IProviderKeysProtectionService, ProviderKeysProtectionService>();
 builder.Services.AddSingleton(typeof(IDataConverter<>), typeof(DataConverter<>));
 
 builder.Services.AddDataProtection()

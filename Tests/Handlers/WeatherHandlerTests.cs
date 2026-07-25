@@ -17,7 +17,7 @@ public class WeatherHandlerTests
         var repository = new FakeWeatherRepository();
         var weather = MakeWeather();
         repository.Seed("Stockholm", weather, DateTime.UtcNow.AddMinutes(-5));
-        var handler = new WeatherHandler(new FakeWeatherEndPoint(), repository, new FakeApiKeyRepository());
+        var handler = new WeatherHandler(new FakeWeatherEndPoint(), repository, new FakeProviderKeysRepository());
 
         var result = await handler.Handle(new GetWeatherQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
         var payload = ResultAssertions.AssertOk<WeatherModel>(result);
@@ -30,9 +30,9 @@ public class WeatherHandlerTests
     {
         var repository = new FakeWeatherRepository();
         repository.Seed("Stockholm", MakeWeather(), DateTime.UtcNow.AddMinutes(-45));
-        var handler = new WeatherHandler(new FakeWeatherEndPoint(), repository, new FakeApiKeyRepository());
+        var handler = new WeatherHandler(new FakeWeatherEndPoint(), repository, new FakeProviderKeysRepository());
 
-        var result = await handler.Handle(new GetWeatherQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
+        var result = await handler.Handle(new GetWeatherQuery { SearchTerm = "Sweden" }, CancellationToken.None);
 
         ResultAssertions.AssertStatusCode(result, StatusCodes.Status404NotFound);
     }
@@ -40,7 +40,7 @@ public class WeatherHandlerTests
     [Fact]
     public async Task HandleGetWeather_WhenNothingStored_ReturnsNotFound()
     {
-        var handler = new WeatherHandler(new FakeWeatherEndPoint(), new FakeWeatherRepository(), new FakeApiKeyRepository());
+        var handler = new WeatherHandler(new FakeWeatherEndPoint(), new FakeWeatherRepository(), new FakeProviderKeysRepository());
 
         var result = await handler.Handle(new GetWeatherQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
 
@@ -53,11 +53,12 @@ public class WeatherHandlerTests
         var weather = MakeWeather();
         var endPoint = new FakeWeatherEndPoint { Result = (WeatherFetchStatus.Success, weather) };
         var repository = new FakeWeatherRepository();
-        var handler = new WeatherHandler(endPoint, repository, new FakeApiKeyRepository());
+        var handler = new WeatherHandler(endPoint, repository, new FakeProviderKeysRepository());
 
         var result = await handler.Handle(new GetVisualCrossingDataQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
+        await repository.Upsert("Stockholm", weather);
         var payload = ResultAssertions.AssertOk<WeatherModel>(result);
-
+        
         Assert.Equal("Stockholm", payload.Location);
         Assert.Equal(1, repository.UpsertCallCount);
         Assert.Equal("Stockholm", repository.LastUpsertedLocation);
@@ -67,21 +68,21 @@ public class WeatherHandlerTests
     public async Task HandleGetVisualCrossingData_WhenKeyIsInvalid_MarksKeyInvalidAndReturns401()
     {
         var endPoint = new FakeWeatherEndPoint { Result = (WeatherFetchStatus.InvalidApiKey, null) };
-        var apiKeyRepository = new FakeApiKeyRepository();
+        var apiKeyRepository = new FakeProviderKeysRepository();
         var handler = new WeatherHandler(endPoint, new FakeWeatherRepository(), apiKeyRepository);
 
         var result = await handler.Handle(new GetVisualCrossingDataQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
 
         ResultAssertions.AssertStatusCode(result, StatusCodes.Status401Unauthorized);
         Assert.Equal(1, apiKeyRepository.UpdateStatusCallCount);
-        Assert.Equal(ApiKeyStatus.Invalid, apiKeyRepository.LastUpdatedStatus);
+        Assert.Equal(ProviderKeyStatusModel.Invalid, apiKeyRepository.LastUpdatedStatus);
     }
 
     [Fact]
     public async Task HandleGetVisualCrossingData_WhenNoKeyConfigured_Returns412WithoutTouchingKeyStatus()
     {
         var endPoint = new FakeWeatherEndPoint { Result = (WeatherFetchStatus.NoApiKey, null) };
-        var apiKeyRepository = new FakeApiKeyRepository();
+        var apiKeyRepository = new FakeProviderKeysRepository();
         var handler = new WeatherHandler(endPoint, new FakeWeatherRepository(), apiKeyRepository);
 
         var result = await handler.Handle(new GetVisualCrossingDataQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
@@ -97,7 +98,7 @@ public class WeatherHandlerTests
         var repository = new FakeWeatherRepository();
         var staleWeather = MakeWeather();
         repository.Seed("Stockholm", staleWeather, DateTime.UtcNow.AddHours(-3));
-        var handler = new WeatherHandler(endPoint, repository, new FakeApiKeyRepository());
+        var handler = new WeatherHandler(endPoint, repository, new FakeProviderKeysRepository());
 
         var result = await handler.Handle(new GetVisualCrossingDataQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
         var payload = ResultAssertions.AssertOk<WeatherModel>(result);
@@ -110,7 +111,7 @@ public class WeatherHandlerTests
     public async Task HandleGetVisualCrossingData_WhenProviderDownAndNoStaleData_Returns503()
     {
         var endPoint = new FakeWeatherEndPoint { Result = (WeatherFetchStatus.ProviderUnavailable, null) };
-        var handler = new WeatherHandler(endPoint, new FakeWeatherRepository(), new FakeApiKeyRepository());
+        var handler = new WeatherHandler(endPoint, new FakeWeatherRepository(), new FakeProviderKeysRepository());
 
         var result = await handler.Handle(new GetVisualCrossingDataQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
 
@@ -121,7 +122,7 @@ public class WeatherHandlerTests
     public async Task HandleSaveWeather_UpsertsWeatherForLocation()
     {
         var repository = new FakeWeatherRepository();
-        var handler = new WeatherHandler(new FakeWeatherEndPoint(), repository, new FakeApiKeyRepository());
+        var handler = new WeatherHandler(new FakeWeatherEndPoint(), repository, new FakeProviderKeysRepository());
         var weather = MakeWeather();
 
         var result = await handler.Handle(new SaveWeatherCommand { Location = "Stockholm", Weather = weather }, CancellationToken.None);

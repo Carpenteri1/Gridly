@@ -1,6 +1,6 @@
 namespace Gridly.Dtos;
 
-public class ApiKeyDtoModel
+public class ProviderKeyDtoModel
 {
     public int Id { get; set; }
     public string Provider { get; set; }

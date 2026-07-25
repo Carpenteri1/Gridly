@@ -1,5 +1,5 @@
 namespace Gridly.Models;
-public class ApiKeyRateLimiterModel
+public class WeatherProviderKeyRateLimiterModel
 {
     public int QueueLimit { get; private set; } = 0;
     public int Limit { get; private set; } = 5;

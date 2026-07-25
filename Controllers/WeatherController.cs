@@ -10,12 +10,11 @@ namespace Gridly.Controllers;
 [ApiController]
 [Route("/api/[controller]")]
 public class WeatherController(IMediator mediator) : ControllerBase
-{
-    //[EnableRateLimiting(RateLimiterPolicySettings.WeatherPolicy)]
+{ 
     [HttpGet("get")]
     public async Task<IResult> Get([FromQuery] GetWeatherQuery query) => await mediator.Send(query);
     
-    [EnableRateLimiting(RateLimiterPolicySettings.WeatherPolicy)]
+    [EnableRateLimiting(RateLimiterPolicySettings.WeatherProviderPolicy)]
     [HttpGet("getvisualcrossingdata")]
     public async Task<IResult> GetWeather([FromQuery] GetVisualCrossingDataQuery query) => await mediator.Send(query);
 

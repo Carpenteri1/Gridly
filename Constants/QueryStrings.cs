@@ -115,23 +115,23 @@ public class QueryStrings
     DELETE FROM RowColumn
     WHERE Id IN @RowColumnId;";
 
-    public const string UpsertThirdPartyApiKeyQuery = @"
-    INSERT INTO ThirdPartyApiKey (Provider, EncryptedKey, Status, LastValidatedAt)
+    public const string UpsertProviderKeysQuery = @"
+    INSERT INTO ProviderKeys (Provider, EncryptedKey, Status, LastValidatedAt)
     VALUES (@Provider, @EncryptedKey, @Status, @LastValidatedAt)
     ON CONFLICT(Provider) DO UPDATE SET
         EncryptedKey = excluded.EncryptedKey,
         Status = excluded.Status,
         LastValidatedAt = excluded.LastValidatedAt;";
 
-    public const string UpdateThirdPartyApiKeyStatusQuery = @"
-    UPDATE ThirdPartyApiKey
+    public const string UpdateProviderKeysStatusQuery = @"
+    UPDATE ProviderKeys
     SET Status = @Status,
         LastValidatedAt = @LastValidatedAt
     WHERE Provider = @Provider;";
 
-    public const string SelectThirdPartyApiKeyQuery = @"
+    public const string SelectProviderKeysQuery = @"
     SELECT Id, Provider, EncryptedKey, Status, LastValidatedAt
-    FROM ThirdPartyApiKey
+    FROM ProviderKeys
     WHERE Provider = @Provider;";
 
     public const string UpsertWeatherDataQuery = @"

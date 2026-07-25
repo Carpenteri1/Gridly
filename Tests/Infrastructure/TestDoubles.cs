@@ -140,19 +140,19 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
     }
 }
 
-internal sealed class FakeApiKeyRepository : IApiKeyRepository
+internal sealed class FakeProviderKeysRepository : IProviderKeysRepository
 {
-    public ApiKeyDtoModel? StoredKey { get; set; }
+    public ProviderKeyDtoModel? StoredKey { get; set; }
     public int UpsertCallCount { get; private set; }
     public int UpdateStatusCallCount { get; private set; }
     public string? LastUpdatedStatus { get; private set; }
 
-    public Task<ApiKeyDtoModel?> Get(string provider) => Task.FromResult(StoredKey);
+    public Task<ProviderKeyDtoModel?> Get(string provider) => Task.FromResult(StoredKey);
 
     public Task<bool> Upsert(string provider, string encryptedKey, string status)
     {
         UpsertCallCount++;
-        StoredKey = new ApiKeyDtoModel
+        StoredKey = new ProviderKeyDtoModel
         {
             Provider = provider,
             EncryptedKey = encryptedKey,
@@ -171,7 +171,7 @@ internal sealed class FakeApiKeyRepository : IApiKeyRepository
     }
 }
 
-internal sealed class FakeApiKeyProtectionService : IApiKeyProtectionService
+internal sealed class FakeProviderKeysProtectionService : IProviderKeysProtectionService
 {
     public string Protect(string rawKey) => $"protected:{rawKey}";
     public string Unprotect(string encryptedKey) => encryptedKey.Replace("protected:", "");

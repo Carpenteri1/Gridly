@@ -1,4 +1,4 @@
-export class ApiKeyStatusModel {
+export class ProviderKeyStatusModel {
   exists!: boolean;
   status!: string;
 }

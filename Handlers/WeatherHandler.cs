@@ -11,12 +11,12 @@ namespace Gridly.Handlers;
 public class WeatherHandler(
     IWeatherEndPoint weatherEndpoint,
     IWeatherRepository weatherRepository,
-    IApiKeyRepository apiKeyRepository) :
+    IProviderKeysRepository providerKeysRepository) :
     IRequestHandler<GetWeatherQuery, IResult>,
     IRequestHandler<GetVisualCrossingDataQuery, IResult>,
     IRequestHandler<SaveWeatherCommand, IResult>
 {
-    private static readonly TimeSpan CacheWindow = TimeSpan.FromMinutes(30);
+    private static readonly TimeSpan CacheWindow = TimeSpan.FromHours(8);
 
     public async Task<IResult> Handle(GetWeatherQuery query, CancellationToken cancellationToken)
     {
@@ -32,12 +32,12 @@ public class WeatherHandler(
 
         switch (status)
         {
-            case WeatherFetchStatus.Success:
-                await weatherRepository.Upsert(query.SearchTerm, weather!);
+            case WeatherFetchStatus.Success: 
+                await providerKeysRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, ProviderKeyStatusModel.Valid);
                 return Results.Ok(weather);
 
             case WeatherFetchStatus.InvalidApiKey:
-                await apiKeyRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, ApiKeyStatus.Invalid);
+                await providerKeysRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, ProviderKeyStatusModel.Invalid);
                 return Results.Problem(statusCode: StatusCodes.Status401Unauthorized, detail: "ApiKeyInvalid");
 
             case WeatherFetchStatus.NoApiKey:

@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.DataProtection;
 
 namespace Gridly.Services;
 
-public class ApiKeyProtectionService : IApiKeyProtectionService
+public class ProviderKeysProtectionService : IProviderKeysProtectionService
 {
-    private const string Purpose = "ThirdPartyApiKey.v1";
+    private const string Purpose = "ProviderKeys.v1";
     private readonly IDataProtector _protector;
 
-    public ApiKeyProtectionService(IDataProtectionProvider dataProtectionProvider)
+    public ProviderKeysProtectionService(IDataProtectionProvider dataProtectionProvider)
     {
         _protector = dataProtectionProvider.CreateProtector(Purpose);
     }

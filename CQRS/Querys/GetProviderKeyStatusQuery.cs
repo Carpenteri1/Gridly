@@ -2,7 +2,7 @@ using MediatR;
 
 namespace Gridly.Querys;
 
-public class GetApiKeyStatusQuery : IRequest<IResult>
+public class GetProviderKeyStatusQuery : IRequest<IResult>
 {
     public string Provider { get; set; }
 }

@@ -5,18 +5,16 @@ namespace Gridly.Configuration;
 
 public static class RateLimiterPolicySettings
 {
-    public const string VersionPolicy = "version";
-    public const string WeatherPolicy = "weather";
-    public const string ApiKeyPolicy = "apikey";
+    public const string VersionProviderPolicy = "version";
+    public const string WeatherProviderPolicy = "weather";
 
     public static async Task<IServiceCollection> AddTokenBucketRateLimiter(this IServiceCollection services) {
 
         var versionRate = new VersionRateLimiterModel();
         var weatherRate = new WeatherRateLimiterModel();
-        var apiKeyRate = new ApiKeyRateLimiterModel();
 
         services.AddRateLimiter(_ => _
-            .AddTokenBucketLimiter(VersionPolicy, opt =>
+            .AddTokenBucketLimiter(VersionProviderPolicy, opt =>
             {
                 opt.TokenLimit = versionRate.Limit;
                 opt.QueueLimit = versionRate.QueueLimit;
@@ -24,22 +22,15 @@ public static class RateLimiterPolicySettings
                 opt.TokensPerPeriod = versionRate.TokensPerPeriod;
                 opt.AutoReplenishment = true;
             })
-            .AddTokenBucketLimiter(WeatherPolicy, opt =>
+            .AddTokenBucketLimiter(WeatherProviderPolicy, opt =>
             {
                 opt.TokenLimit = weatherRate.Limit;
                 opt.QueueLimit = weatherRate.QueueLimit;
                 opt.ReplenishmentPeriod = weatherRate.Window;
                 opt.TokensPerPeriod = weatherRate.TokensPerPeriod;
                 opt.AutoReplenishment = true;
-            })
-            .AddTokenBucketLimiter(ApiKeyPolicy, opt =>
-            {
-                opt.TokenLimit = apiKeyRate.Limit;
-                opt.QueueLimit = apiKeyRate.QueueLimit;
-                opt.ReplenishmentPeriod = apiKeyRate.Window;
-                opt.TokensPerPeriod = apiKeyRate.TokensPerPeriod;
-                opt.AutoReplenishment = true;
             }));
+        
         return services;
     }
     
