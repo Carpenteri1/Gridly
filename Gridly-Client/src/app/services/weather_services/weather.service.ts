@@ -1,8 +1,10 @@
 import {inject, Injectable, Signal} from "@angular/core";
 import { firstValueFrom, Observable, Subject} from "rxjs";
 import { toSignal } from "@angular/core/rxjs-interop";
+import { HttpErrorResponse } from "@angular/common/http";
 import {WeatherModel} from "../../models/weather.Model";
 import {WeatherEndpointService} from "../endpoint_services/weather.endpoint.service";
+import {ApiKeyService} from "../api_key_services/api-key.service";
 
 @Injectable({providedIn: 'root'})
 export class WeatherService {
@@ -10,14 +12,27 @@ export class WeatherService {
   private readonly weather$ = new Observable<WeatherModel>();
   readonly weather!: Signal<WeatherModel | undefined>;
   #api = inject(WeatherEndpointService);
+  #apiKeyService = inject(ApiKeyService);
 
   constructor() {
     this.weather$ = this.weatherSubject.asObservable();
     this.weather = toSignal(this.weather$);
   }
 
-    private getWeather$ = () => this.#api.get();
-    private getWeather = () => firstValueFrom(this.getWeather$());
-    private getVisualCrossingData$ = () => this.#api.getvisualcrossingdata();
-    getVisualCrossingData = () => firstValueFrom(this.getVisualCrossingData$());
+    private getWeather$ = (location: string) => this.#api.get(location);
+    private getWeather = (location: string) => firstValueFrom(this.getWeather$(location));
+    private getVisualCrossingData$ = (location: string) => this.#api.getvisualcrossingdata(location);
+
+    async getVisualCrossingData(location: string): Promise<WeatherModel | undefined> {
+      try {
+        const weather = await firstValueFrom(this.getVisualCrossingData$(location));
+        this.weatherSubject.next(weather);
+        return weather;
+      } catch (error) {
+        if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 412)) {
+          this.#apiKeyService.promptForInvalidKey();
+        }
+        return undefined;
+      }
+    }
 }

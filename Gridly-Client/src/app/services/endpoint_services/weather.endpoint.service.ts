@@ -11,14 +11,12 @@ import {WeatherModel} from "../../models/weather.Model";
 export class WeatherEndpointService{
   private http = inject(HttpClient);
 
-  get(): Observable<WeatherModel> {
-    //TODO SearchTerm will be added
-    const params = new HttpParams().set('SearchTerm', 'The SearchTerm');
+  get(location: string): Observable<WeatherModel> {
+    const params = new HttpParams().set('SearchTerm', location);
     return this.http.get<WeatherModel>(UrlStringsUtil.GetWeatherUrl,{params}).pipe(take(1));
   }
-  getvisualcrossingdata(): Observable<WeatherModel> {
-    //TODO SearchTerm will be added
-    const params = new HttpParams().set('SearchTerm', 'The SearchTerm');
+  getvisualcrossingdata(location: string): Observable<WeatherModel> {
+    const params = new HttpParams().set('SearchTerm', location);
     return this.http.get<WeatherModel>(UrlStringsUtil.GetVisualCrossingDataURL,{params}).pipe(take(1));
   }
 }

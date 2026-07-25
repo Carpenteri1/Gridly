@@ -3,6 +3,7 @@ using Gridly.EndPoints;
 using Gridly.Repositories;
 using Gridly.Services;
 using Gridly.Data;
+using Microsoft.AspNetCore.DataProtection;
 
 var appDirectory = Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
 Directory.SetCurrentDirectory(appDirectory);
@@ -29,11 +30,17 @@ builder.Services.AddScoped<ISettingsRepository,SettingsRepository>();
 builder.Services.AddScoped<IIconRepository,IconRepository>();
 builder.Services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
 builder.Services.AddScoped<IWidgetRepository,WidgetRepository>();
+builder.Services.AddScoped<IApiKeyRepository,ApiKeyRepository>();
+builder.Services.AddScoped<IWeatherRepository,WeatherRepository>();
 
 builder.Services.AddSingleton<IMemoryCashingService, MemoryCashingServices>();
 builder.Services.AddSingleton<IHttpClientServices, HttpClientServices>();
 builder.Services.AddSingleton<IFileService, FileService>();
+builder.Services.AddSingleton<IApiKeyProtectionService, ApiKeyProtectionService>();
 builder.Services.AddSingleton(typeof(IDataConverter<>), typeof(DataConverter<>));
+
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(appDirectory, "Assets/Db/Keys")));
 
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));

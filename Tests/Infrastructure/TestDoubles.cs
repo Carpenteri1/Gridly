@@ -1,5 +1,7 @@
+using Gridly.Dtos;
 using Gridly.EndPoints;
 using Gridly.Models;
+using Gridly.Repositories;
 using Gridly.Services;
 
 namespace Gridly.Tests.Infrastructure;
@@ -87,6 +89,7 @@ internal sealed class FakeHttpClientServices : IHttpClientServices
     public int CallCount { get; private set; }
     public string? LastUrl { get; private set; }
     public (bool Success, string Response) Response { get; set; }
+    public (int StatusCode, string Body) StatusCodeResponse { get; set; }
 
     public Task<(bool, string)> Get(string url)
     {
@@ -94,4 +97,82 @@ internal sealed class FakeHttpClientServices : IHttpClientServices
         LastUrl = url;
         return Task.FromResult((Response.Success, Response.Response));
     }
+
+    public Task<(int StatusCode, string Body)> GetWithStatusCode(string url)
+    {
+        CallCount++;
+        LastUrl = url;
+        return Task.FromResult((StatusCodeResponse.StatusCode, StatusCodeResponse.Body));
+    }
+}
+
+internal sealed class FakeWeatherEndPoint : IWeatherEndPoint
+{
+    public int GetCallCount { get; private set; }
+    public (WeatherFetchStatus Status, WeatherModel? Weather) Result { get; set; }
+
+    public Task<(WeatherFetchStatus Status, WeatherModel? Weather)> Get(string location)
+    {
+        GetCallCount++;
+        return Task.FromResult(Result);
+    }
+}
+
+internal sealed class FakeWeatherRepository : IWeatherRepository
+{
+    private readonly Dictionary<string, (WeatherModel? Weather, DateTime? FetchedAt)> _stored = new();
+
+    public int UpsertCallCount { get; private set; }
+    public string? LastUpsertedLocation { get; private set; }
+
+    public void Seed(string location, WeatherModel weather, DateTime fetchedAt) =>
+        _stored[location] = (weather, fetchedAt);
+
+    public Task<(WeatherModel? Weather, DateTime? FetchedAt)> Get(string location) =>
+        Task.FromResult(_stored.TryGetValue(location, out var value) ? value : (null, null));
+
+    public Task<bool> Upsert(string location, WeatherModel weather)
+    {
+        UpsertCallCount++;
+        LastUpsertedLocation = location;
+        _stored[location] = (weather, DateTime.UtcNow);
+        return Task.FromResult(true);
+    }
+}
+
+internal sealed class FakeApiKeyRepository : IApiKeyRepository
+{
+    public ApiKeyDtoModel? StoredKey { get; set; }
+    public int UpsertCallCount { get; private set; }
+    public int UpdateStatusCallCount { get; private set; }
+    public string? LastUpdatedStatus { get; private set; }
+
+    public Task<ApiKeyDtoModel?> Get(string provider) => Task.FromResult(StoredKey);
+
+    public Task<bool> Upsert(string provider, string encryptedKey, string status)
+    {
+        UpsertCallCount++;
+        StoredKey = new ApiKeyDtoModel
+        {
+            Provider = provider,
+            EncryptedKey = encryptedKey,
+            Status = status,
+            LastValidatedAt = DateTime.UtcNow
+        };
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> UpdateStatus(string provider, string status)
+    {
+        UpdateStatusCallCount++;
+        LastUpdatedStatus = status;
+        if (StoredKey is not null) StoredKey.Status = status;
+        return Task.FromResult(true);
+    }
+}
+
+internal sealed class FakeApiKeyProtectionService : IApiKeyProtectionService
+{
+    public string Protect(string rawKey) => $"protected:{rawKey}";
+    public string Unprotect(string encryptedKey) => encryptedKey.Replace("protected:", "");
 }

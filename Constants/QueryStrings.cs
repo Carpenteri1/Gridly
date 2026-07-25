@@ -115,6 +115,37 @@ public class QueryStrings
     DELETE FROM RowColumn
     WHERE Id IN @RowColumnId;";
 
+    public const string UpsertThirdPartyApiKeyQuery = @"
+    INSERT INTO ThirdPartyApiKey (Provider, EncryptedKey, Status, LastValidatedAt)
+    VALUES (@Provider, @EncryptedKey, @Status, @LastValidatedAt)
+    ON CONFLICT(Provider) DO UPDATE SET
+        EncryptedKey = excluded.EncryptedKey,
+        Status = excluded.Status,
+        LastValidatedAt = excluded.LastValidatedAt;";
+
+    public const string UpdateThirdPartyApiKeyStatusQuery = @"
+    UPDATE ThirdPartyApiKey
+    SET Status = @Status,
+        LastValidatedAt = @LastValidatedAt
+    WHERE Provider = @Provider;";
+
+    public const string SelectThirdPartyApiKeyQuery = @"
+    SELECT Id, Provider, EncryptedKey, Status, LastValidatedAt
+    FROM ThirdPartyApiKey
+    WHERE Provider = @Provider;";
+
+    public const string UpsertWeatherDataQuery = @"
+    INSERT INTO WeatherData (Location, JsonPayload, FetchedAt)
+    VALUES (@Location, @JsonPayload, @FetchedAt)
+    ON CONFLICT(Location) DO UPDATE SET
+        JsonPayload = excluded.JsonPayload,
+        FetchedAt = excluded.FetchedAt;";
+
+    public const string SelectWeatherDataQuery = @"
+    SELECT Id, Location, JsonPayload, FetchedAt
+    FROM WeatherData
+    WHERE Location = @Location;";
+
     public const string JoinIconDataQuery = "Icon i ON i.Id = ic.IconId";
     public const string JoinIconsConnectedDataQuery = "IconsConnected ic ON ic.CardId = co.Id";
     public const string JoinSettingsQuery = "Settings cs ON cs.CardId = co.Id";

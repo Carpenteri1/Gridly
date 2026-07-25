@@ -58,4 +58,12 @@ export class TextStringsUtil {
 
   static readonly EmptyCardTitle = "Empty Card";
   static readonly EmptyCardDescription = "Click to customize";
+
+  static readonly DialogApiKeyTitle = "Third party API key";
+  static readonly DialogApiKeyDescription = "Paste your weather provider API key. It is stored securely and never shown again.";
+  static readonly DialogApiKeyInvalidMessage = "The stored key was rejected. Please paste a new one.";
+  static readonly DialogApiKeyInputLabel = "API key";
+  static readonly DialogApiKeySaveBtnTitle = "Save";
+  static readonly DialogApiKeyCancelBtnTitle = "Cancel";
+  static readonly DialogApiKeySaveFailedMessage = "Failed to save the API key. Please try again.";
 }
