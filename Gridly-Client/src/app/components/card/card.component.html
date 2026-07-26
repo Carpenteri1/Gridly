@@ -15,7 +15,7 @@
           <i class="bi bi-arrows-move"></i>
         </button>
       </div>
-    @if(card.type === CardTypes.Weather)
+    @if(showProviderKeyButton())
     {
       <div class="col d-flex justify-content-end">
         <button
@@ -78,5 +78,6 @@
   </app-delete-card-dialog>
   <app-provider-key-dialog
     [open]="isProviderDialogOpen()"
-    [id]="card.id">
+    [id]="card.id"
+    (openChange)="handleDialogChange($event)">
   </app-provider-key-dialog>

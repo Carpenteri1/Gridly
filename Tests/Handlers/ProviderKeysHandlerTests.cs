@@ -1,40 +1,69 @@
 using Gridly.Commands;
+using Gridly.Dtos;
+using Gridly.Enums;
 using Gridly.Handlers;
 using Gridly.Models;
 using Gridly.Querys;
 using Gridly.Tests.Infrastructure;
-using Microsoft.AspNetCore.Http;
 
 namespace Gridly.Tests.Handlers;
 
 public class ProviderKeysHandlerTests
 {
+    private const string Provider = "VisualCrossing";
+
+    private static ProvidersHandler CreateHandler(
+        FakeProvidersRepository repository,
+        FakeProvidersEndPoint endPoint) =>
+        new(repository, new FakeProviderKeysProtectionService(), endPoint);
+
+    private static ProviderKeyDtoModel StoredKey(ProvidersKeyStatusEnum keyStatus, DateTime? lastValidatedAt) =>
+        new()
+        {
+            Provider = Provider,
+            EncryptedKey = "protected:secret-key",
+            Status = keyStatus.ToString(),
+            LastValidatedAt = lastValidatedAt
+        };
+
     [Fact]
-    public async Task HandleSaveApiKey_WhenKeyProvided_EncryptsAndStoresWithUnknownStatus()
+    public async Task HandleSaveProviderKey_WhenKeyProvided_EncryptsAndStoresWithUnknownStatus()
     {
-        var repository = new FakeProviderKeysRepository();
-        var protection = new FakeProviderKeysProtectionService();
-        var handler = new ProviderKeyHandler(repository, protection);
+        var repository = new FakeProvidersRepository();
+        var handler = CreateHandler(repository, new FakeProvidersEndPoint());
 
         var result = await handler.Handle(
-            new SaveProviderKeyCommand { Provider = "VisualCrossing", RawKey = "secret-key" },
+            new SaveProviderKeyCommand { Provider = Provider, RawKey = "secret-key" },
             CancellationToken.None);
 
         ResultAssertions.AssertStatusCode(result, StatusCodes.Status200OK);
         Assert.Equal(1, repository.UpsertCallCount);
-        Assert.NotNull(repository.StoredKey);
         Assert.Equal("protected:secret-key", repository.StoredKey!.EncryptedKey);
-        Assert.Equal(nameof(ProviderKeyStatusEnum.Unknown), repository.StoredKey!.Status);
+        Assert.Equal(nameof(ProvidersKeyStatusEnum.Unknown), repository.StoredKey!.Status);
     }
 
     [Fact]
-    public async Task HandleSaveApiKey_WhenKeyIsBlank_ReturnsBadRequestWithoutStoring()
+    public async Task HandleSaveProviderKey_TrimsSurroundingWhitespaceBeforeEncrypting()
     {
-        var repository = new FakeProviderKeysRepository();
-        var handler = new ProviderKeyHandler(repository, new FakeProviderKeysProtectionService());
+        var repository = new FakeProvidersRepository();
+        var handler = CreateHandler(repository, new FakeProvidersEndPoint());
 
         var result = await handler.Handle(
-            new SaveProviderKeyCommand { Provider = "VisualCrossing", RawKey = "   " },
+            new SaveProviderKeyCommand { Provider = Provider, RawKey = "  secret-key\n" },
+            CancellationToken.None);
+
+        ResultAssertions.AssertStatusCode(result, StatusCodes.Status200OK);
+        Assert.Equal("protected:secret-key", repository.StoredKey!.EncryptedKey);
+    }
+
+    [Fact]
+    public async Task HandleSaveProviderKey_WhenKeyIsBlank_ReturnsBadRequestWithoutStoring()
+    {
+        var repository = new FakeProvidersRepository();
+        var handler = CreateHandler(repository, new FakeProvidersEndPoint());
+
+        var result = await handler.Handle(
+            new SaveProviderKeyCommand { Provider = Provider, RawKey = "   " },
             CancellationToken.None);
 
         ResultAssertions.AssertStatusCode(result, StatusCodes.Status400BadRequest);
@@ -42,35 +71,120 @@ public class ProviderKeysHandlerTests
     }
 
     [Fact]
-    public async Task HandleGetApiKeyStatus_WhenNoKeyStored_ReturnsExistsFalse()
+    public async Task HandleGetStatus_WhenNoKeyStored_ReturnsExistsFalseWithoutCallingProvider()
     {
-        var handler = new ProviderKeyHandler(new FakeProviderKeysRepository(), new FakeProviderKeysProtectionService());
+        var endPoint = new FakeProvidersEndPoint();
+        var handler = CreateHandler(new FakeProvidersRepository(), endPoint);
 
-        var result = await handler.Handle(new GetProviderKeyStatusQuery { Provider = "VisualCrossing" }, CancellationToken.None);
-        var payload = GetOkValue(result);
+        var result = await handler.Handle(new GetProviderKeyStatusQuery { Provider = Provider }, CancellationToken.None);
+        var payload = ResultAssertions.AssertOk<ProviderKeyStatusModel>(result);
 
-        Assert.False((bool)payload.GetType().GetProperty("exists")!.GetValue(payload)!);
+        Assert.False(payload.Exists);
+        Assert.Equal(ProvidersKeyStatusEnum.Unknown, payload.KeyStatus);
+        Assert.Equal(0, endPoint.ValidateCallCount);
     }
 
     [Fact]
-    public async Task HandleGetApiKeyStatus_WhenKeyStored_ReturnsExistsTrueWithStatus()
+    public async Task HandleGetStatus_WhenStatusUnknown_ValidatesAndPersistsValid()
     {
-        var repository = new FakeProviderKeysRepository();
-        await repository.Upsert("VisualCrossing", "protected:secret-key", nameof(ProviderKeyStatusEnum.Valid));
-        var handler = new ProviderKeyHandler(repository, new FakeProviderKeysProtectionService());
+        var repository = new FakeProvidersRepository
+        {
+            StoredKey = StoredKey(ProvidersKeyStatusEnum.Unknown, lastValidatedAt: null)
+        };
+        var endPoint = new FakeProvidersEndPoint { Result = StatusCodes.Status200OK };
+        var handler = CreateHandler(repository, endPoint);
 
-        var result = await handler.Handle(new GetProviderKeyStatusQuery { Provider = "VisualCrossing" }, CancellationToken.None);
-        var payload = GetOkValue(result);
+        var result = await handler.Handle(new GetProviderKeyStatusQuery { Provider = Provider }, CancellationToken.None);
+        var payload = ResultAssertions.AssertOk<ProviderKeyStatusModel>(result);
 
-        Assert.True((bool)payload.GetType().GetProperty("exists")!.GetValue(payload)!);
-        Assert.Equal(nameof(ProviderKeyStatusEnum.Valid), payload.GetType().GetProperty("status")!.GetValue(payload));
+        Assert.True(payload.Exists);
+        Assert.Equal(ProvidersKeyStatusEnum.Valid, payload.KeyStatus);
+        Assert.Equal(1, endPoint.ValidateCallCount);
+        Assert.Equal(1, repository.UpdateStatusCallCount);
+        Assert.Equal(nameof(ProvidersKeyStatusEnum.Valid), repository.LastUpdatedStatus);
     }
 
-    private static object GetOkValue(IResult result)
+    [Fact]
+    public async Task HandleGetStatus_WhenProviderRejectsKey_ReturnsUnauthorizedWithoutPersisting()
     {
-        var statusResult = Assert.IsAssignableFrom<IStatusCodeHttpResult>(result);
-        Assert.Equal(StatusCodes.Status200OK, statusResult.StatusCode);
-        var valueResult = Assert.IsAssignableFrom<IValueHttpResult>(result);
-        return valueResult.Value!;
+        var repository = new FakeProvidersRepository
+        {
+            StoredKey = StoredKey(ProvidersKeyStatusEnum.Unknown, lastValidatedAt: null)
+        };
+        var endPoint = new FakeProvidersEndPoint { Result = StatusCodes.Status401Unauthorized };
+        var handler = CreateHandler(repository, endPoint);
+
+        var result = await handler.Handle(new GetProviderKeyStatusQuery { Provider = Provider }, CancellationToken.None);
+
+        ResultAssertions.AssertStatusCode(result, StatusCodes.Status401Unauthorized);
+        Assert.Equal(0, repository.UpdateStatusCallCount);
+    }
+
+    [Fact]
+    public async Task HandleGetStatus_WhenKeyIsStored_ValidatesProvider()
+    {
+        var repository = new FakeProvidersRepository
+        {
+            StoredKey = StoredKey(ProvidersKeyStatusEnum.Valid, DateTime.UtcNow.AddMinutes(-5))
+        };
+        var endPoint = new FakeProvidersEndPoint();
+        var handler = CreateHandler(repository, endPoint);
+
+        var result = await handler.Handle(new GetProviderKeyStatusQuery { Provider = Provider }, CancellationToken.None);
+        var payload = ResultAssertions.AssertOk<ProviderKeyStatusModel>(result);
+
+        Assert.True(payload.Exists);
+        Assert.Equal(ProvidersKeyStatusEnum.Valid, payload.KeyStatus);
+        Assert.Equal(1, endPoint.ValidateCallCount);
+        Assert.Equal(1, repository.UpdateStatusCallCount);
+    }
+
+    [Fact]
+    public async Task HandleGetStatus_WhenValidationReturnsUnauthorized_ReturnsUnauthorized()
+    {
+        var repository = new FakeProvidersRepository
+        {
+            StoredKey = StoredKey(ProvidersKeyStatusEnum.Valid, DateTime.UtcNow.AddHours(-2))
+        };
+        var endPoint = new FakeProvidersEndPoint { Result = StatusCodes.Status401Unauthorized };
+        var handler = CreateHandler(repository, endPoint);
+
+        var result = await handler.Handle(new GetProviderKeyStatusQuery { Provider = Provider }, CancellationToken.None);
+
+        ResultAssertions.AssertStatusCode(result, StatusCodes.Status401Unauthorized);
+        Assert.Equal(1, endPoint.ValidateCallCount);
+        Assert.Equal(0, repository.UpdateStatusCallCount);
+    }
+
+    [Fact]
+    public async Task HandleGetStatus_WhenProviderUnavailable_ReturnsBadRequestWithoutPersisting()
+    {
+        var repository = new FakeProvidersRepository
+        {
+            StoredKey = StoredKey(ProvidersKeyStatusEnum.Valid, DateTime.UtcNow.AddHours(-2))
+        };
+        var endPoint = new FakeProvidersEndPoint { Result = StatusCodes.Status500InternalServerError };
+        var handler = CreateHandler(repository, endPoint);
+
+        var result = await handler.Handle(new GetProviderKeyStatusQuery { Provider = Provider }, CancellationToken.None);
+
+        ResultAssertions.AssertStatusCode(result, StatusCodes.Status400BadRequest);
+        Assert.Equal(0, repository.UpdateStatusCallCount);
+    }
+
+    [Fact]
+    public async Task HandleGetStatus_WhenProviderForbidsKey_ReturnsForbiddenWithoutPersisting()
+    {
+        var repository = new FakeProvidersRepository
+        {
+            StoredKey = StoredKey(ProvidersKeyStatusEnum.Unknown, lastValidatedAt: null)
+        };
+        var endPoint = new FakeProvidersEndPoint { Result = StatusCodes.Status403Forbidden };
+        var handler = CreateHandler(repository, endPoint);
+
+        var result = await handler.Handle(new GetProviderKeyStatusQuery { Provider = Provider }, CancellationToken.None);
+
+        Assert.IsType<Microsoft.AspNetCore.Http.HttpResults.ForbidHttpResult>(result);
+        Assert.Equal(0, repository.UpdateStatusCallCount);
     }
 }

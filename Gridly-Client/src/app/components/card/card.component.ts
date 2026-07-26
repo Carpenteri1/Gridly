@@ -12,8 +12,8 @@ import { CardRulesService } from '../../services/card_services/card-rules.servic
 import {DialogService} from "../../services/dialog_services/dialog.service";
 import {ProviderKeyDialogComponent} from "../dialogs/apiKeyDialog/provider-key-dialog.component";
 import {ProviderKeysService} from "../../services/provider_key_services/provider-keys.service";
-import {ThirdPartyProvider} from "../../enums/third-party-provider.enum";
 import {CardTypes} from "../../enums/card.types.enum";
+import {ProviderKeyStatus} from "../../enums/provider-key-status.enum";
 
 @Component({
   selector: 'app-card-component',
@@ -42,9 +42,16 @@ export class CardComponent {
   isDeleteDialogOpen = this.#dialogService.isDeleteDialogOpen;
   isEditDialogOpen = this.#dialogService.isEditDialogOpen;
 
-  providerKeyStatus = this.#providerKeyService.currentStatus();
+  providerKeyStatus = this.#providerKeyService.currentStatus;
 
   editActive = this.#gridService.inEditMode;
+
+  showProviderKeyButton = computed(() => {
+    if (this.card.type !== CardTypes.Weather) return false;
+
+    const status = this.providerKeyStatus();
+    return !(status?.exists && status.status === ProviderKeyStatus.Valid);
+  });
 
   handleDialogChange(dialogId: number): void {
     if (dialogId === this.card.id) {
@@ -86,13 +93,6 @@ export class CardComponent {
 
   openAddProviderKeyDialog(): void {
     this.#dialogService.openProviderKeyDialog(this.card.id);
-  }
-
-  shouldGetProviderKey(): boolean{
-    //TODO for test
-    const s = this.#providerKeyService.getStatus(ThirdPartyProvider.VisualCrossing);
-    console.log(s)
-    return !(!this.providerKeyStatus?.exists || this.providerKeyStatus.status !== "Valid");
   }
 
   protected readonly TextStringsUtil = TextStringsUtil;

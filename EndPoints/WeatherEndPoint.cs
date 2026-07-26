@@ -1,37 +1,23 @@
-using Gridly.Constants;
 using Gridly.Dtos;
 using Gridly.Factories;
+using Gridly.helpers;
 using Gridly.Models;
-using Gridly.Repositories;
 using Gridly.Services;
 
 namespace Gridly.EndPoints;
 
 public class WeatherEndPoint(
     IDataConverter<WeatherDtoModel> dataConverter,
-    IHttpClientServices httpClientServices,
-    IProviderKeysRepository providerKeysRepository,
-    IProviderKeysProtectionService providerKeysProtectionService) : IWeatherEndPoint
+    IProvidersEndPointExtensions providersEndPointExtensions) : IWeatherEndPoint
 {
-    public async Task<(WeatherFetchStatus Status, WeatherModel? Weather)> Get(string location)
+    public async Task<(int, WeatherModel? Weather)> Get(string location,string provider, string rawKey)
     {
-        var apiKey = await providerKeysRepository.Get(EndpointStrings.VisualCrossingProvider);
-        if (apiKey is null) return (WeatherFetchStatus.NoApiKey, null);
-
-        var rawKey = providerKeysProtectionService.Unprotect(apiKey.EncryptedKey);
-        var url = string.Format(
-            EndpointStrings.GetVisualCrossingWeatherData,
-            Uri.EscapeDataString(location),
-            rawKey);
-
-        var (statusCode, body) = await httpClientServices.GetWithStatusCode(url);
-
-        if (statusCode is StatusCodes.Status401Unauthorized or StatusCodes.Status403Forbidden) return (WeatherFetchStatus.InvalidApiKey, null);
-        if (statusCode is < StatusCodes.Status200OK or >= StatusCodes.Status300MultipleChoices) return (WeatherFetchStatus.ProviderUnavailable, null);
+        var (status, body) = await providersEndPointExtensions.CallWeatherProvider(location, provider, rawKey);
 
         var dto = dataConverter.DeserializeJson(body);
+
         return dto is null
-            ? (WeatherFetchStatus.ProviderUnavailable, null)
-            : (WeatherFetchStatus.Success, WeatherFactory.Create(dto));
+            ? (status, null)
+            : (status, WeatherFactory.Create(dto));
     }
 }

@@ -23,8 +23,8 @@ export class UrlStringsUtil {
   static readonly GetVisualCrossingDataURL = this.WeatherUrl+'getvisualcrossingdata';
   static readonly GetUrl = this.WeatherUrl+'get';
 
-  static readonly GetApiKeyStatusUrl = this.ProviderKeyUrl+'status';
-  static readonly SaveApiKeyUrl = this.ProviderKeyUrl+'save';
+  static readonly GetProviderKeyStatusUrl = this.ProviderKeyUrl+'status';
+  static readonly SaveProviderKeyUrl = this.ProviderKeyUrl+'save';
 
   static readonly GitHubReleaseURL = 'https://github.com/Carpenteri1/Gridly/releases/tag/';
 }

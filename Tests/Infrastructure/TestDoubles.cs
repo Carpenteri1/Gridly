@@ -109,9 +109,9 @@ internal sealed class FakeHttpClientServices : IHttpClientServices
 internal sealed class FakeWeatherEndPoint : IWeatherEndPoint
 {
     public int GetCallCount { get; private set; }
-    public (WeatherFetchStatus Status, WeatherModel? Weather) Result { get; set; }
+    public (int Status, WeatherModel? Weather) Result { get; set; }
 
-    public Task<(WeatherFetchStatus Status, WeatherModel? Weather)> Get(string location)
+    public Task<(int, WeatherModel? Weather)> Get(string location, string provider, string rawKey)
     {
         GetCallCount++;
         return Task.FromResult(Result);
@@ -140,7 +140,7 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
     }
 }
 
-internal sealed class FakeProviderKeysRepository : IProviderKeysRepository
+internal sealed class FakeProvidersRepository : IProvidersRepository
 {
     public ProviderKeyDtoModel? StoredKey { get; set; }
     public int UpsertCallCount { get; private set; }
@@ -175,4 +175,16 @@ internal sealed class FakeProviderKeysProtectionService : IProviderKeysProtectio
 {
     public string Protect(string rawKey) => $"protected:{rawKey}";
     public string Unprotect(string encryptedKey) => encryptedKey.Replace("protected:", "");
+}
+
+internal sealed class FakeProvidersEndPoint : IProvidersEndPoint
+{
+    public int ValidateCallCount { get; private set; }
+    public int Result { get; set; } = StatusCodes.Status200OK;
+
+    public Task<int> Validate(string provider)
+    {
+        ValidateCallCount++;
+        return Task.FromResult(Result);
+    }
 }

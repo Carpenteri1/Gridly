@@ -8,4 +8,5 @@ public class EndpointStrings
     public const string GetVisualCrossingWeatherData = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{0}?key={1}";
     
     public const string VisualCrossingProvider = "VisualCrossing";
+    public const string VisualCrossingProbeLocation = "London";
 }

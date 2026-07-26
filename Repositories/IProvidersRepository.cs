@@ -2,7 +2,7 @@ using Gridly.Dtos;
 
 namespace Gridly.Repositories;
 
-public interface IProviderKeysRepository
+public interface IProvidersRepository
 {
     public Task<ProviderKeyDtoModel?> Get(string provider);
     public Task<bool> Upsert(string provider, string encryptedKey, string status);

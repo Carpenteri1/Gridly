@@ -13,10 +13,10 @@ export class ProviderKeysEndpointService {
 
   getStatus(provider: ThirdPartyProvider): Observable<ProviderKeyStatusModel> {
     const params = new HttpParams().set('Provider', provider);
-    return this.http.get<ProviderKeyStatusModel>(UrlStringsUtil.GetApiKeyStatusUrl, { params }).pipe(take(1));
+    return this.http.get<ProviderKeyStatusModel>(UrlStringsUtil.GetProviderKeyStatusUrl, { params }).pipe(take(1));
   }
 
   save(provider: ThirdPartyProvider, rawKey: string): Observable<void> {
-    return this.http.post<void>(UrlStringsUtil.SaveApiKeyUrl, { provider, rawKey }).pipe(take(1));
+    return this.http.post<void>(UrlStringsUtil.SaveProviderKeyUrl, { provider, rawKey }).pipe(take(1));
   }
 }

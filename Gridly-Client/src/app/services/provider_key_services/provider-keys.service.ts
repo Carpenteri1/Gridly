@@ -1,6 +1,6 @@
 import { inject, Injectable, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import {BehaviorSubject, Observable, firstValueFrom} from 'rxjs';
+import { BehaviorSubject, Observable, catchError, of, take, tap } from 'rxjs';
 import { ProviderKeysEndpointService } from '../endpoint_services/provider-keys.endpoint.service';
 import { ProviderKeyStatusModel } from '../../models/providerKeyStatus.Model';
 import { ThirdPartyProvider } from '../../enums/third-party-provider.enum';
@@ -22,10 +22,16 @@ export class ProviderKeysService {
     this.currentStatus = toSignal(this.status$);
     this.shouldPromptForKey$ = this.promptSubject.asObservable();
     this.shouldPromptForKey = toSignal(this.shouldPromptForKey$);
+    this.refreshStatus();
   }
 
-  private getStatus$ = (provider: ThirdPartyProvider) => this.#api.getStatus(provider);
-  getStatus = (provider: ThirdPartyProvider) => firstValueFrom(this.getStatus$(provider));
+  refreshStatus(provider: ThirdPartyProvider = ThirdPartyProvider.VisualCrossing): void {
+    this.#api.getStatus(provider).pipe(
+      take(1),
+      catchError(() => of(null)),
+      tap((status) => this.statusSubject.next(status)),
+    ).subscribe();
+  }
 
   save(rawKey: string, provider: ThirdPartyProvider = ThirdPartyProvider.VisualCrossing): Observable<void> {
     return this.#api.save(provider, rawKey);
@@ -33,7 +39,7 @@ export class ProviderKeysService {
 
   onKeySaved(provider: ThirdPartyProvider = ThirdPartyProvider.VisualCrossing): void {
     this.promptSubject.next(false);
-    this.getStatus(provider);
+    this.refreshStatus(provider);
   }
 
   promptForInvalidKey(): void {

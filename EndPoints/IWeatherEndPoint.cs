@@ -4,5 +4,5 @@ namespace Gridly.EndPoints;
 
 public interface IWeatherEndPoint
 {
-    public Task<(WeatherFetchStatus Status, WeatherModel? Weather)> Get(string location);
+    public Task<(int, WeatherModel? Weather)> Get(string location,string provider, string rawKey);
 }

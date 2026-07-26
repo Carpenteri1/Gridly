@@ -26,12 +26,13 @@ export class ProviderKeyDialogComponent extends BaseDialogComponent{
   errorMessage!:string;
 
   onSubmit(): void {
-    if (!this.rawKey.trim()) return;
+    const key = this.rawKey?.trim();
+    if (!key) return;
 
     this.saving = true;
     this.errorMessage = '';
 
-    this.#providerKeysService.save(this.rawKey, ThirdPartyProvider.VisualCrossing).subscribe({
+    this.#providerKeysService.save(key, ThirdPartyProvider.VisualCrossing).subscribe({
       next: () => {
         this.saving = false;
         this.rawKey = '';
