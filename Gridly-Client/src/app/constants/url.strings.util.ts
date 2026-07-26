@@ -14,7 +14,7 @@ export class UrlStringsUtil {
   static readonly RowColumnUrlGet = this.RowColumnUrl+'get';
   static readonly RowColumnUrlBatchSave = this.RowColumnUrl+'batchSave';
 
-  static readonly GetVersionUrl = this.VersionUrl;
+  static readonly GetVersionUrl = this.VersionUrl+'get';
 
   static readonly GetWidgetUrl = this.WidgetUrl+'get';
 

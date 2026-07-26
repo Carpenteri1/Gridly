@@ -6,12 +6,12 @@ public class MemoryCashingServices(IMemoryCache memoryCache) : IMemoryCashingSer
     
 {
     public T Get<T>(string key) where T : class => memoryCache.Get<T>(key);
-    public bool Store<T>(string key, T item) where T : class => 
+    public bool Store<T>(string key, T item, TimeSpan? absoluteExpiration = null) where T : class =>
         memoryCache.Set(
-            key, 
-            item, 
+            key,
+            item,
             new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60)
+                AbsoluteExpirationRelativeToNow = absoluteExpiration ?? TimeSpan.FromMinutes(60)
             }) is T;
 }

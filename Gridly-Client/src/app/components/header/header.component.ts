@@ -18,7 +18,7 @@ export class HeaderComponent {
   #versionService = inject(VersionService);
   #gridService = inject(GridService);
 
-  version$ = this.#versionService.version$;
+  currentVersion = this.#versionService.currentVersion;
 
   readonly TextStringsUtil = TextStringsUtil;
   addDialogActive = false;

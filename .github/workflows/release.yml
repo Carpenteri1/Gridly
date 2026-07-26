@@ -20,7 +20,12 @@ jobs:
         TAG_VERSION="${GITHUB_REF##*/}"
         echo "TAG_VERSION=$TAG_VERSION" >> $GITHUB_ENV
         echo "Tag version set to $TAG_VERSION"
-    
+
+    - name: Write version data file
+      run: |
+        mkdir -p Assets/VersionData
+        echo "{\"version\": \"${TAG_VERSION#v}\"}" > Assets/VersionData/versionData.json
+
     - name: build angular
       run: |
         cd Gridly-Client

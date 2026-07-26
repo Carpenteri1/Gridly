@@ -1,4 +1,4 @@
 export class VersionModel {
-  name!:string;
+  tag_name!:string;
   newRelease!:boolean;
 }

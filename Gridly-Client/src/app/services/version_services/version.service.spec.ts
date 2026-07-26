@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { VersionEndpointService } from '../endpoint_services/version.endpoint.service';
 import { VersionService } from './version.service';
 
 describe('VersionService', () => {
-  const version = { id: 1, name: 'v1.2.3' };
+  const version = { tag_name: 'v1.2.3', newRelease: false };
   const endpointMock = {
     get: jest.fn(() => of(version)),
   };
@@ -24,5 +24,15 @@ describe('VersionService', () => {
 
     expect(endpointMock.get).toHaveBeenCalledTimes(1);
     expect(service.currentVersion()).toEqual(version);
+  });
+
+  it('resolves to undefined when the endpoint call fails', () => {
+    TestBed.overrideProvider(VersionEndpointService, {
+      useValue: { get: jest.fn(() => throwError(() => new Error('network error'))) },
+    });
+
+    const service = TestBed.inject(VersionService);
+
+    expect(service.currentVersion()).toBeUndefined();
   });
 });

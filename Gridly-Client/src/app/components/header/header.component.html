@@ -5,6 +5,9 @@
         <i class="bi bi-columns text-white fs-5"></i>
       </div>
       <h1 class="h4 fw-bold gradient-text m-0">{{TextStringsUtil.ClientTitle}}</h1>
+      @if(currentVersion()?.newRelease){
+        <span class="badge text-bg-info ms-2">{{TextStringsUtil.NewVersionAvailableHeaderInfoText}} {{currentVersion()!.tag_name}}</span>
+      }
     </div>
 
     <div class="navbar-collapse collapse justify-content-end" [class.show]="editActive()" id="mainNavbar" animate.enter="enter-animation">

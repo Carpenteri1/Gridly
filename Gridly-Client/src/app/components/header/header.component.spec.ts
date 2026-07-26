@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { of } from 'rxjs';
 import { CardModel } from '../../models/card.Model';
+import { VersionModel } from '../../models/version.Model';
 import { GridService } from '../../services/grid_services/grid.service';
 import { VersionService } from '../../services/version_services/version.service';
 import { HeaderComponent } from './header.component';
@@ -15,9 +15,10 @@ describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
   let headerComponent: HeaderComponent;
   const editMode = signal(false);
+  const currentVersion = signal<VersionModel | undefined>(undefined);
 
   const versionServiceMock = {
-    version$: of({ id: 1, name: 'v1.0.0' }),
+    currentVersion: currentVersion.asReadonly(),
   };
 
   const gridServiceMock = {
@@ -31,6 +32,7 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     editMode.set(false);
+    currentVersion.set(undefined);
     gridServiceMock.toggleEdit.mockClear();
     gridServiceMock.setEditMode.mockClear();
     gridServiceMock.addCardToFirstAvailableRow.mockClear();
@@ -97,5 +99,20 @@ describe('HeaderComponent', () => {
 
   it('renders the client title', () => {
     expect((fixture.nativeElement as HTMLElement).querySelector('h1')?.textContent).toContain('Gridly');
+  });
+
+  it('shows the new version banner when a new release is available', () => {
+    currentVersion.set({ tag_name: 'v2.0.0', newRelease: true } as VersionModel);
+    fixture.detectChanges();
+
+    const banner = (fixture.nativeElement as HTMLElement).querySelector('.badge');
+    expect(banner?.textContent).toContain('v2.0.0');
+  });
+
+  it('hides the new version banner when there is no new release', () => {
+    currentVersion.set({ tag_name: 'v1.0.0', newRelease: false } as VersionModel);
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).querySelector('.badge')).toBeNull();
   });
 });

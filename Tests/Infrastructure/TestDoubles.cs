@@ -40,6 +40,7 @@ internal sealed class FakeMemoryCashingService : IMemoryCashingService
     public int StoreCallCount { get; private set; }
     public string? LastStoredKey { get; private set; }
     public object? LastStoredValue { get; private set; }
+    public TimeSpan? LastStoredExpiration { get; private set; }
 
     public T? Get<T>(string key) where T : class
     {
@@ -47,11 +48,12 @@ internal sealed class FakeMemoryCashingService : IMemoryCashingService
         return _cache.TryGetValue(key, out var value) ? value as T : null;
     }
 
-    public bool Store<T>(string key, T item) where T : class
+    public bool Store<T>(string key, T item, TimeSpan? absoluteExpiration = null) where T : class
     {
         StoreCallCount++;
         LastStoredKey = key;
         LastStoredValue = item;
+        LastStoredExpiration = absoluteExpiration;
         _cache[key] = item;
         return true;
     }
@@ -64,21 +66,25 @@ internal sealed class FakeMemoryCashingService : IMemoryCashingService
 
 internal sealed class FakeVersionEndPoint : IVersionEndPoint
 {
-    public int GetVersionCallCount { get; private set; }
     public int GetLatestVersionCallCount { get; private set; }
-    public (bool Success, VersionModel? Version) GetVersionResult { get; set; }
     public (bool Success, VersionModel? Version) GetLatestVersionResult { get; set; }
 
-    public Task<(bool, VersionModel?)> GetLatestVersion()
+    public Task<(bool Success, VersionModel? Version)> GetLatestVersion()
     {
         GetLatestVersionCallCount++;
         return Task.FromResult((GetLatestVersionResult.Success, GetLatestVersionResult.Version));
     }
+}
 
-    public Task<(bool, VersionModel?)> GetVersion()
+internal sealed class FakeAppVersionProvider : IAppVersionProvider
+{
+    public int CallCount { get; private set; }
+    public string CurrentVersion { get; set; } = "1.0.0";
+
+    public Task<string> GetCurrentVersionAsync()
     {
-        GetVersionCallCount++;
-        return Task.FromResult((GetVersionResult.Success, GetVersionResult.Version));
+        CallCount++;
+        return Task.FromResult(CurrentVersion);
     }
 }
 

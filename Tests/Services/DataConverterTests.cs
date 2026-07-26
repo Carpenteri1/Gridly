@@ -11,7 +11,7 @@ public class DataConverterTests
     [Fact]
     public void DeserializeJson_ReturnsObject()
     {
-        const string json = """{"name":"1.2.3","newRelease":true}""";
+        const string json = """{"tag_name":"1.2.3","newRelease":true}""";
 
         var result = _converter.DeserializeJson(json);
 
@@ -23,7 +23,7 @@ public class DataConverterTests
     [Fact]
     public void DeserializeJsonToArray_ReturnsArray()
     {
-        const string json = """[{"name":"1.0.0","newRelease":false},{"name":"1.1.0","newRelease":true}]""";
+        const string json = """[{"tag_name":"1.0.0","newRelease":false},{"tag_name":"1.1.0","newRelease":true}]""";
 
         var result = _converter.DeserializeJsonToArray(json);
 
@@ -45,7 +45,7 @@ public class DataConverterTests
 
         var result = _converter.SerializerToJsonString(model);
 
-        Assert.Equal("""{"name":"2.0.0","newRelease":true}""", result);
+        Assert.Equal("""{"tag_name":"2.0.0","newRelease":true}""", result);
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public class DataConverterTests
 
         var result = _converter.SerializerToJsonString(models);
 
-        Assert.Equal("""[{"name":"1.0.0","newRelease":false},{"name":"2.0.0","newRelease":true}]""", result);
+        Assert.Equal("""[{"tag_name":"1.0.0","newRelease":false},{"tag_name":"2.0.0","newRelease":true}]""", result);
     }
 
     [Fact]
