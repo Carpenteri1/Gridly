@@ -11,9 +11,14 @@ import { ThirdPartyProvider } from '../../enums/third-party-provider.enum';
 export class ProviderKeysEndpointService {
   private http = inject(HttpClient);
 
-  getStatus(provider: ThirdPartyProvider): Observable<ProviderKeyStatusModel> {
+  getLocalProviderStatus(provider: ThirdPartyProvider): Observable<ProviderKeyStatusModel> {
     const params = new HttpParams().set('Provider', provider);
-    return this.http.get<ProviderKeyStatusModel>(UrlStringsUtil.GetProviderKeyStatusUrl, { params }).pipe(take(1));
+    return this.http.get<ProviderKeyStatusModel>(UrlStringsUtil.GetLocalProviderKeyStatusUrl, { params }).pipe(take(1));
+  }
+
+  getRemoteProviderStatus(provider: ThirdPartyProvider): Observable<ProviderKeyStatusModel> {
+    const params = new HttpParams().set('Provider', provider);
+    return this.http.get<ProviderKeyStatusModel>(UrlStringsUtil.GetRemoteProviderKeyStatusUrl, { params }).pipe(take(1));
   }
 
   save(provider: ThirdPartyProvider, rawKey: string): Observable<void> {

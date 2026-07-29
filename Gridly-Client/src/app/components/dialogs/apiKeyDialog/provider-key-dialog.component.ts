@@ -33,10 +33,10 @@ export class ProviderKeyDialogComponent extends BaseDialogComponent{
     this.errorMessage = '';
 
     this.#providerKeysService.save(key, ThirdPartyProvider.VisualCrossing).subscribe({
-      next: () => {
+      next: async () => {
         this.saving = false;
         this.rawKey = '';
-        this.#providerKeysService.onKeySaved(ThirdPartyProvider.VisualCrossing);
+        await this.#providerKeysService.onKeySaved(ThirdPartyProvider.VisualCrossing);
         this.close();
         this.keySaved.emit();
       },

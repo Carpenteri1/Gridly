@@ -12,7 +12,7 @@ namespace Gridly.Handlers;
 public class WeatherHandler(
     IWeatherEndPoint weatherEndpoint,
     IWeatherRepository weatherRepository,
-    IProvidersRepository providersRepository,
+    ILocalProvidersRepository localProvidersRepository,
     IProviderKeysProtectionService providerKeysProtectionService) :
     IRequestHandler<GetWeatherQuery, IResult>,
     IRequestHandler<GetVisualCrossingDataQuery, IResult>,
@@ -32,7 +32,7 @@ public class WeatherHandler(
     {
         if(query.Location is null) return Results.BadRequest();
         
-        var storedKey = await providersRepository.Get(EndpointStrings.VisualCrossingProvider);
+        var storedKey = await localProvidersRepository.Get(EndpointStrings.VisualCrossingProvider);
         
         if(storedKey is null) return Results.Unauthorized();
         if(storedKey.Status == nameof(ProvidersKeyStatusEnum.Invalid) || 
@@ -44,15 +44,15 @@ public class WeatherHandler(
         switch (status)
         {
             case StatusCodes.Status401Unauthorized:
-                await providersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Invalid));
+                await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Invalid));
                 return Results.Unauthorized();
             case StatusCodes.Status403Forbidden:
-                await providersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Valid));
+                await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Valid));
                 return Results.Forbid();
             case < StatusCodes.Status200OK or >= StatusCodes.Status300MultipleChoices:
                 return Results.BadRequest();
             case StatusCodes.Status200OK: 
-                await providersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Valid));
+                await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Valid));
                 return Results.Ok(weather);
             default:
                 var (staleWeather, _) = await weatherRepository.Get(query.Location);

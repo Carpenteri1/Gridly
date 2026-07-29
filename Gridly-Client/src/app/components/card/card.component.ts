@@ -48,9 +48,8 @@ export class CardComponent {
 
   showProviderKeyButton = computed(() => {
     if (this.card.type !== CardTypes.Weather) return false;
-
     const status = this.providerKeyStatus();
-    return !(status?.exists && status.status === ProviderKeyStatus.Valid);
+    return !(status?.exists && status.keyStatus === ProviderKeyStatus.Valid);
   });
 
   handleDialogChange(dialogId: number): void {
@@ -83,7 +82,7 @@ export class CardComponent {
     return this.#cardRulesService.hasMaterialIcon(item);
   }
 
-  openEditDialog(): void {
+  async openEditDialog() {
     this.#dialogService.openEditDialog(this.card.id);
   }
 
@@ -96,5 +95,4 @@ export class CardComponent {
   }
 
   protected readonly TextStringsUtil = TextStringsUtil;
-  protected readonly CardTypes = CardTypes;
 }

@@ -119,7 +119,7 @@ describe('CardComponent', () => {
       (fixture.nativeElement as HTMLElement).querySelector('.bi-key');
 
     it('is shown on a weather card when no key is stored', () => {
-      providerKeyStatus.set({ exists: false, status: ProviderKeyStatus.Unknown });
+      providerKeyStatus.set({ exists: false, keyStatus: ProviderKeyStatus.Unknown });
       createComponent(weatherCard);
 
       expect(createCardComponent.showProviderKeyButton()).toBe(true);
@@ -127,7 +127,7 @@ describe('CardComponent', () => {
     });
 
     it('is shown on a weather card when the stored key is invalid', () => {
-      providerKeyStatus.set({ exists: true, status: ProviderKeyStatus.Invalid });
+      providerKeyStatus.set({ exists: true, keyStatus: ProviderKeyStatus.Invalid });
       createComponent(weatherCard);
 
       expect(createCardComponent.showProviderKeyButton()).toBe(true);
@@ -135,7 +135,7 @@ describe('CardComponent', () => {
     });
 
     it('is hidden on a weather card once the stored key is valid', () => {
-      providerKeyStatus.set({ exists: true, status: ProviderKeyStatus.Valid });
+      providerKeyStatus.set({ exists: true, keyStatus: ProviderKeyStatus.Valid });
       createComponent(weatherCard);
 
       expect(createCardComponent.showProviderKeyButton()).toBe(false);
@@ -143,7 +143,7 @@ describe('CardComponent', () => {
     });
 
     it('is hidden on cards that are not weather cards', () => {
-      providerKeyStatus.set({ exists: false, status: ProviderKeyStatus.Unknown });
+      providerKeyStatus.set({ exists: false, keyStatus: ProviderKeyStatus.Unknown });
       createComponent({ ...currentCard, type: CardTypes.Empty });
 
       expect(createCardComponent.showProviderKeyButton()).toBe(false);

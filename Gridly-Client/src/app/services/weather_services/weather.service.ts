@@ -4,7 +4,7 @@ import { toSignal } from "@angular/core/rxjs-interop";
 import { HttpErrorResponse } from "@angular/common/http";
 import {WeatherModel} from "../../models/weather.Model";
 import {WeatherEndpointService} from "../endpoint_services/weather.endpoint.service";
-import {ApiKeyService} from "../api_key_services/api-key.service";
+import {ProviderKeysService} from "../provider_key_services/provider-keys.service";
 
 @Injectable({providedIn: 'root'})
 export class WeatherService {
@@ -12,7 +12,7 @@ export class WeatherService {
   private readonly weather$ = new Observable<WeatherModel>();
   readonly weather!: Signal<WeatherModel | undefined>;
   #api = inject(WeatherEndpointService);
-  #apiKeyService = inject(ApiKeyService);
+  #providerKeyService= inject(ProviderKeysService);
 
   constructor() {
     this.weather$ = this.weatherSubject.asObservable();
@@ -20,7 +20,7 @@ export class WeatherService {
   }
 
     private getWeather$ = (location: string) => this.#api.get(location);
-    private getWeather = (location: string) => firstValueFrom(this.getWeather$(location));
+    public getWeather = (location: string) => firstValueFrom(this.getWeather$(location));
     private getVisualCrossingData$ = (location: string) => this.#api.getvisualcrossingdata(location);
 
     async getVisualCrossingData(location: string): Promise<WeatherModel | undefined> {
@@ -30,7 +30,7 @@ export class WeatherService {
         return weather;
       } catch (error) {
         if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 412)) {
-          this.#apiKeyService.promptForInvalidKey();
+          this.#providerKeyService.promptForInvalidKey();
         }
         return undefined;
       }

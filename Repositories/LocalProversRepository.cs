@@ -5,7 +5,7 @@ using Gridly.Dtos;
 
 namespace Gridly.Repositories;
 
-public class ProversRepository(IDbConnection connection) : IProvidersRepository
+public class LocalProversRepository(IDbConnection connection) : ILocalProvidersRepository
 {
     private DbCommandRunner _dbCommandRunner = new(connection);
 

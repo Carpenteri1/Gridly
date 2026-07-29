@@ -14,7 +14,7 @@ public class WeatherHandlerTests
     private static WeatherModel MakeWeather(string location = "Stockholm") =>
         new() { Location = location, Address = location, Timezone = "Europe/Stockholm", Description = "clear" };
 
-    private static FakeProvidersRepository MakeProvidersRepository(string status = nameof(ProvidersKeyStatusEnum.Valid)) =>
+    private static FakeLocalProvidersRepository MakeProvidersRepository(string status = nameof(ProvidersKeyStatusEnum.Valid)) =>
         new()
         {
             StoredKey = new ProviderKeyDtoModel
@@ -29,11 +29,11 @@ public class WeatherHandlerTests
     private static WeatherHandler MakeHandler(
         FakeWeatherEndPoint? endPoint = null,
         FakeWeatherRepository? weatherRepository = null,
-        FakeProvidersRepository? providersRepository = null) =>
+        FakeLocalProvidersRepository? providersRepository = null) =>
         new(
             endPoint ?? new FakeWeatherEndPoint(),
             weatherRepository ?? new FakeWeatherRepository(),
-            providersRepository ?? new FakeProvidersRepository(),
+            providersRepository ?? new FakeLocalProvidersRepository(),
             new FakeProviderKeysProtectionService());
 
     [Fact]
@@ -109,7 +109,7 @@ public class WeatherHandlerTests
     public async Task HandleGetVisualCrossingData_WhenNoKeyConfigured_Returns401WithoutTouchingKeyStatus()
     {
         var endPoint = new FakeWeatherEndPoint { Result = (StatusCodes.Status401Unauthorized, null) };
-        var apiKeyRepository = new FakeProvidersRepository();
+        var apiKeyRepository = new FakeLocalProvidersRepository();
         var handler = MakeHandler(endPoint, providersRepository: apiKeyRepository);
 
         var result = await handler.Handle(new GetVisualCrossingDataQuery { Location = "Stockholm" }, CancellationToken.None);

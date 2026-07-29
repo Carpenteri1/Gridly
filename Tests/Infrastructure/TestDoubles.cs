@@ -140,7 +140,7 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
     }
 }
 
-internal sealed class FakeProvidersRepository : IProvidersRepository
+internal sealed class FakeLocalProvidersRepository : ILocalProvidersRepository
 {
     public ProviderKeyDtoModel? StoredKey { get; set; }
     public int UpsertCallCount { get; private set; }

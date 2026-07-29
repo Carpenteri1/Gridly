@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import { EMPTY, of } from 'rxjs';
 import { ProviderKeysService } from './provider-keys.service';
 import { ProviderKeysEndpointService } from '../endpoint_services/provider-keys.endpoint.service';
 import { ProviderKeyStatus } from '../../enums/provider-key-status.enum';
@@ -8,7 +7,8 @@ import { ThirdPartyProvider } from '../../enums/third-party-provider.enum';
 
 describe('ProviderKeysService', () => {
   const endpointMock = {
-    getStatus: jest.fn(),
+    getLocalProviderStatus: jest.fn(),
+    getRemoteProviderStatus: jest.fn(),
     save: jest.fn(),
   };
 
@@ -29,33 +29,31 @@ describe('ProviderKeysService', () => {
   });
 
   it('fetches the status on creation so a reload reflects the stored key', () => {
-    endpointMock.getStatus.mockReturnValue(of({ exists: true, status: ProviderKeyStatus.Valid }));
+    endpointMock.getLocalProviderStatus.mockReturnValue(of({ exists: true, status: ProviderKeyStatus.Valid }));
 
     const service = createService();
 
-    expect(endpointMock.getStatus).toHaveBeenCalledWith(ThirdPartyProvider.VisualCrossing);
+    expect(endpointMock.getLocalProviderStatus).toHaveBeenCalledWith(ThirdPartyProvider.VisualCrossing);
     expect(service.currentStatus()).toEqual({ exists: true, status: ProviderKeyStatus.Valid });
   });
 
-  it('leaves the status null when the request fails', () => {
-    endpointMock.getStatus.mockReturnValue(
-      throwError(() => new HttpErrorResponse({ status: 500 })),
-    );
+  it('leaves the status undefined when the local status request emits no value', () => {
+    endpointMock.getLocalProviderStatus.mockReturnValue(EMPTY);
 
     const service = createService();
 
-    expect(service.currentStatus()).toBeNull();
+    expect(service.currentStatus()).toBeUndefined();
   });
 
-  it('refreshes the status after a key is saved', () => {
-    endpointMock.getStatus.mockReturnValue(of({ exists: false, status: ProviderKeyStatus.Unknown }));
+  it('refreshes the status after a key is saved', async () => {
+    endpointMock.getLocalProviderStatus.mockReturnValue(of({ exists: false, status: ProviderKeyStatus.Unknown }));
     const service = createService();
-    expect(endpointMock.getStatus).toHaveBeenCalledTimes(1);
+    expect(endpointMock.getLocalProviderStatus).toHaveBeenCalledTimes(1);
 
-    endpointMock.getStatus.mockReturnValue(of({ exists: true, status: ProviderKeyStatus.Valid }));
-    service.onKeySaved(ThirdPartyProvider.VisualCrossing);
+    endpointMock.getRemoteProviderStatus.mockReturnValue(of({ exists: true, status: ProviderKeyStatus.Valid }));
+    await service.onKeySaved(ThirdPartyProvider.VisualCrossing);
 
-    expect(endpointMock.getStatus).toHaveBeenCalledTimes(2);
+    expect(endpointMock.getRemoteProviderStatus).toHaveBeenCalledWith(ThirdPartyProvider.VisualCrossing);
     expect(service.currentStatus()).toEqual({ exists: true, status: ProviderKeyStatus.Valid });
   });
 });

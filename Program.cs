@@ -32,7 +32,7 @@ builder.Services.AddScoped<ISettingsRepository,SettingsRepository>();
 builder.Services.AddScoped<IIconRepository,IconRepository>();
 builder.Services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
 builder.Services.AddScoped<IWidgetRepository,WidgetRepository>();
-builder.Services.AddScoped<IProvidersRepository,ProversRepository>();
+builder.Services.AddScoped<ILocalProvidersRepository,LocalProversRepository>();
 builder.Services.AddScoped<IWeatherRepository,WeatherRepository>();
 builder.Services.AddScoped<IProvidersEndPointExtensions,ProvidersEndPointExtensions>();
 
