@@ -43,6 +43,7 @@ export class TextStringsUtil {
   static readonly MenuExitEditButtonTitle = "Exit Edit";
   static readonly MenuDropDownDragTitle = "Move cards";
   static readonly MenuDropDownResizeTitle = "Resize cards";
+  static readonly MenuAddProviderKeysButtonTitle = "Add provider key";
 
   static readonly CardAddedFailedEndPointMessage = "Failed to add new card";
   static readonly CardGetByIdFailedEndPointMessage = "Failed to get card by id";
@@ -61,6 +62,7 @@ export class TextStringsUtil {
 
   static readonly DialogApiKeyTitle = "Add weather provider key";
   static readonly DialogApiKeyDescription = "Paste your weather provider API key. It is stored securely and never shown again.";
+  static readonly DialogApiKeyFoundApiKeyAt = "You can find your key at https://www.visualcrossing.com";
   static readonly DialogApiKeyInvalidMessage = "The stored key was rejected. Please paste a new one.";
   static readonly DialogApiKeyInputLabel = "API key";
   static readonly DialogApiKeySaveBtnTitle = "Save";

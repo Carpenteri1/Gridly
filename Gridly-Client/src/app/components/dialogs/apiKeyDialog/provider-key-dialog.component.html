@@ -13,7 +13,9 @@
           @if (invalidKey) {
             <p>{{TextStringsUtil.DialogApiKeyInvalidMessage}}</p>
           } @else {
-            <p>{{TextStringsUtil.DialogApiKeyDescription}}</p>
+            <p>{{TextStringsUtil.DialogApiKeyDescription}}<br>
+            {{TextStringsUtil.DialogApiKeyFoundApiKeyAt}}
+            </p>
           }
           <input
             type="password"
