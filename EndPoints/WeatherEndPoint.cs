@@ -1,3 +1,4 @@
+using Gridly.Constants;
 using Gridly.Dtos;
 using Gridly.Factories;
 using Gridly.helpers;
@@ -10,9 +11,12 @@ public class WeatherEndPoint(
     IDataConverter<WeatherDtoModel> dataConverter,
     IProvidersEndPointExtensions providersEndPointExtensions) : IWeatherEndPoint
 {
-    public async Task<(int, WeatherModel? Weather)> Get(string location,string provider, string rawKey)
+    public async Task<(int, WeatherModel? Weather)> Get(string location, string rawKey)
     {
-        var (status, body) = await providersEndPointExtensions.CallWeatherProvider(location, provider, rawKey);
+        var (status, body) = await providersEndPointExtensions.CallWeatherProvider(
+            location,
+            EndpointStrings.GetVisualCrossingWeatherData,
+            rawKey);
 
         var dto = dataConverter.DeserializeJson(body);
 

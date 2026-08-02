@@ -23,14 +23,18 @@ public class WeatherHandler(
     public async Task<IResult> Handle(GetWeatherQuery query, CancellationToken cancellationToken)
     {
         var (weather, fetchedAt) = await weatherRepository.Get(query.SearchTerm);
-        var isFresh = weather is not null && fetchedAt is not null && DateTime.UtcNow - fetchedAt.Value < CacheWindow;
+        if(weather is null) return Results.NotFound();
+        
+        var isFresh = fetchedAt is not null && DateTime.UtcNow - fetchedAt.Value < CacheWindow;
+        if(!isFresh)
+            await weatherRepository.Delete(weather.CardId);
 
         return isFresh ? Results.Ok(weather) : Results.NotFound();
     }
 
     public async Task<IResult> Handle(GetVisualCrossingDataQuery query, CancellationToken cancellationToken)
     {
-        if(query.Location is null) return Results.BadRequest();
+        if(query.SearchTerm is null) return Results.BadRequest();
         
         var storedKey = await localProvidersRepository.Get(EndpointStrings.VisualCrossingProvider);
         
@@ -39,7 +43,7 @@ public class WeatherHandler(
            storedKey.Status is nameof(ProvidersKeyStatusEnum.Unknown)) return Results.Unauthorized();
         
         var rawKey = providerKeysProtectionService.Unprotect(storedKey.EncryptedKey);
-        var (status, weather) = await weatherEndpoint.Get(query.Location, storedKey.Provider, rawKey);
+        var (status, weather) = await weatherEndpoint.Get(query.SearchTerm, rawKey);
         
         switch (status)
         {
@@ -53,9 +57,10 @@ public class WeatherHandler(
                 return Results.BadRequest();
             case StatusCodes.Status200OK: 
                 await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Valid));
+                await weatherRepository.Upsert(weather);
                 return Results.Ok(weather);
             default:
-                var (staleWeather, _) = await weatherRepository.Get(query.Location);
+                var (staleWeather, _) = await weatherRepository.Get(query.SearchTerm);
                 return staleWeather is not null
                     ? Results.Ok(staleWeather)
                     : Results.Problem(statusCode: StatusCodes.Status503ServiceUnavailable, detail: "ProviderUnavailable");
@@ -64,7 +69,7 @@ public class WeatherHandler(
 
     public async Task<IResult> Handle(SaveWeatherCommand command, CancellationToken cancellationToken)
     {
-        var success = await weatherRepository.Upsert(command.Location, command.Weather);
+        var success = await weatherRepository.Upsert(command.Weather);
         return success ? Results.Ok() : Results.BadRequest();
     }
 }

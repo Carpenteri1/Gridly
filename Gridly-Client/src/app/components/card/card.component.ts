@@ -14,6 +14,7 @@ import {ProviderKeyDialogComponent} from "../dialogs/apiKeyDialog/provider-key-d
 import {ProviderKeysService} from "../../services/provider_key_services/provider-keys.service";
 import {CardTypes} from "../../enums/card.types.enum";
 import {ProviderKeyStatus} from "../../enums/provider-key-status.enum";
+import {SetLocationForProviderDialogComponent} from "../dialogs/setLocationForProviderDialog/set-location-for-provider-dialog.component";
 
 @Component({
   selector: 'app-card-component',
@@ -27,7 +28,8 @@ import {ProviderKeyStatus} from "../../enums/provider-key-status.enum";
     DeleteCardDialogComponent,
     ResizableDirective,
     MatIconModule,
-    ProviderKeyDialogComponent
+    ProviderKeyDialogComponent,
+    SetLocationForProviderDialogComponent
   ],
 })
 export class CardComponent {
@@ -38,9 +40,10 @@ export class CardComponent {
   #dialogService = inject(DialogService);
   #providerKeyService = inject(ProviderKeysService)
 
-  isAddProviderDialogOpen = this.#dialogService.isAddProviderDialogOpen
-  isDeleteDialogOpen = this.#dialogService.isDeleteDialogOpen;
-  isEditDialogOpen = this.#dialogService.isEditDialogOpen;
+  private _isAddProviderKeyDialogOpen = this.#dialogService.isAddProviderDialogOpen
+  private _isSetProviderLocationDialogOpen = this.#dialogService.isSetProviderLocationDialogOpen
+  private _isDeleteDialogOpen = this.#dialogService.isDeleteDialogOpen;
+  private _isEditDialogOpen = this.#dialogService.isEditDialogOpen;
 
   providerKeyStatus = this.#providerKeyService.currentStatus;
 
@@ -54,20 +57,22 @@ export class CardComponent {
 
   handleDialogChange(dialogId: number): void {
     if (dialogId === this.card.id) {
-      this.#dialogService.closeAddProviderKeyDialog();
       this.#dialogService.closeDeleteDialog();
       this.#dialogService.closeEditDialog();
     }
   }
 
-  isProviderDialogOpen = computed(() =>
-    this.isAddProviderDialogOpen() === this.card.id
+  isAddProviderKeyDialogOpen = computed(() =>
+    this._isAddProviderKeyDialogOpen() === this.card.id
+  );
+  isSetProviderLocationDialogOpen = computed(() =>
+    this._isSetProviderLocationDialogOpen() === this.card.id
   );
   isEditDialogOpenForCard = computed(() =>
-    this.isEditDialogOpen() === this.card.id
+    this._isEditDialogOpen() === this.card.id
   );
   isDeleteDialogOpenForCard = computed(() =>
-    this.isDeleteDialogOpen() === this.card.id
+    this._isDeleteDialogOpen() === this.card.id
   );
 
   protected edit(card: CardModel): void {
@@ -95,4 +100,19 @@ export class CardComponent {
   }
 
   protected readonly TextStringsUtil = TextStringsUtil;
+
+  protected SaveProviderKey(dialogId: number) {
+    if (dialogId === this.card.id) {
+      this.#dialogService.closeAddProviderKeyDialog();
+    }
+    if(this.#dialogService.isAddProviderDialogOpen() === null) {
+      this.#dialogService.openSetProviderLocationDialog(this.card.id);
+    }
+  }
+
+  protected SaveProviderLocation(dialogId: number) {
+    if (dialogId === this.card.id) {
+      this.#dialogService.closeSetProviderLocationDialog();
+    }
+  }
 }

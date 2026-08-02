@@ -77,7 +77,12 @@
     (openChange)="handleDialogChange($event)">
   </app-delete-card-dialog>
   <app-provider-key-dialog
-    [open]="isProviderDialogOpen()"
+    [open]="isAddProviderKeyDialogOpen()"
     [id]="card.id"
-    (openChange)="handleDialogChange($event)">
+    (openChange)="SaveProviderKey($event)">
   </app-provider-key-dialog>
+  <app-set-location-for-provider-dialog
+    [open]="isSetProviderLocationDialogOpen()"
+    [id]="card.id"
+    (openChange)="SaveProviderLocation($event)">
+  </app-set-location-for-provider-dialog>

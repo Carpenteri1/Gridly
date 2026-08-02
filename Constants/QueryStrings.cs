@@ -112,6 +112,7 @@ public class QueryStrings
     public const string DeleteFromCardQuery = "DELETE FROM Card /**where**/";
     public const string DeleteFromIconsConnectedQuery = "DELETE FROM IconsConnected /**where**/";
     public const string DeleteFromIconQuery = "DELETE FROM Icon /**where**/";
+    public const string DeleteFromWeatherQuery = "DELETE FROM Weather /**where**/";
     
     public const string BatchDeleteRowColumnQuery = @"
     DELETE FROM RowColumn
@@ -137,14 +138,23 @@ public class QueryStrings
     WHERE Provider = @Provider;";
 
     public const string UpsertWeatherDataQuery = @"
-    INSERT INTO WeatherData (Location, JsonPayload, FetchedAt)
-    VALUES (@Location, @JsonPayload, @FetchedAt)
+    INSERT INTO WeatherData (CardId, Location, Address, Timezone, Description, Conditions, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt)
+    VALUES (@CardId, @Location, @Address, @Timezone, @Description, @Conditions, @Temp, @FeelsLike, @Humidity, @WindSpeed, @WindDir, @FetchedAt)
     ON CONFLICT(Location) DO UPDATE SET
-        JsonPayload = excluded.JsonPayload,
+        CardId = excluded.CardId,
+        Address = excluded.Address,
+        Timezone = excluded.Timezone,
+        Description = excluded.Description,
+        Conditions = excluded.Conditions,
+        Temp = excluded.Temp,
+        FeelsLike = excluded.FeelsLike,
+        Humidity = excluded.Humidity,
+        WindSpeed = excluded.WindSpeed,
+        WindDir = excluded.WindDir,
         FetchedAt = excluded.FetchedAt;";
 
     public const string SelectWeatherDataQuery = @"
-    SELECT Id, Location, JsonPayload, FetchedAt
+    SELECT Id, CardId, Location, Address, Timezone, Description, Conditions, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt
     FROM WeatherData
     WHERE Location = @Location;";
 

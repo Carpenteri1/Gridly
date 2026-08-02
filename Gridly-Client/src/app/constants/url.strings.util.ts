@@ -21,6 +21,7 @@ export class UrlStringsUtil {
 
   static readonly GetWeatherUrl = this.WeatherUrl+'get';
   static readonly GetVisualCrossingDataURL = this.WeatherUrl+'getvisualcrossingdata';
+  static readonly SaveWeatherUrl = this.WeatherUrl+'save';
   static readonly GetUrl = this.WeatherUrl+'get';
 
   static readonly GetLocalProviderKeyStatusUrl = this.ProviderKeyUrl+'local/provider/status';

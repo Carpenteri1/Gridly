@@ -66,4 +66,14 @@ export class TextStringsUtil {
   static readonly DialogApiKeySaveBtnTitle = "Save";
   static readonly DialogApiKeyCancelBtnTitle = "Cancel";
   static readonly DialogApiKeySaveFailedMessage = "Failed to save the API key. Please try again.";
+
+  static readonly DialogWeatherProviderLocationTitle = "Add location for weather provider";
+  static readonly DialogWeatherProviderLocationCountryInputLabel = "Country";
+  static readonly DialogWeatherProviderLocationCityInputLabel = "City";
+  static readonly DialogWeatherProviderLocationSaveBtnTitle = "Save";
+  static readonly DialogWeatherProviderLocationCancelBtnTitle = "Cancel";
+  static readonly DialogWeatherProviderLocationSaveFailedMessage = "Failed to save. Please try again.";
+  static readonly DialogWeatherProviderLocationSaveInvalidKeyFailedMessage = "Failed to save. Invalid Provider Key.";
+  static readonly DialogWeatherProviderLocationSaveLocationNotFoundFailedMessage = "Failed to save. Location not found.";
+
 }

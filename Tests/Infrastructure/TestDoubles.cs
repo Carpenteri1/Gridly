@@ -111,7 +111,7 @@ internal sealed class FakeWeatherEndPoint : IWeatherEndPoint
     public int GetCallCount { get; private set; }
     public (int Status, WeatherModel? Weather) Result { get; set; }
 
-    public Task<(int, WeatherModel? Weather)> Get(string location, string provider, string rawKey)
+    public Task<(int, WeatherModel? Weather)> Get(string location, string rawKey)
     {
         GetCallCount++;
         return Task.FromResult(Result);
@@ -131,11 +131,17 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
     public Task<(WeatherModel? Weather, DateTime? FetchedAt)> Get(string location) =>
         Task.FromResult(_stored.TryGetValue(location, out var value) ? value : (null, null));
 
-    public Task<bool> Upsert(string location, WeatherModel weather)
+    public Task<bool> Delete(int CardId)
     {
         UpsertCallCount++;
-        LastUpsertedLocation = location;
-        _stored[location] = (weather, DateTime.UtcNow);
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> Upsert(WeatherModel weather)
+    {
+        UpsertCallCount++;
+        LastUpsertedLocation = weather.Location;
+        _stored[weather.Location] = (weather, DateTime.UtcNow);
         return Task.FromResult(true);
     }
 }

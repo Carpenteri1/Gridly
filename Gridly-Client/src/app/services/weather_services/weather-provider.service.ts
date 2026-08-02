@@ -7,7 +7,7 @@ import {WeatherEndpointService} from "../endpoint_services/weather.endpoint.serv
 import {ProviderKeysService} from "../provider_key_services/provider-keys.service";
 
 @Injectable({providedIn: 'root'})
-export class WeatherService {
+export class WeatherProviderService {
   private readonly weatherSubject = new Subject<WeatherModel>();
   private readonly weather$ = new Observable<WeatherModel>();
   readonly weather!: Signal<WeatherModel | undefined>;
@@ -19,20 +19,35 @@ export class WeatherService {
     this.weather = toSignal(this.weather$);
   }
 
+    save = (weather: WeatherModel) => this.#api.save(weather);
     private getWeather$ = (location: string) => this.#api.get(location);
-    public getWeather = (location: string) => firstValueFrom(this.getWeather$(location));
     private getVisualCrossingData$ = (location: string) => this.#api.getvisualcrossingdata(location);
-
-    async getVisualCrossingData(location: string): Promise<WeatherModel | undefined> {
+    async getWeather(location: string): Promise<[weather: WeatherModel | undefined, status: number]> {
+      let status!:number;
+      try {
+          const weather = await firstValueFrom(this.getWeather$(location));
+          this.weatherSubject.next(weather);
+          return [weather,200];
+        } catch (error) {
+          if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 412)) {
+          this.#providerKeyService.promptForInvalidKey();
+          status = error.status !== 412 ? 401 : 404;
+        }
+        return [undefined, status];
+      }
+    }
+    async getVisualCrossingData(location: string): Promise<[weather: WeatherModel | undefined, status: number]> {
+      let status!:number;
       try {
         const weather = await firstValueFrom(this.getVisualCrossingData$(location));
         this.weatherSubject.next(weather);
-        return weather;
+        return [weather,200];
       } catch (error) {
         if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 412)) {
           this.#providerKeyService.promptForInvalidKey();
+          status = error.status !== 412 ? 401 : 404;
         }
-        return undefined;
+        return [undefined, status];
       }
     }
 }
