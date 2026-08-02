@@ -26,31 +26,32 @@ export class SetLocationForProviderDialogComponent extends BaseDialogComponent{
   async onSubmit() {
     const country = this.countryInput?.trim();
     const city = this.cityInput?.trim();
-    if (!country && !city) return;
+    if (!country || !city) return;
 
     this.saving = true;
+    this.errorMessage = '';
 
-    let [weather,status] = await this.#weatherProviderService.getWeather(`${country},${city}`);
-    if(status !== 200 && weather !== undefined) {
-      [weather,status] = await this.#weatherProviderService.getVisualCrossingData(`${country},${city}`);
-      if(status === 200 && weather !== undefined){
-        this.saving = false;
-        this.countryInput = '';
-        this.cityInput = '';
-        weather.cardId = this.id;
-        this.#weatherProviderService.save(weather);
-        this.close();
-      }
-      if(status === 401 || status === 412) {
-        this.errorMessage = this.TextStringsUtil.DialogWeatherProviderLocationSaveInvalidKeyFailedMessage;
-      }
-      if(status === 404) {
-        this.errorMessage = this.TextStringsUtil.DialogWeatherProviderLocationSaveLocationNotFoundFailedMessage;
-      }
-      else{
-        this.saving = false;
-        this.errorMessage = this.TextStringsUtil.DialogWeatherProviderLocationSaveFailedMessage;
-      }
+    const location = `${country},${city}`;
+    let [weather, status] = await this.#weatherProviderService.getWeather(location);
+
+    if (status !== 200) {
+      [weather, status] = await this.#weatherProviderService.getVisualCrossingData(location);
+    }
+
+    this.saving = false;
+
+    if (status === 200 && weather !== undefined) {
+      this.countryInput = '';
+      this.cityInput = '';
+      weather.cardId = this.id;
+      this.#weatherProviderService.save(weather);
+      this.close();
+    } else if (status === 401 || status === 412) {
+      this.errorMessage = this.TextStringsUtil.DialogWeatherProviderLocationSaveInvalidKeyFailedMessage;
+    } else if (status === 404) {
+      this.errorMessage = this.TextStringsUtil.DialogWeatherProviderLocationSaveLocationNotFoundFailedMessage;
+    } else {
+      this.errorMessage = this.TextStringsUtil.DialogWeatherProviderLocationSaveFailedMessage;
     }
   }
 }

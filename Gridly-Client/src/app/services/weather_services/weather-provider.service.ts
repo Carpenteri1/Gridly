@@ -23,31 +23,33 @@ export class WeatherProviderService {
     private getWeather$ = (location: string) => this.#api.get(location);
     private getVisualCrossingData$ = (location: string) => this.#api.getvisualcrossingdata(location);
     async getWeather(location: string): Promise<[weather: WeatherModel | undefined, status: number]> {
-      let status!:number;
       try {
-          const weather = await firstValueFrom(this.getWeather$(location));
-          this.weatherSubject.next(weather);
-          return [weather,200];
-        } catch (error) {
-          if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 412)) {
-          this.#providerKeyService.promptForInvalidKey();
-          status = error.status !== 412 ? 401 : 404;
+        const weather = await firstValueFrom(this.getWeather$(location));
+        this.weatherSubject.next(weather);
+        return [weather, 200];
+      } catch (error) {
+        if (error instanceof HttpErrorResponse) {
+          if (error.status === 401 || error.status === 412) {
+            this.#providerKeyService.promptForInvalidKey();
+          }
+          return [undefined, error.status];
         }
-        return [undefined, status];
+        return [undefined, 0];
       }
     }
     async getVisualCrossingData(location: string): Promise<[weather: WeatherModel | undefined, status: number]> {
-      let status!:number;
       try {
         const weather = await firstValueFrom(this.getVisualCrossingData$(location));
         this.weatherSubject.next(weather);
-        return [weather,200];
+        return [weather, 200];
       } catch (error) {
-        if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 412)) {
-          this.#providerKeyService.promptForInvalidKey();
-          status = error.status !== 412 ? 401 : 404;
+        if (error instanceof HttpErrorResponse) {
+          if (error.status === 401 || error.status === 412) {
+            this.#providerKeyService.promptForInvalidKey();
+          }
+          return [undefined, error.status];
         }
-        return [undefined, status];
+        return [undefined, 0];
       }
     }
 }
