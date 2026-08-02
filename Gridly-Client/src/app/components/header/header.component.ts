@@ -53,9 +53,9 @@ export class HeaderComponent {
     this.#dialogService.openProviderKeyDialog(0);
   }
 
-  save(): void {
+  async save(): Promise<void> {
+    await this.#gridService.batchSave(this.#gridService.currentRowColumns());
     this.toggleMenu();
-    this.#gridService.batchSave(this.#gridService.currentRowColumns());
   }
 
   protected reloadPage(): void {
