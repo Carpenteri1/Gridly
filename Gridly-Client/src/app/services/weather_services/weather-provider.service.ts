@@ -5,6 +5,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import {WeatherModel} from "../../models/weather.Model";
 import {WeatherEndpointService} from "../endpoint_services/weather.endpoint.service";
 import {ProviderKeysService} from "../provider_key_services/provider-keys.service";
+import {WeatherDataDto} from "../../dtos/weatherDataDto";
 
 @Injectable({providedIn: 'root'})
 export class WeatherProviderService {
@@ -19,10 +20,15 @@ export class WeatherProviderService {
     this.weather = toSignal(this.weather$);
   }
 
-    save = (weather: WeatherModel) => this.#api.save(weather);
+    private save$ = (dto: WeatherDataDto) => this.#api.save(dto);
     private getWeather$ = (location: string) => this.#api.get(location);
     private getVisualCrossingData$ = (location: string) => this.#api.getvisualcrossingdata(location);
-    async getWeather(location: string): Promise<[weather: WeatherModel | undefined, status: number]> {
+
+    save = async (dto: WeatherDataDto) => {
+      await firstValueFrom(this.save$(dto))
+    };
+
+  async getWeather(location: string): Promise<[weather: WeatherModel | undefined, status: number]> {
       try {
         const weather = await firstValueFrom(this.getWeather$(location));
         this.weatherSubject.next(weather);

@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { BaseDialogComponent } from '../../../directives/base-dialog.directive';
 import { DialogDirective } from '../../../directives/dialog.directive';
 import {WeatherProviderService} from "../../../services/weather_services/weather-provider.service";
+import {WeatherDataDtoFactory} from "../../../factory/weatherDtoFactory";
 
 @Component({
   selector: 'app-set-location-for-provider-dialog',
@@ -13,7 +14,7 @@ import {WeatherProviderService} from "../../../services/weather_services/weather
 })
 export class SetLocationForProviderDialogComponent extends BaseDialogComponent{
   @Input() open = false;
-  @Input() id = 0;
+  @Input() id!:number;
   @Output() openChange = new EventEmitter<number>();
 
   #weatherProviderService = inject(WeatherProviderService);
@@ -44,7 +45,8 @@ export class SetLocationForProviderDialogComponent extends BaseDialogComponent{
       this.countryInput = '';
       this.cityInput = '';
       weather.cardId = this.id;
-      this.#weatherProviderService.save(weather);
+      const dto = WeatherDataDtoFactory.create(weather);
+      await this.#weatherProviderService.save(dto);
       this.close();
     } else if (status === 401 || status === 412) {
       this.errorMessage = this.TextStringsUtil.DialogWeatherProviderLocationSaveInvalidKeyFailedMessage;

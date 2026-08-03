@@ -23,4 +23,19 @@ public class WeatherDataFactory
                 WindDir = dto.WindDir,
             }
         };
+    public static WeatherDataDtoModel CreateDto(WeatherModel weather)
+        => new()
+        {
+            CardId = weather.CardId,
+            Location = weather.Location,
+            Address = weather.Address,
+            Timezone = weather.Timezone,
+            Description = weather.Description,
+            Conditions = weather.CurrentConditions.Conditions,
+            Temp = weather.CurrentConditions.Temp,
+            FeelsLike = weather.CurrentConditions.FeelsLike,
+            Humidity = weather.CurrentConditions.Humidity,
+            WindSpeed = weather.CurrentConditions.WindSpeed,
+            WindDir = weather.CurrentConditions.WindDir,
+        };
 }

@@ -28,7 +28,7 @@ public class WeatherHandler(
         var isFresh = fetchedAt is not null && DateTime.UtcNow - fetchedAt.Value < CacheWindow;
         if(!isFresh)
             await weatherRepository.Delete(weather.CardId);
-
+        
         return isFresh ? Results.Ok(weather) : Results.NotFound();
     }
 
@@ -55,20 +55,17 @@ public class WeatherHandler(
                 return Results.Forbid();
             case < StatusCodes.Status200OK or >= StatusCodes.Status300MultipleChoices:
                 return Results.BadRequest();
-            case StatusCodes.Status200OK: 
+            case StatusCodes.Status200OK:
                 await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Valid));
-                await weatherRepository.Upsert(weather);
                 return Results.Ok(weather);
             default:
-                var (staleWeather, _) = await weatherRepository.Get(query.SearchTerm);
-                return staleWeather is not null
-                    ? Results.Ok(staleWeather)
-                    : Results.Problem(statusCode: StatusCodes.Status503ServiceUnavailable, detail: "ProviderUnavailable");
+                return Results.Problem(statusCode: StatusCodes.Status503ServiceUnavailable, detail: "ProviderUnavailable");
         }
     }
 
     public async Task<IResult> Handle(SaveWeatherCommand command, CancellationToken cancellationToken)
     {
+        command.Weather.FetchedAt = DateTime.UtcNow;
         var success = await weatherRepository.Upsert(command.Weather);
         return success ? Results.Ok() : Results.BadRequest();
     }

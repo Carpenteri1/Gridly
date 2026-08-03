@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlStringsUtil} from "../../constants/url.strings.util";
 import {Observable, take} from "rxjs";
 import {WeatherModel} from "../../models/weather.Model";
+import {WeatherDataDto} from "../../dtos/weatherDataDto";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class WeatherEndpointService{
     const params = new HttpParams().set('SearchTerm', location);
     return this.http.get<WeatherModel>(UrlStringsUtil.GetVisualCrossingDataURL,{params}).pipe(take(1));
   }
-  save(weather: WeatherModel){
-    this.http.post<WeatherModel>(UrlStringsUtil.SaveWeatherUrl,{weather}).pipe(take(1));
+  save(weather: WeatherDataDto){
+    return this.http.post(UrlStringsUtil.SaveWeatherUrl, {weather}).pipe(take(1));
   }
 }

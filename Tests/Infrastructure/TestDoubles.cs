@@ -1,5 +1,6 @@
 using Gridly.Dtos;
 using Gridly.EndPoints;
+using Gridly.Factories;
 using Gridly.Models;
 using Gridly.Repositories;
 using Gridly.Services;
@@ -137,11 +138,11 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
         return Task.FromResult(true);
     }
 
-    public Task<bool> Upsert(WeatherModel weather)
+    public Task<bool> Upsert(WeatherDataDtoModel weather)
     {
         UpsertCallCount++;
         LastUpsertedLocation = weather.Location;
-        _stored[weather.Location] = (weather, DateTime.UtcNow);
+        _stored[weather.Location] = (WeatherDataFactory.Create(weather), DateTime.UtcNow);
         return Task.FromResult(true);
     }
 }

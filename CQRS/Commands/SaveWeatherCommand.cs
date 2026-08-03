@@ -1,9 +1,9 @@
-using Gridly.Models;
+using Gridly.Dtos;
 using MediatR;
 
 namespace Gridly.Commands;
 
 public class SaveWeatherCommand : IRequest<IResult>
 {
-    public WeatherModel Weather { get; set; }
+    public WeatherDataDtoModel Weather { get; set; }
 }

@@ -11,7 +11,22 @@ namespace Gridly.Tests.Handlers;
 public class WeatherHandlerTests
 {
     private static WeatherModel MakeWeather(string location = "Stockholm") =>
-        new() { Location = location, Address = location, Timezone = "Europe/Stockholm", Description = "clear" };
+        new()
+        {
+            Location = location,
+            Address = location,
+            Timezone = "Europe/Stockholm",
+            Description = "clear",
+            CurrentConditions = new CurrentConditionsModel
+            {
+                Conditions = "clear",
+                Temp = 20,
+                FeelsLike = 20,
+                Humidity = 50,
+                WindSpeed = 5,
+                WindDir = 180
+            }
+        };
 
     private static FakeLocalProvidersRepository MakeProvidersRepository(string status = nameof(ProvidersKeyStatusEnum.Valid)) =>
         new()
@@ -85,7 +100,6 @@ public class WeatherHandlerTests
         
         Assert.Equal("Stockholm", payload.Location);
         Assert.Equal(1, endPoint.GetCallCount);
-        Assert.Equal(1, repository.UpsertCallCount);
         Assert.Equal(1, providersRepository.UpdateStatusCallCount);
         Assert.Equal(nameof(ProvidersKeyStatusEnum.Valid), providersRepository.LastUpdatedStatus);
     }
