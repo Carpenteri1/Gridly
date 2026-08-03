@@ -15,10 +15,12 @@
               <i class="bi bi-plus-lg me-1"></i>
               <span>{{TextStringsUtil.MenuAddCardButtonTitle}}</span>
             </button>
-            <app-add-card-dialog
-              [open]="addDialogActive"
-              (newCard)="add($event)">
-            </app-add-card-dialog>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1" (click)="openAddProviderKeyDialog()">
+              <i class="bi bi-key"></i>
+              <span>{{TextStringsUtil.MenuAddProviderKeysButtonTitle}}</span>
+            </button>
           </li>
            <li class="nav-item">
              <button class="btn btn-primary btn-sm d-flex align-items-center gap-1"
@@ -47,3 +49,12 @@
     </div>
   </nav>
 </header>
+<app-add-card-dialog
+  [open]="addDialogActive"
+  (newCard)="add($event)">
+</app-add-card-dialog>
+<app-provider-key-dialog
+  [open]="isAddProviderDialogOpen()"
+  (openChange)="handleDialogChange($event)">
+</app-provider-key-dialog>
+

@@ -1,0 +1,41 @@
+<dialog #dlg appDialogWindow [open]="open" [dialogId]="id" [id]="id" (openChange)="openChange.emit($event)" class="ew-dialog">
+  <div class="ew-card">
+    <header class="ew-header">
+      <h3 id="ew-title" class="m-0">{{TextStringsUtil.DialogWeatherProviderLocationTitle}}</h3>
+      <button type="button" class="btn" aria-label="Close" (click)="close()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </header>
+    <div class="ew-body">
+      <form (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="api-key-input" class="form-label">{{TextStringsUtil.DialogWeatherProviderLocationCountryInputLabel}}</label>
+          <input
+            type="text"
+            id="weather-provider-country-input"
+            class="form-control"
+            name="country"
+            [(ngModel)]="countryInput"
+            autocomplete="off"
+            required>
+          <label for="api-key-input" class="form-label">{{TextStringsUtil.DialogWeatherProviderLocationCityInputLabel}}</label>
+          <input
+            type="text"
+            id="weather-provider-city-input"
+            class="form-control"
+            name="city"
+            [(ngModel)]="cityInput"
+            autocomplete="off"
+            required>
+          @if (errorMessage) {
+            <p class="text-danger">{{errorMessage}}</p>
+          }
+        </div>
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="button" class="btn btn-secondary" (click)="close()">{{TextStringsUtil.DialogWeatherProviderLocationCancelBtnTitle}}</button>
+          <button type="submit" class="btn btn-primary" [disabled]="saving">{{TextStringsUtil.DialogWeatherProviderLocationSaveBtnTitle}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</dialog>

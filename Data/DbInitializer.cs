@@ -27,6 +27,7 @@ public class DbInitializer
                 RowColumnId INTEGER NOT NULL,
                 Name TEXT,
                 URL TEXT,
+                Type TEXT,
                 IconUrl TEXT,
                 FOREIGN KEY(RowColumnId) REFERENCES RowColumn(Id) ON DELETE CASCADE);
 
@@ -64,6 +65,29 @@ public class DbInitializer
                  Description TEXT NOT NULL,
                  Icon TEXT NOT NULL,
                  FOREIGN KEY(WidgetType) REFERENCES WidgetType(Id));
+
+                CREATE TABLE IF NOT EXISTS ProviderKeys(
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Provider TEXT NOT NULL UNIQUE,
+                EncryptedKey TEXT NOT NULL,
+                Status TEXT NOT NULL,
+                LastValidatedAt TEXT);
+
+                CREATE TABLE IF NOT EXISTS WeatherData(
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                CardId INTEGER NOT NULL,
+                Location TEXT NOT NULL UNIQUE,
+                Address TEXT NOT NULL,
+                Timezone TEXT NOT NULL,
+                Description TEXT NOT NULL,
+                Conditions TEXT NOT NULL,
+                Temp REAL NOT NULL,
+                FeelsLike REAL NOT NULL,
+                Humidity REAL NOT NULL,
+                WindSpeed REAL NOT NULL,
+                WindDir REAL NOT NULL,
+                FetchedAt TEXT NOT NULL,
+                FOREIGN KEY(CardId) REFERENCES Card(Id));
 
                 INSERT INTO WidgetType(Name)
                 SELECT 'Empty'

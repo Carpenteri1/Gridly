@@ -5,16 +5,18 @@ namespace Gridly.Configuration;
 
 public static class RateLimiterPolicySettings
 {
-    public const string VersionPolicy = "version";
-    public const string WeatherPolicy = "weather";
-    
+    public const string VersionProviderPolicy = "version";
+    public const string WeatherProviderPolicy = "weather";
+    public const string RemoteProviderKeyPolicy = "remoteProviderKey";
+
     public static async Task<IServiceCollection> AddTokenBucketRateLimiter(this IServiceCollection services) {
 
         var versionRate = new VersionRateLimiterModel();
         var weatherRate = new WeatherRateLimiterModel();
+        var providerKeyRate = new ProviderKeyRateLimiterModel();
 
         services.AddRateLimiter(_ => _
-            .AddTokenBucketLimiter(VersionPolicy, opt =>
+            .AddTokenBucketLimiter(VersionProviderPolicy, opt =>
             {
                 opt.TokenLimit = versionRate.Limit;
                 opt.QueueLimit = versionRate.QueueLimit;
@@ -22,14 +24,23 @@ public static class RateLimiterPolicySettings
                 opt.TokensPerPeriod = versionRate.TokensPerPeriod;
                 opt.AutoReplenishment = true;
             })
-            .AddTokenBucketLimiter(WeatherPolicy, opt =>
+            .AddTokenBucketLimiter(WeatherProviderPolicy, opt =>
             {
                 opt.TokenLimit = weatherRate.Limit;
                 opt.QueueLimit = weatherRate.QueueLimit;
                 opt.ReplenishmentPeriod = weatherRate.Window;
                 opt.TokensPerPeriod = weatherRate.TokensPerPeriod;
                 opt.AutoReplenishment = true;
+            })
+            .AddTokenBucketLimiter(RemoteProviderKeyPolicy, opt =>
+            {
+                opt.TokenLimit = providerKeyRate.Limit;
+                opt.QueueLimit = providerKeyRate.QueueLimit;
+                opt.ReplenishmentPeriod = providerKeyRate.Window;
+                opt.TokensPerPeriod = providerKeyRate.TokensPerPeriod;
+                opt.AutoReplenishment = true;
             }));
+        
         return services;
     }
     

@@ -9,6 +9,7 @@ public class CardModel
     [JsonPropertyName("rowColumnId")] public int? RowColumnId { get; set; }
     [JsonPropertyName("name")] public string? Name { get; set; }
     [JsonPropertyName("url")] public string? Url { get; set; }
+    [JsonPropertyName("type")] public string? Type { get; set; }
     [JsonPropertyName("iconData")] public IconModel? IconData { get; set; }
     [JsonPropertyName("iconUrl")] public string? IconUrl { get; set; }
     [JsonPropertyName("settings")] public SettingsModel? Settings { get; set; }

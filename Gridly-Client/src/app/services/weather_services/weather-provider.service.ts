@@ -1,0 +1,61 @@
+import {inject, Injectable, Signal} from "@angular/core";
+import { firstValueFrom, Observable, Subject} from "rxjs";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { HttpErrorResponse } from "@angular/common/http";
+import {WeatherModel} from "../../models/weather.Model";
+import {WeatherEndpointService} from "../endpoint_services/weather.endpoint.service";
+import {ProviderKeysService} from "../provider_key_services/provider-keys.service";
+import {WeatherDataDto} from "../../dtos/weatherDataDto";
+
+@Injectable({providedIn: 'root'})
+export class WeatherProviderService {
+  private readonly weatherSubject = new Subject<WeatherModel>();
+  private readonly weather$ = new Observable<WeatherModel>();
+  readonly weather!: Signal<WeatherModel | undefined>;
+  #api = inject(WeatherEndpointService);
+  #providerKeyService= inject(ProviderKeysService);
+
+  constructor() {
+    this.weather$ = this.weatherSubject.asObservable();
+    this.weather = toSignal(this.weather$);
+  }
+
+    private save$ = (dto: WeatherDataDto) => this.#api.save(dto);
+    private getWeather$ = (location: string) => this.#api.get(location);
+    private getVisualCrossingData$ = (location: string) => this.#api.getvisualcrossingdata(location);
+
+    save = async (dto: WeatherDataDto) => {
+      await firstValueFrom(this.save$(dto))
+    };
+
+  async getWeather(location: string): Promise<[weather: WeatherModel | undefined, status: number]> {
+      try {
+        const weather = await firstValueFrom(this.getWeather$(location));
+        this.weatherSubject.next(weather);
+        return [weather, 200];
+      } catch (error) {
+        if (error instanceof HttpErrorResponse) {
+          if (error.status === 401 || error.status === 412) {
+            this.#providerKeyService.promptForInvalidKey();
+          }
+          return [undefined, error.status];
+        }
+        return [undefined, 0];
+      }
+    }
+    async getVisualCrossingData(location: string): Promise<[weather: WeatherModel | undefined, status: number]> {
+      try {
+        const weather = await firstValueFrom(this.getVisualCrossingData$(location));
+        this.weatherSubject.next(weather);
+        return [weather, 200];
+      } catch (error) {
+        if (error instanceof HttpErrorResponse) {
+          if (error.status === 401 || error.status === 412) {
+            this.#providerKeyService.promptForInvalidKey();
+          }
+          return [undefined, error.status];
+        }
+        return [undefined, 0];
+      }
+    }
+}

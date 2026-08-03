@@ -8,8 +8,8 @@ public class QueryStrings
     SELECT * FROM RowColumn WHERE Id = last_insert_rowid();";
     
     public const string InsertToCardQuery = @"
-    INSERT INTO Card (RowColumnId, IndexPosition, Name, Url, IconUrl) 
-    VALUES (@RowColumnId, @IndexPosition, @Name, @Url, @IconUrl);
+    INSERT INTO Card (RowColumnId, IndexPosition, Name, Url, IconUrl, Type) 
+    VALUES (@RowColumnId, @IndexPosition, @Name, @Url, @IconUrl, @Type);
     SELECT * FROM Card WHERE Id = last_insert_rowid();";
 
     public const string InsertToSettingsQuery = @"
@@ -35,6 +35,7 @@ public class QueryStrings
         co.Name AS CardName, 
         co.Url, 
         co.IconUrl, 
+        co.Type AS CardType,
         cs.ImageHidden AS ImageHidden, 
         cs.TitleHidden AS TitleHidden,
         cs.Width AS Width,
@@ -77,7 +78,8 @@ public class QueryStrings
         IndexPosition = @IndexPosition,
         RowColumnId = @RowColumnId,
         Url = @Url, 
-        IconUrl = @IconUrl
+        IconUrl = @IconUrl,
+        Type = @Type
         /**where**/";
     
     public const string UpdateBatchCardQuery = @"
@@ -110,10 +112,51 @@ public class QueryStrings
     public const string DeleteFromCardQuery = "DELETE FROM Card /**where**/";
     public const string DeleteFromIconsConnectedQuery = "DELETE FROM IconsConnected /**where**/";
     public const string DeleteFromIconQuery = "DELETE FROM Icon /**where**/";
+    public const string DeleteFromWeatherQuery = "DELETE FROM Weather /**where**/";
     
     public const string BatchDeleteRowColumnQuery = @"
     DELETE FROM RowColumn
     WHERE Id IN @RowColumnId;";
+
+    public const string UpsertProviderKeyQuery = @"
+    INSERT INTO ProviderKeys (Provider, EncryptedKey, Status, LastValidatedAt)
+    VALUES (@Provider, @EncryptedKey, @Status, @LastValidatedAt)
+    ON CONFLICT(Provider) DO UPDATE SET
+        EncryptedKey = excluded.EncryptedKey,
+        Status = excluded.Status,
+        LastValidatedAt = excluded.LastValidatedAt;";
+
+    public const string UpdateProviderKeyStatusQuery = @"
+    UPDATE ProviderKeys
+    SET Status = @Status,
+        LastValidatedAt = @LastValidatedAt
+    WHERE Provider = @Provider;";
+
+    public const string SelectProviderKeyQuery = @"
+    SELECT Id, Provider, EncryptedKey, Status, LastValidatedAt
+    FROM ProviderKeys
+    WHERE Provider = @Provider;";
+
+    public const string UpsertWeatherDataQuery = @"
+    INSERT INTO WeatherData (CardId, Location, Address, Timezone, Description, Conditions, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt)
+    VALUES (@CardId, @Location, @Address, @Timezone, @Description, @Conditions, @Temp, @FeelsLike, @Humidity, @WindSpeed, @WindDir, @FetchedAt)
+    ON CONFLICT(Location) DO UPDATE SET
+        CardId = excluded.CardId,
+        Address = excluded.Address,
+        Timezone = excluded.Timezone,
+        Description = excluded.Description,
+        Conditions = excluded.Conditions,
+        Temp = excluded.Temp,
+        FeelsLike = excluded.FeelsLike,
+        Humidity = excluded.Humidity,
+        WindSpeed = excluded.WindSpeed,
+        WindDir = excluded.WindDir,
+        FetchedAt = excluded.FetchedAt;";
+
+    public const string SelectWeatherDataQuery = @"
+    SELECT Id, CardId, Location, Address, Timezone, Description, Conditions, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt
+    FROM WeatherData
+    WHERE Location = @Location;";
 
     public const string JoinIconDataQuery = "Icon i ON i.Id = ic.IconId";
     public const string JoinIconsConnectedDataQuery = "IconsConnected ic ON ic.CardId = co.Id";

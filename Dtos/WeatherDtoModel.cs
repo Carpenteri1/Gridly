@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Gridly.Models;
 
 namespace Gridly.Dtos;
 

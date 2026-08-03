@@ -43,6 +43,7 @@ export class TextStringsUtil {
   static readonly MenuExitEditButtonTitle = "Exit Edit";
   static readonly MenuDropDownDragTitle = "Move cards";
   static readonly MenuDropDownResizeTitle = "Resize cards";
+  static readonly MenuAddProviderKeysButtonTitle = "Add provider key";
 
   static readonly CardAddedFailedEndPointMessage = "Failed to add new card";
   static readonly CardGetByIdFailedEndPointMessage = "Failed to get card by id";
@@ -58,4 +59,23 @@ export class TextStringsUtil {
 
   static readonly EmptyCardTitle = "Empty Card";
   static readonly EmptyCardDescription = "Click to customize";
+
+  static readonly DialogApiKeyTitle = "Add weather provider key";
+  static readonly DialogApiKeyDescription = "Paste your weather provider API key. It is stored securely and never shown again.";
+  static readonly DialogApiKeyFoundApiKeyAt = "You can find your key at https://www.visualcrossing.com";
+  static readonly DialogApiKeyInvalidMessage = "The stored key was rejected. Please paste a new one.";
+  static readonly DialogApiKeyInputLabel = "API key";
+  static readonly DialogApiKeySaveBtnTitle = "Save";
+  static readonly DialogApiKeyCancelBtnTitle = "Cancel";
+  static readonly DialogApiKeySaveFailedMessage = "Failed to save the API key. Please try again.";
+
+  static readonly DialogWeatherProviderLocationTitle = "Add location for weather provider";
+  static readonly DialogWeatherProviderLocationCountryInputLabel = "Country";
+  static readonly DialogWeatherProviderLocationCityInputLabel = "City";
+  static readonly DialogWeatherProviderLocationSaveBtnTitle = "Save";
+  static readonly DialogWeatherProviderLocationCancelBtnTitle = "Cancel";
+  static readonly DialogWeatherProviderLocationSaveFailedMessage = "Failed to save. Please try again.";
+  static readonly DialogWeatherProviderLocationSaveInvalidKeyFailedMessage = "Failed to save. Invalid Provider Key.";
+  static readonly DialogWeatherProviderLocationSaveLocationNotFoundFailedMessage = "Failed to save. Location not found.";
+
 }

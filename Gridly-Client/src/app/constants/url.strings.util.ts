@@ -5,6 +5,7 @@ export class UrlStringsUtil {
   static readonly VersionUrl = '/api/version/';
   static readonly WidgetUrl = '/api/widget/';
   static readonly WeatherUrl = '/api/weather/';
+  static readonly ProviderKeyUrl = '/api/providerkeys/';
 
   static readonly CardUrlGet = this.CardUrl+'get';
 
@@ -20,7 +21,12 @@ export class UrlStringsUtil {
 
   static readonly GetWeatherUrl = this.WeatherUrl+'get';
   static readonly GetVisualCrossingDataURL = this.WeatherUrl+'getvisualcrossingdata';
+  static readonly SaveWeatherUrl = this.WeatherUrl+'save';
   static readonly GetUrl = this.WeatherUrl+'get';
+
+  static readonly GetLocalProviderKeyStatusUrl = this.ProviderKeyUrl+'local/provider/status';
+  static readonly GetRemoteProviderKeyStatusUrl = this.ProviderKeyUrl+'remote/provider/status';
+  static readonly SaveProviderKeyUrl = this.ProviderKeyUrl+'save';
 
   static readonly GitHubReleaseURL = 'https://github.com/Carpenteri1/Gridly/releases/tag/';
 }
