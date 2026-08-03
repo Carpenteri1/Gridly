@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlStringsUtil} from "../../constants/url.strings.util";
 import {Observable, take} from "rxjs";
 import {WeatherModel} from "../../models/weather.Model";
+import {WeatherDataDto} from "../../dtos/weatherDataDto";
 
 @Injectable({
   providedIn: 'root'
@@ -11,14 +12,15 @@ import {WeatherModel} from "../../models/weather.Model";
 export class WeatherEndpointService{
   private http = inject(HttpClient);
 
-  get(): Observable<WeatherModel> {
-    //TODO SearchTerm will be added
-    const params = new HttpParams().set('SearchTerm', 'The SearchTerm');
+  get(location: string): Observable<WeatherModel> {
+    const params = new HttpParams().set('SearchTerm', location);
     return this.http.get<WeatherModel>(UrlStringsUtil.GetWeatherUrl,{params}).pipe(take(1));
   }
-  getvisualcrossingdata(): Observable<WeatherModel> {
-    //TODO SearchTerm will be added
-    const params = new HttpParams().set('SearchTerm', 'The SearchTerm');
+  getvisualcrossingdata(location: string): Observable<WeatherModel> {
+    const params = new HttpParams().set('SearchTerm', location);
     return this.http.get<WeatherModel>(UrlStringsUtil.GetVisualCrossingDataURL,{params}).pipe(take(1));
+  }
+  save(weather: WeatherDataDto){
+    return this.http.post(UrlStringsUtil.SaveWeatherUrl, {weather}).pipe(take(1));
   }
 }

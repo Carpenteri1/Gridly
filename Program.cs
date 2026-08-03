@@ -3,6 +3,8 @@ using Gridly.EndPoints;
 using Gridly.Repositories;
 using Gridly.Services;
 using Gridly.Data;
+using Gridly.helpers;
+using Microsoft.AspNetCore.DataProtection;
 
 var appDirectory = Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
 Directory.SetCurrentDirectory(appDirectory);
@@ -25,16 +27,21 @@ builder.Services.AddScoped<IVersionEndPoint, VersionEndPoint>();
 builder.Services.AddScoped<IWeatherEndPoint, WeatherEndPoint>();
 builder.Services.AddScoped<IClockEndPoint, ClockEndPoint>();
 builder.Services.AddScoped<IClockRepository, ClockRepository>();
+builder.Services.AddScoped<IProvidersEndPoint, ProvidersEndPoint>();
 builder.Services.AddScoped<ICardRepository,CardRepository>();
 builder.Services.AddScoped<IColumnRowRepository,ColumnRowRepository>();
 builder.Services.AddScoped<ISettingsRepository,SettingsRepository>();
 builder.Services.AddScoped<IIconRepository,IconRepository>();
 builder.Services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
 builder.Services.AddScoped<IWidgetRepository,WidgetRepository>();
+builder.Services.AddScoped<ILocalProvidersRepository,LocalProversRepository>();
+builder.Services.AddScoped<IWeatherRepository,WeatherRepository>();
+builder.Services.AddScoped<IProvidersEndPointExtensions,ProvidersEndPointExtensions>();
 
 builder.Services.AddSingleton<IMemoryCashingService, MemoryCashingServices>();
 builder.Services.AddSingleton<IHttpClientServices, HttpClientServices>();
 builder.Services.AddSingleton<IFileService, FileService>();
+builder.Services.AddSingleton<IProviderKeysProtectionService, ProviderKeysProtectionService>();
 builder.Services.AddSingleton(typeof(IDataConverter<>), typeof(DataConverter<>));
 
 builder.Services.AddMediatR(cfg => 

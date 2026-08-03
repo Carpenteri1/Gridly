@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { DialogDirective } from '../../../directives/dialog.directive';
 import { BaseDialogComponent } from '../../../directives/base-dialog.directive';
-import { CardTypes } from '../../../types/card.types.enum';
+import { CardTypes } from '../../../enums/card.types.enum';
 import { CardOptionModel } from '../../../models/cardOptions.Model';
 import { CardModel } from '../../../models/card.Model';
 import { DialogService } from '../../../services/dialog_services/dialog.service';

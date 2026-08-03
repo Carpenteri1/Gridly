@@ -1,4 +1,6 @@
+using Gridly.Dtos;
 using Gridly.EndPoints;
+using Gridly.Factories;
 using Gridly.Models;
 using Gridly.Repositories;
 using Gridly.Services;
@@ -118,6 +120,19 @@ internal sealed class FakeClockEndPoint : IClockEndPoint
     }
 }
 
+
+internal sealed class FakeWeatherEndPoint : IWeatherEndPoint
+{
+    public int GetCallCount { get; private set; }
+    public (int Status, WeatherModel? Weather) Result { get; set; }
+
+    public Task<(int, WeatherModel? Weather)> Get(string location, string rawKey)
+    {
+        GetCallCount++;
+        return Task.FromResult(Result);
+    }
+}
+
 internal sealed class FakeClockRepository : IClockRepository
 {
     private readonly Dictionary<string, (ClockModel? Clock, DateTime? FetchedAt)> _stored = new();
@@ -137,5 +152,83 @@ internal sealed class FakeClockRepository : IClockRepository
         LastUpsertedLocation = location;
         _stored[location] = (clock, DateTime.UtcNow);
         return Task.FromResult(true);
+    }
+
+}
+
+internal sealed class FakeWeatherRepository : IWeatherRepository
+{
+    private readonly Dictionary<string, (WeatherModel? Weather, DateTime? FetchedAt)> _stored = new();
+
+    public int UpsertCallCount { get; private set; }
+    public string? LastUpsertedLocation { get; private set; }
+
+    public void Seed(string location, WeatherModel weather, DateTime fetchedAt) =>
+        _stored[location] = (weather, fetchedAt);
+
+    public Task<(WeatherModel? Weather, DateTime? FetchedAt)> Get(string location) =>
+        Task.FromResult(_stored.TryGetValue(location, out var value) ? value : (null, null));
+
+    public Task<bool> Delete(int CardId)
+    {
+        UpsertCallCount++;
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> Upsert(WeatherDataDtoModel weather)
+    {
+        UpsertCallCount++;
+        LastUpsertedLocation = weather.Location;
+        _stored[weather.Location] = (WeatherDataFactory.Create(weather), DateTime.UtcNow);
+        return Task.FromResult(true);
+    }
+}
+
+internal sealed class FakeLocalProvidersRepository : ILocalProvidersRepository
+{
+    public ProviderKeyDtoModel? StoredKey { get; set; }
+    public int UpsertCallCount { get; private set; }
+    public int UpdateStatusCallCount { get; private set; }
+    public string? LastUpdatedStatus { get; private set; }
+
+    public Task<ProviderKeyDtoModel?> Get(string provider) => Task.FromResult(StoredKey);
+
+    public Task<bool> Upsert(string provider, string encryptedKey, string status)
+    {
+        UpsertCallCount++;
+        StoredKey = new ProviderKeyDtoModel
+        {
+            Provider = provider,
+            EncryptedKey = encryptedKey,
+            Status = status,
+            LastValidatedAt = DateTime.UtcNow
+        };
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> UpdateStatus(string provider, string status)
+    {
+        UpdateStatusCallCount++;
+        LastUpdatedStatus = status;
+        if (StoredKey is not null) StoredKey.Status = status;
+        return Task.FromResult(true);
+    }
+}
+
+internal sealed class FakeProviderKeysProtectionService : IProviderKeysProtectionService
+{
+    public string Protect(string rawKey) => $"protected:{rawKey}";
+    public string Unprotect(string encryptedKey) => encryptedKey.Replace("protected:", "");
+}
+
+internal sealed class FakeProvidersEndPoint : IProvidersEndPoint
+{
+    public int ValidateCallCount { get; private set; }
+    public int Result { get; set; } = StatusCodes.Status200OK;
+
+    public Task<int> Validate(string provider)
+    {
+        ValidateCallCount++;
+        return Task.FromResult(Result);
     }
 }

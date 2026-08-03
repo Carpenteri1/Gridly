@@ -4,7 +4,7 @@ import { DialogService } from '../../../services/dialog_services/dialog.service'
 import { CardModel } from '../../../models/card.Model';
 import { IconModel } from '../../../models/icon.Model';
 import { AddCardDialogComponent } from './add-card-dialog.component';
-import { CardTypes } from '../../../types/card.types.enum';
+import { CardTypes } from '../../../enums/card.types.enum';
 import { Widget } from '../../../interfaces/widget.Interface';
 
 describe('AddCardDialogComponent', () => {

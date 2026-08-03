@@ -1,11 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IconModel } from '../../models/icon.Model';
 import { SettingsModel } from '../../models/settings.Model';
-import { ImageExtensionsType } from '../../types/image.extensions.type.enum';
+import { ImageExtensionsType } from '../../enums/image.extensions.type.enum';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
+  private _addProviderDialog = signal<number | null>(null);
+  private _setProviderLocationDialog = signal<number | null>(null);
+  private _editCardDialog = signal<number | null>(null);
+  private _deleteCardDialog = signal<number | null>(null);
+
+  readonly isAddProviderDialogOpen = this._addProviderDialog.asReadonly();
+  readonly isSetProviderLocationDialogOpen = this._setProviderLocationDialog.asReadonly();
+  readonly isEditDialogOpen = this._editCardDialog.asReadonly();
+  readonly isDeleteDialogOpen = this._deleteCardDialog.asReadonly();
+
   readonly resetFile$ = new Subject<void>();
   readonly #supportedImageExtensions: readonly string[] = [
     ImageExtensionsType.Svg,
@@ -14,6 +24,16 @@ export class DialogService {
     ImageExtensionsType.Jpeg,
     ImageExtensionsType.Ico,
   ];
+
+  closeAddProviderKeyDialog = () => this._addProviderDialog.update(() => null);
+  closeSetProviderLocationDialog = () => this._setProviderLocationDialog.update(() => null);
+  closeEditDialog = () => this._editCardDialog.update(() => null);
+  closeDeleteDialog = () => this._deleteCardDialog.update(() => null);
+
+  openProviderKeyDialog = (cardId: number) => this._addProviderDialog.update(() => cardId);
+  openSetProviderLocationDialog = (cardId: number) => this._setProviderLocationDialog.update(() => cardId);
+  openEditDialog = (cardId: number) => this._editCardDialog.update(() => cardId);
+  openDeleteDialog = (cardId: number) => this._deleteCardDialog.update(() => cardId);
 
   async onFileUpload(event: Event): Promise<IconModel | undefined> {
     const fileInput = event.target as HTMLInputElement | null;

@@ -1,9 +1,9 @@
-using System.Text.Json.Serialization;
 
 namespace Gridly.Models;
 
 public class WeatherModel 
 { 
+    public int CardId { get; set; }
     public string Location { get; set; } 
     public string Address { get; set; }
     public string Timezone { get; set; }

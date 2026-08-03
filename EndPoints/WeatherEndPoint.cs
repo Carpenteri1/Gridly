@@ -1,6 +1,7 @@
 using Gridly.Constants;
 using Gridly.Dtos;
 using Gridly.Factories;
+using Gridly.helpers;
 using Gridly.Models;
 using Gridly.Services;
 
@@ -8,22 +9,19 @@ namespace Gridly.EndPoints;
 
 public class WeatherEndPoint(
     IDataConverter<WeatherDtoModel> dataConverter,
-    IHttpClientServices httpClientServices) : IWeatherEndPoint
+    IProvidersEndPointExtensions providersEndPointExtensions) : IWeatherEndPoint
 {
-    public async Task<(bool, WeatherModel?)> Get(string location)
+    public async Task<(int, WeatherModel? Weather)> Get(string location, string rawKey)
     {
-        var APIKEY = string.Empty;
-        if (string.IsNullOrEmpty(APIKEY)) return (false, null);
-        //TODO add api key
-        var url = string.Format(
+        var (status, body) = await providersEndPointExtensions.CallWeatherProvider(
+            location,
             EndpointStrings.GetVisualCrossingWeatherData,
-            Uri.EscapeDataString(location),
-            APIKEY);
+            rawKey);
 
-        var (success, jsonString) = await httpClientServices.Get(url);
-        if (!success) return (false, null);
+        var dto = dataConverter.DeserializeJson(body);
 
-        var dto = dataConverter.DeserializeJson(jsonString);
-        return dto is null ? (false, null) : (true, WeatherFactory.Create(dto));
+        return dto is null
+            ? (status, null)
+            : (status, WeatherFactory.Create(dto));
     }
 }

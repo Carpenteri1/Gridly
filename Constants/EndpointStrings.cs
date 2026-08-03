@@ -7,4 +7,7 @@ public class EndpointStrings
     public const string materialIconsEndPoint = "https://raw.githubusercontent.com/google/material-design-icons/master/font/MaterialIcons-Regular.codepoints";
     public const string GetVisualCrossingWeatherData = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{0}?key={1}";
     public const string GetTimeApiCurrentZone = "https://timeapi.io/api/v1/time/current/zone?timeZone={0}";
+    
+    public const string VisualCrossingProvider = "VisualCrossing";
+    public const string VisualCrossingProbeLocation = "London";
 }

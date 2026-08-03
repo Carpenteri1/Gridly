@@ -25,9 +25,9 @@ public class DbInitializer
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 IndexPosition INTEGER NOT NULL,
                 RowColumnId INTEGER NOT NULL,
-                Type TEXT,
                 Name TEXT,
                 URL TEXT,
+                Type TEXT,
                 IconUrl TEXT,
                 FOREIGN KEY(RowColumnId) REFERENCES RowColumn(Id) ON DELETE CASCADE);
 
@@ -74,6 +74,29 @@ public class DbInitializer
                 JsonPayload TEXT NOT NULL,
                 FetchedAt TEXT NOT NULL);
 
+                CREATE TABLE IF NOT EXISTS ProviderKeys(
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Provider TEXT NOT NULL UNIQUE,
+                EncryptedKey TEXT NOT NULL,
+                Status TEXT NOT NULL,
+                LastValidatedAt TEXT);
+
+                CREATE TABLE IF NOT EXISTS WeatherData(
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                CardId INTEGER NOT NULL,
+                Location TEXT NOT NULL UNIQUE,
+                Address TEXT NOT NULL,
+                Timezone TEXT NOT NULL,
+                Description TEXT NOT NULL,
+                Conditions TEXT NOT NULL,
+                Temp REAL NOT NULL,
+                FeelsLike REAL NOT NULL,
+                Humidity REAL NOT NULL,
+                WindSpeed REAL NOT NULL,
+                WindDir REAL NOT NULL,
+                FetchedAt TEXT NOT NULL,
+                FOREIGN KEY(CardId) REFERENCES Card(Id));
+
                 INSERT INTO WidgetType(Name)
                 SELECT 'Empty'
                 WHERE NOT EXISTS (SELECT 1 FROM WidgetType WHERE Id = 1);
@@ -92,8 +115,8 @@ public class DbInitializer
 
                 INSERT INTO Widget(WidgetType, Label, Description, Icon)
                 SELECT Id, 'Weather widget', '', 'clouds'
-                FROM WidgetType
-                WHERE Name = 'Weather'
+                FROM WidgetType 
+                WHERE Name = 'Weather' 
                   AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 1);
 
                 INSERT INTO Widget(WidgetType, Label, Description, Icon)

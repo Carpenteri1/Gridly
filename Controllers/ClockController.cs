@@ -13,7 +13,7 @@ public class ClockController(IMediator mediator) : ControllerBase
     [HttpGet("get")]
     public async Task<IResult> Get([FromQuery] GetClockQuery query) => await mediator.Send(query);
 
-    [EnableRateLimiting(RateLimiterPolicySettings.ClockPolicy)]
+    [EnableRateLimiting(RateLimiterPolicySettings.ClockProviderPolicy)]
     [HttpGet("gettimeapidata")]
     public async Task<IResult> GetClockData([FromQuery] GetClockDataQuery query) => await mediator.Send(query);
 }
