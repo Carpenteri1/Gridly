@@ -8,7 +8,7 @@ public class ProvidersEndPoint(IProvidersEndPointExtensions providersEndPointExt
     public async Task<int> Validate(string rawKey)
     {
         var (statusCode, _) = await providersEndPointExtensions.CallWeatherProvider(
-            "London",
+            EndpointStrings.VisualCrossingProbeLocation,
             EndpointStrings.GetVisualCrossingWeatherData, 
             rawKey);
         

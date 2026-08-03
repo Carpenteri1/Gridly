@@ -2,7 +2,7 @@ import {WeatherModel} from "../models/weather.Model";
 import {WeatherDataDto} from "../dtos/weatherDataDto";
 
 export class WeatherDataDtoFactory {
-  public static create(weather: WeatherModel): WeatherDataDto {
+  public static createDto(weather: WeatherModel): WeatherDataDto {
     const dto = new WeatherDataDto();
 
     dto.cardId = weather.cardId;

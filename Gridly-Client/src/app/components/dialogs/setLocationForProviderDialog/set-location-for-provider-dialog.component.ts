@@ -45,7 +45,7 @@ export class SetLocationForProviderDialogComponent extends BaseDialogComponent{
       this.countryInput = '';
       this.cityInput = '';
       weather.cardId = this.id;
-      const dto = WeatherDataDtoFactory.create(weather);
+      const dto = WeatherDataDtoFactory.createDto(weather);
       await this.#weatherProviderService.save(dto);
       this.close();
     } else if (status === 401 || status === 412) {
