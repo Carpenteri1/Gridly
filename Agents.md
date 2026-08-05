@@ -19,8 +19,8 @@ Defines run profiles per environment (e.g. plain HTTP for local development, and
 ### wwwroot
 The static/published output folder for the frontend. A build pipeline compiles the frontend app and moves the compiled output into this folder, then cleans up any intermediate build artifacts. The same pipeline can also wrap the backend build/run steps, so the whole stack can be built and started from one command.
 
-### Commands
-One type per operation, representing a single unit of intent (a query or an action) that flows through the request-dispatch layer. Controllers construct these and pass them along; they carry whatever input data the corresponding handler needs. Grouped by feature — reads and writes each get their own type rather than sharing one generic request shape.
+### CQRS (Commands, Queries & Behaviors)
+Everything that flows through the request-dispatch layer lives under a single `CQRS/` folder, split into three subfolders: `Commands` for write operations, `Querys` for read operations, and `Behaviors` for pipeline behaviors that wrap requests with cross-cutting concerns (e.g. validation or logging) — currently scaffolded and empty, ready for the first behavior to be added. One type per operation, each carrying whatever input data its handler needs; controllers construct these and pass them to the dispatcher. Like the rest of the backend, files sit flat within `Commands`/`Querys` — organized by technical layer, not grouped into per-feature subfolders.
 
 ### Handlers
 One handler per feature area, each responsible for one or more related operations. This is where the actual business logic lives — a handler decides what to do with an incoming request, and delegates the low-level work to a repository or an outbound-call layer rather than doing that work itself. A single handler can own multiple related operations if it makes sense to group them.
@@ -55,7 +55,7 @@ Organized to mirror the main source layout — one test area per layer (handlers
 ### Git workflow, branching & pull requests
 The repo uses a two-tier branch model, not direct-to-main feature branches:
 1. **`sandbox`** is the integration branch. All feature/fix work branches off `sandbox`, not off `main`.
-2. Branch names follow the pattern `issue-<number>-<short-kebab-description>` (or `#<number>-<short-description>`), tied to the GitHub issue being worked.
+2. Branch names follow the pattern `issue-<number>-<short-kebab-description>` (or `#<number>-<short-description>`), tied to the GitHub issue being worked. Maintenance, refactor, and CI/release-pipeline work that isn't tied to a tracked issue may instead use a short descriptive branch name with no issue-number prefix (e.g. `cqrs-refractor`, `fix-self-contained-build`).
 3. While a branch is in progress, periodically merge `sandbox` back into it to stay current, rather than rebasing.
 4. Open the pull request against **`sandbox`**, not `main`. A pull request into `main` is automatically rejected unless its source branch is literally `sandbox` — `main` only ever receives `sandbox` as a whole, in a batch, when it's time to release.
 5. Every push and every pull request (regardless of target branch) triggers an automated pipeline: install and build the frontend, lint it, run its test suite, then restore/build/test the backend. Treat this as the merge gate — don't consider a change ready for review until it passes. A separate static/security scan also runs against pull requests.
