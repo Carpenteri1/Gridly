@@ -49,11 +49,11 @@ export class SetLocationForProviderDialogComponent extends BaseDialogComponent{
       await this.#weatherProviderService.save(dto);
       this.close();
     } else if (status === 401 || status === 412) {
-      this.errorMessage = this.TextStringsUtil.DialogWeatherProviderLocationSaveInvalidKeyFailedMessage;
+      this.errorMessage = this.locale.weatherProviderLocationDialog.text.saveInvalidKeyFailedMessage;
     } else if (status === 404) {
-      this.errorMessage = this.TextStringsUtil.DialogWeatherProviderLocationSaveLocationNotFoundFailedMessage;
+      this.errorMessage = this.locale.weatherProviderLocationDialog.text.saveLocationNotFoundFailedMessage;
     } else {
-      this.errorMessage = this.TextStringsUtil.DialogWeatherProviderLocationSaveFailedMessage;
+      this.errorMessage = this.locale.weatherProviderLocationDialog.text.saveFailedMessage;
     }
   }
 }

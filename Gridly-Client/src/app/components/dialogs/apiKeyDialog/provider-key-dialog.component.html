@@ -1,7 +1,7 @@
 <dialog #dlg appDialogWindow [open]="open" [dialogId]="id" [id]="id" (openChange)="openChange.emit($event)" class="ew-dialog">
   <div class="ew-card">
     <header class="ew-header">
-      <h3 id="ew-title" class="m-0">{{TextStringsUtil.DialogApiKeyTitle}}</h3>
+      <h3 id="ew-title" class="m-0">{{locale.apiKeyDialog.text.title}}</h3>
       <button type="button" class="btn" aria-label="Close" (click)="close()">
         <i class="bi bi-x-lg"></i>
       </button>
@@ -9,12 +9,12 @@
     <div class="ew-body">
       <form (ngSubmit)="onSubmit()">
         <div class="mb-3">
-          <label for="api-key-input" class="form-label">{{TextStringsUtil.DialogApiKeyInputLabel}}</label>
+          <label for="api-key-input" class="form-label">{{locale.apiKeyDialog.text.inputLabel}}</label>
           @if (invalidKey) {
-            <p>{{TextStringsUtil.DialogApiKeyInvalidMessage}}</p>
+            <p>{{locale.apiKeyDialog.text.invalidMessage}}</p>
           } @else {
-            <p>{{TextStringsUtil.DialogApiKeyDescription}}<br>
-            {{TextStringsUtil.DialogApiKeyFoundApiKeyAt}}
+            <p>{{locale.apiKeyDialog.text.description}}<br>
+            {{locale.apiKeyDialog.text.foundApiKeyAt}}
             </p>
           }
           <input
@@ -30,8 +30,8 @@
           }
         </div>
         <div class="d-flex justify-content-end gap-2 mt-4">
-          <button type="button" class="btn btn-secondary" (click)="close()">{{TextStringsUtil.DialogApiKeyCancelBtnTitle}}</button>
-          <button type="submit" class="btn btn-primary" [disabled]="saving">{{TextStringsUtil.DialogApiKeySaveBtnTitle}}</button>
+          <button type="button" class="btn btn-secondary" (click)="close()">{{locale.apiKeyDialog.text.cancelBtnTitle}}</button>
+          <button type="submit" class="btn btn-primary" [disabled]="saving">{{locale.apiKeyDialog.text.saveBtnTitle}}</button>
         </div>
       </form>
     </div>

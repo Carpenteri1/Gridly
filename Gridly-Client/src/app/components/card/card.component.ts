@@ -1,6 +1,6 @@
 import {Component, computed, inject, Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TextStringsUtil } from '../../constants/text.strings.util';
+import { LocaleStringsService } from '../../services/locale_services/locale-strings.service';
 import { CardModel } from '../../models/card.Model';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { EditCardDialogComponent } from '../dialogs/editCardDialog/edit-card-dialog.component';
@@ -99,7 +99,7 @@ export class CardComponent {
     this.#dialogService.openProviderKeyDialog(this.card.id);
   }
 
-  protected readonly TextStringsUtil = TextStringsUtil;
+  protected readonly locale = inject(LocaleStringsService).locale;
 
   protected SaveProviderKey(dialogId: number) {
     if (dialogId === this.card.id) {

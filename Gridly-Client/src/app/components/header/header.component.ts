@@ -1,5 +1,5 @@
 import {Component, computed, inject} from "@angular/core";
-import { TextStringsUtil } from "../../constants/text.strings.util";
+import { LocaleStringsService } from "../../services/locale_services/locale-strings.service";
 import { CommonModule } from "@angular/common";
 import { VersionService } from "../../services/version_services/version.service";
 import { AddCardDialogComponent } from "../dialogs/addCardDialog/add-card-dialog.component";
@@ -28,7 +28,7 @@ export class HeaderComponent {
 
   _isAddProviderDialogOpen = this.#dialogService.isAddProviderDialogOpen
 
-  readonly TextStringsUtil = TextStringsUtil;
+  readonly locale = inject(LocaleStringsService).locale;
   addDialogActive = false;
 
   editActive = this.#gridService.inEditMode;

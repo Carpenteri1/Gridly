@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AsyncPipe } from '@angular/common';
 import { DialogService } from '../../../services/dialog_services/dialog.service';
+import { LocaleStringsService } from '../../../services/locale_services/locale-strings.service';
 import { CardModel } from '../../../models/card.Model';
 import { IconModel } from '../../../models/icon.Model';
 import { AddCardDialogComponent } from './add-card-dialog.component';
@@ -29,6 +30,13 @@ describe('AddCardDialogComponent', () => {
     } as IconModel)
   };
 
+  const localeStringsServiceMock = {
+    locale: {
+      addCardPicker: { text: { title: 'Add Card', description: 'Pick card type for your dashboard' } },
+      widget: { url: { get: '/api/widget/get' } },
+    },
+  };
+
   const widget = (widgetType: CardTypes): Widget => ({
     id: 1,
     widgetType,
@@ -40,7 +48,10 @@ describe('AddCardDialogComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [AddCardDialogComponent],
-      providers: [{ provide: DialogService, useValue: dialogServiceMock }],
+      providers: [
+        { provide: DialogService, useValue: dialogServiceMock },
+        { provide: LocaleStringsService, useValue: localeStringsServiceMock },
+      ],
     }).overrideComponent(AddCardDialogComponent, {
       add: { imports: [AsyncPipe] },
     });

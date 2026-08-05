@@ -9,12 +9,12 @@
     <div class="ew-body">
       <form (ngSubmit)="onSubmit()">
         <div class="mb-3">
-          <label for="name-input" class="form-label">{{TextStringsUtil.DialogDeleteCardTitle}}</label>
-          <p> {{TextStringsUtil.DialogDeleteCardDescription}}</p>
+          <label for="name-input" class="form-label">{{locale.deleteCardDialog.text.title}}</label>
+          <p> {{locale.deleteCardDialog.text.description}}</p>
         </div>
         <div class="d-flex justify-content-end gap-2 mt-4">
-          <button type="button" class="btn btn-secondary" (click)="close()">{{TextStringsUtil.DialogDeleteCardCancelBtnTitle}}</button>
-          <button type="submit" class="btn btn-primary">{{TextStringsUtil.DialogDeleteCardAcceptBtnTitle}}</button>
+          <button type="button" class="btn btn-secondary" (click)="close()">{{locale.deleteCardDialog.text.cancelBtnTitle}}</button>
+          <button type="submit" class="btn btn-primary">{{locale.deleteCardDialog.text.acceptBtnTitle}}</button>
         </div>
       </form>
     </div>

@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { GridComponent } from './components/grid/grid.component';
 import { HeaderComponent } from "./components/header/header.component";
-import {TextStringsUtil} from "./constants/text.strings.util";
+import { LocaleStringsService } from "./services/locale_services/locale-strings.service";
 
 @Component({
   selector: 'app-root',
@@ -9,6 +9,6 @@ import {TextStringsUtil} from "./constants/text.strings.util";
   imports: [GridComponent, HeaderComponent]
 })
 export class AppComponent {
-  title = TextStringsUtil.ClientTitle;
+  title = inject(LocaleStringsService).locale.app.text.title;
   isEditMode = false;
 }

@@ -42,7 +42,7 @@ export class ProviderKeyDialogComponent extends BaseDialogComponent{
       },
       error: () => {
         this.saving = false;
-        this.errorMessage = this.TextStringsUtil.DialogApiKeySaveFailedMessage;
+        this.errorMessage = this.locale.apiKeyDialog.text.saveFailedMessage;
       },
     });
   }
