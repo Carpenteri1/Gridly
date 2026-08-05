@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {UrlStringsUtil} from "../../constants/url.strings.util";
+import {LocaleStringsService} from "../locale_services/locale-strings.service";
 import {Observable, take} from "rxjs";
 import {Widget} from "../../interfaces/widget.Interface";
 
@@ -10,7 +10,8 @@ import {Widget} from "../../interfaces/widget.Interface";
 
 export class WidgetEndpointService{
   private http = inject(HttpClient);
+  private localeStrings = inject(LocaleStringsService);
   get(): Observable<Widget[]> {
-    return this.http.get<Widget[]>(UrlStringsUtil.GetWidgetUrl).pipe(take(1));
+    return this.http.get<Widget[]>(this.localeStrings.locale.widget.url.get).pipe(take(1));
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {VersionModel} from "../../models/version.Model";
-import {UrlStringsUtil} from "../../constants/url.strings.util";
+import {LocaleStringsService} from "../locale_services/locale-strings.service";
 import {Observable, take} from "rxjs";
 
 @Injectable({
@@ -10,8 +10,9 @@ import {Observable, take} from "rxjs";
 
 export class VersionEndpointService{
   private http = inject(HttpClient);
+  private localeStrings = inject(LocaleStringsService);
 
   get(): Observable<VersionModel> {
-    return this.http.get<VersionModel>(UrlStringsUtil.GetVersionUrl).pipe(take(1));
+    return this.http.get<VersionModel>(this.localeStrings.locale.version.url.get).pipe(take(1));
   }
 }
