@@ -19,8 +19,8 @@ Defines run profiles per environment (e.g. plain HTTP for local development, and
 ### wwwroot
 The static/published output folder for the frontend. A build pipeline compiles the frontend app and moves the compiled output into this folder, then cleans up any intermediate build artifacts. The same pipeline can also wrap the backend build/run steps, so the whole stack can be built and started from one command.
 
-### Commands
-One type per operation, representing a single unit of intent (a query or an action) that flows through the request-dispatch layer. Controllers construct these and pass them along; they carry whatever input data the corresponding handler needs. Grouped by feature — reads and writes each get their own type rather than sharing one generic request shape.
+### CQRS (Commands, Queries & Behaviors)
+Everything that flows through the request-dispatch layer lives under a single `CQRS/` folder, split into three subfolders: `Commands` for write operations, `Querys` for read operations, and `Behaviors` for pipeline behaviors that wrap requests with cross-cutting concerns (e.g. validation or logging) — currently scaffolded and empty, ready for the first behavior to be added. One type per operation, each carrying whatever input data its handler needs; controllers construct these and pass them to the dispatcher. Like the rest of the backend, files sit flat within `Commands`/`Querys` — organized by technical layer, not grouped into per-feature subfolders.
 
 ### Handlers
 One handler per feature area, each responsible for one or more related operations. This is where the actual business logic lives — a handler decides what to do with an incoming request, and delegates the low-level work to a repository or an outbound-call layer rather than doing that work itself. A single handler can own multiple related operations if it makes sense to group them.
@@ -36,6 +36,9 @@ Shared, cross-cutting infrastructure used across handlers, repositories, and out
 
 ### Models / Dtos / Factories
 Domain objects (the shapes returned to callers) live separately from data-transfer objects (the flatter shapes that mirror what comes back from a data query, including any joined data). A dedicated mapping layer converts between the two, keeping that conversion logic out of the repositories and handlers themselves.
+
+### Domain-Driven Design (DDD)
+The backend applies a lightweight DDD-inspired layering rather than a full rich-domain-model implementation: business concepts (`Card`, `Widget`, `ColumnRow`, `ProviderKey`, `Weather`, etc.) are named and modeled after the real-world dashboard concepts they represent, and that same vocabulary carries through consistently across `Models`, `Handlers`, `Repositories`, and `Commands`/`Queries`. Domain models themselves stay plain data holders with no embedded behavior — business logic and rules live in `Handlers`, not on the domain objects. There are no bounded contexts or per-domain module boundaries: the app is treated as a single domain, organized by technical layer (see Structure) rather than split into DDD-style modules.
 
 ### Configuration — Rate limiting
 Rate limiting policies are registered centrally and applied per-endpoint where needed, generally scoped to whichever endpoints call out to external services with their own usage limits — each such integration gets its own named policy with limits tuned to that external service's constraints, rather than one shared global policy. New outbound integrations should follow the same pattern: define a policy sized to that service's limits, and apply it explicitly to the endpoint(s) that use it. User-facing mutation endpoints that touch secrets (e.g. saving a third-party API key) warrant their own policy too, sized to deter abuse/brute-forcing rather than to an external service's quota.
@@ -55,14 +58,15 @@ Organized to mirror the main source layout — one test area per layer (handlers
 ### Git workflow, branching & pull requests
 The repo uses a two-tier branch model, not direct-to-main feature branches:
 1. **`sandbox`** is the integration branch. All feature/fix work branches off `sandbox`, not off `main`.
-2. Branch names follow the pattern `issue-<number>-<short-kebab-description>` (or `#<number>-<short-description>`), tied to the GitHub issue being worked.
-3. While a branch is in progress, periodically merge `sandbox` back into it to stay current, rather than rebasing.
-4. Open the pull request against **`sandbox`**, not `main`. A pull request into `main` is automatically rejected unless its source branch is literally `sandbox` — `main` only ever receives `sandbox` as a whole, in a batch, when it's time to release.
-5. Every push and every pull request (regardless of target branch) triggers an automated pipeline: install and build the frontend, lint it, run its test suite, then restore/build/test the backend. Treat this as the merge gate — don't consider a change ready for review until it passes. A separate static/security scan also runs against pull requests.
-6. Commit messages are short, plain-English summaries of what changed (not a strict conventional-commits format) — write them the way you'd describe the diff to a teammate, and reference the related issue number where relevant.
-7. Releases are cut by tagging `main` with a version tag after a `sandbox` → `main` merge, which triggers an automated multi-platform build and publish. Day-to-day feature work never needs to touch this step directly.
+2. Branch names follow the pattern `#<number>-<short-kebab-description>`, tied to the GitHub issue being worked. Maintenance, refactor, and CI/release-pipeline work that isn't tied to a tracked issue may instead use a short descriptive branch name with no issue-number prefix (e.g. `cqrs-refractor`, `fix-self-contained-build`).
+3. Create and switch to a new branch with `git switch -c #<number>-<short-kebab-description>`, not `git checkout -b`. `git checkout` remains fine for its other valid uses (e.g. switching to an existing branch, restoring a file) — it's specifically creating-and-switching to a new branch where `switch` is required instead.
+4. While a branch is in progress, periodically merge `sandbox` back into it to stay current, rather than rebasing.
+5. Open the pull request against **`sandbox`**, not `main`. A pull request into `main` is automatically rejected unless its source branch is literally `sandbox` — `main` only ever receives `sandbox` as a whole, in a batch, when it's time to release.
+6. Every push and every pull request (regardless of target branch) triggers an automated pipeline: install and build the frontend, lint it, run its test suite, then restore/build/test the backend. Treat this as the merge gate — don't consider a change ready for review until it passes. A separate static/security scan also runs against pull requests.
+7. Commit messages are short, plain-English summaries of what changed (not a strict conventional-commits format) — write them the way you'd describe the diff to a teammate, and reference the related issue number where relevant.
+8. Releases are cut by tagging `main` with a version tag after a `sandbox` → `main` merge, which triggers an automated multi-platform build and publish. Day-to-day feature work never needs to touch this step directly.
 
-When asked to make a change: create a branch off `sandbox` named for the relevant issue, commit with a plain descriptive message, make sure the build/lint/test pipeline would pass, and open the pull request against `sandbox`.
+When asked to make a change: create a branch off `sandbox` with `git switch -c` named for the relevant issue, commit with a plain descriptive message, make sure the build/lint/test pipeline would pass, and open the pull request against `sandbox`.
 
 ### Pattern summary (quick reference)
 - **Backend:** CQRS via a mediator (one request type per operation, one handler each) → repository pattern behind interfaces for all data access → raw query results mapped through a DTO into a domain model by a dedicated mapping layer → dependency injection registered centrally with deliberate lifetimes → rate limiting applied per-endpoint, not globally → secrets encrypted at rest via Data Protection, decrypted only at point of use → folders organized by technical layer, not by feature.
@@ -84,6 +88,7 @@ Automated workflows handle building and testing on every branch, static/security
 - DTO → mapper → domain model: raw query results are never handed back directly; they're mapped into DTOs matching the query shape, then converted into domain models by a dedicated mapping layer.
 - Centralized dependency injection: everything is registered in one place at startup, with lifetimes chosen deliberately — per-request/connection-scoped for things tied to a single database connection, singleton for stateless shared infrastructure like caching or HTTP helpers.
 - Per-endpoint rate limiting: policies are opt-in and attached explicitly to the specific endpoints that need them, not applied globally.
+- Domain vocabulary end-to-end (lightweight DDD): model, handler, repository, and command/query names mirror the real-world dashboard concepts (cards, widgets, rows/columns, providers) rather than storage or transport shapes — domain objects stay data-only, though; behavior lives in handlers, not a rich domain model.
 
 **Structure:** organized by technical layer, not by feature/module — all commands live together, all handlers live together, all repositories live together, and so on, rather than nesting each layer inside a per-feature folder. When adding a new operation, add one item to each relevant layer rather than creating a new feature folder.
 
