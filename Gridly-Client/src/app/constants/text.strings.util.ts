@@ -21,6 +21,10 @@ export class TextStringsUtil {
   static readonly DialogEditCardDropDownOptionTitleOne = "Upload New Image to card";
   static readonly DialogEditCardDropDownOptionTitleTwo = "Link To Image";
   static readonly DialogEditCardLinkToImageTitle = "URL To Image"
+  static readonly DialogEditCardLocationSectionTitle = "Weather location";
+  static readonly DialogEditCardLocationCountryInputLabel = "Country";
+  static readonly DialogEditCardLocationCityInputLabel = "City";
+  static readonly DialogEditCardLocationBothFieldsRequiredMessage = "Enter both country and city, or leave both blank.";
 
   static readonly DialogAddCardTitle = "Add";
   static readonly DialogAddCardAcceptBtnTitle = "Add";

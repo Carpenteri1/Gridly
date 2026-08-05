@@ -66,6 +66,7 @@ public class WeatherHandler(
     public async Task<IResult> Handle(SaveWeatherCommand command, CancellationToken cancellationToken)
     {
         command.Weather.FetchedAt = DateTime.UtcNow;
+        await weatherRepository.Delete(command.Weather.CardId);
         var success = await weatherRepository.Upsert(command.Weather);
         return success ? Results.Ok() : Results.BadRequest();
     }

@@ -112,7 +112,7 @@ public class QueryStrings
     public const string DeleteFromCardQuery = "DELETE FROM Card /**where**/";
     public const string DeleteFromIconsConnectedQuery = "DELETE FROM IconsConnected /**where**/";
     public const string DeleteFromIconQuery = "DELETE FROM Icon /**where**/";
-    public const string DeleteFromWeatherQuery = "DELETE FROM Weather /**where**/";
+    public const string DeleteFromWeatherQuery = "DELETE FROM WeatherData /**where**/";
     
     public const string BatchDeleteRowColumnQuery = @"
     DELETE FROM RowColumn

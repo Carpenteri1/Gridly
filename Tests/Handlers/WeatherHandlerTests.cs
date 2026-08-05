@@ -1,3 +1,4 @@
+using Gridly.Commands;
 using Gridly.Constants;
 using Gridly.Dtos;
 using Gridly.Enums;
@@ -155,5 +156,20 @@ public class WeatherHandlerTests
         var result = await handler.Handle(new GetVisualCrossingDataQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
 
         ResultAssertions.AssertStatusCode(result, StatusCodes.Status400BadRequest);
+    }
+
+    [Fact]
+    public async Task HandleSaveWeather_DeletesExistingRowForCardBeforeUpserting()
+    {
+        var repository = new FakeWeatherRepository();
+        var handler = MakeHandler(weatherRepository: repository);
+        var dto = new WeatherDataDtoModel { CardId = 7, Location = "Stockholm" };
+
+        var result = await handler.Handle(new SaveWeatherCommand { Weather = dto }, CancellationToken.None);
+
+        ResultAssertions.AssertStatusCode(result, StatusCodes.Status200OK);
+        Assert.Equal(1, repository.DeleteCallCount);
+        Assert.Equal(7, repository.LastDeletedCardId);
+        Assert.Equal(1, repository.UpsertCallCount);
     }
 }

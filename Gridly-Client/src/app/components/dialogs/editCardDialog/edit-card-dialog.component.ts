@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { EditCardDialogFacade } from './edit-card-dialog.facade';
 import { DialogDirective } from '../../../directives/dialog.directive';
+import { CardTypes } from '../../../enums/card.types.enum';
 
 @Component({
   selector: 'app-edit-card-dialog',
@@ -26,6 +27,7 @@ export class EditCardDialogComponent extends BaseDialogComponent implements OnCh
   @Output() editCard = new EventEmitter();
 
   readonly facade: EditCardDialogFacade;
+  protected readonly CardTypes = CardTypes;
 
   constructor() {
     super();
@@ -38,7 +40,12 @@ export class EditCardDialogComponent extends BaseDialogComponent implements OnCh
     }
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
+    if (this.facade.isWeatherCard) {
+      const locationSaved = await this.facade.saveLocation(this.id);
+      if (!locationSaved) return;
+    }
+
     const payload = this.facade.buildSubmitPayload(this.id);
     this.close();
     this.editCard.emit(payload);

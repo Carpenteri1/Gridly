@@ -60,6 +60,38 @@
             </mat-select>
           </div>
         </mat-form-field>
+        @if (facade.card.type === CardTypes.Weather) {
+          <fieldset class="mb-3">
+            <legend class="form-label h6">{{TextStringsUtil.DialogEditCardLocationSectionTitle}}</legend>
+            <mat-form-field class="mb-2 w-100 gap-2 form-control">
+              <mat-label for="location-country-input" class="form-label">{{TextStringsUtil.DialogEditCardLocationCountryInputLabel}}</mat-label>
+              <input
+                type="text"
+                matInput
+                id="location-country-input"
+                class="form-control"
+                placeholder="Enter country"
+                name="locationCountry"
+                [(ngModel)]="facade.countryInput">
+            </mat-form-field>
+
+            <mat-form-field class="mb-2 w-100 gap-2 form-control">
+              <mat-label for="location-city-input" class="form-label">{{TextStringsUtil.DialogEditCardLocationCityInputLabel}}</mat-label>
+              <input
+                type="text"
+                matInput
+                id="location-city-input"
+                class="form-control"
+                placeholder="Enter city"
+                name="locationCity"
+                [(ngModel)]="facade.cityInput">
+            </mat-form-field>
+
+            @if (facade.locationErrorMessage) {
+              <p class="text-danger">{{facade.locationErrorMessage}}</p>
+            }
+          </fieldset>
+        }
         <!--
         <div class="mb-3">
           <label for="icon-select" class="form-label">{{TextStringsUtil.ModalEditComponentLinkToImageTitle}}</label>

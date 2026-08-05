@@ -125,6 +125,8 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
 
     public int UpsertCallCount { get; private set; }
     public string? LastUpsertedLocation { get; private set; }
+    public int DeleteCallCount { get; private set; }
+    public int? LastDeletedCardId { get; private set; }
 
     public void Seed(string location, WeatherModel weather, DateTime fetchedAt) =>
         _stored[location] = (weather, fetchedAt);
@@ -134,7 +136,8 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
 
     public Task<bool> Delete(int CardId)
     {
-        UpsertCallCount++;
+        DeleteCallCount++;
+        LastDeletedCardId = CardId;
         return Task.FromResult(true);
     }
 
