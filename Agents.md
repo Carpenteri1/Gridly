@@ -55,7 +55,7 @@ Organized to mirror the main source layout — one test area per layer (handlers
 ### Git workflow, branching & pull requests
 The repo uses a two-tier branch model, not direct-to-main feature branches:
 1. **`sandbox`** is the integration branch. All feature/fix work branches off `sandbox`, not off `main`.
-2. Branch names follow the pattern `issue-<number>-<short-kebab-description>` (or `#<number>-<short-description>`), tied to the GitHub issue being worked. Maintenance, refactor, and CI/release-pipeline work that isn't tied to a tracked issue may instead use a short descriptive branch name with no issue-number prefix (e.g. `cqrs-refractor`, `fix-self-contained-build`).
+2. Branch names follow the pattern `#<number>-<short-kebab-description>`, tied to the GitHub issue being worked. Maintenance, refactor, and CI/release-pipeline work that isn't tied to a tracked issue may instead use a short descriptive branch name with no issue-number prefix (e.g. `cqrs-refractor`, `fix-self-contained-build`).
 3. Create and switch to a new branch with `git switch -c <branch-name>`, not `git checkout -b`. `git checkout` remains fine for its other valid uses (e.g. switching to an existing branch, restoring a file) — it's specifically creating-and-switching to a new branch where `switch` is required instead.
 4. While a branch is in progress, periodically merge `sandbox` back into it to stay current, rather than rebasing.
 5. Open the pull request against **`sandbox`**, not `main`. A pull request into `main` is automatically rejected unless its source branch is literally `sandbox` — `main` only ever receives `sandbox` as a whole, in a batch, when it's time to release.
