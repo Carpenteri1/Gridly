@@ -3,8 +3,7 @@
     "text": { "title": "Gridly" }
   },
   "header": {
-    "text": { "newVersionAvailable": "There is a new version available!" },
-    "url": { "githubReleaseUrl": "https://github.com/Carpenteri1/Gridly/releases/tag/" }
+    "text": { "newVersionAvailable": "There is a new version available!" }
   },
   "gridCard": {
     "text": {
@@ -18,7 +17,6 @@
     }
   },
   "card": {
-    "url": { "get": "/api/card/get" },
     "text": { "emptyTitle": "Empty Card", "emptyDescription": "Click to customize" },
     "errors": {
       "addFailed": "Failed to add new card",
@@ -28,24 +26,6 @@
       "editFailed": "Failed to edit card",
       "getFailed": "Failed to get cards"
     }
-  },
-  "icon": {
-    "url": { "search": "/api/icon/search?value=", "get": "/api/icon/get" }
-  },
-  "rowColumn": {
-    "url": { "get": "/api/row/get", "batchSave": "/api/row/batchSave" }
-  },
-  "version": {
-    "url": { "get": "/api/version/" }
-  },
-  "widget": {
-    "url": { "get": "/api/widget/get" }
-  },
-  "weather": {
-    "url": { "get": "/api/weather/get", "getVisualCrossingData": "/api/weather/getvisualcrossingdata", "save": "/api/weather/save" }
-  },
-  "providerKey": {
-    "url": { "getLocalStatus": "/api/providerkeys/local/provider/status", "getRemoteStatus": "/api/providerkeys/remote/provider/status", "save": "/api/providerkeys/save" }
   },
   "addCardPicker": {
     "text": { "title": "Add Card", "description": "Pick card type for your dashboard" }

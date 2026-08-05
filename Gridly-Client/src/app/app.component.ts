@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { GridComponent } from './components/grid/grid.component';
 import { HeaderComponent } from "./components/header/header.component";
-import { LocaleStringsService } from "./services/locale_services/locale-strings.service";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +9,6 @@ import { LocaleStringsService } from "./services/locale_services/locale-strings.
   imports: [GridComponent, HeaderComponent]
 })
 export class AppComponent {
-  title = inject(LocaleStringsService).locale.app.text.title;
+  title = inject(TranslateService).instant('app.text.title');
   isEditMode = false;
 }

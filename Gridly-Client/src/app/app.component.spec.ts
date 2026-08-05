@@ -1,17 +1,15 @@
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { AppComponent } from './app.component';
-import { LocaleStringsService } from './services/locale_services/locale-strings.service';
 
 describe('AppComponent', () => {
-  const localeStringsServiceMock = {
-    locale: {
-      app: { text: { title: 'Gridly' } },
-    },
+  const translateServiceMock = {
+    instant: (key: string) => (key === 'app.text.title' ? 'Gridly' : key),
   };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{ provide: LocaleStringsService, useValue: localeStringsServiceMock }],
+      providers: [{ provide: TranslateService, useValue: translateServiceMock }],
     });
   });
 

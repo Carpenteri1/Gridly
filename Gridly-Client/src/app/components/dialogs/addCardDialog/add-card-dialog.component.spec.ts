@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AsyncPipe } from '@angular/common';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DialogService } from '../../../services/dialog_services/dialog.service';
-import { LocaleStringsService } from '../../../services/locale_services/locale-strings.service';
 import { CardModel } from '../../../models/card.Model';
 import { IconModel } from '../../../models/icon.Model';
 import { AddCardDialogComponent } from './add-card-dialog.component';
 import { CardTypes } from '../../../enums/card.types.enum';
 import { Widget } from '../../../interfaces/widget.Interface';
+import { StubTranslatePipe } from '../../../testing/stub-translate.pipe';
 
 describe('AddCardDialogComponent', () => {
   let fixture: ComponentFixture<AddCardDialogComponent>;
@@ -30,11 +31,8 @@ describe('AddCardDialogComponent', () => {
     } as IconModel)
   };
 
-  const localeStringsServiceMock = {
-    locale: {
-      addCardPicker: { text: { title: 'Add Card', description: 'Pick card type for your dashboard' } },
-      widget: { url: { get: '/api/widget/get' } },
-    },
+  const translateServiceMock = {
+    instant: (key: string) => key,
   };
 
   const widget = (widgetType: CardTypes): Widget => ({
@@ -50,10 +48,11 @@ describe('AddCardDialogComponent', () => {
       imports: [AddCardDialogComponent],
       providers: [
         { provide: DialogService, useValue: dialogServiceMock },
-        { provide: LocaleStringsService, useValue: localeStringsServiceMock },
+        { provide: TranslateService, useValue: translateServiceMock },
       ],
     }).overrideComponent(AddCardDialogComponent, {
-      add: { imports: [AsyncPipe] },
+      remove: { imports: [TranslatePipe] },
+      add: { imports: [AsyncPipe, StubTranslatePipe] },
     });
 
     fixture = TestBed.createComponent(AddCardDialogComponent);

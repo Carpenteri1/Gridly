@@ -4,11 +4,12 @@ import { BaseDialogComponent } from '../../../directives/base-dialog.directive';
 import { DialogDirective } from '../../../directives/dialog.directive';
 import {WeatherProviderService} from "../../../services/weather_services/weather-provider.service";
 import {WeatherDataDtoFactory} from "../../../factory/weatherDtoFactory";
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-set-location-for-provider-dialog',
   standalone: true,
-  imports: [FormsModule, DialogDirective],
+  imports: [FormsModule, DialogDirective, TranslatePipe],
   templateUrl: './set-location-for-provider-dialog.component.html',
   styleUrls: ['../../../css/shared.dialog.css'],
 })
@@ -49,11 +50,11 @@ export class SetLocationForProviderDialogComponent extends BaseDialogComponent{
       await this.#weatherProviderService.save(dto);
       this.close();
     } else if (status === 401 || status === 412) {
-      this.errorMessage = this.locale.weatherProviderLocationDialog.text.saveInvalidKeyFailedMessage;
+      this.errorMessage = this.translate.instant('weatherProviderLocationDialog.text.saveInvalidKeyFailedMessage');
     } else if (status === 404) {
-      this.errorMessage = this.locale.weatherProviderLocationDialog.text.saveLocationNotFoundFailedMessage;
+      this.errorMessage = this.translate.instant('weatherProviderLocationDialog.text.saveLocationNotFoundFailedMessage');
     } else {
-      this.errorMessage = this.locale.weatherProviderLocationDialog.text.saveFailedMessage;
+      this.errorMessage = this.translate.instant('weatherProviderLocationDialog.text.saveFailedMessage');
     }
   }
 }

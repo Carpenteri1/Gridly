@@ -4,11 +4,12 @@ import { BaseDialogComponent } from '../../../directives/base-dialog.directive';
 import { DialogDirective } from '../../../directives/dialog.directive';
 import { ThirdPartyProvider } from '../../../enums/third-party-provider.enum';
 import { ProviderKeysService } from "../../../services/provider_key_services/provider-keys.service";
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-provider-key-dialog',
   standalone: true,
-  imports: [FormsModule, DialogDirective],
+  imports: [FormsModule, DialogDirective, TranslatePipe],
   templateUrl: './provider-key-dialog.component.html',
   styleUrls: ['../../../css/shared.dialog.css'],
 })
@@ -42,7 +43,7 @@ export class ProviderKeyDialogComponent extends BaseDialogComponent{
       },
       error: () => {
         this.saving = false;
-        this.errorMessage = this.locale.apiKeyDialog.text.saveFailedMessage;
+        this.errorMessage = this.translate.instant('apiKeyDialog.text.saveFailedMessage');
       },
     });
   }

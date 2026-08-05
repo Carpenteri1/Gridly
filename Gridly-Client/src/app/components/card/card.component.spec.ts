@@ -1,13 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CardModel } from '../../models/card.Model';
 import { CardRulesService } from '../../services/card_services/card-rules.service';
 import { GridService } from '../../services/grid_services/grid.service';
 import { ProviderKeysService } from '../../services/provider_key_services/provider-keys.service';
-import { LocaleStringsService } from '../../services/locale_services/locale-strings.service';
 import { ProviderKeyStatusModel } from '../../models/providerKeyStatus.Model';
 import { ProviderKeyStatus } from '../../enums/provider-key-status.enum';
 import { CardTypes } from '../../enums/card.types.enum';
+import { EditCardDialogComponent } from '../dialogs/editCardDialog/edit-card-dialog.component';
+import { DeleteCardDialogComponent } from '../dialogs/deleteCardDialog/delete-card-dialog.component';
+import { ProviderKeyDialogComponent } from '../dialogs/apiKeyDialog/provider-key-dialog.component';
+import { SetLocationForProviderDialogComponent } from '../dialogs/setLocationForProviderDialog/set-location-for-provider-dialog.component';
+import { StubTranslatePipe } from '../../testing/stub-translate.pipe';
 import { CardComponent } from './card.component';
 
 type CardComponentFixture = CardComponent & {
@@ -48,56 +53,8 @@ describe('CardComponent', () => {
     onKeySaved: jest.fn(),
   };
 
-  const localeStringsServiceMock = {
-    locale: {
-      card: { text: { emptyTitle: 'Empty Card', emptyDescription: 'Click to customize' } },
-      editCardDialog: {
-        text: {
-          title: 'Edit',
-          acceptBtnTitle: 'Save',
-          cancelBtnTitle: 'Cancel',
-          inputNameTitle: 'Edit card: Title',
-          inputUrlTitle: 'Edit card URL: http://127.0.0.1',
-          inputSearchIconTitle: 'Search for Icon',
-          dropDownOptionUploadImage: 'Upload New Image to card',
-          dropDownOptionLinkToImage: 'Link To Image',
-          linkToImageTitle: 'URL To Image',
-        },
-      },
-      deleteCardDialog: {
-        text: {
-          title: 'Delete',
-          headerTitle: 'Warning',
-          acceptBtnTitle: 'Delete',
-          cancelBtnTitle: 'Cancel',
-          description: 'You sure you want to delete this card?',
-        },
-      },
-      apiKeyDialog: {
-        text: {
-          title: 'Add weather provider key',
-          description: 'Paste your weather provider API key. It is stored securely and never shown again.',
-          foundApiKeyAt: 'You can find your key at https://www.visualcrossing.com',
-          invalidMessage: 'The stored key was rejected. Please paste a new one.',
-          inputLabel: 'API key',
-          saveBtnTitle: 'Save',
-          cancelBtnTitle: 'Cancel',
-          saveFailedMessage: 'Failed to save the API key. Please try again.',
-        },
-      },
-      weatherProviderLocationDialog: {
-        text: {
-          title: 'Add location for weather provider',
-          countryInputLabel: 'Country',
-          cityInputLabel: 'City',
-          saveBtnTitle: 'Save',
-          cancelBtnTitle: 'Cancel',
-          saveFailedMessage: 'Failed to save. Please try again.',
-          saveInvalidKeyFailedMessage: 'Failed to save. Invalid Provider Key.',
-          saveLocationNotFoundFailedMessage: 'Failed to save. Location not found.',
-        },
-      },
-    },
+  const translateServiceMock = {
+    instant: (key: string) => key,
   };
 
   const createComponent = (card: CardModel) => {
@@ -117,9 +74,15 @@ describe('CardComponent', () => {
         { provide: CardRulesService, useValue: cardRulesServiceMock },
         { provide: GridService, useValue: gridServiceMock },
         { provide: ProviderKeysService, useValue: providerKeysServiceMock },
-        { provide: LocaleStringsService, useValue: localeStringsServiceMock },
+        { provide: TranslateService, useValue: translateServiceMock },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(CardComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(EditCardDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(DeleteCardDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(ProviderKeyDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(SetLocationForProviderDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .compileComponents();
 
     createComponent(currentCard);
   });

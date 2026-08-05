@@ -1,10 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { of } from 'rxjs';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CardModel } from '../../models/card.Model';
 import { GridService } from '../../services/grid_services/grid.service';
 import { VersionService } from '../../services/version_services/version.service';
-import { LocaleStringsService } from '../../services/locale_services/locale-strings.service';
+import { AddCardDialogComponent } from '../dialogs/addCardDialog/add-card-dialog.component';
+import { ProviderKeyDialogComponent } from '../dialogs/apiKeyDialog/provider-key-dialog.component';
+import { StubTranslatePipe } from '../../testing/stub-translate.pipe';
 import { HeaderComponent } from './header.component';
 
 type HeaderComponentTestHarness = HeaderComponent & {
@@ -30,42 +33,8 @@ describe('HeaderComponent', () => {
     currentRowColumns: jest.fn(() => []),
   };
 
-  const localeStringsServiceMock = {
-    locale: {
-      app: { text: { title: 'Gridly' } },
-      menu: {
-        text: {
-          addCardButtonTitle: 'Add Card',
-          saveButtonTitle: 'Save',
-          editButtonTitle: 'Edit',
-          exitEditButtonTitle: 'Exit Edit',
-          dropDownDragTitle: 'Move cards',
-          dropDownResizeTitle: 'Resize cards',
-          addProviderKeysButtonTitle: 'Add provider key',
-        },
-      },
-      addCardPicker: { text: { title: 'Add Card', description: 'Pick card type for your dashboard' } },
-      widget: { url: { get: '/api/widget/get' } },
-      providerKey: {
-        url: {
-          getLocalStatus: '/api/providerkeys/local/provider/status',
-          getRemoteStatus: '/api/providerkeys/remote/provider/status',
-          save: '/api/providerkeys/save',
-        },
-      },
-      apiKeyDialog: {
-        text: {
-          title: 'Add weather provider key',
-          description: 'Paste your weather provider API key. It is stored securely and never shown again.',
-          foundApiKeyAt: 'You can find your key at https://www.visualcrossing.com',
-          invalidMessage: 'The stored key was rejected. Please paste a new one.',
-          inputLabel: 'API key',
-          saveBtnTitle: 'Save',
-          cancelBtnTitle: 'Cancel',
-          saveFailedMessage: 'Failed to save the API key. Please try again.',
-        },
-      },
-    },
+  const translateServiceMock = {
+    instant: (key: string) => key,
   };
 
   beforeEach(async () => {
@@ -80,9 +49,13 @@ describe('HeaderComponent', () => {
       providers: [
         { provide: VersionService, useValue: versionServiceMock },
         { provide: GridService, useValue: gridServiceMock },
-        { provide: LocaleStringsService, useValue: localeStringsServiceMock },
+        { provide: TranslateService, useValue: translateServiceMock },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(HeaderComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(AddCardDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(ProviderKeyDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);
     headerComponent = fixture.componentInstance;
@@ -136,6 +109,6 @@ describe('HeaderComponent', () => {
   });
 
   it('renders the client title', () => {
-    expect((fixture.nativeElement as HTMLElement).querySelector('h1')?.textContent).toContain('Gridly');
+    expect((fixture.nativeElement as HTMLElement).querySelector('h1')?.textContent).toContain('app.text.title');
   });
 });
