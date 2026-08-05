@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { GridComponent } from './components/grid/grid.component';
 import { HeaderComponent } from "./components/header/header.component";
-import {TextStringsUtil} from "./constants/text.strings.util";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +9,6 @@ import {TextStringsUtil} from "./constants/text.strings.util";
   imports: [GridComponent, HeaderComponent]
 })
 export class AppComponent {
-  title = TextStringsUtil.ClientTitle;
+  title = inject(TranslateService).instant('app.text.title');
   isEditMode = false;
 }

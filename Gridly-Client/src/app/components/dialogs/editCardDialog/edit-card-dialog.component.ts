@@ -8,10 +8,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { EditCardDialogFacade } from './edit-card-dialog.facade';
 import { DialogDirective } from '../../../directives/dialog.directive';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-edit-card-dialog',
-  imports: [CommonModule, FormsModule, DialogDirective, MatIconModule, MatSelectModule, MatInputModule],
+  imports: [CommonModule, FormsModule, DialogDirective, MatIconModule, MatSelectModule, MatInputModule, TranslatePipe],
   templateUrl: './edit-card-dialog.component.html',
   styleUrls: ['../../../css/shared.dialog.css', './edit-card-dialog.component.css'],
   providers: [EditCardDialogFacade],

@@ -1,5 +1,5 @@
 import {Component, computed, inject} from "@angular/core";
-import { TextStringsUtil } from "../../constants/text.strings.util";
+import { TranslatePipe } from '@ngx-translate/core';
 import { CommonModule } from "@angular/common";
 import { VersionService } from "../../services/version_services/version.service";
 import { AddCardDialogComponent } from "../dialogs/addCardDialog/add-card-dialog.component";
@@ -16,7 +16,7 @@ import {
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   standalone: true,
-  imports: [CommonModule, AddCardDialogComponent, ProviderKeyDialogComponent, SetLocationForProviderDialogComponent]
+  imports: [CommonModule, TranslatePipe, AddCardDialogComponent, ProviderKeyDialogComponent, SetLocationForProviderDialogComponent]
 })
 export class HeaderComponent {
 
@@ -28,7 +28,6 @@ export class HeaderComponent {
 
   _isAddProviderDialogOpen = this.#dialogService.isAddProviderDialogOpen
 
-  readonly TextStringsUtil = TextStringsUtil;
   addDialogActive = false;
 
   editActive = this.#gridService.inEditMode;

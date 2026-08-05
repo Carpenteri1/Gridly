@@ -1,6 +1,6 @@
 import {Component, computed, inject, Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TextStringsUtil } from '../../constants/text.strings.util';
+import { TranslatePipe } from '@ngx-translate/core';
 import { CardModel } from '../../models/card.Model';
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { EditCardDialogComponent } from '../dialogs/editCardDialog/edit-card-dialog.component';
@@ -23,6 +23,7 @@ import {SetLocationForProviderDialogComponent} from "../dialogs/setLocationForPr
   standalone: true,
   imports: [
     CommonModule,
+    TranslatePipe,
     CdkDragHandle,
     EditCardDialogComponent,
     DeleteCardDialogComponent,
@@ -98,8 +99,6 @@ export class CardComponent {
   openAddProviderKeyDialog(): void {
     this.#dialogService.openProviderKeyDialog(this.card.id);
   }
-
-  protected readonly TextStringsUtil = TextStringsUtil;
 
   protected SaveProviderKey(dialogId: number) {
     if (dialogId === this.card.id) {

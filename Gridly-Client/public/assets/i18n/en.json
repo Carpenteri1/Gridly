@@ -1,0 +1,102 @@
+{
+  "app": {
+    "text": { "title": "Gridly" }
+  },
+  "header": {
+    "text": { "newVersionAvailable": "There is a new version available!" }
+  },
+  "gridCard": {
+    "text": {
+      "resizeTitle": "Resize cards",
+      "cancelToolTip": "Cancel changes done with drag and resize",
+      "movePositionTitle": "Move cards position",
+      "movePositionSaveToolTip": "Save changes done with drag and resize!",
+      "saveButtonTitle": "Save",
+      "cancelButtonTitle": "Cancel",
+      "iconNotFoundMessage": "Icon not found"
+    }
+  },
+  "card": {
+    "text": { "emptyTitle": "Empty Card", "emptyDescription": "Click to customize" },
+    "errors": {
+      "addFailed": "Failed to add new card",
+      "getByIdFailed": "Failed to get card by id",
+      "deletionFailed": "Failed to delete card",
+      "batchEditFailed": "Failed to edit cards in batch",
+      "editFailed": "Failed to edit card",
+      "getFailed": "Failed to get cards"
+    }
+  },
+  "addCardPicker": {
+    "text": { "title": "Add Card", "description": "Pick card type for your dashboard" }
+  },
+  "editCardDialog": {
+    "text": {
+      "title": "Edit",
+      "acceptBtnTitle": "Save",
+      "cancelBtnTitle": "Cancel",
+      "inputNameTitle": "Edit card: Title",
+      "inputUrlTitle": "Edit card URL: http://127.0.0.1",
+      "inputSearchIconTitle": "Search for Icon",
+      "dropDownOptionUploadImage": "Upload New Image to card",
+      "dropDownOptionLinkToImage": "Link To Image",
+      "linkToImageTitle": "URL To Image"
+    }
+  },
+  "addCardDialog": {
+    "text": {
+      "title": "Add",
+      "acceptBtnTitle": "Add",
+      "cancelBtnTitle": "Cancel",
+      "inputNameTitle": "Enter card: Title",
+      "inputUrlTitle": "Enter card URL: http://127.0.0.1",
+      "dropDownOptionUploadImage": "Upload Image To card",
+      "dropDownOptionLinkToImage": "Link To Image",
+      "linkToImageTitle": "URL To Image"
+    }
+  },
+  "deleteCardDialog": {
+    "text": {
+      "title": "Delete",
+      "headerTitle": "Warning",
+      "acceptBtnTitle": "Delete",
+      "cancelBtnTitle": "Cancel",
+      "description": "You sure you want to delete this card?"
+    }
+  },
+  "menu": {
+    "text": {
+      "addCardButtonTitle": "Add Card",
+      "saveButtonTitle": "Save",
+      "editButtonTitle": "Edit",
+      "exitEditButtonTitle": "Exit Edit",
+      "dropDownDragTitle": "Move cards",
+      "dropDownResizeTitle": "Resize cards",
+      "addProviderKeysButtonTitle": "Add provider key"
+    }
+  },
+  "apiKeyDialog": {
+    "text": {
+      "title": "Add weather provider key",
+      "description": "Paste your weather provider API key. It is stored securely and never shown again.",
+      "foundApiKeyAt": "You can find your key at https://www.visualcrossing.com",
+      "invalidMessage": "The stored key was rejected. Please paste a new one.",
+      "inputLabel": "API key",
+      "saveBtnTitle": "Save",
+      "cancelBtnTitle": "Cancel",
+      "saveFailedMessage": "Failed to save the API key. Please try again."
+    }
+  },
+  "weatherProviderLocationDialog": {
+    "text": {
+      "title": "Add location for weather provider",
+      "countryInputLabel": "Country",
+      "cityInputLabel": "City",
+      "saveBtnTitle": "Save",
+      "cancelBtnTitle": "Cancel",
+      "saveFailedMessage": "Failed to save. Please try again.",
+      "saveInvalidKeyFailedMessage": "Failed to save. Invalid Provider Key.",
+      "saveLocationNotFoundFailedMessage": "Failed to save. Location not found."
+    }
+  }
+}

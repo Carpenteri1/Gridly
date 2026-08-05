@@ -1,13 +1,13 @@
 import { Directive, ViewChild, inject } from '@angular/core';
 import { DialogService } from '../services/dialog_services/dialog.service';
-import { TextStringsUtil } from '../constants/text.strings.util';
+import { TranslateService } from '@ngx-translate/core';
 import { DialogDirective } from './dialog.directive';
 
 @Directive()
 export abstract class BaseDialogComponent {
   @ViewChild(DialogDirective) modalDirective!: DialogDirective;
 
-  protected readonly TextStringsUtil = TextStringsUtil;
+  protected readonly translate = inject(TranslateService);
   protected readonly dialogService = inject(DialogService);
 
 

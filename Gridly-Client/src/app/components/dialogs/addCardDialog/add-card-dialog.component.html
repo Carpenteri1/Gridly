@@ -1,14 +1,14 @@
 <dialog #dlg appDialogWindow [open]="open" class="aw-dialog" aria-labelledby="aw-title">
   <div class="aw-card">
     <header class="aw-header">
-      <h5 id="aw-title" class="m-0">{{ TextStringsUtil.AddCardTitle }}</h5>
+      <h5 id="aw-title" class="m-0">{{ 'addCardPicker.text.title' | translate }}</h5>
       <button type="button" class="btn" aria-label="Close" (click)="close()">
         <i class="bi bi-x-lg"></i>
       </button>
     </header>
     @if(widgetOptions$ | async; as options){
       <div class="aw-body">
-        <p class="text-muted mb-3">{{ TextStringsUtil.AddCardDescription }}</p>
+        <p class="text-muted mb-3">{{ 'addCardPicker.text.description' | translate }}</p>
         <div class="row row-cols-1 row-cols-sm-2 g-3 py-2">
           @for(option of options; track option.widgetType){
             <div class="col">
