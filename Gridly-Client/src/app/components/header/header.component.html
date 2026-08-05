@@ -4,7 +4,7 @@
       <div class="logo-box me-2">
         <i class="bi bi-columns text-white fs-5"></i>
       </div>
-      <h1 class="h4 fw-bold gradient-text m-0">{{TextStringsUtil.ClientTitle}}</h1>
+      <h1 class="h4 fw-bold gradient-text m-0">{{ 'app.text.title' | translate }}</h1>
     </div>
 
     <div class="navbar-collapse collapse justify-content-end" [class.show]="editActive()" id="mainNavbar" animate.enter="enter-animation">
@@ -13,20 +13,20 @@
           <li class="nav-item">
             <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1" (click)="addDialogActive = true">
               <i class="bi bi-plus-lg me-1"></i>
-              <span>{{TextStringsUtil.MenuAddCardButtonTitle}}</span>
+              <span>{{ 'menu.text.addCardButtonTitle' | translate }}</span>
             </button>
           </li>
           <li class="nav-item">
             <button class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1" (click)="openAddProviderKeyDialog()">
               <i class="bi bi-key"></i>
-              <span>{{TextStringsUtil.MenuAddProviderKeysButtonTitle}}</span>
+              <span>{{ 'menu.text.addProviderKeysButtonTitle' | translate }}</span>
             </button>
           </li>
            <li class="nav-item">
              <button class="btn btn-primary btn-sm d-flex align-items-center gap-1"
                      (click)="save()">
                <i class="bi bi-save"></i>
-               <span>{{TextStringsUtil.MenuSaveButtonTitle}}</span>
+               <span>{{ 'menu.text.saveButtonTitle' | translate }}</span>
              </button>
            </li>
         }
@@ -36,9 +36,9 @@
                   [ngClass]="editActive() ? 'btn-primary' : 'btn-outline-secondary'"
                   (click)="toggleMenu()">
             <i class="bi bi-pencil"></i>
-            <span>{{ editActive() ?
-              TextStringsUtil.MenuExitEditButtonTitle :
-              TextStringsUtil.MenuEditButtonTitle }}</span>
+            <span>{{ (editActive() ?
+              'menu.text.exitEditButtonTitle' :
+              'menu.text.editButtonTitle') | translate }}</span>
           </button>
         </li>
 

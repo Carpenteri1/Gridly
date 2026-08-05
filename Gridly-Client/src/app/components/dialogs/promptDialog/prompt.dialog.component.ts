@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BaseDialogComponent } from '../../../directives/base-dialog.directive';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-prompt-dialog',
   templateUrl: './prompt.dialog.component.html',
   styleUrls: ['../../../css/shared.dialog.css'],
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TranslatePipe],
 })
 export class PromptDialogComponent extends BaseDialogComponent {
   @Input() open = false;

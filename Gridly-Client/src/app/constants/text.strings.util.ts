@@ -78,6 +78,7 @@ export class TextStringsUtil {
   static readonly DialogWeatherProviderLocationCityInputLabel = "City";
   static readonly DialogWeatherProviderLocationSaveBtnTitle = "Save";
   static readonly DialogWeatherProviderLocationCancelBtnTitle = "Cancel";
+
   static readonly DialogWeatherProviderLocationSaveFailedMessage = "Failed to save. Please try again.";
   static readonly DialogWeatherProviderLocationSaveInvalidKeyFailedMessage = "Failed to save. Invalid Provider Key.";
   static readonly DialogWeatherProviderLocationSaveLocationNotFoundFailedMessage = "Failed to save. Location not found.";

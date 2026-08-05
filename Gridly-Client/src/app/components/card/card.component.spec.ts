@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CardModel } from '../../models/card.Model';
 import { CardRulesService } from '../../services/card_services/card-rules.service';
 import { GridService } from '../../services/grid_services/grid.service';
@@ -7,6 +8,11 @@ import { ProviderKeysService } from '../../services/provider_key_services/provid
 import { ProviderKeyStatusModel } from '../../models/providerKeyStatus.Model';
 import { ProviderKeyStatus } from '../../enums/provider-key-status.enum';
 import { CardTypes } from '../../enums/card.types.enum';
+import { EditCardDialogComponent } from '../dialogs/editCardDialog/edit-card-dialog.component';
+import { DeleteCardDialogComponent } from '../dialogs/deleteCardDialog/delete-card-dialog.component';
+import { ProviderKeyDialogComponent } from '../dialogs/apiKeyDialog/provider-key-dialog.component';
+import { SetLocationForProviderDialogComponent } from '../dialogs/setLocationForProviderDialog/set-location-for-provider-dialog.component';
+import { StubTranslatePipe } from '../../testing/stub-translate.pipe';
 import { CardComponent } from './card.component';
 
 type CardComponentFixture = CardComponent & {
@@ -47,6 +53,10 @@ describe('CardComponent', () => {
     onKeySaved: jest.fn(),
   };
 
+  const translateServiceMock = {
+    instant: (key: string) => key,
+  };
+
   const createComponent = (card: CardModel) => {
     fixture = TestBed.createComponent(CardComponent);
     createCardComponent = fixture.componentInstance;
@@ -64,8 +74,15 @@ describe('CardComponent', () => {
         { provide: CardRulesService, useValue: cardRulesServiceMock },
         { provide: GridService, useValue: gridServiceMock },
         { provide: ProviderKeysService, useValue: providerKeysServiceMock },
+        { provide: TranslateService, useValue: translateServiceMock },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(CardComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(EditCardDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(DeleteCardDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(ProviderKeyDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(SetLocationForProviderDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .compileComponents();
 
     createComponent(currentCard);
   });

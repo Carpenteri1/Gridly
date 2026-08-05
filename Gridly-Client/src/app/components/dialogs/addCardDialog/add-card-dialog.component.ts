@@ -9,11 +9,12 @@ import {WidgetService} from "../../../services/widget_services/widget.service";
 import {Widget} from "../../../interfaces/widget.Interface";
 import {MatIcon} from "@angular/material/icon";
 import {AsyncPipe} from "@angular/common";
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-add-card-dialog',
   standalone: true,
-  imports: [DialogDirective, MatIcon, AsyncPipe],
+  imports: [DialogDirective, MatIcon, AsyncPipe, TranslatePipe],
   templateUrl: './add-card-dialog.component.html',
   styleUrls: ['./add-card-dialog.component.css'],
 })
