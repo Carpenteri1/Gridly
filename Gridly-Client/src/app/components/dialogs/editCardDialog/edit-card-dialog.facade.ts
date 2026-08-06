@@ -7,8 +7,8 @@ import { IconModel } from '../../../models/icon.Model';
 import { CardRulesService } from '../../../services/card_services/card-rules.service';
 import { CardTypes } from '../../../enums/card.types.enum';
 import { WeatherProviderService } from '../../../services/weather_services/weather-provider.service';
-import { WeatherDataDtoFactory } from '../../../factory/weatherDtoFactory';
 import { TextStringsUtil } from '../../../constants/text.strings.util';
+import {ProviderKeysService} from "../../../services/provider_key_services/provider-keys.service";
 
 @Injectable()
 export class EditCardDialogFacade {
@@ -22,6 +22,7 @@ export class EditCardDialogFacade {
   #iconService = inject(IconService);
   #CardRulesService = inject(CardRulesService);
   #weatherProviderService = inject(WeatherProviderService);
+  #providerKeyService = inject(ProviderKeysService);
 
   constructor() {
     this.icons$ = this.#iconService.icons$;
@@ -82,24 +83,24 @@ export class EditCardDialogFacade {
     }
 
     this.locationErrorMessage = '';
-    const location = `${country},${city}`;
-    let [weather, status] = await this.#weatherProviderService.getWeather(location);
-    let isFromProvider = false;
+    const address = `${country},${city}`;
+    this.countryInput = '';
+    this.cityInput = '';
+
+    let [weather, status] = await this.#weatherProviderService.getWeather(address);
 
     if (status !== 200) {
-      [weather, status] = await this.#weatherProviderService.getVisualCrossingData(location);
-      isFromProvider = true;
-    }
-
-    if (status === 200 && weather !== undefined) {
-      weather.cardId = cardId;
-      if (isFromProvider) {
-        const dto = WeatherDataDtoFactory.createDto(weather);
-        await this.#weatherProviderService.save(dto);
+      [weather, status] = await this.#weatherProviderService.getVisualCrossingData(address);
+      if (status === 401 || status === 412) {
+        this.#providerKeyService.promptForInvalidKey();
       }
-      this.countryInput = '';
-      this.cityInput = '';
-      return true;
+    }
+    if (status === 200 && weather !== undefined) {
+      if (weather.cardId !== cardId) {
+        weather.cardId = cardId;
+        await this.#weatherProviderService.save(weather);
+        return true;
+      }
     }
 
     if (status === 401 || status === 412) {

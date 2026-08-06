@@ -5,5 +5,5 @@ namespace Gridly.Commands;
 
 public class SaveWeatherCommand : IRequest<IResult>
 {
-    public WeatherDataDtoModel Weather { get; set; }
+    public WeatherDataModel Weather { get; set; }
 }

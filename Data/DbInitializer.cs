@@ -76,11 +76,9 @@ public class DbInitializer
                 CREATE TABLE IF NOT EXISTS WeatherData(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 CardId INTEGER NOT NULL,
-                Location TEXT NOT NULL UNIQUE,
                 Address TEXT NOT NULL,
                 Timezone TEXT NOT NULL,
                 Description TEXT NOT NULL,
-                Conditions TEXT NOT NULL,
                 Temp REAL NOT NULL,
                 FeelsLike REAL NOT NULL,
                 Humidity REAL NOT NULL,

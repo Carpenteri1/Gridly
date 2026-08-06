@@ -44,12 +44,34 @@
       </div>
   }
 </div>
-      <a
-        class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2"
-        [href]="card.url"
-        target="_blank"
-        rel="noreferrer">
-        <span>
+  @if(card.type === CardTypes.Weather) {
+    <a
+      class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2">
+      <span><mat-icon class="card-mat-icon-size">{{card.iconData?.materialIcon}}</mat-icon></span>
+      @if(storedWeatherData$ | async; as weatherData){
+        @for(weather of weatherData; track weather){
+          @if (card.id === weather.cardId && card.type === CardTypes.Weather) {
+            <ul class="weather-section">
+              <li> Address: {{weather.address}}</li>
+              <li> Temp: {{weather.temp}}</li>
+              <li> Feels like: {{weather.feelsLike}}</li>
+              <li> Humidity: {{weather.humidity}}</li>
+              <li> Wind dir: {{weather.windDir}}</li>
+              <li> Wind speed: {{weather.windSpeed}}</li>
+            </ul>
+          }
+        }
+      }
+    </a>
+  }
+  @else{
+    <a
+      class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2"
+      [href]="card.url"
+      target="_blank"
+      rel="noreferrer">
+      <p>{{card.id}}</p>
+      <span>
         @if (hasMaterialIcon(card))
         {
           <mat-icon class="card-mat-icon-size">
@@ -57,10 +79,10 @@
           </mat-icon>
         }
         </span>
-        <p>{{card.id}}</p>
-        <h5 [hidden]="card.settings?.titleHidden" class="fw-bold">{{card.name || ('card.text.emptyTitle' | translate)}}</h5>
-        <p class="text-center">{{card.url}}</p>
-  </a>
+      <h5 [hidden]="card.settings?.titleHidden" class="fw-bold">{{card.name || ('card.text.emptyTitle' | translate)}}</h5>
+      <p class="text-center">{{card.url}}</p>
+    </a>
+  }
   <app-edit-card-dialog
     [open]="isEditDialogOpenForCard()"
     [cardId]="card.id"

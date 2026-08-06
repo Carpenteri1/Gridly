@@ -3,10 +3,10 @@ import { of } from 'rxjs';
 import { IconService } from '../../../services/icon_services/Icon.service';
 import { CardRulesService } from '../../../services/card_services/card-rules.service';
 import { WeatherProviderService } from '../../../services/weather_services/weather-provider.service';
-import { WeatherModel } from '../../../models/weather.Model';
 import { CardTypes } from '../../../enums/card.types.enum';
 import { TextStringsUtil } from '../../../constants/text.strings.util';
 import { EditCardDialogFacade } from './edit-card-dialog.facade';
+import {WeatherDataModel} from "../../../models/weatherData.Model";
 
 describe('EditCardDialogFacade', () => {
   let facade: EditCardDialogFacade;
@@ -22,20 +22,17 @@ describe('EditCardDialogFacade', () => {
     ),
   };
 
-  const makeWeather = (): WeatherModel => ({
+  const makeWeather = (): WeatherDataModel => ({
     cardId: 0,
-    location: 'Sweden,Stockholm',
     address: 'Stockholm, Sweden',
     timezone: 'Europe/Stockholm',
     description: 'clear',
-    currentConditions: {
-      conditions: 'clear',
-      temp: 20,
-      feelsLik: 20,
-      humidity: 50,
-      windspeed: 5,
-      windDir: 180,
-    },
+    temp: 20,
+    feelsLike: 20,
+    humidity: 50,
+    windSpeed: 5,
+    windDir: 180,
+    id: 0
   });
 
   const weatherProviderServiceMock = {
@@ -146,9 +143,9 @@ describe('EditCardDialogFacade', () => {
       const result = await facade.saveLocation(9);
 
       expect(result).toBe(true);
-      expect(weatherProviderServiceMock.getWeather).toHaveBeenCalledWith('Sweden,Stockholm');
+      expect(weatherProviderServiceMock.getWeather).toHaveBeenCalledWith("Sweden,Stockholm");
       expect(weatherProviderServiceMock.getVisualCrossingData).not.toHaveBeenCalled();
-      expect(weatherProviderServiceMock.save).not.toHaveBeenCalled();
+      expect(weatherProviderServiceMock.save).toHaveBeenCalled();
       expect(facade.countryInput).toBe('');
       expect(facade.cityInput).toBe('');
       expect(facade.locationErrorMessage).toBe('');
@@ -165,7 +162,7 @@ describe('EditCardDialogFacade', () => {
       expect(result).toBe(true);
       expect(weatherProviderServiceMock.getVisualCrossingData).toHaveBeenCalledWith('Sweden,Stockholm');
       expect(weatherProviderServiceMock.save).toHaveBeenCalledWith(
-        expect.objectContaining({ cardId: 9, location: 'Sweden,Stockholm' })
+        expect.objectContaining({"address": "Stockholm, Sweden", "cardId": 9, "description": "clear", "feelsLike": 20, "humidity": 50, "id": 0, "temp": 20, "timezone": "Europe/Stockholm", "windDir": 180, "windSpeed": 5})
       );
     });
 

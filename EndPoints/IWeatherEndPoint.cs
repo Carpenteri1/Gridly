@@ -1,8 +1,8 @@
-using Gridly.Models;
+using Gridly.Dtos;
 
 namespace Gridly.EndPoints;
 
 public interface IWeatherEndPoint
 {
-    public Task<(int, WeatherModel? Weather)> Get(string location, string rawKey);
+    public Task<(int, WeatherDataDto? Weather)> Get(string address, string rawKey);
 }

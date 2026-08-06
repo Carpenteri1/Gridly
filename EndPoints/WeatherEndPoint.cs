@@ -1,27 +1,22 @@
 using Gridly.Constants;
 using Gridly.Dtos;
-using Gridly.Factories;
 using Gridly.helpers;
-using Gridly.Models;
 using Gridly.Services;
 
 namespace Gridly.EndPoints;
 
 public class WeatherEndPoint(
-    IDataConverter<WeatherDtoModel> dataConverter,
+    IDataConverter<WeatherDataDto> dataConverter,
     IProvidersEndPointExtensions providersEndPointExtensions) : IWeatherEndPoint
 {
-    public async Task<(int, WeatherModel? Weather)> Get(string location, string rawKey)
+    public async Task<(int, WeatherDataDto? Weather)> Get(string address, string rawKey)
     {
         var (status, body) = await providersEndPointExtensions.CallWeatherProvider(
-            location,
+            address,
             EndpointStrings.GetVisualCrossingWeatherData,
             rawKey);
 
         var dto = dataConverter.DeserializeJson(body);
-
-        return dto is null
-            ? (status, null)
-            : (status, WeatherFactory.Create(dto));
+        return (status, dto);
     }
 }

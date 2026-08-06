@@ -4,11 +4,11 @@ namespace Gridly.helpers;
 
 public class ProvidersEndPointExtensions(IHttpClientServices httpClientServices) : IProvidersEndPointExtensions
 {
-    public async Task<(int Status, string Body)> CallWeatherProvider(string location, string provider, string rawKey)
+    public async Task<(int Status, string Body)> CallWeatherProvider(string address, string provider, string rawKey)
     {
         var url = string.Format(
             provider,
-            Uri.EscapeDataString(location),
+            Uri.EscapeDataString(address),
             rawKey);
         
         var (statusCode, body) = await httpClientServices.GetWithStatusCode(url);

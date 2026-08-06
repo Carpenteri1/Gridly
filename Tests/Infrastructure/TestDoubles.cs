@@ -1,6 +1,5 @@
 using Gridly.Dtos;
 using Gridly.EndPoints;
-using Gridly.Factories;
 using Gridly.Models;
 using Gridly.Repositories;
 using Gridly.Services;
@@ -110,36 +109,36 @@ internal sealed class FakeHttpClientServices : IHttpClientServices
 internal sealed class FakeWeatherEndPoint : IWeatherEndPoint
 {
     public int GetCallCount { get; private set; }
-    public (int Status, WeatherModel? Weather) Result { get; set; }
+    public (int Status, WeatherDataDto? Weather) Result { get; set; }
 
-    public Task<(int, WeatherModel? Weather)> Get(string location, string rawKey)
+    public Task<(int, WeatherDataDto? Weather)> Get(string location, string rawKey)
     {
         GetCallCount++;
         return Task.FromResult(Result);
     }
 }
-
+/*
 internal sealed class FakeWeatherRepository : IWeatherRepository
 {
-    private readonly Dictionary<string, (WeatherModel? Weather, DateTime? FetchedAt)> _stored = new();
-    private readonly Dictionary<int, (WeatherModel? Weather, DateTime? FetchedAt)> _storedCardId = new();
+    private readonly Dictionary<string, (WeatherDataModel? Weather, DateTime? FetchedAt)> _stored = new();
+    private readonly Dictionary<int, (WeatherDataModel? Weather, DateTime? FetchedAt)> _storedCardId = new();
 
     public int UpsertCallCount { get; private set; }
     public string? LastUpsertedLocation { get; private set; }
     public int DeleteCallCount { get; private set; }
     public int? LastDeletedCardId { get; private set; }
 
-    public void Seed(string location, WeatherModel weather, DateTime fetchedAt) =>
-        _stored[location] = (weather, fetchedAt);
+    public void Seed(string location, WeatherModel weather) =>
+        _stored[location] = weather;
     
-    public void CardIdSeed(int cardId, WeatherModel weather, DateTime fetchedAt) =>
-        _storedCardId[cardId] = (weather, fetchedAt);
+    public void CardIdSeed(int cardId, WeatherModel weather) =>
+        _storedCardId[cardId] = weather;
 
-    public Task<(WeatherModel? Weather, DateTime? FetchedAt)> Get(string location) =>
-        Task.FromResult(_stored.TryGetValue(location, out var value) ? value : (null, null));
+    public Task<WeatherDataModel> Get(string location) =>
+        Task.FromResult(_stored.TryGetValue(location, out var value) ? value : null);
 
-    public Task<(WeatherModel? Weather, DateTime? FetchedAt)> GetById(int cardId) =>
-        Task.FromResult(_storedCardId.TryGetValue(cardId, out var value) ? value : (null, null));
+    public Task<WeatherDataModel> GetById(int cardId) =>
+        Task.FromResult(_storedCardId.TryGetValue(cardId, out var value) ? value : null);
 
     public Task<bool> Delete(int CardId)
     {
@@ -148,14 +147,14 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
         return Task.FromResult(true);
     }
 
-    public Task<bool> Upsert(WeatherDataDtoModel weather)
+    public Task<bool> Upsert(WeatherDataModel weather)
     {
         UpsertCallCount++;
         LastUpsertedLocation = weather.Location;
         _stored[weather.Location] = (WeatherDataFactory.Create(weather), DateTime.UtcNow);
         return Task.FromResult(true);
     }
-}
+}*/
 
 internal sealed class FakeLocalProvidersRepository : ILocalProvidersRepository
 {

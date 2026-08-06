@@ -9,58 +9,60 @@
 
     <div class="ew-body">
       <form (ngSubmit)="onSubmit()">
-        <mat-form-field class="mb-3 w-100 gap-2 form-control">
-          <mat-label for="name-input" class="form-label">{{'editCardDialog.text.inputNameTitle' | translate}}</mat-label>
-          <input
-            type="text"
-            matInput
-            id="name-input"
-            class="form-control"
-            placeholder="Enter name"
-            name="name"
-            [(ngModel)]="facade.card.name"
-            required>
-        </mat-form-field>
+        @if (facade.card.type !== CardTypes.Weather) {
+          <mat-form-field class="mb-3 w-100 gap-2 form-control">
+            <mat-label for="name-input" class="form-label">{{'editCardDialog.text.inputNameTitle' | translate}}</mat-label>
+            <input
+              type="text"
+              matInput
+              id="name-input"
+              class="form-control"
+              placeholder="Enter name"
+              name="name"
+              [(ngModel)]="facade.card.name"
+              required>
+          </mat-form-field>
 
-        <mat-form-field class="mb-3 w-100 gap-2 form-control">
-          <mat-label for="url-input" class="form-label">{{'editCardDialog.text.inputUrlTitle' | translate}}</mat-label>
-          <input
-            matInput
-            type="text"
-            id="url-input"
-            class="form-control"
-            [(ngModel)]="facade.card.url"
-            placeholder="Enter URL"
-            name="url"
-            required>
-        </mat-form-field>
+          <mat-form-field class="mb-3 w-100 gap-2 form-control">
+            <mat-label for="url-input" class="form-label">{{'editCardDialog.text.inputUrlTitle' | translate}}</mat-label>
+            <input
+              matInput
+              type="text"
+              id="url-input"
+              class="form-control"
+              [(ngModel)]="facade.card.url"
+              placeholder="Enter URL"
+              name="url"
+              required>
+          </mat-form-field>
 
-        <mat-form-field class="mb-3 w-100 gap-2 form-control">
-          <mat-label>{{'editCardDialog.text.inputSearchIconTitle' | translate}}</mat-label>
-        <div class="d-flex">
-          <input
-            matInput
-            type="text"
-            #iconInput
-            (input)="facade.onSearch(iconInput.value)"
-            placeholder="Enter Icon name"
-            name="icon">
-          <button matSuffix id="dropDownButton" (click)="dropDown.open();$event.stopPropagation()" type="button">
-            <mat-icon>arrow_drop_down</mat-icon>
-          </button>
-        </div>
-          <div class="d-flex">
-            <mat-select #dropDown [value]="facade.card.iconData?.materialIcon" (selectionChange)="facade.setIcon($event.value)">
-              @if (facade.icons$ | async; as icons)
-              {
-                @for (icon of icons.icons; track icon) {
-                  <mat-option [value]="icon"><mat-icon>{{icon}}</mat-icon></mat-option>
+          <mat-form-field class="mb-3 w-100 gap-2 form-control">
+            <mat-label>{{'editCardDialog.text.inputSearchIconTitle' | translate}}</mat-label>
+            <div class="d-flex">
+              <input
+                matInput
+                type="text"
+                #iconInput
+                (input)="facade.onSearch(iconInput.value)"
+                placeholder="Enter Icon name"
+                name="icon">
+              <button matSuffix id="dropDownButton" (click)="dropDown.open();$event.stopPropagation()" type="button">
+                <mat-icon>arrow_drop_down</mat-icon>
+              </button>
+            </div>
+            <div class="d-flex">
+              <mat-select #dropDown [value]="facade.card.iconData?.materialIcon" (selectionChange)="facade.setIcon($event.value)">
+                @if (facade.icons$ | async; as icons)
+                {
+                  @for (icon of icons.icons; track icon) {
+                    <mat-option [value]="icon"><mat-icon>{{icon}}</mat-icon></mat-option>
+                  }
                 }
-              }
-            </mat-select>
-          </div>
-        </mat-form-field>
-        @if (facade.card.type === CardTypes.Weather) {
+              </mat-select>
+            </div>
+          </mat-form-field>
+        }
+        @else{
           <fieldset class="mb-3">
             <legend class="form-label h6">{{'editCardDialog.text.weatherSectionTitle' | translate}}</legend>
             <mat-form-field class="mb-2 w-100 gap-2 form-control">

@@ -17,6 +17,9 @@ public class WeatherController(IMediator mediator) : ControllerBase
     [EnableRateLimiting(RateLimiterPolicySettings.WeatherProviderPolicy)]
     [HttpGet("getvisualcrossingdata")]
     public async Task<IResult> GetWeather([FromQuery] GetVisualCrossingDataQuery query) => await mediator.Send(query);
+    
+    [HttpGet("getstoredweatherdata")]
+    public async Task<IResult> GetWeather([FromQuery] GetStoredWeatheDataQuery query) => await mediator.Send(query);
 
     [HttpPost("save")]
     public async Task<IResult> SaveSettings([FromBody] SaveWeatherCommand command) =>
