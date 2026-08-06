@@ -14,6 +14,7 @@ public class WeatherHandlerTests
     private static WeatherModel MakeWeather(string location = "Stockholm") =>
         new()
         {
+            CardId = 1,
             Location = location,
             Address = location,
             Timezone = "Europe/Stockholm",
@@ -57,6 +58,7 @@ public class WeatherHandlerTests
         var repository = new FakeWeatherRepository();
         var weather = MakeWeather();
         repository.Seed("Stockholm", weather, DateTime.UtcNow.AddMinutes(-5));
+        repository.CardIdSeed(1, weather, DateTime.UtcNow.AddMinutes(-5));
         var handler = MakeHandler(weatherRepository: repository);
 
         var result = await handler.Handle(new GetWeatherQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
@@ -70,6 +72,7 @@ public class WeatherHandlerTests
     {
         var repository = new FakeWeatherRepository();
         repository.Seed("Stockholm", MakeWeather(), DateTime.UtcNow.AddHours(-9));
+        repository.CardIdSeed(1, MakeWeather(), DateTime.UtcNow.AddHours(-9));
         var handler = MakeHandler(weatherRepository: repository);
 
         var result = await handler.Handle(new GetWeatherQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
@@ -139,6 +142,7 @@ public class WeatherHandlerTests
         var repository = new FakeWeatherRepository();
         var staleWeather = MakeWeather();
         repository.Seed("Stockholm", staleWeather, DateTime.UtcNow.AddHours(-3));
+        repository.CardIdSeed(1, staleWeather, DateTime.UtcNow.AddHours(-3));
         var handler = MakeHandler(endPoint, repository, MakeProvidersRepository());
 
         var result = await handler.Handle(new GetVisualCrossingDataQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
@@ -156,20 +160,5 @@ public class WeatherHandlerTests
         var result = await handler.Handle(new GetVisualCrossingDataQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
 
         ResultAssertions.AssertStatusCode(result, StatusCodes.Status400BadRequest);
-    }
-
-    [Fact]
-    public async Task HandleSaveWeather_DeletesExistingRowForCardBeforeUpserting()
-    {
-        var repository = new FakeWeatherRepository();
-        var handler = MakeHandler(weatherRepository: repository);
-        var dto = new WeatherDataDtoModel { CardId = 7, Location = "Stockholm" };
-
-        var result = await handler.Handle(new SaveWeatherCommand { Weather = dto }, CancellationToken.None);
-
-        ResultAssertions.AssertStatusCode(result, StatusCodes.Status200OK);
-        Assert.Equal(1, repository.DeleteCallCount);
-        Assert.Equal(7, repository.LastDeletedCardId);
-        Assert.Equal(1, repository.UpsertCallCount);
     }
 }

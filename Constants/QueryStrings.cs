@@ -152,11 +152,15 @@ public class QueryStrings
         WindSpeed = excluded.WindSpeed,
         WindDir = excluded.WindDir,
         FetchedAt = excluded.FetchedAt;";
-
+/*
     public const string SelectWeatherDataQuery = @"
     SELECT Id, CardId, Location, Address, Timezone, Description, Conditions, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt
     FROM WeatherData
-    WHERE Location = @Location;";
+    WHERE Location = @Location;";*/
+    
+    public const string SelectWeatherDataQuery = @"
+    SELECT Id, CardId, Location, Address, Timezone, Description, Conditions, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt
+    FROM WeatherData /**where**/";
 
     public const string JoinIconDataQuery = "Icon i ON i.Id = ic.IconId";
     public const string JoinIconsConnectedDataQuery = "IconsConnected ic ON ic.CardId = co.Id";
@@ -164,6 +168,7 @@ public class QueryStrings
     public const string JoinWidgetType = "WidgetType wt ON wt.Id = w.WidgetType";
 
     public const string WhereCardIdForeignKeyEqualId = "CardId = @CardId";
+    public const string WhereLocationEqualsLocation = "Location = @Location";
     public const string WhereIdEqualsId = "Id = @Id";
     public const string WhereIconConnectedIconIdForeignKeyEqualIdWithAlias = "ic.IconId = @IconId";
     public const string WhereIconConnectedCardIdForeignKeyEqualIdWithAlias = "ic.CardId = @CardId";

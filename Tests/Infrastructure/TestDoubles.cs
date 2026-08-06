@@ -122,6 +122,7 @@ internal sealed class FakeWeatherEndPoint : IWeatherEndPoint
 internal sealed class FakeWeatherRepository : IWeatherRepository
 {
     private readonly Dictionary<string, (WeatherModel? Weather, DateTime? FetchedAt)> _stored = new();
+    private readonly Dictionary<int, (WeatherModel? Weather, DateTime? FetchedAt)> _storedCardId = new();
 
     public int UpsertCallCount { get; private set; }
     public string? LastUpsertedLocation { get; private set; }
@@ -130,9 +131,15 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
 
     public void Seed(string location, WeatherModel weather, DateTime fetchedAt) =>
         _stored[location] = (weather, fetchedAt);
+    
+    public void CardIdSeed(int cardId, WeatherModel weather, DateTime fetchedAt) =>
+        _storedCardId[cardId] = (weather, fetchedAt);
 
     public Task<(WeatherModel? Weather, DateTime? FetchedAt)> Get(string location) =>
         Task.FromResult(_stored.TryGetValue(location, out var value) ? value : (null, null));
+
+    public Task<(WeatherModel? Weather, DateTime? FetchedAt)> GetById(int cardId) =>
+        Task.FromResult(_storedCardId.TryGetValue(cardId, out var value) ? value : (null, null));
 
     public Task<bool> Delete(int CardId)
     {

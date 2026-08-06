@@ -84,15 +84,19 @@ export class EditCardDialogFacade {
     this.locationErrorMessage = '';
     const location = `${country},${city}`;
     let [weather, status] = await this.#weatherProviderService.getWeather(location);
+    let isFromProvider = false;
 
     if (status !== 200) {
       [weather, status] = await this.#weatherProviderService.getVisualCrossingData(location);
+      isFromProvider = true;
     }
 
     if (status === 200 && weather !== undefined) {
       weather.cardId = cardId;
-      const dto = WeatherDataDtoFactory.createDto(weather);
-      await this.#weatherProviderService.save(dto);
+      if (isFromProvider) {
+        const dto = WeatherDataDtoFactory.createDto(weather);
+        await this.#weatherProviderService.save(dto);
+      }
       this.countryInput = '';
       this.cityInput = '';
       return true;
