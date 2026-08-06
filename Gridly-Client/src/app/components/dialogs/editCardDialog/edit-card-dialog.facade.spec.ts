@@ -138,7 +138,7 @@ describe('EditCardDialogFacade', () => {
       expect(weatherProviderServiceMock.getWeather).not.toHaveBeenCalled();
     });
 
-    it('saves the resolved weather for the card and clears the inputs on success', async () => {
+    it('populates the card from already-stored weather without re-saving it', async () => {
       facade.countryInput = 'Sweden';
       facade.cityInput = 'Stockholm';
       weatherProviderServiceMock.getWeather.mockResolvedValue([makeWeather(), 200]);
@@ -148,15 +148,13 @@ describe('EditCardDialogFacade', () => {
       expect(result).toBe(true);
       expect(weatherProviderServiceMock.getWeather).toHaveBeenCalledWith('Sweden,Stockholm');
       expect(weatherProviderServiceMock.getVisualCrossingData).not.toHaveBeenCalled();
-      expect(weatherProviderServiceMock.save).toHaveBeenCalledWith(
-        expect.objectContaining({ cardId: 9, location: 'Sweden,Stockholm' })
-      );
+      expect(weatherProviderServiceMock.save).not.toHaveBeenCalled();
       expect(facade.countryInput).toBe('');
       expect(facade.cityInput).toBe('');
       expect(facade.locationErrorMessage).toBe('');
     });
 
-    it('falls back to getVisualCrossingData when getWeather fails', async () => {
+    it('falls back to getVisualCrossingData and saves the freshly-fetched weather when getWeather fails', async () => {
       facade.countryInput = 'Sweden';
       facade.cityInput = 'Stockholm';
       weatherProviderServiceMock.getWeather.mockResolvedValue([undefined, 404]);
@@ -166,7 +164,9 @@ describe('EditCardDialogFacade', () => {
 
       expect(result).toBe(true);
       expect(weatherProviderServiceMock.getVisualCrossingData).toHaveBeenCalledWith('Sweden,Stockholm');
-      expect(weatherProviderServiceMock.save).toHaveBeenCalled();
+      expect(weatherProviderServiceMock.save).toHaveBeenCalledWith(
+        expect.objectContaining({ cardId: 9, location: 'Sweden,Stockholm' })
+      );
     });
 
     it('surfaces an invalid-key error message and does not save', async () => {
