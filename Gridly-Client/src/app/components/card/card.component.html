@@ -52,12 +52,12 @@
         @for(weather of weatherData; track weather){
           @if (card.id === weather.cardId && card.type === CardTypes.Weather) {
             <ul class="weather-section">
-              <li> Address: {{weather.address}}</li>
-              <li> Temp: {{weather.temp}}</li>
-              <li> Feels like: {{weather.feelsLike}}</li>
-              <li> Humidity: {{weather.humidity}}</li>
-              <li> Wind dir: {{weather.windDir}}</li>
-              <li> Wind speed: {{weather.windSpeed}}</li>
+              <li> {{ 'card.weatherSection.address' | translate }} {{weather.address}}</li>
+              <li> {{ 'card.weatherSection.temp' | translate }} {{weather.temp}}</li>
+              <li> {{ 'card.weatherSection.feelsLike' | translate }} {{weather.feelsLike}}</li>
+              <li> {{ 'card.weatherSection.humidity' | translate }} {{weather.humidity}}</li>
+              <li> {{ 'card.weatherSection.windDir' | translate }} {{weather.windDir}}</li>
+              <li> {{ 'card.weatherSection.windSpeed' | translate }} {{weather.windSpeed}}</li>
             </ul>
           }
         }

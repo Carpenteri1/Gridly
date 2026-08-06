@@ -89,8 +89,15 @@
                 [(ngModel)]="facade.cityInput">
             </mat-form-field>
 
-            @if (facade.locationErrorMessage) {
-              <p class="text-danger">{{facade.locationErrorMessage}}</p>
+            @if (facade.cityInput === '' || facade.countryInput === '') {
+              <p class="text-danger">{{'editCardFacadDialog.error.inputBlank' | translate}}</p>
+            }
+
+            @if (facade.errorStatus  === 401 || facade.errorStatus === 412) {
+              <p class="text-danger">{{'editCardFacadDialog.error.invalidProviderKey' | translate}}</p>
+            }
+            @if(facade.errorStatus === 404) {
+              <p class="text-danger">{{'editCardFacadDialog.error.locationNotFound' | translate}}</p>
             }
           </fieldset>
         }

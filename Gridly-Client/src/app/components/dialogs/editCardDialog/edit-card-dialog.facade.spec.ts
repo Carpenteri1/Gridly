@@ -4,7 +4,6 @@ import { IconService } from '../../../services/icon_services/Icon.service';
 import { CardRulesService } from '../../../services/card_services/card-rules.service';
 import { WeatherProviderService } from '../../../services/weather_services/weather-provider.service';
 import { CardTypes } from '../../../enums/card.types.enum';
-import { TextStringsUtil } from '../../../constants/text.strings.util';
 import { EditCardDialogFacade } from './edit-card-dialog.facade';
 import {WeatherDataModel} from "../../../models/weatherData.Model";
 
@@ -119,7 +118,6 @@ describe('EditCardDialogFacade', () => {
       const result = await facade.saveLocation(1);
 
       expect(result).toBe(true);
-      expect(facade.locationErrorMessage).toBe('');
       expect(weatherProviderServiceMock.getWeather).not.toHaveBeenCalled();
       expect(weatherProviderServiceMock.save).not.toHaveBeenCalled();
     });
@@ -131,7 +129,6 @@ describe('EditCardDialogFacade', () => {
       const result = await facade.saveLocation(1);
 
       expect(result).toBe(false);
-      expect(facade.locationErrorMessage).toBe(TextStringsUtil.DialogEditCardLocationBothFieldsRequiredMessage);
       expect(weatherProviderServiceMock.getWeather).not.toHaveBeenCalled();
     });
 
@@ -148,7 +145,6 @@ describe('EditCardDialogFacade', () => {
       expect(weatherProviderServiceMock.save).toHaveBeenCalled();
       expect(facade.countryInput).toBe('');
       expect(facade.cityInput).toBe('');
-      expect(facade.locationErrorMessage).toBe('');
     });
 
     it('falls back to getVisualCrossingData and saves the freshly-fetched weather when getWeather fails', async () => {
@@ -175,7 +171,6 @@ describe('EditCardDialogFacade', () => {
       const result = await facade.saveLocation(9);
 
       expect(result).toBe(false);
-      expect(facade.locationErrorMessage).toBe(TextStringsUtil.DialogWeatherProviderLocationSaveInvalidKeyFailedMessage);
       expect(weatherProviderServiceMock.save).not.toHaveBeenCalled();
     });
 
@@ -188,7 +183,6 @@ describe('EditCardDialogFacade', () => {
       const result = await facade.saveLocation(9);
 
       expect(result).toBe(false);
-      expect(facade.locationErrorMessage).toBe(TextStringsUtil.DialogWeatherProviderLocationSaveLocationNotFoundFailedMessage);
     });
 
     it('surfaces a generic failure message for other failures', async () => {
@@ -200,7 +194,6 @@ describe('EditCardDialogFacade', () => {
       const result = await facade.saveLocation(9);
 
       expect(result).toBe(false);
-      expect(facade.locationErrorMessage).toBe(TextStringsUtil.DialogWeatherProviderLocationSaveFailedMessage);
     });
   });
 });

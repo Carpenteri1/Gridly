@@ -17,7 +17,18 @@
     }
   },
   "card": {
-    "text": { "emptyTitle": "Empty Card", "emptyDescription": "Click to customize" },
+    "text": {
+      "emptyTitle": "Empty Card",
+      "emptyDescription": "Click to customize"
+    },
+    "weatherSection": {
+      "address": "Address:",
+      "temp": "Temp:",
+      "feelsLike": "Feels like:",
+      "humidity": "Humidity:",
+      "windDir": "Wind dir:",
+      "windSpeed": "Wind speed:"
+    },
     "errors": {
       "addFailed": "Failed to add new card",
       "getByIdFailed": "Failed to get card by id",
@@ -44,6 +55,14 @@
       "dropDownOptionUploadImage": "Upload New Image to card",
       "dropDownOptionLinkToImage": "Link To Image",
       "linkToImageTitle": "URL To Image"
+    }
+  },
+  "editCardFacadDialog": {
+    "error":{
+      "locationNotFound": "Location not found",
+      "inputBlank": "Enter both country and city, or leave both blank",
+      "invalidProviderKey": "Failed to save. Invalid Provider Key."
+
     }
   },
   "addCardDialog": {

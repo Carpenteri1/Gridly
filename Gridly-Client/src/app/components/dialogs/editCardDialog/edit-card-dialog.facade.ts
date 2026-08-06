@@ -7,7 +7,6 @@ import { IconModel } from '../../../models/icon.Model';
 import { CardRulesService } from '../../../services/card_services/card-rules.service';
 import { CardTypes } from '../../../enums/card.types.enum';
 import { WeatherProviderService } from '../../../services/weather_services/weather-provider.service';
-import { TextStringsUtil } from '../../../constants/text.strings.util';
 import {ProviderKeysService} from "../../../services/provider_key_services/provider-keys.service";
 
 @Injectable()
@@ -17,7 +16,7 @@ export class EditCardDialogFacade {
 
   countryInput = '';
   cityInput = '';
-  locationErrorMessage = '';
+  errorStatus = 0;
 
   #iconService = inject(IconService);
   #CardRulesService = inject(CardRulesService);
@@ -61,7 +60,7 @@ export class EditCardDialogFacade {
     this.card = Object.assign(new CardModel(), initial ?? {});
     this.countryInput = '';
     this.cityInput = '';
-    this.locationErrorMessage = '';
+    this.errorStatus = 0;
   }
 
   buildSubmitPayload(id: number): CardModel {
@@ -74,15 +73,13 @@ export class EditCardDialogFacade {
     const city = this.cityInput?.trim();
 
     if (!country && !city) {
-      this.locationErrorMessage = '';
+      this.errorStatus = 0;
       return true;
     }
     if (!country || !city) {
-      this.locationErrorMessage = TextStringsUtil.DialogEditCardLocationBothFieldsRequiredMessage;
       return false;
     }
 
-    this.locationErrorMessage = '';
     const address = `${country},${city}`;
     this.countryInput = '';
     this.cityInput = '';
@@ -92,6 +89,7 @@ export class EditCardDialogFacade {
     if (status !== 200) {
       [weather, status] = await this.#weatherProviderService.getVisualCrossingData(address);
       if (status === 401 || status === 412) {
+        this.errorStatus = status;
         this.#providerKeyService.promptForInvalidKey();
       }
     }
@@ -102,14 +100,7 @@ export class EditCardDialogFacade {
         return true;
       }
     }
-
-    if (status === 401 || status === 412) {
-      this.locationErrorMessage = TextStringsUtil.DialogWeatherProviderLocationSaveInvalidKeyFailedMessage;
-    } else if (status === 404) {
-      this.locationErrorMessage = TextStringsUtil.DialogWeatherProviderLocationSaveLocationNotFoundFailedMessage;
-    } else {
-      this.locationErrorMessage = TextStringsUtil.DialogWeatherProviderLocationSaveFailedMessage;
-    }
+    this.errorStatus = status;
     return false;
   }
 }
