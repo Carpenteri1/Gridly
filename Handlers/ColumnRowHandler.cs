@@ -14,6 +14,8 @@ public class ColumnRowHandler(
     ISettingsRepository settingsRepository,
     IIconRepository iconRepository,
     IIconConnectedRepository iconConnectedRepository,
+    IWeatherRepository weatherRepository,
+    IWeatherDataConnectionRepository weatherDataConnectionRepository,
     IFileService fileService):
     IRequestHandler<GetAllRowColumnsQuery, IResult>,
     IRequestHandler<BatchSaveColumnRowCommands, IResult>
@@ -148,6 +150,11 @@ public class ColumnRowHandler(
 
             if (card.IconData is not null)
                 await iconConnectedRepository.Delete(card.Id);
+
+            var weatherConnection = (await weatherDataConnectionRepository.GetManyById(card.Id, null)).FirstOrDefault();
+            await weatherDataConnectionRepository.Delete(card.Id);
+            if (weatherConnection?.WeatherId is not null)
+                await weatherRepository.DeleteIfOrphaned(weatherConnection.WeatherId.Value);
 
             await cardRepository.Delete(card.Id);
 

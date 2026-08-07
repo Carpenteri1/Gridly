@@ -94,11 +94,8 @@ export class EditCardDialogFacade {
       }
     }
     if (status === 200 && weather !== undefined) {
-      if (weather.cardId !== cardId) {
-        weather.cardId = cardId;
-        await this.#weatherProviderService.save(weather);
-        return true;
-      }
+      await this.#weatherProviderService.save(weather, cardId);
+      return true;
     }
     this.errorStatus = status;
     return false;

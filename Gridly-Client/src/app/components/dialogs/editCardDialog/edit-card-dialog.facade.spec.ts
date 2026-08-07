@@ -22,7 +22,6 @@ describe('EditCardDialogFacade', () => {
   };
 
   const makeWeather = (): WeatherDataModel => ({
-    cardId: 0,
     address: 'Stockholm, Sweden',
     timezone: 'Europe/Stockholm',
     description: 'clear',
@@ -158,7 +157,8 @@ describe('EditCardDialogFacade', () => {
       expect(result).toBe(true);
       expect(weatherProviderServiceMock.getVisualCrossingData).toHaveBeenCalledWith('Sweden,Stockholm');
       expect(weatherProviderServiceMock.save).toHaveBeenCalledWith(
-        expect.objectContaining({"address": "Stockholm, Sweden", "cardId": 9, "description": "clear", "feelsLike": 20, "humidity": 50, "id": 0, "temp": 20, "timezone": "Europe/Stockholm", "windDir": 180, "windSpeed": 5})
+        expect.objectContaining({"address": "Stockholm, Sweden", "description": "clear", "feelsLike": 20, "humidity": 50, "id": 0, "temp": 20, "timezone": "Europe/Stockholm", "windDir": 180, "windSpeed": 5}),
+        9
       );
     });
 

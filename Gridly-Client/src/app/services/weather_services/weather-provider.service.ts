@@ -4,27 +4,29 @@ import { toSignal } from "@angular/core/rxjs-interop";
 import { HttpErrorResponse } from "@angular/common/http";
 import {WeatherEndpointService} from "../endpoint_services/weather.endpoint.service";
 import {WeatherDataModel} from "../../models/weatherData.Model";
+import {CardWeatherDataModel} from "../../models/cardWeatherData.Model";
 
 @Injectable({providedIn: 'root'})
 export class WeatherProviderService {
-  private readonly storedWeatherDataSubject =  new BehaviorSubject<WeatherDataModel[]>([]);
-  readonly storedWeatherData$: Observable<WeatherDataModel[]>;
-  readonly storedWeatherData!: Signal<WeatherDataModel[]>;
+  private readonly storedWeatherDataSubject =  new BehaviorSubject<CardWeatherDataModel[]>([]);
+  readonly storedWeatherData$: Observable<CardWeatherDataModel[]>;
+  readonly storedWeatherData!: Signal<CardWeatherDataModel[]>;
   #api = inject(WeatherEndpointService);
 
   constructor() {
     this.storedWeatherData$ = this.storedWeatherDataSubject.asObservable();
-    this.storedWeatherData = toSignal(this.storedWeatherData$, { initialValue: [] as WeatherDataModel[] });
+    this.storedWeatherData = toSignal(this.storedWeatherData$, { initialValue: [] as CardWeatherDataModel[] });
     this.refresh();
   }
 
-    private save$ = (weather: WeatherDataModel) => this.#api.save(weather);
+    private save$ = (weather: WeatherDataModel, cardId: number) => this.#api.save(weather, cardId);
     private getWeather$ = (address: string) => this.#api.get(address);
     private getVisualCrossingData$ = (address: string) => this.#api.getvisualcrossingdata(address);
 
 
-    save = async (weather: WeatherDataModel) => {
-      await firstValueFrom(this.save$(weather));
+    save = async (weather: WeatherDataModel, cardId: number) => {
+      await firstValueFrom(this.save$(weather, cardId));
+      this.refresh();
     }
 
 

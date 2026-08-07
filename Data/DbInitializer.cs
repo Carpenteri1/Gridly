@@ -1,5 +1,6 @@
 using Dapper;
 using System.Data;
+using Microsoft.Data.Sqlite;
 
 namespace Gridly.Data;
 
@@ -11,7 +12,7 @@ public class DbInitializer
     {
         this.connection = connection;
     }
-    
+
     public async Task EnsureTablesCreatedAsync()
     {
         await connection.ExecuteAsync(
@@ -75,8 +76,7 @@ public class DbInitializer
 
                 CREATE TABLE IF NOT EXISTS WeatherData(
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                CardId INTEGER NOT NULL,
-                Address TEXT NOT NULL,
+                Address TEXT NOT NULL UNIQUE,
                 Timezone TEXT NOT NULL,
                 Description TEXT NOT NULL,
                 Temp REAL NOT NULL,
@@ -84,8 +84,16 @@ public class DbInitializer
                 Humidity REAL NOT NULL,
                 WindSpeed REAL NOT NULL,
                 WindDir REAL NOT NULL,
-                FetchedAt TEXT NOT NULL,
-                FOREIGN KEY(CardId) REFERENCES Card(Id));
+                FetchedAt TEXT NOT NULL);
+
+                CREATE TABLE IF NOT EXISTS WeatherDataConnection(
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                CardId INTEGER NOT NULL,
+                WeatherId INTEGER NOT NULL,
+                FOREIGN KEY(CardId) REFERENCES Card(Id) ON DELETE CASCADE,
+                FOREIGN KEY(WeatherId) REFERENCES WeatherData(Id) ON DELETE CASCADE);
+
+                CREATE INDEX IF NOT EXISTS idx_weatherdataconnection_weatherid ON WeatherDataConnection(WeatherId);
 
                 INSERT INTO WidgetType(Name)
                 SELECT 'Empty'

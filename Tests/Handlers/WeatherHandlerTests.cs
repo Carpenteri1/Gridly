@@ -1,17 +1,19 @@
+using Gridly.Commands;
 using Gridly.Constants;
 using Gridly.Dtos;
 using Gridly.Enums;
+using Gridly.Handlers;
+using Gridly.Querys;
 using Gridly.Tests.Infrastructure;
 
 namespace Gridly.Tests.Handlers;
 
 public class WeatherHandlerTests
 {
-    private static WeatherDataModel MakeWeather(string location = "Stockholm") =>
+    private static WeatherDataModel MakeWeather(string address = "Stockholm") =>
         new()
         {
-            CardId = 1,
-            Address = location,
+            Address = address,
             Timezone = "Europe/Stockholm",
             Description = "clear",
             Temp = 20,
@@ -33,14 +35,16 @@ public class WeatherHandlerTests
                 LastValidatedAt = DateTime.UtcNow
             }
         };
-/*
+
     private static WeatherHandler MakeHandler(
         FakeWeatherEndPoint? endPoint = null,
         FakeWeatherRepository? weatherRepository = null,
+        FakeWeatherDataConnectionRepository? connectionRepository = null,
         FakeLocalProvidersRepository? providersRepository = null) =>
         new(
             endPoint ?? new FakeWeatherEndPoint(),
             weatherRepository ?? new FakeWeatherRepository(),
+            connectionRepository ?? new FakeWeatherDataConnectionRepository(),
             providersRepository ?? new FakeLocalProvidersRepository(),
             new FakeProviderKeysProtectionService());
 
@@ -49,25 +53,26 @@ public class WeatherHandlerTests
     {
         var repository = new FakeWeatherRepository();
         var weather = MakeWeather();
-        repository.Seed("Stockholm", weather, DateTime.UtcNow.AddMinutes(-5));
-        repository.CardIdSeed(1, weather, DateTime.UtcNow.AddMinutes(-5));
+        weather.FetchedAt = DateTime.UtcNow.AddMinutes(-5);
+        repository.Seed(weather);
         var handler = MakeHandler(weatherRepository: repository);
 
-        var result = await handler.Handle(new GetWeatherQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
-        var payload = ResultAssertions.AssertOk<WeatherModel>(result);
+        var result = await handler.Handle(new GetWeatherQuery { Address = "Stockholm" }, CancellationToken.None);
+        var payload = ResultAssertions.AssertOk<WeatherDataModel>(result);
 
-        Assert.Equal("Stockholm", payload.Location);
+        Assert.Equal("Stockholm", payload.Address);
     }
 
     [Fact]
     public async Task HandleGetWeather_WhenCacheIsStale_ReturnsNotFound()
     {
         var repository = new FakeWeatherRepository();
-        repository.Seed("Stockholm", MakeWeather(), DateTime.UtcNow.AddHours(-9));
-        repository.CardIdSeed(1, MakeWeather(), DateTime.UtcNow.AddHours(-9));
+        var weather = MakeWeather();
+        weather.FetchedAt = DateTime.UtcNow.AddHours(-9);
+        repository.Seed(weather);
         var handler = MakeHandler(weatherRepository: repository);
 
-        var result = await handler.Handle(new GetWeatherQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
+        var result = await handler.Handle(new GetWeatherQuery { Address = "Stockholm" }, CancellationToken.None);
 
         ResultAssertions.AssertStatusCode(result, StatusCodes.Status404NotFound);
     }
@@ -77,7 +82,7 @@ public class WeatherHandlerTests
     {
         var handler = MakeHandler();
 
-        var result = await handler.Handle(new GetWeatherQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
+        var result = await handler.Handle(new GetWeatherQuery { Address = "Stockholm" }, CancellationToken.None);
 
         ResultAssertions.AssertStatusCode(result, StatusCodes.Status404NotFound);
     }
@@ -86,15 +91,15 @@ public class WeatherHandlerTests
     public async Task HandleGetVisualCrossingData_WhenSuccessful_ReturnsWeatherAndMarksKeyValid()
     {
         var weather = MakeWeather();
-        var endPoint = new FakeWeatherEndPoint { Result = (StatusCodes.Status200OK, weather) };
-        var repository = new FakeWeatherRepository();
+        var days = new[] { new DaysDto(weather.Temp, weather.FeelsLike, weather.Humidity, weather.WindSpeed, weather.WindDir) };
+        var endPoint = new FakeWeatherEndPoint { Result = (StatusCodes.Status200OK, new WeatherDataDto("Stockholm", weather.Timezone, weather.Description, days, weather.FetchedAt)) };
         var providersRepository = MakeProvidersRepository();
-        var handler = MakeHandler(endPoint, repository, providersRepository);
+        var handler = MakeHandler(endPoint, providersRepository: providersRepository);
 
-        var result = await handler.Handle(new GetVisualCrossingDataQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
-        var payload = ResultAssertions.AssertOk<WeatherModel>(result);
-        
-        Assert.Equal("Stockholm", payload.Location);
+        var result = await handler.Handle(new GetVisualCrossingDataQuery { Address = "Stockholm" }, CancellationToken.None);
+        var payload = ResultAssertions.AssertOk<WeatherDataModel>(result);
+
+        Assert.Equal("Stockholm", payload.Address);
         Assert.Equal(1, endPoint.GetCallCount);
         Assert.Equal(1, providersRepository.UpdateStatusCallCount);
         Assert.Equal(nameof(ProvidersKeyStatusEnum.Valid), providersRepository.LastUpdatedStatus);
@@ -103,11 +108,12 @@ public class WeatherHandlerTests
     [Fact]
     public async Task HandleGetVisualCrossingData_WhenKeyIsInvalid_MarksKeyInvalidAndReturns401()
     {
-        var endPoint = new FakeWeatherEndPoint { Result = (StatusCodes.Status401Unauthorized, null) };
+        var placeholderDto = new WeatherDataDto("Stockholm", "Europe/Stockholm", "", [], DateTime.UtcNow);
+        var endPoint = new FakeWeatherEndPoint { Result = (StatusCodes.Status401Unauthorized, placeholderDto) };
         var apiKeyRepository = MakeProvidersRepository();
         var handler = MakeHandler(endPoint, providersRepository: apiKeyRepository);
 
-        var result = await handler.Handle(new GetVisualCrossingDataQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
+        var result = await handler.Handle(new GetVisualCrossingDataQuery { Address = "Stockholm" }, CancellationToken.None);
 
         ResultAssertions.AssertStatusCode(result, StatusCodes.Status401Unauthorized);
         Assert.Equal(1, apiKeyRepository.UpdateStatusCallCount);
@@ -115,42 +121,52 @@ public class WeatherHandlerTests
     }
 
     [Fact]
-    public async Task HandleGetVisualCrossingData_WhenNoKeyConfigured_Returns401WithoutTouchingKeyStatus()
+    public async Task HandleSaveWeather_WhenAddressIsNew_InsertsWeatherAndCreatesConnection()
     {
-        var endPoint = new FakeWeatherEndPoint { Result = (StatusCodes.Status401Unauthorized, null) };
-        var apiKeyRepository = new FakeLocalProvidersRepository();
-        var handler = MakeHandler(endPoint, providersRepository: apiKeyRepository);
+        var weatherRepository = new FakeWeatherRepository();
+        var connectionRepository = new FakeWeatherDataConnectionRepository();
+        var handler = MakeHandler(weatherRepository: weatherRepository, connectionRepository: connectionRepository);
 
-        var result = await handler.Handle(new GetVisualCrossingDataQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
+        var result = await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather(), CardId = 1 }, CancellationToken.None);
 
-        ResultAssertions.AssertStatusCode(result, StatusCodes.Status401Unauthorized);
-        Assert.Equal(0, apiKeyRepository.UpdateStatusCallCount);
+        ResultAssertions.AssertStatusCode(result, StatusCodes.Status200OK);
+        Assert.Equal(1, weatherRepository.UpsertCallCount);
+        Assert.Equal(1, connectionRepository.UpsertCallCount);
+        var connections = await connectionRepository.GetManyById(1, null);
+        Assert.Single(connections);
+        Assert.Empty(weatherRepository.DeleteIfOrphanedCalls);
     }
 
     [Fact]
-    public async Task HandleGetVisualCrossingData_WhenProviderDownAndStaleDataExists_ReturnsBadRequest()
+    public async Task HandleSaveWeather_WhenTwoCardsShareAnAddress_ReuseTheSameWeatherRow()
     {
-        var endPoint = new FakeWeatherEndPoint { Result = (StatusCodes.Status500InternalServerError, null) };
-        var repository = new FakeWeatherRepository();
-        var staleWeather = MakeWeather();
-        repository.Seed("Stockholm", staleWeather, DateTime.UtcNow.AddHours(-3));
-        repository.CardIdSeed(1, staleWeather, DateTime.UtcNow.AddHours(-3));
-        var handler = MakeHandler(endPoint, repository, MakeProvidersRepository());
+        var weatherRepository = new FakeWeatherRepository();
+        var connectionRepository = new FakeWeatherDataConnectionRepository();
+        var handler = MakeHandler(weatherRepository: weatherRepository, connectionRepository: connectionRepository);
 
-        var result = await handler.Handle(new GetVisualCrossingDataQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
+        await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 1 }, CancellationToken.None);
+        await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 2 }, CancellationToken.None);
 
-        ResultAssertions.AssertStatusCode(result, StatusCodes.Status400BadRequest);
-        Assert.Equal(0, repository.UpsertCallCount);
+        var connectionsForCard1 = (await connectionRepository.GetManyById(1, null)).Single();
+        var connectionsForCard2 = (await connectionRepository.GetManyById(2, null)).Single();
+        Assert.Equal(connectionsForCard1.WeatherId, connectionsForCard2.WeatherId);
+        Assert.Empty(weatherRepository.DeleteIfOrphanedCalls);
     }
 
     [Fact]
-    public async Task HandleGetVisualCrossingData_WhenProviderDownAndNoStaleData_ReturnsBadRequest()
+    public async Task HandleSaveWeather_WhenCardMovesToANewAddress_DeletesTheOldWeatherRowIfOrphaned()
     {
-        var endPoint = new FakeWeatherEndPoint { Result = (StatusCodes.Status500InternalServerError, null) };
-        var handler = MakeHandler(endPoint, providersRepository: MakeProvidersRepository());
+        var weatherRepository = new FakeWeatherRepository();
+        var connectionRepository = new FakeWeatherDataConnectionRepository();
+        var handler = MakeHandler(weatherRepository: weatherRepository, connectionRepository: connectionRepository);
 
-        var result = await handler.Handle(new GetVisualCrossingDataQuery { SearchTerm = "Stockholm" }, CancellationToken.None);
+        await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 1 }, CancellationToken.None);
+        var originalWeatherId = (await connectionRepository.GetManyById(1, null)).Single().WeatherId;
 
-        ResultAssertions.AssertStatusCode(result, StatusCodes.Status400BadRequest);
-    }*/
+        await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Gothenburg"), CardId = 1 }, CancellationToken.None);
+
+        var updatedConnection = (await connectionRepository.GetManyById(1, null)).Single();
+        Assert.NotEqual(originalWeatherId, updatedConnection.WeatherId);
+        Assert.Contains(originalWeatherId!.Value, weatherRepository.DeleteIfOrphanedCalls);
+    }
 }

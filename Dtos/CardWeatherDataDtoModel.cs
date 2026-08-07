@@ -1,9 +1,9 @@
-
 namespace Gridly.Dtos;
 
-public class WeatherDataModel
+public class CardWeatherDataDtoModel
 {
-    public int Id { get; set; }
+    public int CardId { get; set; }
+    public int WeatherId { get; set; }
     public string Address { get; set; }
     public string Timezone { get; set; }
     public string Description { get; set; }

@@ -117,44 +117,80 @@ internal sealed class FakeWeatherEndPoint : IWeatherEndPoint
         return Task.FromResult(Result);
     }
 }
-/*
 internal sealed class FakeWeatherRepository : IWeatherRepository
 {
-    private readonly Dictionary<string, (WeatherDataModel? Weather, DateTime? FetchedAt)> _stored = new();
-    private readonly Dictionary<int, (WeatherDataModel? Weather, DateTime? FetchedAt)> _storedCardId = new();
+    private readonly Dictionary<string, WeatherDataModel> _byAddress = new();
+    private int _nextId = 1;
 
     public int UpsertCallCount { get; private set; }
-    public string? LastUpsertedLocation { get; private set; }
-    public int DeleteCallCount { get; private set; }
-    public int? LastDeletedCardId { get; private set; }
+    public List<int> DeleteIfOrphanedCalls { get; } = new();
+    public bool DeleteIfOrphanedResult { get; set; } = true;
 
-    public void Seed(string location, WeatherModel weather) =>
-        _stored[location] = weather;
-    
-    public void CardIdSeed(int cardId, WeatherModel weather) =>
-        _storedCardId[cardId] = weather;
-
-    public Task<WeatherDataModel> Get(string location) =>
-        Task.FromResult(_stored.TryGetValue(location, out var value) ? value : null);
-
-    public Task<WeatherDataModel> GetById(int cardId) =>
-        Task.FromResult(_storedCardId.TryGetValue(cardId, out var value) ? value : null);
-
-    public Task<bool> Delete(int CardId)
+    public void Seed(WeatherDataModel weather)
     {
-        DeleteCallCount++;
-        LastDeletedCardId = CardId;
-        return Task.FromResult(true);
+        if (weather.Id == 0) weather.Id = _nextId;
+        _nextId = Math.Max(_nextId, weather.Id + 1);
+        _byAddress[weather.Address] = weather;
     }
 
-    public Task<bool> Upsert(WeatherDataModel weather)
+    public Task<WeatherDataModel> Get(string address) =>
+        Task.FromResult(_byAddress.TryGetValue(address, out var value) ? value : null);
+
+    public Task<IEnumerable<CardWeatherDataDtoModel>?> GetStoredWeatherData() =>
+        Task.FromResult<IEnumerable<CardWeatherDataDtoModel>?>(Array.Empty<CardWeatherDataDtoModel>());
+
+    public Task<WeatherDataModel> Upsert(WeatherDataModel weather)
     {
         UpsertCallCount++;
-        LastUpsertedLocation = weather.Location;
-        _stored[weather.Location] = (WeatherDataFactory.Create(weather), DateTime.UtcNow);
-        return Task.FromResult(true);
+        weather.Id = _byAddress.TryGetValue(weather.Address, out var existing) ? existing.Id : _nextId++;
+        _byAddress[weather.Address] = weather;
+        return Task.FromResult(weather);
     }
-}*/
+
+    public Task<bool> DeleteIfOrphaned(int weatherId)
+    {
+        DeleteIfOrphanedCalls.Add(weatherId);
+        var entry = _byAddress.Values.FirstOrDefault(w => w.Id == weatherId);
+        if (entry is not null) _byAddress.Remove(entry.Address);
+        return Task.FromResult(DeleteIfOrphanedResult);
+    }
+}
+
+internal sealed class FakeWeatherDataConnectionRepository : IWeatherDataConnectionRepository
+{
+    private readonly List<WeatherDataConnectionDtoModel> _connections = new();
+
+    public int UpsertCallCount { get; private set; }
+    public int DeleteCallCount { get; private set; }
+    public List<int> DeletedCardIds { get; } = new();
+
+    public void Seed(int cardId, int weatherId) =>
+        _connections.Add(new WeatherDataConnectionDtoModel { CardId = cardId, WeatherId = weatherId });
+
+    public Task<IEnumerable<WeatherDataConnectionDtoModel>> GetManyById(int? cardId, int? weatherId)
+    {
+        var results = _connections.Where(c =>
+            (cardId is null || c.CardId == cardId) &&
+            (weatherId is null || c.WeatherId == weatherId));
+        return Task.FromResult<IEnumerable<WeatherDataConnectionDtoModel>>(results.ToList());
+    }
+
+    public Task<WeatherDataConnectionDtoModel> Upsert(WeatherDataConnectionDtoModel model)
+    {
+        UpsertCallCount++;
+        _connections.RemoveAll(c => c.CardId == model.CardId);
+        _connections.Add(model);
+        return Task.FromResult(model);
+    }
+
+    public Task<bool> Delete(int cardId)
+    {
+        DeleteCallCount++;
+        DeletedCardIds.Add(cardId);
+        var removed = _connections.RemoveAll(c => c.CardId == cardId);
+        return Task.FromResult(removed > 0);
+    }
+}
 
 internal sealed class FakeLocalProvidersRepository : ILocalProvidersRepository
 {

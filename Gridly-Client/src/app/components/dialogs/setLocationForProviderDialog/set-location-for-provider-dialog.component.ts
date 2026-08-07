@@ -50,10 +50,7 @@ export class SetLocationForProviderDialogComponent extends BaseDialogComponent{
       this.countryInput = '';
       this.cityInput = '';
 
-      if(weather.cardId !== this.id){
-        weather.cardId = this.id;
-        await this.#weatherProviderService.save(weather);
-      }
+      await this.#weatherProviderService.save(weather, this.id);
       this.close();
     }
 

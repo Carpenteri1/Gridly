@@ -13,6 +13,7 @@ namespace Gridly.Handlers;
 public class WeatherHandler(
     IWeatherEndPoint weatherEndpoint,
     IWeatherRepository weatherRepository,
+    IWeatherDataConnectionRepository weatherDataConnectionRepository,
     ILocalProvidersRepository localProvidersRepository,
     IProviderKeysProtectionService providerKeysProtectionService) :
     IRequestHandler<GetWeatherQuery, IResult>,
@@ -72,14 +73,16 @@ public class WeatherHandler(
 
     public async Task<IResult> Handle(SaveWeatherCommand command, CancellationToken cancellationToken)
     {
-        var success = false;
-        var weather = await weatherRepository.GetById(command.Weather.CardId);
-        
-        if (weather is null)
-            success = await weatherRepository.Insert(command.Weather);
-        else 
-            success = await weatherRepository.Update(command.Weather);
-        
-        return success ? Results.Ok() : Results.BadRequest();
+        var previousConnection = (await weatherDataConnectionRepository.GetManyById(command.CardId, null)).FirstOrDefault();
+
+        var weather = await weatherRepository.Upsert(command.Weather);
+        if (weather is null) return Results.BadRequest();
+
+        await weatherDataConnectionRepository.Upsert(WeatherDataConnectionFactory.Create(command.CardId, weather.Id));
+
+        if (previousConnection?.WeatherId is not null && previousConnection.WeatherId != weather.Id)
+            await weatherRepository.DeleteIfOrphaned(previousConnection.WeatherId.Value);
+
+        return Results.Ok();
     }
 }

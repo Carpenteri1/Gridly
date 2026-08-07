@@ -27,11 +27,32 @@ public class QueryStrings
     VALUES (@CardId, @IconId);
     SELECT * FROM IconsConnected WHERE Id = last_insert_rowid();";
 
-    public const string InsertWeatherDataQuery = @"
-    INSERT INTO WeatherData (CardId, Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt)
-    VALUES (@CardId, @Address, @Timezone, @Description, @Temp, @FeelsLike, @Humidity, @WindSpeed, @WindDir, @FetchedAt);
-    SELECT * FROM RowColumn WHERE Id = last_insert_rowid();";
-    
+    public const string UpsertWeatherDataQuery = @"
+    INSERT INTO WeatherData (Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt)
+    VALUES (@Address, @Timezone, @Description, @Temp, @FeelsLike, @Humidity, @WindSpeed, @WindDir, @FetchedAt)
+    ON CONFLICT(Address) DO UPDATE SET
+        Timezone = excluded.Timezone,
+        Description = excluded.Description,
+        Temp = excluded.Temp,
+        FeelsLike = excluded.FeelsLike,
+        Humidity = excluded.Humidity,
+        WindSpeed = excluded.WindSpeed,
+        WindDir = excluded.WindDir,
+        FetchedAt = excluded.FetchedAt
+    RETURNING *;";
+
+    public const string UpsertWeatherDataConnectionQuery = @"
+    INSERT INTO WeatherDataConnection (CardId, WeatherId)
+    VALUES (@CardId, @WeatherId)
+    ON CONFLICT(CardId) DO UPDATE SET
+        WeatherId = excluded.WeatherId
+    RETURNING *;";
+
+    public const string DeleteOrphanedWeatherDataQuery = @"
+    DELETE FROM WeatherData
+    WHERE Id = @Id
+      AND NOT EXISTS (SELECT 1 FROM WeatherDataConnection WHERE WeatherId = @Id);";
+
     public const string SelectCardQuery = @"
      SELECT 
         co.Id AS CardId, 
@@ -141,22 +162,21 @@ public class QueryStrings
     FROM ProviderKeys
     WHERE Provider = @Provider;";
 
-    public const string UpdateWeatherDataQuery = @"
-    UPDATE WeatherData
-    SET Address = @Address,
-        Timezone = @Timezone,
-        Description = @Description,
-        Temp = @Temp,
-        FeelsLike = @FeelsLike,
-        Humidity = @Humidity,
-        WindSpeed = @WindSpeed,
-        WindDir = @WindDir,
-        FetchedAt = @FetchedAt
-        WHERE CardId = @CardId;";
-    
     public const string SelectWeatherDataQuery = @"
-    SELECT Id, CardId, Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt
+    SELECT Id, Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt
     FROM WeatherData /**where**/";
+
+    public const string SelectCardWeatherDataQuery = @"
+    SELECT wc.CardId, w.Id AS WeatherId, w.Address, w.Timezone, w.Description,
+        w.Temp, w.FeelsLike, w.Humidity, w.WindSpeed, w.WindDir, w.FetchedAt
+    FROM WeatherDataConnection wc
+    INNER JOIN WeatherData w ON w.Id = wc.WeatherId /**where**/";
+
+    public const string SelectWeatherDataConnectionQuery = @"
+    SELECT *
+    FROM WeatherDataConnection wc /**where**/";
+
+    public const string DeleteFromWeatherDataConnectionQuery = "DELETE FROM WeatherDataConnection /**where**/";
 
     public const string JoinIconDataQuery = "Icon i ON i.Id = ic.IconId";
     public const string JoinIconsConnectedDataQuery = "IconsConnected ic ON ic.CardId = co.Id";
@@ -166,6 +186,8 @@ public class QueryStrings
     public const string WhereCardIdForeignKeyEqualId = "CardId = @CardId";
     public const string WhereLocationEqualsLocation = "Address = @Address";
     public const string WhereIdEqualsId = "Id = @Id";
+    public const string WhereWeatherConnectedCardIdForeignKeyEqualIdWithAlias = "wc.CardId = @CardId";
+    public const string WhereWeatherConnectedWeatherIdForeignKeyEqualIdWithAlias = "wc.WeatherId = @WeatherId";
     public const string WhereIconConnectedIconIdForeignKeyEqualIdWithAlias = "ic.IconId = @IconId";
     public const string WhereIconConnectedCardIdForeignKeyEqualIdWithAlias = "ic.CardId = @CardId";
     public const string WhereCardIdEqualsCardIdWithAlias = "co.Id = @cardId";
