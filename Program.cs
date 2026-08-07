@@ -40,6 +40,7 @@ builder.Services.AddSingleton<IHttpClientServices, HttpClientServices>();
 builder.Services.AddSingleton<IFileService, FileService>();
 builder.Services.AddSingleton<IProviderKeysProtectionService, ProviderKeysProtectionService>();
 builder.Services.AddSingleton(typeof(IDataConverter<>), typeof(DataConverter<>));
+builder.Services.AddHostedService<WeatherRefreshBackgroundService>();
 
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
