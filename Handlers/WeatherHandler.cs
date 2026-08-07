@@ -2,6 +2,7 @@ using Gridly.Commands;
 using Gridly.Constants;
 using Gridly.EndPoints;
 using Gridly.Enums;
+using Gridly.Factories;
 using Gridly.Querys;
 using Gridly.Repositories;
 using Gridly.Services;
@@ -16,26 +17,22 @@ public class WeatherHandler(
     IProviderKeysProtectionService providerKeysProtectionService) :
     IRequestHandler<GetWeatherQuery, IResult>,
     IRequestHandler<GetVisualCrossingDataQuery, IResult>,
+    IRequestHandler<GetStoredWeatheDataQuery, IResult>,
     IRequestHandler<SaveWeatherCommand, IResult>
 {
     private static readonly TimeSpan CacheWindow = TimeSpan.FromHours(8);
 
     public async Task<IResult> Handle(GetWeatherQuery query, CancellationToken cancellationToken)
     {
-        var (weather, fetchedAt) = await weatherRepository.Get(query.SearchTerm);
+        var weather = await weatherRepository.Get(query.Address);
         if(weather is null) return Results.NotFound();
         
-        var isFresh = fetchedAt is not null && DateTime.UtcNow - fetchedAt.Value < CacheWindow;
-        if(!isFresh)
-            await weatherRepository.Delete(weather.CardId);
-        
+        var isFresh = DateTime.UtcNow - weather.FetchedAt < CacheWindow;
         return isFresh ? Results.Ok(weather) : Results.NotFound();
     }
 
     public async Task<IResult> Handle(GetVisualCrossingDataQuery query, CancellationToken cancellationToken)
     {
-        if(query.SearchTerm is null) return Results.BadRequest();
-        
         var storedKey = await localProvidersRepository.Get(EndpointStrings.VisualCrossingProvider);
         
         if(storedKey is null) return Results.Unauthorized();
@@ -43,7 +40,9 @@ public class WeatherHandler(
            storedKey.Status is nameof(ProvidersKeyStatusEnum.Unknown)) return Results.Unauthorized();
         
         var rawKey = providerKeysProtectionService.Unprotect(storedKey.EncryptedKey);
-        var (status, weather) = await weatherEndpoint.Get(query.SearchTerm, rawKey);
+        var (status, dto) = await weatherEndpoint.Get(query.Address, rawKey);
+        
+        if(dto is null) return Results.NotFound();
         
         switch (status)
         {
@@ -57,16 +56,30 @@ public class WeatherHandler(
                 return Results.BadRequest();
             case StatusCodes.Status200OK:
                 await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Valid));
+                var weather = WeatherDataFactory.Create(dto);
+                weather.FetchedAt = DateTime.UtcNow;
                 return Results.Ok(weather);
             default:
                 return Results.Problem(statusCode: StatusCodes.Status503ServiceUnavailable, detail: "ProviderUnavailable");
         }
     }
+    
+    public async Task<IResult> Handle(GetStoredWeatheDataQuery request, CancellationToken cancellationToken)
+    {
+        var storedWeatherData = await weatherRepository.GetStoredWeatherData();
+        return storedWeatherData is not null ? Results.Ok(storedWeatherData) : Results.NoContent();
+    }
 
     public async Task<IResult> Handle(SaveWeatherCommand command, CancellationToken cancellationToken)
     {
-        command.Weather.FetchedAt = DateTime.UtcNow;
-        var success = await weatherRepository.Upsert(command.Weather);
+        var success = false;
+        var weather = await weatherRepository.GetById(command.Weather.CardId);
+        
+        if (weather is null)
+            success = await weatherRepository.Insert(command.Weather);
+        else 
+            success = await weatherRepository.Update(command.Weather);
+        
         return success ? Results.Ok() : Results.BadRequest();
     }
 }

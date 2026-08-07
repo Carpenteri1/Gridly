@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { BaseDialogComponent } from '../../../directives/base-dialog.directive';
 import { DialogDirective } from '../../../directives/dialog.directive';
 import {WeatherProviderService} from "../../../services/weather_services/weather-provider.service";
-import {WeatherDataDtoFactory} from "../../../factory/weatherDtoFactory";
 import {TranslatePipe} from '@ngx-translate/core';
+import {ProviderKeysService} from "../../../services/provider_key_services/provider-keys.service";
 
 @Component({
   selector: 'app-set-location-for-provider-dialog',
@@ -19,6 +19,7 @@ export class SetLocationForProviderDialogComponent extends BaseDialogComponent{
   @Output() openChange = new EventEmitter<number>();
 
   #weatherProviderService = inject(WeatherProviderService);
+  #providerKeyService = inject(ProviderKeysService);
 
   countryInput!:string;
   cityInput!:string;
@@ -33,11 +34,14 @@ export class SetLocationForProviderDialogComponent extends BaseDialogComponent{
     this.saving = true;
     this.errorMessage = '';
 
-    const location = `${country},${city}`;
-    let [weather, status] = await this.#weatherProviderService.getWeather(location);
+    const address = `${country},${city}`;
+    let [weather, status] = await this.#weatherProviderService.getWeather(address);
 
     if (status !== 200) {
-      [weather, status] = await this.#weatherProviderService.getVisualCrossingData(location);
+      [weather, status] = await this.#weatherProviderService.getVisualCrossingData(address);
+      if (status === 401 || status === 412) {
+        this.#providerKeyService.promptForInvalidKey();
+      }
     }
 
     this.saving = false;
@@ -45,11 +49,15 @@ export class SetLocationForProviderDialogComponent extends BaseDialogComponent{
     if (status === 200 && weather !== undefined) {
       this.countryInput = '';
       this.cityInput = '';
-      weather.cardId = this.id;
-      const dto = WeatherDataDtoFactory.createDto(weather);
-      await this.#weatherProviderService.save(dto);
+
+      if(weather.cardId !== this.id){
+        weather.cardId = this.id;
+        await this.#weatherProviderService.save(weather);
+      }
       this.close();
-    } else if (status === 401 || status === 412) {
+    }
+
+    if (status === 401 || status === 412) {
       this.errorMessage = this.translate.instant('weatherProviderLocationDialog.text.saveInvalidKeyFailedMessage');
     } else if (status === 404) {
       this.errorMessage = this.translate.instant('weatherProviderLocationDialog.text.saveLocationNotFoundFailedMessage');

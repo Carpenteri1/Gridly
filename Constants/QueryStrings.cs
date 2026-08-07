@@ -27,6 +27,11 @@ public class QueryStrings
     VALUES (@CardId, @IconId);
     SELECT * FROM IconsConnected WHERE Id = last_insert_rowid();";
 
+    public const string InsertWeatherDataQuery = @"
+    INSERT INTO WeatherData (CardId, Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt)
+    VALUES (@CardId, @Address, @Timezone, @Description, @Temp, @FeelsLike, @Humidity, @WindSpeed, @WindDir, @FetchedAt);
+    SELECT * FROM RowColumn WHERE Id = last_insert_rowid();";
+    
     public const string SelectCardQuery = @"
      SELECT 
         co.Id AS CardId, 
@@ -112,7 +117,6 @@ public class QueryStrings
     public const string DeleteFromCardQuery = "DELETE FROM Card /**where**/";
     public const string DeleteFromIconsConnectedQuery = "DELETE FROM IconsConnected /**where**/";
     public const string DeleteFromIconQuery = "DELETE FROM Icon /**where**/";
-    public const string DeleteFromWeatherQuery = "DELETE FROM Weather /**where**/";
     
     public const string BatchDeleteRowColumnQuery = @"
     DELETE FROM RowColumn
@@ -137,26 +141,22 @@ public class QueryStrings
     FROM ProviderKeys
     WHERE Provider = @Provider;";
 
-    public const string UpsertWeatherDataQuery = @"
-    INSERT INTO WeatherData (CardId, Location, Address, Timezone, Description, Conditions, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt)
-    VALUES (@CardId, @Location, @Address, @Timezone, @Description, @Conditions, @Temp, @FeelsLike, @Humidity, @WindSpeed, @WindDir, @FetchedAt)
-    ON CONFLICT(Location) DO UPDATE SET
-        CardId = excluded.CardId,
-        Address = excluded.Address,
-        Timezone = excluded.Timezone,
-        Description = excluded.Description,
-        Conditions = excluded.Conditions,
-        Temp = excluded.Temp,
-        FeelsLike = excluded.FeelsLike,
-        Humidity = excluded.Humidity,
-        WindSpeed = excluded.WindSpeed,
-        WindDir = excluded.WindDir,
-        FetchedAt = excluded.FetchedAt;";
-
+    public const string UpdateWeatherDataQuery = @"
+    UPDATE WeatherData
+    SET Address = @Address,
+        Timezone = @Timezone,
+        Description = @Description,
+        Temp = @Temp,
+        FeelsLike = @FeelsLike,
+        Humidity = @Humidity,
+        WindSpeed = @WindSpeed,
+        WindDir = @WindDir,
+        FetchedAt = @FetchedAt
+        WHERE CardId = @CardId;";
+    
     public const string SelectWeatherDataQuery = @"
-    SELECT Id, CardId, Location, Address, Timezone, Description, Conditions, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt
-    FROM WeatherData
-    WHERE Location = @Location;";
+    SELECT Id, CardId, Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt
+    FROM WeatherData /**where**/";
 
     public const string JoinIconDataQuery = "Icon i ON i.Id = ic.IconId";
     public const string JoinIconsConnectedDataQuery = "IconsConnected ic ON ic.CardId = co.Id";
@@ -164,6 +164,7 @@ public class QueryStrings
     public const string JoinWidgetType = "WidgetType wt ON wt.Id = w.WidgetType";
 
     public const string WhereCardIdForeignKeyEqualId = "CardId = @CardId";
+    public const string WhereLocationEqualsLocation = "Address = @Address";
     public const string WhereIdEqualsId = "Id = @Id";
     public const string WhereIconConnectedIconIdForeignKeyEqualIdWithAlias = "ic.IconId = @IconId";
     public const string WhereIconConnectedCardIdForeignKeyEqualIdWithAlias = "ic.CardId = @CardId";

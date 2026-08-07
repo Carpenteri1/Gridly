@@ -3,8 +3,6 @@ using Dapper;
 using Gridly.Constants;
 using Gridly.Data;
 using Gridly.Dtos;
-using Gridly.Factories;
-using Gridly.Models;
 
 namespace Gridly.Repositories;
 
@@ -12,24 +10,40 @@ public class WeatherRepository(IDbConnection connection) : IWeatherRepository
 {
     private DbCommandRunner _dbCommandRunner = new(connection);
 
-    public async Task<(WeatherModel? Weather, DateTime? FetchedAt)> Get(string location)
+    public async Task<WeatherDataModel?> Get(string address)
     {
-        var dto = await _dbCommandRunner.Select<WeatherDataDtoModel>(
-            QueryStrings.SelectWeatherDataQuery, new { Location = location });
-
-        if (dto is null) return (null, null);
-
-        return (WeatherDataFactory.Create(dto), dto.FetchedAt);
+        var builder = new SqlBuilder();
+        builder.Where(QueryStrings.WhereLocationEqualsLocation);
+        var template = builder.AddTemplate(QueryStrings.SelectWeatherDataQuery); 
+        
+        var dto = await _dbCommandRunner.Select<WeatherDataModel>(
+            template.RawSql, new { Address = address });
+        
+        return dto;
     }
 
-    public async Task<bool> Delete(int CardId)
+    public async Task<WeatherDataModel> GetById(int cardId)
     {
-        var builder = new SqlBuilder();                                                       
-        var template = builder.AddTemplate(QueryStrings.DeleteFromWeatherQuery); 
-        builder.Where(QueryStrings.WhereCardIdForeignKeyEqualId, new { CardId});
-        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
+        var builder = new SqlBuilder();
+        builder.Where(QueryStrings.WhereCardIdForeignKeyEqualId);
+        var template = builder.AddTemplate(QueryStrings.SelectWeatherDataQuery); 
+        
+        var weather = await _dbCommandRunner.Select<WeatherDataModel>(
+            template.RawSql, new { CardId = cardId });
+        
+        return weather;
     }
 
-    public async Task<bool> Upsert(WeatherDataDtoModel weather) => 
-        await _dbCommandRunner.Execute(QueryStrings.UpsertWeatherDataQuery, weather as object);
+    public async Task<IEnumerable<WeatherDataModel>?> GetStoredWeatherData()
+    {
+        var storedWeatherData =
+            await _dbCommandRunner.SelectMany<WeatherDataModel>(QueryStrings.SelectWeatherDataQuery, string.Empty);
+        return storedWeatherData;    
+    }
+
+    public async Task<bool> Update(WeatherDataModel weather) => 
+        await _dbCommandRunner.Execute(QueryStrings.UpdateWeatherDataQuery, weather as object);
+    
+    public async Task<bool> Insert(WeatherDataModel weather) => 
+        await _dbCommandRunner.Execute(QueryStrings.InsertWeatherDataQuery, weather as object);
 }

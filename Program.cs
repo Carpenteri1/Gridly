@@ -4,7 +4,6 @@ using Gridly.Repositories;
 using Gridly.Services;
 using Gridly.Data;
 using Gridly.helpers;
-using Microsoft.AspNetCore.DataProtection;
 
 var appDirectory = Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
 Directory.SetCurrentDirectory(appDirectory);
@@ -41,9 +40,6 @@ builder.Services.AddSingleton<IHttpClientServices, HttpClientServices>();
 builder.Services.AddSingleton<IFileService, FileService>();
 builder.Services.AddSingleton<IProviderKeysProtectionService, ProviderKeysProtectionService>();
 builder.Services.AddSingleton(typeof(IDataConverter<>), typeof(DataConverter<>));
-
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(appDirectory, "Assets/Db/Keys")));
 
 builder.Services.AddMediatR(cfg => 
     cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));

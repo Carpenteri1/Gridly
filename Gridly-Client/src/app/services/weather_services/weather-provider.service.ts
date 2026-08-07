@@ -1,58 +1,56 @@
 import {inject, Injectable, Signal} from "@angular/core";
-import { firstValueFrom, Observable, Subject} from "rxjs";
+import {BehaviorSubject, firstValueFrom, Observable, take} from "rxjs";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { HttpErrorResponse } from "@angular/common/http";
-import {WeatherModel} from "../../models/weather.Model";
 import {WeatherEndpointService} from "../endpoint_services/weather.endpoint.service";
-import {ProviderKeysService} from "../provider_key_services/provider-keys.service";
-import {WeatherDataDto} from "../../dtos/weatherDataDto";
+import {WeatherDataModel} from "../../models/weatherData.Model";
 
 @Injectable({providedIn: 'root'})
 export class WeatherProviderService {
-  private readonly weatherSubject = new Subject<WeatherModel>();
-  private readonly weather$ = new Observable<WeatherModel>();
-  readonly weather!: Signal<WeatherModel | undefined>;
+  private readonly storedWeatherDataSubject =  new BehaviorSubject<WeatherDataModel[]>([]);
+  readonly storedWeatherData$: Observable<WeatherDataModel[]>;
+  readonly storedWeatherData!: Signal<WeatherDataModel[]>;
   #api = inject(WeatherEndpointService);
-  #providerKeyService= inject(ProviderKeysService);
 
   constructor() {
-    this.weather$ = this.weatherSubject.asObservable();
-    this.weather = toSignal(this.weather$);
+    this.storedWeatherData$ = this.storedWeatherDataSubject.asObservable();
+    this.storedWeatherData = toSignal(this.storedWeatherData$, { initialValue: [] as WeatherDataModel[] });
+    this.refresh();
   }
 
-    private save$ = (dto: WeatherDataDto) => this.#api.save(dto);
-    private getWeather$ = (location: string) => this.#api.get(location);
-    private getVisualCrossingData$ = (location: string) => this.#api.getvisualcrossingdata(location);
+    private save$ = (weather: WeatherDataModel) => this.#api.save(weather);
+    private getWeather$ = (address: string) => this.#api.get(address);
+    private getVisualCrossingData$ = (address: string) => this.#api.getvisualcrossingdata(address);
 
-    save = async (dto: WeatherDataDto) => {
-      await firstValueFrom(this.save$(dto))
-    };
 
-  async getWeather(location: string): Promise<[weather: WeatherModel | undefined, status: number]> {
+    save = async (weather: WeatherDataModel) => {
+      await firstValueFrom(this.save$(weather));
+    }
+
+
+    refresh(): void {
+      this.#api.getStoredWeatherData().pipe(take(1))
+        .subscribe((storedWeatherData) =>
+          this.storedWeatherDataSubject.next(storedWeatherData));
+    }
+
+  async getWeather(address: string): Promise<[weather: WeatherDataModel | undefined, status: number]> {
       try {
-        const weather = await firstValueFrom(this.getWeather$(location));
-        this.weatherSubject.next(weather);
+        const weather = await firstValueFrom(this.getWeather$(address));
         return [weather, 200];
       } catch (error) {
         if (error instanceof HttpErrorResponse) {
-          if (error.status === 401 || error.status === 412) {
-            this.#providerKeyService.promptForInvalidKey();
-          }
           return [undefined, error.status];
         }
         return [undefined, 0];
       }
     }
-    async getVisualCrossingData(location: string): Promise<[weather: WeatherModel | undefined, status: number]> {
+    async getVisualCrossingData(address: string): Promise<[weather: WeatherDataModel | undefined, status: number]> {
       try {
-        const weather = await firstValueFrom(this.getVisualCrossingData$(location));
-        this.weatherSubject.next(weather);
+        const weather = await firstValueFrom(this.getVisualCrossingData$(address));
         return [weather, 200];
       } catch (error) {
         if (error instanceof HttpErrorResponse) {
-          if (error.status === 401 || error.status === 412) {
-            this.#providerKeyService.promptForInvalidKey();
-          }
           return [undefined, error.status];
         }
         return [undefined, 0];

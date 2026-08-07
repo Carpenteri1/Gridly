@@ -15,6 +15,7 @@ import {ProviderKeysService} from "../../services/provider_key_services/provider
 import {CardTypes} from "../../enums/card.types.enum";
 import {ProviderKeyStatus} from "../../enums/provider-key-status.enum";
 import {SetLocationForProviderDialogComponent} from "../dialogs/setLocationForProviderDialog/set-location-for-provider-dialog.component";
+import {WeatherProviderService} from "../../services/weather_services/weather-provider.service";
 
 @Component({
   selector: 'app-card-component',
@@ -40,6 +41,9 @@ export class CardComponent {
   #cardRulesService = inject(CardRulesService);
   #dialogService = inject(DialogService);
   #providerKeyService = inject(ProviderKeysService)
+  #weatherProviderService = inject(WeatherProviderService)
+
+  protected readonly storedWeatherData$ = this.#weatherProviderService.storedWeatherData$;
 
   private _isAddProviderKeyDialogOpen = this.#dialogService.isAddProviderDialogOpen
   private _isSetProviderLocationDialogOpen = this.#dialogService.isSetProviderLocationDialogOpen
@@ -114,4 +118,6 @@ export class CardComponent {
       this.#dialogService.closeSetProviderLocationDialog();
     }
   }
+
+  protected readonly CardTypes = CardTypes;
 }

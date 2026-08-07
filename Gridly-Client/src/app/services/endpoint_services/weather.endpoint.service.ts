@@ -2,8 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {urlConstants} from "../../constants/url.constants";
 import {Observable, take} from "rxjs";
-import {WeatherModel} from "../../models/weather.Model";
-import {WeatherDataDto} from "../../dtos/weatherDataDto";
+import {WeatherDataModel} from "../../models/weatherData.Model";
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +11,18 @@ import {WeatherDataDto} from "../../dtos/weatherDataDto";
 export class WeatherEndpointService{
   private http = inject(HttpClient);
 
-  get(location: string): Observable<WeatherModel> {
-    const params = new HttpParams().set('SearchTerm', location);
-    return this.http.get<WeatherModel>(urlConstants.weather.get,{params}).pipe(take(1));
+  get(address: string): Observable<WeatherDataModel> {
+    const params = new HttpParams().set('Address', address);
+    return this.http.get<WeatherDataModel>(urlConstants.weather.get,{params}).pipe(take(1));
   }
-  getvisualcrossingdata(location: string): Observable<WeatherModel> {
-    const params = new HttpParams().set('SearchTerm', location);
-    return this.http.get<WeatherModel>(urlConstants.weather.getVisualCrossingData,{params}).pipe(take(1));
+  getStoredWeatherData(): Observable<WeatherDataModel[]> {
+    return this.http.get<WeatherDataModel[]>(urlConstants.weather.getStoredWeatherData).pipe(take(1));
   }
-  save(weather: WeatherDataDto){
+  getvisualcrossingdata(address: string): Observable<WeatherDataModel> {
+    const params = new HttpParams().set('Address', address);
+    return this.http.get<WeatherDataModel>(urlConstants.weather.getVisualCrossingData,{params}).pipe(take(1));
+  }
+  save(weather: WeatherDataModel){
     return this.http.post(urlConstants.weather.save, {weather}).pipe(take(1));
   }
 }
