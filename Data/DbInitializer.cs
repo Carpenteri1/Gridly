@@ -58,7 +58,7 @@ public class DbInitializer
                  CREATE TABLE IF NOT EXISTS WidgetType(
                  Id INTEGER PRIMARY KEY AUTOINCREMENT,
                  Name TEXT NOT NULL);
-                
+
                  CREATE TABLE IF NOT EXISTS Widget(
                  Id INTEGER PRIMARY KEY AUTOINCREMENT,
                  WidgetType INTEGER,
@@ -90,6 +90,7 @@ public class DbInitializer
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 CardId INTEGER NOT NULL,
                 WeatherId INTEGER NOT NULL,
+                UNIQUE(CardId),
                 FOREIGN KEY(CardId) REFERENCES Card(Id) ON DELETE CASCADE,
                 FOREIGN KEY(WeatherId) REFERENCES WeatherData(Id) ON DELETE CASCADE);
 
@@ -109,8 +110,8 @@ public class DbInitializer
 
                 INSERT INTO Widget(WidgetType, Label, Description, Icon)
                 SELECT Id, 'Weather widget', '', 'clouds'
-                FROM WidgetType 
-                WHERE Name = 'Weather' 
+                FROM WidgetType
+                WHERE Name = 'Weather'
                   AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 1);
 
                 INSERT INTO Widget(WidgetType, Label, Description, Icon)
@@ -125,5 +126,75 @@ public class DbInitializer
                 WHERE Name = 'Custom'
                   AND NOT EXISTS (SELECT 1 FROM Widget WHERE Id = 3);",
             commandTimeout:150);
+
+        await MigrateLegacyWeatherDataAsync();
+    }
+
+    private async Task MigrateLegacyWeatherDataAsync()
+    {
+        var columnNames = await connection.QueryAsync<string>(
+            "SELECT name FROM pragma_table_info('WeatherData');");
+
+        if (!columnNames.Contains("CardId"))
+            return;
+
+        BackupDatabaseFile();
+
+        await connection.ExecuteAsync(
+            sql: @"
+                PRAGMA foreign_keys=OFF;
+                BEGIN TRANSACTION;
+
+                CREATE TABLE WeatherData_new(
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Address TEXT NOT NULL UNIQUE,
+                Timezone TEXT NOT NULL,
+                Description TEXT NOT NULL,
+                Temp REAL NOT NULL,
+                FeelsLike REAL NOT NULL,
+                Humidity REAL NOT NULL,
+                WindSpeed REAL NOT NULL,
+                WindDir REAL NOT NULL,
+                FetchedAt TEXT NOT NULL);
+
+                INSERT INTO WeatherData_new (Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt)
+                SELECT Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt
+                FROM WeatherData wd
+                WHERE wd.Id = (
+                    SELECT wd2.Id FROM WeatherData wd2
+                    WHERE wd2.Address = wd.Address
+                    ORDER BY wd2.FetchedAt DESC, wd2.Id DESC
+                    LIMIT 1
+                );
+
+                INSERT INTO WeatherDataConnection (CardId, WeatherId)
+                SELECT legacy.CardId, wn.Id
+                FROM (
+                    SELECT wd.CardId, wd.Address
+                    FROM WeatherData wd
+                    WHERE wd.Id = (
+                        SELECT wd2.Id FROM WeatherData wd2
+                        WHERE wd2.CardId = wd.CardId
+                        ORDER BY wd2.FetchedAt DESC, wd2.Id DESC
+                        LIMIT 1
+                    )
+                ) legacy
+                INNER JOIN WeatherData_new wn ON wn.Address = legacy.Address;
+
+                DROP TABLE WeatherData;
+                ALTER TABLE WeatherData_new RENAME TO WeatherData;
+
+                COMMIT;
+                PRAGMA foreign_keys=ON;",
+            commandTimeout: 150);
+    }
+
+    private void BackupDatabaseFile()
+    {
+        var dataSource = new SqliteConnectionStringBuilder(connection.ConnectionString).DataSource;
+        if (string.IsNullOrWhiteSpace(dataSource) || !File.Exists(dataSource))
+            return;
+
+        File.Copy(dataSource, dataSource + ".bak", overwrite: true);
     }
 }
