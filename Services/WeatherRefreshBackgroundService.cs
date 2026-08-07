@@ -17,8 +17,11 @@ public class WeatherRefreshBackgroundService(
     // Mirrors the "weather" rate-limiting policy (Configuration/RateLimiterPolicySettings) so this
     // background job never calls the provider faster than the HTTP endpoint is allowed to.
     private static readonly WeatherRateLimiterModel ProviderRate = new();
-    private static readonly TimeSpan DelayBetweenProviderCalls =
+    internal static readonly TimeSpan DelayBetweenProviderCalls =
         ProviderRate.Window / ProviderRate.TokensPerPeriod;
+
+    // Overridable seam so tests can assert on the delay without actually waiting on it.
+    internal Func<TimeSpan, CancellationToken, Task> Delay { get; set; } = Task.Delay;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -29,7 +32,7 @@ public class WeatherRefreshBackgroundService(
         } while (await timer.WaitForNextTickAsync(stoppingToken));
     }
 
-    private async Task RefreshAll(CancellationToken cancellationToken)
+    internal async Task RefreshAll(CancellationToken cancellationToken)
     {
         using var scope = scopeFactory.CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
@@ -43,7 +46,7 @@ public class WeatherRefreshBackgroundService(
         {
             if (cancellationToken.IsCancellationRequested) return;
 
-            if (!isFirst) await Task.Delay(DelayBetweenProviderCalls, cancellationToken);
+            if (!isFirst) await Delay(DelayBetweenProviderCalls, cancellationToken);
             isFirst = false;
 
             try
