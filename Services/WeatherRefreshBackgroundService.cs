@@ -1,5 +1,6 @@
 using Gridly.Commands;
 using Gridly.Dtos;
+using Gridly.Models;
 using Gridly.Querys;
 using Gridly.Repositories;
 using MediatR;
@@ -12,6 +13,12 @@ public class WeatherRefreshBackgroundService(
     ILogger<WeatherRefreshBackgroundService> logger) : BackgroundService
 {
     private static readonly TimeSpan Interval = TimeSpan.FromHours(1);
+
+    // Mirrors the "weather" rate-limiting policy (Configuration/RateLimiterPolicySettings) so this
+    // background job never calls the provider faster than the HTTP endpoint is allowed to.
+    private static readonly WeatherRateLimiterModel ProviderRate = new();
+    private static readonly TimeSpan DelayBetweenProviderCalls =
+        ProviderRate.Window / ProviderRate.TokensPerPeriod;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -31,9 +38,13 @@ public class WeatherRefreshBackgroundService(
         var stored = await weatherRepository.GetStoredWeatherData();
         if (stored is null) return;
 
+        var isFirst = true;
         foreach (var entry in stored)
         {
             if (cancellationToken.IsCancellationRequested) return;
+
+            if (!isFirst) await Task.Delay(DelayBetweenProviderCalls, cancellationToken);
+            isFirst = false;
 
             try
             {
