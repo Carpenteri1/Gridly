@@ -10,34 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\Main\Index.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Header\index.cshtml" />
-    <_ContentIncludedByDefault Remove="Gridly-Client\gridly-prod\prerendered-routes.json" />
-    <_ContentIncludedByDefault Remove="wwwroot\js\site.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery-validation\LICENSE.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
-    <_ContentIncludedByDefault Remove="Gridly-Client\dist\Gridly-Client\prerendered-routes.json" />
-    <_ContentIncludedByDefault Remove="Assets\CardData\CardData.json" />
-    <_ContentIncludedByDefault Remove="Assets\VersionData\versionData.json" />
-    <_ContentIncludedByDefault Remove="wwwroot\index.html" />
-    <_ContentIncludedByDefault Remove="wwwroot\main.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\media\bootstrap-icons.woff" />
-    <_ContentIncludedByDefault Remove="wwwroot\media\bootstrap-icons.woff2" />
-    <_ContentIncludedByDefault Remove="wwwroot\polyfills.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\styles.css" />
-  </ItemGroup>
-
-  <ItemGroup>
       <UpToDateCheckInput Remove="Views\Main\Index.cshtml" />
   </ItemGroup>
 
