@@ -5,10 +5,7 @@
     "build": "ng build",
     "lint": "ng lint",
     "watch": "ng build --watch --configuration development",
-    "test": "jest --runInBand",
-    "node-run": "node dist/gridly-client/server/server.mjs",
-    "start": "gulp build-angular-net",
-    "start-angular": "gulp build-angular"
+    "test": "jest --runInBand"
   },
   "private": true,
   "dependencies": {
