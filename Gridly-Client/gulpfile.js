@@ -1,5 +1,5 @@
 var gulp = require("gulp");
-var { exec, spawn } = require('child_process');
+var { spawn } = require('child_process');
 var ngProcess = null;
 const prom= require("fs/promises");
 const path = require("path");
@@ -43,13 +43,11 @@ gulp.task("clean-build", async function () {
 
 
 gulp.task("ng-serve", function (done) {
-  console.log("🚀 Starting client server...");
   ngProcess = spawn('ng', ['serve'], {
     stdio: 'inherit',
     shell: true,
     cwd: process.cwd()
   });
-  MessageLoop("ng");
 
   ngProcess.on('close', (code) => {
     if (code !== null) {
@@ -64,41 +62,6 @@ gulp.task("ng-serve", function (done) {
   });
 
   done();
-});
-
-
-gulp.task("ng-stop", function (done) {
-  console.log("🛑 Stopping ng serve...");
-
-  if (ngProcess) {
-    ngProcess.kill('SIGTERM');
-    ngProcess = null;
-  }
-
-  const isWindows = process.platform === 'win32';
-
-  if (isWindows) {
-    exec('netstat -ano | findstr :4200', (error, stdout) => {
-      if (stdout) {
-        const lines = stdout.trim().split('\n');
-        lines.forEach(line => {
-          const parts = line.trim().split(/\s+/);
-          const pid = parts[parts.length - 1];
-          if (pid) {
-            exec(`taskkill /F /PID ${pid}`, () => {});
-          }
-        });
-      }
-      done();
-    });
-  } else {
-    exec('pkill -f "ng serve" || lsof -ti:4200 | xargs kill -9 2>/dev/null || true', (error) => {
-      if (!error) {
-        console.log("✅ ng serve stopped");
-      }
-      done();
-    });
-  }
 });
 
 gulp.task("ng-move-build", async function () {
@@ -124,9 +87,7 @@ gulp.task("dotnet-build", async function () {
 });
 
 gulp.task("dotnet-run", function () {
-  console.log("Starting .NET kestrel...");
-
-  const child = spawn("dotnet", ["run"], {
+  const child = spawn("dotnet", ["run", "--configuration", "Debug"], {
     cwd: path.resolve(__dirname, ".."),
     stdio: "inherit",
     shell: false
@@ -136,27 +97,8 @@ gulp.task("dotnet-run", function () {
     console.error(error);
   });
 
-  MessageLoop("net");
-
   return child;
 });
-
-function MessageLoop(session) {
-  for (let i = 0; i <= 2; i++) {
-    setTimeout(() => {
-      if (i === 0) console.log("Doing stuff ..");
-      if (i === 1) console.log("Success on stuff ..");
-
-      if (session === "net" && i === 2) {
-        console.log("Up on http://localhost:7575");
-      }
-
-      if (session === "ng" && i === 2) {
-        console.log("Client up on http://localhost:4200/ - With live edit");
-      }
-    }, i * 2000);
-  }
-}
 
 gulp.task(
   "build-net",
