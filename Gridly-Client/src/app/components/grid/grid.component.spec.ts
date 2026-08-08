@@ -9,6 +9,7 @@ import { GridComponent } from './grid.component';
 
 type GridComponentTestHarness = GridComponent & {
   drop(event: unknown, rows: RowColumnModel[], rowIndex: number): void;
+  dropToNewRow(event: unknown, rows: RowColumnModel[], rowIndex: number): void;
 };
 
 class MockResizeObserver {
@@ -203,6 +204,33 @@ describe('GridComponent', () => {
         ],
       },
     ]);
+  });
+
+  it('does not insert a new row when edit mode is disabled', () => {
+    editMode.set(false);
+
+    const event = { item: { data: cards[0] } } as never;
+
+    (gridComponent as GridComponentTestHarness).dropToNewRow(event, rows, 1);
+
+    expect(gridServiceMock.setRowsForView).not.toHaveBeenCalled();
+  });
+
+  it('inserts a new row at the given position and removes the card from its source row', () => {
+    const movedCard = { id: 1, indexPosition: 1, rowColumnId: 1, rowPosition: 1, name: 'One', url: 'https://one.example' };
+    const remainingCard = { id: 2, indexPosition: 2, rowColumnId: 1, rowPosition: 1, name: 'Two', url: 'https://two.example' };
+    const rowColumns: RowColumnModel[] = [
+      { id: 1, rowPosition: 1, cards: [movedCard, remainingCard] },
+    ];
+    const event = { item: { data: movedCard } } as never;
+
+    (gridComponent as GridComponentTestHarness).dropToNewRow(event, rowColumns, 1);
+
+    expect(gridServiceMock.normalizeRows).toHaveBeenCalledWith([
+      { id: 0, rowPosition: 1, rowWidth: 0, cards: [movedCard] },
+      { id: 1, rowPosition: 1, cards: [remainingCard] },
+    ]);
+    expect(gridServiceMock.setRowsForView).toHaveBeenCalledTimes(1);
   });
 
   it('keeps the card DOM element stable when a resized card object is emitted', () => {

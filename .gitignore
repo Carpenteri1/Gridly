@@ -9,6 +9,7 @@ bin/
 obj/
 Gridly-Client/publish/
 Gridly-Client/dist
+Gridly-Client/coverage
 Gridly-Client/package-lock.json
 .vs/*
 

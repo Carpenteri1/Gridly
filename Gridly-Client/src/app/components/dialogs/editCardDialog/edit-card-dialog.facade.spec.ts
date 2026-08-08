@@ -93,6 +93,14 @@ describe('EditCardDialogFacade', () => {
     expect(facade.card.iconData?.materialIcon).toBe('settings');
   });
 
+  it('resets to a blank card when no initial values are given', () => {
+    facade.card.name = 'Stale';
+
+    facade.reset();
+
+    expect(facade.card.name).toBeUndefined();
+  });
+
   it('resets and builds the submit payload with the card id', () => {
     facade.reset({ name: 'Alpha', url: 'https://alpha.example' });
     const payload = facade.buildSubmitPayload(42);
@@ -145,6 +153,17 @@ describe('EditCardDialogFacade', () => {
       expect(weatherProviderServiceMock.save).toHaveBeenCalled();
       expect(facade.countryInput).toBe('');
       expect(facade.cityInput).toBe('');
+    });
+
+    it('does not re-save when the returned weather already belongs to the requested card', async () => {
+      facade.countryInput = 'Sweden';
+      facade.cityInput = 'Stockholm';
+      weatherProviderServiceMock.getWeather.mockResolvedValue([{ ...makeWeather(), cardId: 9 }, 200]);
+
+      const result = await facade.saveLocation(9);
+
+      expect(result).toBe(false);
+      expect(weatherProviderServiceMock.save).not.toHaveBeenCalled();
     });
 
     it('falls back to getVisualCrossingData and saves the freshly-fetched weather when getWeather fails', async () => {

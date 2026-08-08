@@ -56,4 +56,33 @@ describe('ProviderKeysService', () => {
     expect(endpointMock.getRemoteProviderStatus).toHaveBeenCalledWith(ThirdPartyProvider.VisualCrossing);
     expect(service.currentStatus()).toEqual({ exists: true, status: ProviderKeyStatus.Valid });
   });
+
+  it('saves a key for the given provider', () => {
+    endpointMock.getLocalProviderStatus.mockReturnValue(EMPTY);
+    endpointMock.save.mockReturnValue(of(undefined));
+    const service = createService();
+
+    service.save('raw-key', ThirdPartyProvider.VisualCrossing);
+
+    expect(endpointMock.save).toHaveBeenCalledWith(ThirdPartyProvider.VisualCrossing, 'raw-key');
+  });
+
+  it('saves a key for the default provider when none is given', () => {
+    endpointMock.getLocalProviderStatus.mockReturnValue(EMPTY);
+    endpointMock.save.mockReturnValue(of(undefined));
+    const service = createService();
+
+    service.save('raw-key');
+
+    expect(endpointMock.save).toHaveBeenCalledWith(ThirdPartyProvider.VisualCrossing, 'raw-key');
+  });
+
+  it('flags that the user should be prompted for a key', () => {
+    endpointMock.getLocalProviderStatus.mockReturnValue(EMPTY);
+    const service = createService();
+
+    service.promptForInvalidKey();
+
+    expect(service.shouldPromptForKey()).toBe(true);
+  });
 });

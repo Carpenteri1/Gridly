@@ -42,7 +42,7 @@ jobs:
         working-directory: ${{ env.ANGULAR_PATH }}
 
       - name: Test Angular with Jest
-        run: npm test -- --runInBand
+        run: npm test -- --runInBand --coverage
         working-directory: ${{ env.ANGULAR_PATH }}
 
       - name: Restore .NET dependencies
