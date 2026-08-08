@@ -37,7 +37,8 @@ gulp.task("ng-build", async function () {
 gulp.task("clean-build", async function () {
   await Promise.all([
     prom.rm("../wwwroot", {recursive: true, force: true}),
-    prom.rm("../bin", {recursive: true, force: true})
+    prom.rm("../bin", {recursive: true, force: true}),
+    prom.rm("../publish", {recursive: true, force: true})
   ]);
 });
 
@@ -100,6 +101,42 @@ gulp.task("dotnet-run", function () {
   return child;
 });
 
+/**
+ * Publish for test
+ * Pi: linux-arm64
+ * Windows: win-x64
+ * Mac: osx-arm64
+ * Linux: linux-x64
+ * Put in Gulp argument
+ * */
+
+gulp.task("publish-dotnet", async function () {
+   let runtime =
+     {
+      pi: "linux-arm64",
+      windows: "win-x64",
+      mac: "osx-arm64",
+      linux: "linux-x64",
+      raspberry: "linux-arm64",
+    };
+  await publishDotnet(runtime.mac);
+});
+
+async function publishDotnet(runtime) {
+  await runCommand("dotnet", [
+    "publish",
+    "Gridly.csproj",
+    "--configuration", "Release",
+    "--runtime", runtime,
+    "--self-contained", "true",
+    "--output", path.resolve(__dirname, `../publish/${runtime}`)
+  ], {
+    cwd: path.resolve(__dirname, "..")
+  });
+}
+
+//Tasks and series
+
 gulp.task(
   "build-net",
   gulp.series(
@@ -132,5 +169,15 @@ gulp.task(
     "ng-build",
     "ng-move-build",
     "dotnet-run"
+  )
+);
+
+gulp.task(
+  "publish",
+  gulp.series(
+    'clean-build',
+    'ng-build',
+    'ng-move-build',
+    'publish-dotnet',
   )
 );
