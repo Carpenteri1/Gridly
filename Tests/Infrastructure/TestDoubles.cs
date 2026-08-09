@@ -1,8 +1,14 @@
+using Gridly.Commands;
+using Gridly.Commands;
 using Gridly.Dtos;
 using Gridly.EndPoints;
 using Gridly.Models;
+using Gridly.Querys;
+using Gridly.Querys;
 using Gridly.Repositories;
 using Gridly.Services;
+using MediatR;
+using MediatR;
 
 namespace Gridly.Tests.Infrastructure;
 
@@ -117,6 +123,7 @@ internal sealed class FakeWeatherEndPoint : IWeatherEndPoint
         return Task.FromResult(Result);
     }
 }
+
 internal sealed class FakeWeatherRepository : IWeatherRepository
 {
     private readonly Dictionary<string, WeatherDataModel> _byAddress = new();
@@ -136,7 +143,7 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
     public Task<WeatherDataModel> Get(string address) =>
         Task.FromResult(_byAddress.TryGetValue(address, out var value) ? value : null);
 
-    public Task<IEnumerable<CardWeatherDataDtoModel>?> GetStoredWeatherData() =>
+    public Task<IEnumerable<CardWeatherDataDtoModel>> GetStoredWeatherData() =>
         Task.FromResult<IEnumerable<CardWeatherDataDtoModel>?>(Array.Empty<CardWeatherDataDtoModel>());
 
     public Task<WeatherDataModel> Upsert(WeatherDataModel weather)
@@ -159,14 +166,28 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
 internal sealed class FakeWeatherDataConnectionRepository : IWeatherDataConnectionRepository
 {
     private readonly List<WeatherDataConnectionDtoModel> _connections = new();
+    private readonly Dictionary<string, WeatherDataModel> _byAddress = new();
+    private readonly Dictionary<int, WeatherDataModel> _byCardId = new();
 
+    public IEnumerable<WeatherDataModel>? StoredWeatherData { get; set; }
+    public int UpdateCallCount { get; private set; }
+    public int InsertCallCount { get; private set; }
     public int UpsertCallCount { get; private set; }
     public int DeleteCallCount { get; private set; }
     public List<int> DeletedCardIds { get; } = new();
-
+    
     public void Seed(int cardId, int weatherId) =>
         _connections.Add(new WeatherDataConnectionDtoModel { CardId = cardId, WeatherId = weatherId });
 
+    public Task<WeatherDataModel> Get(string address) =>
+        Task.FromResult(_byAddress.GetValueOrDefault(address)!);
+
+    public Task<WeatherDataModel> GetById(int cardId) =>
+        Task.FromResult(_byCardId.GetValueOrDefault(cardId)!);
+
+    public Task<IEnumerable<WeatherDataModel>?> GetStoredWeatherData() =>
+        Task.FromResult(StoredWeatherData);
+    
     public Task<IEnumerable<WeatherDataConnectionDtoModel>> GetManyById(int? cardId, int? weatherId)
     {
         var results = _connections.Where(c =>
@@ -175,6 +196,18 @@ internal sealed class FakeWeatherDataConnectionRepository : IWeatherDataConnecti
         return Task.FromResult<IEnumerable<WeatherDataConnectionDtoModel>>(results.ToList());
     }
 
+    public Task<bool> Update(WeatherDataModel weather)
+    {
+        UpdateCallCount++;
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> Insert(WeatherDataModel weather)
+    {
+        InsertCallCount++;
+        return Task.FromResult(true);
+    }
+    
     public Task<WeatherDataConnectionDtoModel> Upsert(WeatherDataConnectionDtoModel model)
     {
         UpsertCallCount++;
@@ -182,7 +215,7 @@ internal sealed class FakeWeatherDataConnectionRepository : IWeatherDataConnecti
         _connections.Add(model);
         return Task.FromResult(model);
     }
-
+    
     public Task<bool> Delete(int cardId)
     {
         DeleteCallCount++;
@@ -190,8 +223,47 @@ internal sealed class FakeWeatherDataConnectionRepository : IWeatherDataConnecti
         var removed = _connections.RemoveAll(c => c.CardId == cardId);
         return Task.FromResult(removed > 0);
     }
+    
 }
 
+internal sealed class FakeMediator : IMediator
+{
+    public List<object> SentRequests { get; } = new();
+    public Func<GetVisualCrossingDataQuery, IResult>? OnGetVisualCrossingData { get; set; }
+    public Func<SaveWeatherCommand, IResult>? OnSaveWeather { get; set; }
+
+    public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+    {
+        SentRequests.Add(request);
+
+        object? response = request switch
+        {
+            GetVisualCrossingDataQuery query => OnGetVisualCrossingData?.Invoke(query) ?? Results.NotFound(),
+            SaveWeatherCommand command => OnSaveWeather?.Invoke(command) ?? Results.Ok(),
+            _ => throw new NotSupportedException($"FakeMediator does not handle {request.GetType()}")
+        };
+
+        return Task.FromResult((TResponse)response!);
+    }
+
+    public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default) where TRequest : IRequest =>
+        throw new NotSupportedException();
+
+    public Task<object?> Send(object request, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
+
+    public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
+
+    public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
+
+    public Task Publish(object notification, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
+
+    public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification =>
+        throw new NotSupportedException();
+}
 internal sealed class FakeLocalProvidersRepository : ILocalProvidersRepository
 {
     public ProviderKeyDtoModel? StoredKey { get; set; }

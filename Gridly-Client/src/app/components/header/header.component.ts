@@ -7,16 +7,13 @@ import { CardModel } from "../../models/card.Model";
 import { GridService } from "../../services/grid_services/grid.service";
 import {ProviderKeyDialogComponent} from "../dialogs/apiKeyDialog/provider-key-dialog.component";
 import {DialogService} from "../../services/dialog_services/dialog.service";
-import {
-  SetLocationForProviderDialogComponent
-} from "../dialogs/setLocationForProviderDialog/set-location-for-provider-dialog.component";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   standalone: true,
-  imports: [CommonModule, TranslatePipe, AddCardDialogComponent, ProviderKeyDialogComponent, SetLocationForProviderDialogComponent]
+  imports: [CommonModule, TranslatePipe, AddCardDialogComponent, ProviderKeyDialogComponent]
 })
 export class HeaderComponent {
 

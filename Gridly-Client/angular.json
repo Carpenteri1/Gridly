@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/Gridly-Client",
+            "outputPath": "../wwwroot",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -23,7 +23,8 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "assets",
+                "output": "./assets"
               }
             ],
             "styles": [
