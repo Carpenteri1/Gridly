@@ -1,8 +1,11 @@
+using Gridly.Commands;
 using Gridly.Dtos;
 using Gridly.EndPoints;
 using Gridly.Models;
+using Gridly.Querys;
 using Gridly.Repositories;
 using Gridly.Services;
+using MediatR;
 
 namespace Gridly.Tests.Infrastructure;
 
@@ -117,45 +120,82 @@ internal sealed class FakeWeatherEndPoint : IWeatherEndPoint
         return Task.FromResult(Result);
     }
 }
-/*
+
 internal sealed class FakeWeatherRepository : IWeatherRepository
 {
-    private readonly Dictionary<string, (WeatherDataModel? Weather, DateTime? FetchedAt)> _stored = new();
-    private readonly Dictionary<int, (WeatherDataModel? Weather, DateTime? FetchedAt)> _storedCardId = new();
+    private readonly Dictionary<string, WeatherDataModel> _byAddress = new();
+    private readonly Dictionary<int, WeatherDataModel> _byCardId = new();
 
-    public int UpsertCallCount { get; private set; }
-    public string? LastUpsertedLocation { get; private set; }
-    public int DeleteCallCount { get; private set; }
-    public int? LastDeletedCardId { get; private set; }
+    public IEnumerable<WeatherDataModel>? StoredWeatherData { get; set; }
+    public int UpdateCallCount { get; private set; }
+    public int InsertCallCount { get; private set; }
 
-    public void Seed(string location, WeatherModel weather) =>
-        _stored[location] = weather;
-    
-    public void CardIdSeed(int cardId, WeatherModel weather) =>
-        _storedCardId[cardId] = weather;
+    public void Seed(WeatherDataModel weather)
+    {
+        _byAddress[weather.Address] = weather;
+        _byCardId[weather.CardId] = weather;
+    }
 
-    public Task<WeatherDataModel> Get(string location) =>
-        Task.FromResult(_stored.TryGetValue(location, out var value) ? value : null);
+    public Task<WeatherDataModel> Get(string address) =>
+        Task.FromResult(_byAddress.GetValueOrDefault(address)!);
 
     public Task<WeatherDataModel> GetById(int cardId) =>
-        Task.FromResult(_storedCardId.TryGetValue(cardId, out var value) ? value : null);
+        Task.FromResult(_byCardId.GetValueOrDefault(cardId)!);
 
-    public Task<bool> Delete(int CardId)
+    public Task<IEnumerable<WeatherDataModel>?> GetStoredWeatherData() =>
+        Task.FromResult(StoredWeatherData);
+
+    public Task<bool> Update(WeatherDataModel weather)
     {
-        DeleteCallCount++;
-        LastDeletedCardId = CardId;
+        UpdateCallCount++;
         return Task.FromResult(true);
     }
 
-    public Task<bool> Upsert(WeatherDataModel weather)
+    public Task<bool> Insert(WeatherDataModel weather)
     {
-        UpsertCallCount++;
-        LastUpsertedLocation = weather.Location;
-        _stored[weather.Location] = (WeatherDataFactory.Create(weather), DateTime.UtcNow);
+        InsertCallCount++;
         return Task.FromResult(true);
     }
-}*/
+}
 
+internal sealed class FakeMediator : IMediator
+{
+    public List<object> SentRequests { get; } = new();
+    public Func<GetVisualCrossingDataQuery, IResult>? OnGetVisualCrossingData { get; set; }
+    public Func<SaveWeatherCommand, IResult>? OnSaveWeather { get; set; }
+
+    public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+    {
+        SentRequests.Add(request);
+
+        object? response = request switch
+        {
+            GetVisualCrossingDataQuery query => OnGetVisualCrossingData?.Invoke(query) ?? Results.NotFound(),
+            SaveWeatherCommand command => OnSaveWeather?.Invoke(command) ?? Results.Ok(),
+            _ => throw new NotSupportedException($"FakeMediator does not handle {request.GetType()}")
+        };
+
+        return Task.FromResult((TResponse)response!);
+    }
+
+    public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default) where TRequest : IRequest =>
+        throw new NotSupportedException();
+
+    public Task<object?> Send(object request, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
+
+    public IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
+
+    public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
+
+    public Task Publish(object notification, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException();
+
+    public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification =>
+        throw new NotSupportedException();
+}
 internal sealed class FakeLocalProvidersRepository : ILocalProvidersRepository
 {
     public ProviderKeyDtoModel? StoredKey { get; set; }

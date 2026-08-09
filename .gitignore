@@ -6,6 +6,7 @@
 /out-tsc
 /bazel-out
 bin/
+publish/
 obj/
 Gridly-Client/publish/
 Gridly-Client/dist
