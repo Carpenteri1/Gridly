@@ -111,4 +111,26 @@ describe('HeaderComponent', () => {
   it('renders the client title', () => {
     expect((fixture.nativeElement as HTMLElement).querySelector('h1')?.textContent).toContain('app.text.title');
   });
+
+  it('opens the add-provider-key dialog', () => {
+    headerComponent.openAddProviderKeyDialog();
+
+    expect(headerComponent.isAddProviderDialogOpen()).toBe(true);
+  });
+
+  it('closes the add-provider-key dialog when the matching dialog id is emitted', () => {
+    headerComponent.openAddProviderKeyDialog();
+
+    (headerComponent as unknown as { handleDialogChange(id: number): void }).handleDialogChange(0);
+
+    expect(headerComponent.isAddProviderDialogOpen()).toBe(false);
+  });
+
+  it('leaves the add-provider-key dialog open when a non-matching dialog id is emitted', () => {
+    headerComponent.openAddProviderKeyDialog();
+
+    (headerComponent as unknown as { handleDialogChange(id: number): void }).handleDialogChange(1);
+
+    expect(headerComponent.isAddProviderDialogOpen()).toBe(true);
+  });
 });

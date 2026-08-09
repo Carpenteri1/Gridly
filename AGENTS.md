@@ -53,7 +53,9 @@ Stores icons, images, and other static assets needed by the app. A dedicated con
 Organized by responsibility: UI components, a services layer (split between low-level per-resource HTTP calls and higher-level services that use them), plus shared models/DTOs/interfaces/type definitions. Domain concepts that have multiple variants (e.g. different kinds of cards/widgets) are defined as an enum/type list, with room to add new variants without restructuring existing code. Not every variant needs to be fully implemented at once — a variant can be scaffolded (reference data, a type entry, a placeholder in the UI) ahead of its backend implementation being built.
 
 ### Tests
-Organized to mirror the main source layout — one test area per layer (handlers, repositories, mapping/factory logic, services), with shared test infrastructure (fakes/doubles and result-assertion helpers) factored out so individual tests stay focused on behavior rather than setup.
+Backend tests are organized to mirror the main source layout — one test area per layer (handlers, repositories, mapping/factory logic, services), with shared test infrastructure (fakes/doubles and result-assertion helpers) factored out so individual tests stay focused on behavior rather than setup.
+
+Frontend (`Gridly-Client`) tests are Jest specs colocated with their source under `src/app/**/*.spec.ts`, run via `npm test` (`jest --runInBand --coverage`). HTTP-boundary endpoint services are tested with `provideHttpClient()` + `provideHttpClientTesting()`/`HttpTestingController`, asserting the request rather than calling a real API; higher-level services and components instead mock their injected endpoint/business services directly with `jest.fn()`. All tests must maintain at least 80% coverage across branches, functions, lines, and statements, enforced via `coverageThreshold` in `jest.config.js` — if a change drops any category below 80%, more tests must be added before that change is considered done, since a Jest run that misses the threshold fails automatically.
 
 ### Git workflow, branching & pull requests
 The repo uses a two-tier branch model, not direct-to-main feature branches:

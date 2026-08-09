@@ -74,6 +74,15 @@ describe('CardService', () => {
     ]);
   });
 
+  it('sorts multiple row groups by their row position', () => {
+    const rowTwoCard: CardModel = { ...cardA, rowPosition: 2 };
+    const rowOneCard: CardModel = { ...cardB, rowPosition: 1 };
+
+    const rows = service.toRows([rowTwoCard, rowOneCard], 1000);
+
+    expect(rows.map((row) => row.map((card) => card.id))).toEqual([[cardB.id], [cardA.id]]);
+  });
+
   it('keeps cards from the same API row horizontal', () => {
     const rows = service.toRows([cardB, cardA], 1000);
 
