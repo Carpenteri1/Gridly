@@ -3,7 +3,7 @@ namespace Gridly.Services;
 public abstract class PeriodicRefreshBackgroundService : BackgroundService
 {
     protected abstract TimeSpan Interval { get; }
-    protected readonly TimeSpan DelayBetweenProviderCalls = TimeSpan.FromSeconds(10);
+    protected readonly TimeSpan DelayBetweenProviderCalls = TimeSpan.FromMinutes(1);
     protected Func<TimeSpan, CancellationToken, Task> Delay { get; set; } = Task.Delay;
     
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

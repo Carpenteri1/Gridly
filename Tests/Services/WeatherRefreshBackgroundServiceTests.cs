@@ -25,10 +25,23 @@ public class WeatherRefreshBackgroundServiceTests
 
         return new TestableWeatherPeriodicRefreshBackgroundService(
             NullLogger<WeatherPeriodicRefreshBackgroundService>.Instance,
-            repository,
-            weatherEndPoint ?? new RecordingWeatherEndPoint(),
-            localProvidersRepository,
+            CreateScopeFactory(
+                repository,
+                weatherEndPoint ?? new RecordingWeatherEndPoint(),
+                localProvidersRepository),
             providerKeysProtectionService ?? new FakeProviderKeysProtectionService());
+    }
+
+    private static IServiceScopeFactory CreateScopeFactory(
+        IWeatherRepository weatherRepository,
+        IWeatherEndPoint weatherEndPoint,
+        ILocalProvidersRepository localProvidersRepository)
+    {
+        var services = new ServiceCollection();
+        services.AddScoped(_ => weatherRepository);
+        services.AddScoped(_ => weatherEndPoint);
+        services.AddScoped(_ => localProvidersRepository);
+        return services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
     }
 
     [Fact]
@@ -139,15 +152,11 @@ public class WeatherRefreshBackgroundServiceTests
 
     private sealed class TestableWeatherPeriodicRefreshBackgroundService(
         ILogger<WeatherPeriodicRefreshBackgroundService> logger,
-        IWeatherRepository weatherRepository,
-        IWeatherEndPoint weatherEndPoint,
-        ILocalProvidersRepository localProvidersRepository,
+        IServiceScopeFactory serviceScopeFactory,
         IProviderKeysProtectionService providerKeysProtectionService)
         : WeatherPeriodicRefreshBackgroundService(
             logger,
-            weatherRepository,
-            weatherEndPoint,
-            localProvidersRepository,
+            serviceScopeFactory,
             providerKeysProtectionService)
     {
         public TimeSpan ExpectedDelayBetweenProviderCalls => DelayBetweenProviderCalls;
@@ -200,7 +209,7 @@ public class WeatherRefreshBackgroundServiceTests
     {
         public ProviderKeyDtoModel? StoredKey { get; set; }
 
-        public Task<ProviderKeyDtoModel?> Get(string provider) => Task.FromResult(StoredKey);
+        public Task<ProviderKeyDtoModel?> Get(string Provider) => Task.FromResult(StoredKey);
 
         public Task<bool> Upsert(string provider, string encryptedKey, string status) =>
             throw new NotSupportedException();

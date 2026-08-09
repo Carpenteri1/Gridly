@@ -1,5 +1,6 @@
 using Gridly.Constants;
 using Gridly.EndPoints;
+using Gridly.Enums;
 using Gridly.Factories;
 using Gridly.Repositories;
 
@@ -7,27 +8,44 @@ namespace Gridly.Services;
 
 public class WeatherPeriodicRefreshBackgroundService(
     ILogger<WeatherPeriodicRefreshBackgroundService> logger,
-    IWeatherRepository weatherRepository,
-    IWeatherEndPoint weatherEndPoint,
-    ILocalProvidersRepository localProvidersRepository,
+    IServiceScopeFactory serviceScopeFactory,
     IProviderKeysProtectionService providerKeysProtectionService) : PeriodicRefreshBackgroundService
-{ 
-    protected override TimeSpan Interval => TimeSpan.FromMinutes(30);
+{
+    protected override TimeSpan Interval => TimeSpan.FromHours(1);
+
     protected override async Task RefreshData(CancellationToken cancellationToken)
     {
+        using var scope = serviceScopeFactory.CreateScope();//Creates temperary dependency injection scope
+        var weatherRepository = scope.ServiceProvider.GetRequiredService<IWeatherRepository>();
+        var weatherEndPoint = scope.ServiceProvider.GetRequiredService<IWeatherEndPoint>();
+        var localProvidersRepository = scope.ServiceProvider.GetRequiredService<ILocalProvidersRepository>();
+
         var stored = await weatherRepository.GetStoredWeatherData();
         if (stored is null) return;
 
-        var isFirst = true;
+        var storedKey = await localProvidersRepository.Get(EndpointStrings.VisualCrossingProvider);
+        if (storedKey is null)
+        {
+            logger.LogWarning("Hourly weather refresh skipped because no Visual Crossing provider key is stored");
+            return;
+        }
+
+        var rawKey = providerKeysProtectionService.Unprotect(storedKey.EncryptedKey);
+        if (string.IsNullOrWhiteSpace(rawKey))
+        {
+            logger.LogWarning("Hourly weather refresh skipped because no Valid Visual Crossing provider key is stored");
+            return;
+        }
+        
+        var isFirstCall = true;
+        
         foreach (var entry in stored)
         {
             if (cancellationToken.IsCancellationRequested) return;
 
-            if (!isFirst) await Delay(DelayBetweenProviderCalls, cancellationToken);
-            isFirst = false;
+            if (!isFirstCall) await Delay(DelayBetweenProviderCalls, cancellationToken);
 
-            var storedKey = await localProvidersRepository.Get(EndpointStrings.VisualCrossingProvider);
-            var rawKey = providerKeysProtectionService.Unprotect(storedKey.EncryptedKey);
+            isFirstCall = false;
 
             try
             {
@@ -40,6 +58,9 @@ public class WeatherPeriodicRefreshBackgroundService(
                 }
                 else
                 {
+                    if (status is StatusCodes.Status404NotFound || status is StatusCodes.Status401Unauthorized)
+                        await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Invalid));
+                    
                     logger.LogWarning(
                         "Hourly weather refresh for {Address} did not return fresh data ({ResultType})",
                         entry.Address, status);
