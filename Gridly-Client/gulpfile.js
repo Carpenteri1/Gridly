@@ -34,14 +34,6 @@ gulp.task("ng-build", async function () {
 
   await runCommand(ng, ["build"]);
 });
-gulp.task("clean-build", async function () {
-  await Promise.all([
-    prom.rm("../wwwroot", {recursive: true, force: true}),
-    prom.rm("../bin", {recursive: true, force: true}),
-    prom.rm("../publish", {recursive: true, force: true})
-  ]);
-});
-
 
 gulp.task("ng-serve", function (done) {
   ngProcess = spawn('ng', ['serve'], {
@@ -140,7 +132,6 @@ async function publishDotnet(runtime) {
 gulp.task(
   "build-net",
   gulp.series(
-    "clean-build",
     "dotnet-build"
   )
 );
@@ -148,7 +139,6 @@ gulp.task(
 gulp.task(
   "build-angular",
   gulp.series(
-    "clean-build",
     "ng-build",
     "ng-move-build"
   )
@@ -157,7 +147,6 @@ gulp.task(
 gulp.task(
   "run-angular",
   gulp.series(
-    "clean-build",
     "ng-serve",
   )
 );
@@ -165,7 +154,6 @@ gulp.task(
 gulp.task(
   "run-net-angular",
   gulp.series(
-    "clean-build",
     "ng-build",
     "ng-move-build",
     "dotnet-run"
@@ -175,7 +163,6 @@ gulp.task(
 gulp.task(
   "publish",
   gulp.series(
-    'clean-build',
     'ng-build',
     'ng-move-build',
     'publish-dotnet',
