@@ -22,10 +22,10 @@ public class WeatherRepository(IDbConnection connection) : IWeatherRepository
         return dto;
     }
 
-    public async Task<IEnumerable<CardWeatherDataDtoModel>?> GetStoredWeatherData()
+    public async Task<IEnumerable<WeatherDataModel>?> GetStoredWeatherData()
     {
         var storedWeatherData =
-            await _dbCommandRunner.SelectMany<CardWeatherDataDtoModel>(QueryStrings.SelectCardWeatherDataQuery, string.Empty);
+            await _dbCommandRunner.SelectMany<WeatherDataModel>(QueryStrings.SelectAllWeatherDataQuery, string.Empty);
         return storedWeatherData;
     }
 

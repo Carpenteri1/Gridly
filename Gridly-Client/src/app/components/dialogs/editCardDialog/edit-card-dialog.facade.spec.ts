@@ -154,17 +154,6 @@ describe('EditCardDialogFacade', () => {
       expect(facade.cityInput).toBe('');
     });
 
-    it('does not re-save when the returned weather already belongs to the requested card', async () => {
-      facade.countryInput = 'Sweden';
-      facade.cityInput = 'Stockholm';
-      weatherProviderServiceMock.getWeather.mockResolvedValue([{ ...makeWeather(), cardId: 9 }, 200]);
-
-      const result = await facade.saveLocation(9);
-
-      expect(result).toBe(false);
-      expect(weatherProviderServiceMock.save).not.toHaveBeenCalled();
-    });
-
     it('falls back to getVisualCrossingData and saves the freshly-fetched weather when getWeather fails', async () => {
       facade.countryInput = 'Sweden';
       facade.cityInput = 'Stockholm';

@@ -3,7 +3,6 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {urlConstants} from "../../constants/url.constants";
 import {Observable, take} from "rxjs";
 import {WeatherDataModel} from "../../models/weatherData.Model";
-import {CardWeatherDataModel} from "../../models/cardWeatherData.Model";
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +15,8 @@ export class WeatherEndpointService{
     const params = new HttpParams().set('Address', address);
     return this.http.get<WeatherDataModel>(urlConstants.weather.get,{params}).pipe(take(1));
   }
-  getStoredWeatherData(): Observable<CardWeatherDataModel[]> {
-    return this.http.get<CardWeatherDataModel[]>(urlConstants.weather.getStoredWeatherData).pipe(take(1));
+  getStoredWeatherData(): Observable<WeatherDataModel[]> {
+    return this.http.get<WeatherDataModel[]>(urlConstants.weather.getStoredWeatherData).pipe(take(1));
   }
   getvisualcrossingdata(address: string): Observable<WeatherDataModel> {
     const params = new HttpParams().set('Address', address);

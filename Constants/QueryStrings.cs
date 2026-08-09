@@ -166,7 +166,7 @@ public class QueryStrings
     SELECT Id, Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt
     FROM WeatherData /**where**/";
 
-    public const string SelectCardWeatherDataQuery = @"
+    public const string SelectAllWeatherDataQuery = @"
     SELECT wc.CardId, w.Id AS WeatherId, w.Address, w.Timezone, w.Description,
         w.Temp, w.FeelsLike, w.Humidity, w.WindSpeed, w.WindDir, w.FetchedAt
     FROM WeatherDataConnection wc

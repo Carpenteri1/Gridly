@@ -8,9 +8,10 @@ import { WeatherProviderService } from './weather-provider.service';
 describe('WeatherProviderService', () => {
   let service: WeatherProviderService;
 
+  const cardId = 1;
+
   const weather: WeatherDataModel = {
     id: 1,
-    cardId: 1,
     address: 'Sweden,Stockholm',
     timezone: 'Europe/Stockholm',
     description: 'Clear',
@@ -59,9 +60,9 @@ describe('WeatherProviderService', () => {
   it('saves weather data through the endpoint', async () => {
     endpointMock.save.mockReturnValue(of(undefined));
 
-    await service.save(weather);
+    await service.save(weather, cardId);
 
-    expect(endpointMock.save).toHaveBeenCalledWith(weather);
+    expect(endpointMock.save).toHaveBeenCalledWith(weather,cardId);
   });
 
   it('returns weather data with a 200 status on a successful getWeather call', async () => {
