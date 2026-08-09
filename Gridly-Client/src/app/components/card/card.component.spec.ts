@@ -13,6 +13,7 @@ import { DeleteCardDialogComponent } from '../dialogs/deleteCardDialog/delete-ca
 import { ProviderKeyDialogComponent } from '../dialogs/apiKeyDialog/provider-key-dialog.component';
 import { SetLocationForProviderDialogComponent } from '../dialogs/setLocationForProviderDialog/set-location-for-provider-dialog.component';
 import { StubTranslatePipe } from '../../testing/stub-translate.pipe';
+import { DialogService } from '../../services/dialog_services/dialog.service';
 import { CardComponent } from './card.component';
 
 type CardComponentFixture = CardComponent & {
@@ -93,27 +94,69 @@ describe('CardComponent', () => {
     expect(element.querySelector('mat-icon')?.textContent).toContain('cloud');
     expect(element.textContent).toContain('Weather');
   });
-  /*TODO add test later
-  it('opens the edit and delete dialogs from the card methods', () => {
-    createCardComponent.openEditDialog();
+  it('opens the edit, delete and add-provider-key dialogs for the current card', async () => {
+    await createCardComponent.openEditDialog();
     createCardComponent.openDeleteDialog();
-    createCardComponent.openAddProviderKeyDialog()
+    createCardComponent.openAddProviderKeyDialog();
 
-    expect(createCardComponent.isEditDialogOpen).toBe(true);
-    expect(createCardComponent.isDeleteDialogOpen).toBe(true);
-    expect(createCardComponent.isProviderDialogOpen).toBe(true);
+    expect(createCardComponent.isEditDialogOpenForCard()).toBe(true);
+    expect(createCardComponent.isDeleteDialogOpenForCard()).toBe(true);
+    expect(createCardComponent.isAddProviderKeyDialogOpen()).toBe(true);
   });
 
+  it('closes both the edit and delete dialogs when the matching dialog id is emitted', async () => {
+    await createCardComponent.openEditDialog();
+    createCardComponent.openDeleteDialog();
 
-  it('closes both dialogs when the matching dialog id is emitted', () => {
-    createCardComponent.isEditDialogOpen = true;
-    createCardComponent.isDeleteDialogOpen = true;
+    createCardComponent.handleDialogChange(currentCard.id);
 
-    createCardComponent.handleDialogChange(7);
+    expect(createCardComponent.isEditDialogOpenForCard()).toBe(false);
+    expect(createCardComponent.isDeleteDialogOpenForCard()).toBe(false);
+  });
 
-    expect(createCardComponent.isEditDialogOpen).toBe(false);
-    expect(createCardComponent.isDeleteDialogOpen).toBe(false);
-  });*/
+  it('leaves the dialogs open when a non-matching dialog id is emitted', async () => {
+    await createCardComponent.openEditDialog();
+
+    createCardComponent.handleDialogChange(currentCard.id + 1);
+
+    expect(createCardComponent.isEditDialogOpenForCard()).toBe(true);
+  });
+
+  it('closes the api key dialog and opens the location dialog once no key dialog remains open', () => {
+    createCardComponent.openAddProviderKeyDialog();
+
+    (createCardComponent as unknown as { SaveProviderKey(id: number): void }).SaveProviderKey(currentCard.id);
+
+    expect(createCardComponent.isAddProviderKeyDialogOpen()).toBe(false);
+    expect(createCardComponent.isSetProviderLocationDialogOpen()).toBe(true);
+  });
+
+  it('does not open the location dialog while another card still has the key dialog open', () => {
+    const dialogService = TestBed.inject(DialogService);
+    dialogService.openProviderKeyDialog(currentCard.id + 1);
+
+    (createCardComponent as unknown as { SaveProviderKey(id: number): void }).SaveProviderKey(currentCard.id + 1);
+
+    expect(createCardComponent.isSetProviderLocationDialogOpen()).toBe(false);
+  });
+
+  it('closes the location dialog when the matching dialog id is emitted', () => {
+    const dialogService = TestBed.inject(DialogService);
+    dialogService.openSetProviderLocationDialog(currentCard.id);
+
+    (createCardComponent as unknown as { SaveProviderLocation(id: number): void }).SaveProviderLocation(currentCard.id);
+
+    expect(createCardComponent.isSetProviderLocationDialogOpen()).toBe(false);
+  });
+
+  it('leaves the location dialog open when a non-matching dialog id is emitted', () => {
+    const dialogService = TestBed.inject(DialogService);
+    dialogService.openSetProviderLocationDialog(currentCard.id);
+
+    (createCardComponent as unknown as { SaveProviderLocation(id: number): void }).SaveProviderLocation(currentCard.id + 1);
+
+    expect(createCardComponent.isSetProviderLocationDialogOpen()).toBe(true);
+  });
 
   it('delegates edit and remove actions to the grid service', () => {
     (createCardComponent as CardComponentFixture).edit(currentCard);

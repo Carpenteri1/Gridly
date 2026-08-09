@@ -128,6 +128,36 @@ describe('GridService', () => {
     ]);
   });
 
+  it('toggles edit mode', () => {
+    expect(service.inEditMode()).toBe(false);
+
+    service.toggleEdit();
+    expect(service.inEditMode()).toBe(true);
+
+    service.toggleEdit();
+    expect(service.inEditMode()).toBe(false);
+  });
+
+  it('updates a card in place and renumbers the row it belongs to', () => {
+    const firstCard = createCard(1);
+    const targetCard = createCard(2);
+    service.setRowsForView([{ id: 1, rowPosition: 1, cards: [firstCard, targetCard] }]);
+
+    service.updateCardInView(targetCard, { ...targetCard, name: 'Renamed' });
+
+    expect(service.currentRowColumns()).toEqual([
+      {
+        id: 1,
+        rowPosition: 1,
+        rowWidth: 0,
+        cards: [
+          { ...firstCard, indexPosition: 1, rowPosition: 1, rowColumnId: 1 },
+          { ...targetCard, name: 'Renamed', indexPosition: 2, rowPosition: 1, rowColumnId: 1 },
+        ],
+      },
+    ]);
+  });
+
   it('saves normalized rows through the row batchSave endpoint', async () => {
     const card = createCard(1);
     service.setRowsForView([{ id: 1, rowPosition: 1, cards: [card] }]);

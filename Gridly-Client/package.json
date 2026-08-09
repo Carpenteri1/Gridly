@@ -5,7 +5,7 @@
     "build": "ng build",
     "lint": "ng lint",
     "watch": "ng build --watch --configuration development",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand --coverage"
   },
   "private": true,
   "dependencies": {
