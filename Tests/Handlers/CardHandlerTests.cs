@@ -92,9 +92,6 @@ public class CardHandlerTests
         public Task<IEnumerable<CardModel>?> Get() =>
             Task.FromResult<IEnumerable<CardModel>?>(Cards.Select(Clone).ToList());
 
-        public Task<CardModel?> GetById(int Id) =>
-            Task.FromResult<CardModel?>(Clone(Cards.Single(card => card.Id == Id)));
-
         public Task<bool> Delete(int Id)
         {
             Cards = Cards.Where(card => card.Id != Id).ToList();

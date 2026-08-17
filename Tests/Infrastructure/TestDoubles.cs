@@ -1,6 +1,8 @@
 using Gridly.Commands;
+using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.EndPoints;
+using Gridly.Entities;
 using Gridly.Models;
 using Gridly.Querys;
 using Gridly.Repositories;
@@ -299,4 +301,17 @@ internal sealed class FakeProvidersEndPoint : IProvidersEndPoint
         ValidateCallCount++;
         return Task.FromResult(Result);
     }
+}
+
+internal sealed class FakeGridlyDbContext : IGridlyDbContext
+{
+    public List<CardEntity> CardEntities { get; } = [];
+    public List<SettingsEntity> SettingsEntities { get; } = [];
+    public List<IconsConnectedEntity> IconsConnectedEntities { get; } = [];
+    public List<IconEntity> IconEntities { get; } = [];
+
+    public IQueryable<CardEntity> Cards => CardEntities.AsQueryable();
+    public IQueryable<SettingsEntity> Settings => SettingsEntities.AsQueryable();
+    public IQueryable<IconsConnectedEntity> IconsConnected => IconsConnectedEntities.AsQueryable();
+    public IQueryable<IconEntity> Icons => IconEntities.AsQueryable();
 }

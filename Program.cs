@@ -4,6 +4,7 @@ using Gridly.Repositories;
 using Gridly.Services;
 using Gridly.Data;
 using Gridly.helpers;
+using Microsoft.EntityFrameworkCore;
 
 var appDirectory = Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
 Directory.SetCurrentDirectory(appDirectory);
@@ -22,6 +23,9 @@ builder.Services.AddScoped<DbInitializer>();
 builder.Services.AddScoped(sp =>
     sp.GetRequiredService<IDbConnectionServices>().CreateConnection());
 builder.Services.AddScoped<IDbConnectionServices,DbConnectionServices>();
+builder.Services.AddDbContext<GridlyDbContext>((sp, options) =>
+    options.UseSqlite(sp.GetRequiredService<IDbConnectionServices>().ConnectionString));
+builder.Services.AddScoped<IGridlyDbContext>(sp => sp.GetRequiredService<GridlyDbContext>());
 builder.Services.AddScoped<IVersionEndPoint, VersionEndPoint>();
 builder.Services.AddScoped<IWeatherEndPoint, WeatherEndPoint>();
 builder.Services.AddScoped<IProvidersEndPoint, ProvidersEndPoint>();
