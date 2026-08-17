@@ -32,28 +32,6 @@ public class CardRepository(IDbConnection connection, GridlyDbContext dbContext)
         if (cards is null)
             return false;
 
-        var cardsList = cards.ToList();
-        var cardIds = cardsList.Select(c => c.Id).ToList();
-        var cardEntities = await dbContext.Cards
-            .Include(c => c.Settings)
-            .Where(c => cardIds.Contains(c.Id))
-            .ToDictionaryAsync(c => c.Id);
-
-        foreach (var card in cardsList)
-        {
-            if (!cardEntities.TryGetValue(card.Id, out var entity))
-                continue;
-
-            entity.IndexPosition = card.IndexPosition!.Value;
-            entity.RowColumnId = card.RowColumnId!.Value;
-
-            if (entity.Settings is not null)
-            {
-                entity.Settings.Width = card.Settings?.Width ?? 250;
-                entity.Settings.Height = card.Settings?.Height ?? 250;
-            }
-        }
-
         var result = await dbContext.SaveChangesAsync();
         return result > 0;
     }
