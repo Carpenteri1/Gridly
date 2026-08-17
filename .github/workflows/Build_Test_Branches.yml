@@ -54,5 +54,17 @@ jobs:
         working-directory: ${{ env.DOTNET_PATH }}
 
       - name: Test .NET
-        run: dotnet test Gridly.csproj --configuration Release --no-build
+        run: >
+          dotnet test Gridly.csproj --configuration Release --no-build
+          --collect:"XPlat Code Coverage" --settings coverage.runsettings
+          --results-directory ./TestResults
+        working-directory: ${{ env.DOTNET_PATH }}
+
+      - name: Enforce .NET coverage threshold
+        run: |
+          COVERAGE_FILE=$(find TestResults -name "coverage.cobertura.xml" | head -n 1)
+          LINE_RATE=$(grep -oP 'line-rate="\K[0-9.]+' "$COVERAGE_FILE" | head -n 1)
+          COVERAGE_PERCENT=$(awk "BEGIN { printf \"%.2f\", $LINE_RATE * 100 }")
+          echo "Backend line coverage: ${COVERAGE_PERCENT}% (threshold: 80%)"
+          awk -v rate="$LINE_RATE" 'BEGIN { exit (rate < 0.80) }'
         working-directory: ${{ env.DOTNET_PATH }}

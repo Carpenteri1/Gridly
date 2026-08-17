@@ -1,6 +1,7 @@
 using Gridly.Commands;
 using Gridly.Dtos;
 using Gridly.EndPoints;
+using Gridly.helpers;
 using Gridly.Models;
 using Gridly.Querys;
 using Gridly.Repositories;
@@ -128,6 +129,7 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
 
     public int UpsertCallCount { get; private set; }
     public bool DeleteIfOrphanedResult { get; set; } = true;
+    public IEnumerable<StoredWeatherDataDto>? StoredWeatherData { get; set; } = Array.Empty<StoredWeatherDataDto>();
 
     public void Seed(WeatherDataModel weather)
     {
@@ -140,7 +142,7 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
         Task.FromResult(_byAddress.TryGetValue(address, out var value) ? value : null);
 
     public Task<IEnumerable<StoredWeatherDataDto>?> GetStoredWeatherData() =>
-        Task.FromResult<IEnumerable<StoredWeatherDataDto>?>(Array.Empty<StoredWeatherDataDto>());
+        Task.FromResult(StoredWeatherData);
 
     public Task<WeatherDataModel> Upsert(WeatherDataModel weather)
     {
@@ -297,6 +299,32 @@ internal sealed class FakeProvidersEndPoint : IProvidersEndPoint
     public Task<int> Validate(string provider)
     {
         ValidateCallCount++;
+        return Task.FromResult(Result);
+    }
+}
+
+internal sealed class FakeWidgetRepository : IWidgetRepository
+{
+    public List<WidgetModel> Widgets { get; set; } = [];
+
+    public Task<IEnumerable<WidgetModel>> Get() =>
+        Task.FromResult<IEnumerable<WidgetModel>>(Widgets);
+}
+
+internal sealed class FakeProvidersEndPointExtensions : IProvidersEndPointExtensions
+{
+    public int CallCount { get; private set; }
+    public string? LastAddress { get; private set; }
+    public string? LastProvider { get; private set; }
+    public string? LastRawKey { get; private set; }
+    public (int Status, string Body) Result { get; set; } = (StatusCodes.Status200OK, "{}");
+
+    public Task<(int Status, string Body)> CallWeatherProvider(string address, string provider, string rawKey)
+    {
+        CallCount++;
+        LastAddress = address;
+        LastProvider = provider;
+        LastRawKey = rawKey;
         return Task.FromResult(Result);
     }
 }

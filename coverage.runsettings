@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <!-- App source and tests share one assembly (Gridly.dll), which coverlet otherwise
+               treats as "the test assembly" and skips entirely by default. -->
+          <IncludeTestAssembly>true</IncludeTestAssembly>
+          <Exclude>[Gridly]Gridly.Tests.*,[Gridly]Gridly.Services.HttpClientServices,[Gridly]Program</Exclude>
+          <ExcludeByFile>**/Program.cs</ExcludeByFile>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

@@ -52,6 +52,9 @@ testem.log
 # Files I wanna ignore
 Assets/CardData/*.json
 Assets/VersionData/*.json
+
+# .NET test results / coverage output
+/TestResults
 Assets/Icons/*
 Assets/Db/*
 /wwwroot/
