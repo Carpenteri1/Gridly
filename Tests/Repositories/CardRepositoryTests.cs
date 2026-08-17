@@ -1,34 +1,70 @@
 using System.Data;
-using Dapper;
 using Gridly.Data;
 using Gridly.Models;
 using Gridly.Repositories;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Tests.Repositories;
 
-public sealed class CardRepositoryTests : IDisposable
+// CardRepository.BatchEdit is tested with a fake GridlyDbContext whose SaveChangesAsync
+// is overridden to return a canned value instead of persisting anything. No database
+// provider is configured, so no real save/insert of any kind - live or in-memory - can
+// happen; SaveChangesAsync is fully mocked out.
+public sealed class CardRepositoryTests
 {
-    private readonly string _dbPath = Path.Combine(Path.GetTempPath(), $"gridly-card-batchedit-{Guid.NewGuid():N}.db");
-    private readonly IDbConnection _connection;
-    private readonly GridlyDbContext _dbContext;
+    private static CardRepository CreateRepository(GridlyDbContext dbContext, IDbConnection connection) =>
+        new(connection, dbContext);
 
-    public CardRepositoryTests()
+    private static FakeGridlyDbContext CreateFakeDbContext(int saveChangesResult) =>
+        new(new DbContextOptionsBuilder<GridlyDbContext>().Options, saveChangesResult);
+
+    [Fact]
+    public async Task BatchEdit_WhenCardsIsNull_ReturnsFalseAndNeverCallsSaveChanges()
     {
-        _connection = new SqliteConnection($"Data Source={_dbPath}");
-        _dbContext = new GridlyDbContext(
-            new DbContextOptionsBuilder<GridlyDbContext>()
-                .UseSqlite($"Data Source={_dbPath}")
-                .Options);
+        using var connection = new SqliteConnection("Data Source=:memory:");
+        using var dbContext = CreateFakeDbContext(saveChangesResult: 1);
+        var repository = CreateRepository(dbContext, connection);
+
+        var result = await repository.BatchEdit(null);
+
+        Assert.False(result);
+        Assert.False(dbContext.SaveChangesCalled);
     }
 
-    public void Dispose()
+    [Fact]
+    public async Task BatchEdit_WhenBatchSaveSucceeds_ReturnsTrue()
     {
-        _connection.Dispose();
-        _dbContext.Dispose();
-        SqliteConnection.ClearAllPools();
-        if (File.Exists(_dbPath)) File.Delete(_dbPath);
-        if (File.Exists(_dbPath + ".bak")) File.Delete(_dbPath + ".bak");
+        using var connection = new SqliteConnection("Data Source=:memory:");
+        using var dbContext = CreateFakeDbContext(saveChangesResult: 1);
+        var repository = CreateRepository(dbContext, connection);
+
+        var result = await repository.BatchEdit(new List<CardModel> { new() { Id = 1 } });
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task BatchEdit_WhenBatchSaveFails_ReturnsFalse()
+    {
+        using var connection = new SqliteConnection("Data Source=:memory:");
+        using var dbContext = CreateFakeDbContext(saveChangesResult: 0);
+        var repository = CreateRepository(dbContext, connection);
+
+        var result = await repository.BatchEdit(new List<CardModel> { new() { Id = 1 } });
+
+        Assert.False(result);
+    }
+
+    private sealed class FakeGridlyDbContext(DbContextOptions<GridlyDbContext> options, int saveChangesResult)
+        : GridlyDbContext(options)
+    {
+        public bool SaveChangesCalled { get; private set; }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            SaveChangesCalled = true;
+            return Task.FromResult(saveChangesResult);
+        }
     }
 }

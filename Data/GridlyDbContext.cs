@@ -5,7 +5,7 @@ namespace Gridly.Data;
 
 public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbContext(options)
 {
-    public DbSet<SettingsModel> Cards => Set<SettingsModel>();
+    public DbSet<CardModel> Cards => Set<CardModel>();
     public DbSet<SettingsModel> Settings => Set<SettingsModel>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
