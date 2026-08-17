@@ -8,7 +8,7 @@ using Gridly.Services;
 
 namespace Gridly.Repositories;
 
-public class CardRepository(IDbConnection connection) : ICardRepository
+public class CardRepository(IDbConnection connection, GridlyDbContext dbContext) : ICardRepository
 {
     private DbCommandRunner _dbCommandRunner = new (connection);
     
@@ -31,20 +31,7 @@ public class CardRepository(IDbConnection connection) : ICardRepository
         if (cards is null)
             return false;
 
-        var parameters = cards
-            .Select(c => new 
-            { 
-                c.Id,
-                c.IndexPosition,
-                c.RowColumnId,
-                Width = c.Settings?.Width ?? 250,
-                Height = c.Settings?.Height ?? 250,
-                TitleHidden = c.Settings?.TitleHidden ?? false,
-                ImageHidden = c.Settings?.ImageHidden ?? false
-            })
-            .ToList();
-
-        var result = await connection.ExecuteAsync(QueryStrings.UpdateBatchCardQuery, parameters);
+        var result = await dbContext.SaveChangesAsync();
         return result > 0;
     }
 

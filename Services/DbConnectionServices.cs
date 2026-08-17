@@ -29,4 +29,9 @@ public class DbConnectionServices : IDbConnectionServices
     {
         return new SqliteConnection(connectionString);
     }
+
+    public string GetConnectionString()
+    {
+        return connectionString;
+    }
 }
