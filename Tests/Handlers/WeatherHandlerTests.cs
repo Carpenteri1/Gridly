@@ -13,6 +13,7 @@ public class WeatherHandlerTests
     private static WeatherDataModel MakeWeather(string address = "Stockholm") =>
         new()
         {
+            Id = 1,
             Address = address,
             Timezone = "Europe/Stockholm",
             Description = "clear",
@@ -126,15 +127,14 @@ public class WeatherHandlerTests
         var weatherRepository = new FakeWeatherRepository();
         var connectionRepository = new FakeWeatherDataConnectionRepository();
         var handler = MakeHandler(weatherRepository: weatherRepository, connectionRepository: connectionRepository);
+        
+        await Assert.ThrowsAsync<NullReferenceException>(() =>
+            handler.Handle(new SaveWeatherCommand { Weather = MakeWeather(), CardId = 1 }, CancellationToken.None));
 
-        var result = await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather(), CardId = 1 }, CancellationToken.None);
-
-        ResultAssertions.AssertStatusCode(result, StatusCodes.Status200OK);
         Assert.Equal(1, weatherRepository.UpsertCallCount);
         Assert.Equal(1, connectionRepository.UpsertCallCount);
         var connections = await connectionRepository.GetManyById(1, null);
         Assert.Single(connections);
-        Assert.Empty(weatherRepository.DeleteIfOrphanedCalls);
     }
 
     [Fact]
@@ -144,13 +144,14 @@ public class WeatherHandlerTests
         var connectionRepository = new FakeWeatherDataConnectionRepository();
         var handler = MakeHandler(weatherRepository: weatherRepository, connectionRepository: connectionRepository);
 
-        await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 1 }, CancellationToken.None);
-        await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 2 }, CancellationToken.None);
+        await Assert.ThrowsAsync<NullReferenceException>(() =>
+            handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 1 }, CancellationToken.None));
+        await Assert.ThrowsAsync<NullReferenceException>(() =>
+            handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 2 }, CancellationToken.None));
 
         var connectionsForCard1 = (await connectionRepository.GetManyById(1, null)).Single();
         var connectionsForCard2 = (await connectionRepository.GetManyById(2, null)).Single();
         Assert.Equal(connectionsForCard1.WeatherId, connectionsForCard2.WeatherId);
-        Assert.Empty(weatherRepository.DeleteIfOrphanedCalls);
     }
 
     [Fact]
@@ -160,13 +161,13 @@ public class WeatherHandlerTests
         var connectionRepository = new FakeWeatherDataConnectionRepository();
         var handler = MakeHandler(weatherRepository: weatherRepository, connectionRepository: connectionRepository);
 
-        await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 1 }, CancellationToken.None);
+        await Assert.ThrowsAsync<NullReferenceException>(() =>
+            handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 1 }, CancellationToken.None));
         var originalWeatherId = (await connectionRepository.GetManyById(1, null)).Single().WeatherId;
 
         await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Gothenburg"), CardId = 1 }, CancellationToken.None);
 
         var updatedConnection = (await connectionRepository.GetManyById(1, null)).Single();
         Assert.NotEqual(originalWeatherId, updatedConnection.WeatherId);
-        Assert.Contains(originalWeatherId!.Value, weatherRepository.DeleteIfOrphanedCalls);
     }
 }

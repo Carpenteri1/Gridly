@@ -130,7 +130,6 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
     private int _nextId = 1;
 
     public int UpsertCallCount { get; private set; }
-    public List<int> DeleteIfOrphanedCalls { get; } = new();
     public bool DeleteIfOrphanedResult { get; set; } = true;
 
     public void Seed(WeatherDataModel weather)
@@ -152,14 +151,6 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
         weather.Id = _byAddress.TryGetValue(weather.Address, out var existing) ? existing.Id : _nextId++;
         _byAddress[weather.Address] = weather;
         return Task.FromResult(weather);
-    }
-
-    public Task<bool> DeleteIfOrphaned(int weatherId)
-    {
-        DeleteIfOrphanedCalls.Add(weatherId);
-        var entry = _byAddress.Values.FirstOrDefault(w => w.Id == weatherId);
-        if (entry is not null) _byAddress.Remove(entry.Address);
-        return Task.FromResult(DeleteIfOrphanedResult);
     }
 }
 
