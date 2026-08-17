@@ -143,8 +143,8 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
     public Task<WeatherDataModel> Get(string address) =>
         Task.FromResult(_byAddress.TryGetValue(address, out var value) ? value : null);
 
-    public Task<IEnumerable<WeatherDataModel>> GetStoredWeatherData() =>
-        Task.FromResult<IEnumerable<WeatherDataModel>?>(Array.Empty<WeatherDataModel>());
+    public Task<IEnumerable<StoredWeatherDataDto>> GetStoredWeatherData() =>
+        Task.FromResult<IEnumerable<StoredWeatherDataDto>?>(Array.Empty<StoredWeatherDataDto>());
 
     public Task<WeatherDataModel> Upsert(WeatherDataModel weather)
     {

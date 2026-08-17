@@ -46,29 +46,32 @@ public class WeatherPeriodicRefreshBackgroundService(
             if (!isFirstCall) await Delay(DelayBetweenProviderCalls, cancellationToken);
 
             isFirstCall = false;
-
             try
             {
-                var (status, weather) = await weatherEndPoint.Get(entry.Address,rawKey);
-                
+                var (status, weather) = await weatherEndPoint.Get(entry.Address, rawKey);
                 if (status is StatusCodes.Status200OK && weather is not null)
                 {
                     await weatherRepository.Upsert(WeatherDataFactory.Create(weather));
+                    await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider,
+                        nameof(ProvidersKeyStatusEnum.Valid));
+
                     logger.LogInformation("Hourly weather refresh for {Address} completed", entry.Address);
                 }
-                else
-                {
-                    if (status is StatusCodes.Status404NotFound || status is StatusCodes.Status401Unauthorized)
-                        await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Invalid));
-                    
-                    logger.LogWarning(
-                        "Hourly weather refresh for {Address} did not return fresh data ({ResultType})",
-                        entry.Address, status);
-                }
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
-                logger.LogError(ex, "Hourly weather refresh failed for {Address}", entry.Address);
+                var s = ex.StatusCode;
+                logger.LogWarning(
+                    "Hourly weather refresh for {Address} did not return fresh data",
+                    entry.Address);
+                await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider,
+                    nameof(ProvidersKeyStatusEnum.Invalid));
+            }
+            catch (Exception)
+            {
+                logger.LogWarning(
+                    "Hourly weather refresh for {Address} did not return fresh data",
+                    entry.Address);
             }
         }
     }

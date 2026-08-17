@@ -75,39 +75,6 @@ public sealed class WeatherRepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task DeleteIfOrphaned_WhenAnotherConnectionStillReferencesIt_KeepsTheRow()
-    {
-        await new DbInitializer(_connection).EnsureTablesCreatedAsync();
-        var (card1, card2) = await SeedTwoCardsAsync();
-        var weatherRepository = new WeatherRepository(_connection);
-        var connectionRepository = new WeatherDataConnectionRepository(_connection);
-        var weather = await weatherRepository.Upsert(MakeWeather("Stockholm", "clear"));
-        await connectionRepository.Upsert(new WeatherDataConnectionDtoModel { CardId = card1, WeatherId = weather.Id });
-        await connectionRepository.Upsert(new WeatherDataConnectionDtoModel { CardId = card2, WeatherId = weather.Id });
-
-        await connectionRepository.Delete(card1);
-        await weatherRepository.DeleteIfOrphaned(weather.Id);
-
-        Assert.NotNull(await weatherRepository.Get("Stockholm"));
-    }
-
-    [Fact]
-    public async Task DeleteIfOrphaned_WhenNoConnectionsRemain_DeletesTheRow()
-    {
-        await new DbInitializer(_connection).EnsureTablesCreatedAsync();
-        var (card1, _) = await SeedTwoCardsAsync();
-        var weatherRepository = new WeatherRepository(_connection);
-        var connectionRepository = new WeatherDataConnectionRepository(_connection);
-        var weather = await weatherRepository.Upsert(MakeWeather("Stockholm", "clear"));
-        await connectionRepository.Upsert(new WeatherDataConnectionDtoModel { CardId = card1, WeatherId = weather.Id });
-
-        await connectionRepository.Delete(card1);
-        await weatherRepository.DeleteIfOrphaned(weather.Id);
-
-        Assert.Null(await weatherRepository.Get("Stockholm"));
-    }
-
-    [Fact]
     public async Task EnsureTablesCreatedAsync_WhenLegacySchemaExists_MigratesDataIntoJunctionTableAndDropsCardId()
     {
         await _connection.ExecuteAsync(@"

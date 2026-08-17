@@ -4,17 +4,18 @@ import { toSignal } from "@angular/core/rxjs-interop";
 import { HttpErrorResponse } from "@angular/common/http";
 import {WeatherEndpointService} from "../endpoint_services/weather.endpoint.service";
 import {WeatherDataModel} from "../../models/weatherData.Model";
+import {StoredWeatherDataModel} from "../../models/storedWeatherData.Model";
 
 @Injectable({providedIn: 'root'})
 export class WeatherProviderService {
-  private readonly storedWeatherDataSubject =  new BehaviorSubject<WeatherDataModel[]>([]);
-  readonly storedWeatherData$: Observable<WeatherDataModel[]>;
-  readonly storedWeatherData!: Signal<WeatherDataModel[]>;
+  private readonly storedWeatherDataSubject =  new BehaviorSubject<StoredWeatherDataModel[]>([]);
+  readonly storedWeatherData$: Observable<StoredWeatherDataModel[]>;
+  readonly storedWeatherData!: Signal<StoredWeatherDataModel[]>;
   #api = inject(WeatherEndpointService);
 
   constructor() {
     this.storedWeatherData$ = this.storedWeatherDataSubject.asObservable();
-    this.storedWeatherData = toSignal(this.storedWeatherData$, { initialValue: [] as WeatherDataModel[] });
+    this.storedWeatherData = toSignal(this.storedWeatherData$, { initialValue: [] as StoredWeatherDataModel[] });
     this.refresh();
   }
 

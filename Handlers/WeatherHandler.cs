@@ -27,7 +27,7 @@ public class WeatherHandler(
     {
         var weather = await weatherRepository.Get(query.Address);
         if(weather is null) return Results.NotFound();
-        
+
         var isFresh = DateTime.UtcNow - weather.FetchedAt < CacheWindow;
         return isFresh ? Results.Ok(weather) : Results.NotFound();
     }
@@ -73,16 +73,18 @@ public class WeatherHandler(
 
     public async Task<IResult> Handle(SaveWeatherCommand command, CancellationToken cancellationToken)
     {
-        var previousConnection = (await weatherDataConnectionRepository.GetManyById(command.CardId, null)).FirstOrDefault();
+        var weather = await weatherRepository.Get(command.Weather.Address);
+        if (weather is null)
+            weather = await weatherRepository.Upsert(command.Weather);
+     
+        var weatherConnnection = (await weatherDataConnectionRepository.GetManyById(command.CardId, null)).FirstOrDefault();
 
-        var weather = await weatherRepository.Upsert(command.Weather);
-        if (weather is null) return Results.BadRequest();
+        if (weatherConnnection is null)
+            await weatherDataConnectionRepository.Upsert(WeatherDataConnectionFactory.Create(command.CardId, command.Weather.Id));
 
-        await weatherDataConnectionRepository.Upsert(WeatherDataConnectionFactory.Create(command.CardId, weather.Id));
-
-        if (previousConnection?.WeatherId is not null && previousConnection.WeatherId != weather.Id)
-            await weatherRepository.DeleteIfOrphaned(previousConnection.WeatherId.Value);
-
+        if (weatherConnnection.WeatherId != weather.Id)
+            await weatherDataConnectionRepository.Upsert(WeatherDataConnectionFactory.Create(command.CardId, weather.Id));
+        
         return Results.Ok();
     }
 }

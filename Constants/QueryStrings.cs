@@ -47,12 +47,7 @@ public class QueryStrings
     ON CONFLICT(CardId) DO UPDATE SET
         WeatherId = excluded.WeatherId
     RETURNING *;";
-
-    public const string DeleteOrphanedWeatherDataQuery = @"
-    DELETE FROM WeatherData
-    WHERE Id = @Id
-      AND NOT EXISTS (SELECT 1 FROM WeatherDataConnection WHERE WeatherId = @Id);";
-
+    
     public const string SelectCardQuery = @"
      SELECT 
         co.Id AS CardId, 

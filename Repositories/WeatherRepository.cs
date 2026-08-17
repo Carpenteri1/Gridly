@@ -22,16 +22,13 @@ public class WeatherRepository(IDbConnection connection) : IWeatherRepository
         return dto;
     }
 
-    public async Task<IEnumerable<WeatherDataModel>?> GetStoredWeatherData()
+    public async Task<IEnumerable<StoredWeatherDataDto>?> GetStoredWeatherData()
     {
         var storedWeatherData =
-            await _dbCommandRunner.SelectMany<WeatherDataModel>(QueryStrings.SelectAllWeatherDataQuery, string.Empty);
+            await _dbCommandRunner.SelectMany<StoredWeatherDataDto>(QueryStrings.SelectAllWeatherDataQuery, string.Empty);
         return storedWeatherData;
     }
 
     public async Task<WeatherDataModel> Upsert(WeatherDataModel weather) =>
         await _dbCommandRunner.Execute(QueryStrings.UpsertWeatherDataQuery, weather);
-
-    public async Task<bool> DeleteIfOrphaned(int weatherId) =>
-        await _dbCommandRunner.Execute(QueryStrings.DeleteOrphanedWeatherDataQuery, new { Id = weatherId } as object);
 }
