@@ -10,7 +10,8 @@ public static class ColumnRowFactory
         {
             Id = dto.Id,
             RowPosition = dto. RowPosition,
-            RowWidth = dto.RowWidth 
+            RowWidth = dto.RowWidth,
+            Cards = []
         };
 
     public static IEnumerable<ColumnRowModel> CreateMany(IEnumerable<ColumnRowDtoModel> dtos) 

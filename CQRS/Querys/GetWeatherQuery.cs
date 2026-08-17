@@ -4,5 +4,5 @@ namespace Gridly.Querys;
 
 public class GetWeatherQuery : IRequest<IResult>
 {
-    public string Address { get; set; }
+    public required string Address { get; set; }
 }

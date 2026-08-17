@@ -11,6 +11,6 @@ public class CardHandlerHelper(IFileService fileService)
         !string.IsNullOrEmpty(iconModel.Type) &&
         !string.IsNullOrEmpty(iconModel.Base64Data);
             
-    public bool DeleteIcon(CardModel Card) =>
-        fileService.DeleteIcon(Card.IconData.Name, Card.IconData.Type);
+    public bool DeleteIcon(IconModel iconData) =>
+        fileService.DeleteIcon(iconData.Name, iconData.Type);
 }

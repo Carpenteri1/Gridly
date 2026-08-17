@@ -23,7 +23,7 @@ public sealed class IconRepositoryTests : IDisposable
         {
             new CardModel
             {
-                IconData = new IconModel { Name = "used", Type = "svg" }
+                IconData = new IconModel { Name = "used", Type = "svg", Base64Data = "", MaterialIcon = "" }
             }
         };
 
@@ -47,7 +47,7 @@ public sealed class IconRepositoryTests : IDisposable
         {
             new CardModel
             {
-                IconData = new IconModel { Name = "used", Type = "svg" }
+                IconData = new IconModel { Name = "used", Type = "svg", Base64Data = "", MaterialIcon = "" }
             }
         };
 

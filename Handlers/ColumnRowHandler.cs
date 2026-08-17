@@ -14,7 +14,6 @@ public class ColumnRowHandler(
     ISettingsRepository settingsRepository,
     IIconRepository iconRepository,
     IIconConnectedRepository iconConnectedRepository,
-    IWeatherRepository weatherRepository,
     IWeatherDataConnectionRepository weatherDataConnectionRepository,
     IFileService fileService):
     IRequestHandler<GetAllRowColumnsQuery, IResult>,
@@ -164,7 +163,7 @@ public class ColumnRowHandler(
             await iconRepository.Delete(card.IconData.Id);
 
             if (handlerHelper.IconDataHasValue(card.IconData))
-                handlerHelper.DeleteIcon(card);
+                handlerHelper.DeleteIcon(card.IconData);
         }
     }
 

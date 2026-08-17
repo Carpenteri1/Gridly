@@ -3,8 +3,8 @@ namespace Gridly.Dtos;
 public class WidgetDtoModel
 {
     public int Id {get; set;}
-    public string WidgetType {get; set;}
-    public string Label {get; set;}
-    public string Description {get; set;}
-    public string Icon {get; set;}
+    public required string WidgetType {get; set;}
+    public required string Label {get; set;}
+    public required string Description {get; set;}
+    public required string Icon {get; set;}
 }
