@@ -53,7 +53,8 @@ public sealed class FileServiceTests : IDisposable
         {
             Name = fileName,
             Type = "png",
-            Base64Data = Convert.ToBase64String([5, 6, 7])
+            Base64Data = Convert.ToBase64String([5, 6, 7]),
+            MaterialIcon = ""
         };
 
         var result = _service.UploadIcon(icon);

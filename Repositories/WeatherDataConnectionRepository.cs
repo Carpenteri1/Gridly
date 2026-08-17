@@ -33,6 +33,6 @@ public class WeatherDataConnectionRepository(IDbConnection connection) : IWeathe
         var builder = new SqlBuilder();
         var template = builder.AddTemplate(QueryStrings.DeleteFromWeatherDataConnectionQuery);
         builder.Where(QueryStrings.WhereCardIdForeignKeyEqualId, new { CardId = cardId });
-        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters) != null;
+        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
     }
 }

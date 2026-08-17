@@ -43,6 +43,7 @@ public sealed class WeatherRepositoryTests : IDisposable
 
         Assert.Equal(first.Id, second.Id);
         var stored = await repository.Get("Stockholm");
+        Assert.NotNull(stored);
         Assert.Equal("cloudy", stored.Description);
         var rowCount = await _connection.QuerySingleAsync<int>("SELECT COUNT(*) FROM WeatherData;");
         Assert.Equal(1, rowCount);

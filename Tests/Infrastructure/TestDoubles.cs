@@ -1,13 +1,10 @@
 using Gridly.Commands;
-using Gridly.Commands;
 using Gridly.Dtos;
 using Gridly.EndPoints;
 using Gridly.Models;
 using Gridly.Querys;
-using Gridly.Querys;
 using Gridly.Repositories;
 using Gridly.Services;
-using MediatR;
 using MediatR;
 
 namespace Gridly.Tests.Infrastructure;
@@ -139,10 +136,10 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
         _byAddress[weather.Address] = weather;
     }
 
-    public Task<WeatherDataModel> Get(string address) =>
+    public Task<WeatherDataModel?> Get(string address) =>
         Task.FromResult(_byAddress.TryGetValue(address, out var value) ? value : null);
 
-    public Task<IEnumerable<StoredWeatherDataDto>> GetStoredWeatherData() =>
+    public Task<IEnumerable<StoredWeatherDataDto>?> GetStoredWeatherData() =>
         Task.FromResult<IEnumerable<StoredWeatherDataDto>?>(Array.Empty<StoredWeatherDataDto>());
 
     public Task<WeatherDataModel> Upsert(WeatherDataModel weather)

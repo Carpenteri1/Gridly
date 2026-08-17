@@ -14,8 +14,13 @@ public class CardFactoryTests
             IndexPosition = 3,
             RowColumnId = 1,
             CardName = "Docs",
+            CardType = "",
             Url = "https://example.test",
-            IconUrl = "/icons/docs.svg"
+            IconUrl = "/icons/docs.svg",
+            IconName = "",
+            Type = "",
+            Base64Data = "",
+            MaterialIcon = ""
         };
 
         var result = CardFactory.Create(dto);
@@ -35,8 +40,8 @@ public class CardFactoryTests
     {
         var dtos = new[]
         {
-            new CardDtoModel { CardId = 1, CardName = "First" },
-            new CardDtoModel { CardId = 2, CardName = "Second" }
+            new CardDtoModel { CardId = 1, CardName = "First", CardType = "", Url = "", IconUrl = "", IconName = "", Type = "", Base64Data = "", MaterialIcon = "" },
+            new CardDtoModel { CardId = 2, CardName = "Second", CardType = "", Url = "", IconUrl = "", IconName = "", Type = "", Base64Data = "", MaterialIcon = "" }
         };
 
         var result = CardFactory.CreateMany(dtos).ToArray();
@@ -54,6 +59,10 @@ public class CardFactoryTests
         var dto = new CardDtoModel
         {
             CardId = 8,
+            CardName = "",
+            CardType = "",
+            Url = "",
+            IconUrl = "",
             IconId = 21,
             IconName = "grid",
             Type = "svg",

@@ -64,10 +64,7 @@ using (var scope = app.Services.CreateScope())
     await dbInit.EnsureTablesCreatedAsync();
 }
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-    endpoints.MapFallbackToFile("index.html");
-});
+app.MapControllers();
+app.MapFallbackToFile("index.html");
 
 app.Run();

@@ -128,8 +128,7 @@ public class WeatherHandlerTests
         var connectionRepository = new FakeWeatherDataConnectionRepository();
         var handler = MakeHandler(weatherRepository: weatherRepository, connectionRepository: connectionRepository);
         
-        await Assert.ThrowsAsync<NullReferenceException>(() =>
-            handler.Handle(new SaveWeatherCommand { Weather = MakeWeather(), CardId = 1 }, CancellationToken.None));
+        await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather(), CardId = 1 }, CancellationToken.None);
 
         Assert.Equal(1, weatherRepository.UpsertCallCount);
         Assert.Equal(1, connectionRepository.UpsertCallCount);
@@ -144,10 +143,8 @@ public class WeatherHandlerTests
         var connectionRepository = new FakeWeatherDataConnectionRepository();
         var handler = MakeHandler(weatherRepository: weatherRepository, connectionRepository: connectionRepository);
 
-        await Assert.ThrowsAsync<NullReferenceException>(() =>
-            handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 1 }, CancellationToken.None));
-        await Assert.ThrowsAsync<NullReferenceException>(() =>
-            handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 2 }, CancellationToken.None));
+        await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 1 }, CancellationToken.None);
+        await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 2 }, CancellationToken.None);
 
         var connectionsForCard1 = (await connectionRepository.GetManyById(1, null)).Single();
         var connectionsForCard2 = (await connectionRepository.GetManyById(2, null)).Single();
@@ -161,8 +158,7 @@ public class WeatherHandlerTests
         var connectionRepository = new FakeWeatherDataConnectionRepository();
         var handler = MakeHandler(weatherRepository: weatherRepository, connectionRepository: connectionRepository);
 
-        await Assert.ThrowsAsync<NullReferenceException>(() =>
-            handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 1 }, CancellationToken.None));
+        await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Stockholm"), CardId = 1 }, CancellationToken.None);
         var originalWeatherId = (await connectionRepository.GetManyById(1, null)).Single().WeatherId;
 
         await handler.Handle(new SaveWeatherCommand { Weather = MakeWeather("Gothenburg"), CardId = 1 }, CancellationToken.None);

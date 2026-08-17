@@ -79,10 +79,7 @@ public class WeatherHandler(
      
         var weatherConnnection = (await weatherDataConnectionRepository.GetManyById(command.CardId, null)).FirstOrDefault();
 
-        if (weatherConnnection is null)
-            await weatherDataConnectionRepository.Upsert(WeatherDataConnectionFactory.Create(command.CardId, command.Weather.Id));
-
-        if (weatherConnnection.WeatherId != weather.Id)
+        if (weatherConnnection is null || weatherConnnection.WeatherId != weather.Id)
             await weatherDataConnectionRepository.Upsert(WeatherDataConnectionFactory.Create(command.CardId, weather.Id));
         
         return Results.Ok();

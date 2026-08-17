@@ -36,7 +36,6 @@ public class ColumnRowHandlerTests
             new FakeSettingsRepository(),
             new FakeIconRepository(),
             new FakeIconConnectedRepository(),
-            new FakeWeatherRepository(),
             new FakeWeatherDataConnectionRepository(),
             new FakeFileService());
         var command = new BatchSaveColumnRowCommands
@@ -75,7 +74,6 @@ public class ColumnRowHandlerTests
         {
             Cards = [new CardModel { Id = 10, RowColumnId = 1, IndexPosition = 1, Name = "Plain", Url = "https://plain.example" }],
         };
-        var weatherRepository = new FakeWeatherRepository();
         var weatherDataConnectionRepository = new FakeWeatherDataConnectionRepository();
         var handler = new ColumnRowHandler(
             columnRowRepository,
@@ -83,7 +81,6 @@ public class ColumnRowHandlerTests
             new FakeSettingsRepository(),
             new FakeIconRepository(),
             new FakeIconConnectedRepository(),
-            weatherRepository,
             weatherDataConnectionRepository,
             new FakeFileService());
         var command = new BatchSaveColumnRowCommands
@@ -109,8 +106,8 @@ public class ColumnRowHandlerTests
             return Task.FromResult(Clone(insertedRow));
         }
 
-        public Task<IEnumerable<ColumnRowModel>> Get() =>
-            Task.FromResult<IEnumerable<ColumnRowModel>>(Rows.Select(Clone).ToList());
+        public Task<IEnumerable<ColumnRowModel>?> Get() =>
+            Task.FromResult<IEnumerable<ColumnRowModel>?>(Rows.Select(Clone).ToList());
 
         public Task<bool> BatchDelete(IEnumerable<ColumnRowModel> columnRows)
         {
@@ -166,8 +163,8 @@ public class ColumnRowHandlerTests
         public Task<IEnumerable<CardModel>?> Get() =>
             Task.FromResult<IEnumerable<CardModel>?>(Cards.Select(Clone).ToList());
 
-        public Task<CardModel> GetById(int Id) =>
-            Task.FromResult(Clone(Cards.Single(card => card.Id == Id)));
+        public Task<CardModel?> GetById(int Id) =>
+            Task.FromResult<CardModel?>(Clone(Cards.Single(card => card.Id == Id)));
 
         public Task<bool> Delete(int Id) => Task.FromResult(true);
 
@@ -196,7 +193,7 @@ public class ColumnRowHandlerTests
     {
         public Task<IconModel> Insert(IconModel icon) => Task.FromResult(icon);
         public Task<IconModel> Edit(IconModel icon) => Task.FromResult(icon);
-        public Task<IconModel> GetById(int Id) => Task.FromResult(new IconModel { Id = Id });
+        public Task<IconModel> GetById(int Id) => Task.FromResult(new IconModel { Id = Id, Name = "", Type = "", Base64Data = "", MaterialIcon = "" });
         public Task<IconModel> GetByFullName(IconModel icon) => Task.FromResult(icon);
         public List<string> FindUnusedIcons(IEnumerable<CardModel> cards) => [];
         public Task<bool> Delete(int Id) => Task.FromResult(true);

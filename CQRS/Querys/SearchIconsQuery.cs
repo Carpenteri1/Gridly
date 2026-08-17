@@ -4,5 +4,5 @@ namespace Gridly.Querys;
 
 public class SearchIconsQuery : IRequest<IResult> 
 {
-    public string SearchTerm { get; set; }
+    public required string SearchTerm { get; set; }
 }

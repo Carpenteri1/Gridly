@@ -10,7 +10,7 @@ public class CardHandlerHelperTests
     public void IconDataHasValue_ReturnsTrue_WhenAllFieldsExist()
     {
         var helper = new CardHandlerHelper(new FakeFileService());
-        var icon = new IconModel { Name = "grid", Type = "svg", Base64Data = "Zm9v" };
+        var icon = new IconModel { Name = "grid", Type = "svg", Base64Data = "Zm9v", MaterialIcon = "dashboard" };
 
         var result = helper.IconDataHasValue(icon);
 
@@ -42,7 +42,8 @@ public class CardHandlerHelperTests
         {
             Name = name!,
             Type = type!,
-            Base64Data = base64Data!
+            Base64Data = base64Data!,
+            MaterialIcon = "dashboard"
         };
 
         var result = helper.IconDataHasValue(icon);
@@ -55,9 +56,9 @@ public class CardHandlerHelperTests
     {
         var fileService = new FakeFileService { DeleteIconResult = true };
         var helper = new CardHandlerHelper(fileService);
-        var Card = new CardModel { IconData = new IconModel { Name = "grid", Type = "svg" } };
+        var iconData = new IconModel { Name = "grid", Type = "svg", Base64Data = "", MaterialIcon = "" };
 
-        var result = helper.DeleteIcon(Card);
+        var result = helper.DeleteIcon(iconData);
 
         Assert.True(result);
         Assert.Equal(("grid", "svg"), fileService.DeletedIcon);

@@ -1,3 +1,4 @@
+using Gridly.Models;
 using Gridly.Querys;
 using Gridly.Services;
 using MediatR;
@@ -9,7 +10,7 @@ public class CardHandler(
 {
     public async Task<IResult> Handle(GetAllCardQuery query, CancellationToken cancellationToken)
     {
-        var cards = await cardRepository.Get();
+        var cards = await cardRepository.Get() ?? Enumerable.Empty<CardModel>();
         return Results.Ok(cards.OrderBy(c => c.RowColumnId).ThenBy(x => x.IndexPosition));
     }
 }
