@@ -5,10 +5,11 @@ using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.Models;
 using Gridly.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;
 
-public class CardRepository(IDbConnection connection) : ICardRepository
+public class CardRepository(IDbConnection connection, GridlyDbContext dbContext) : ICardRepository
 {
     private DbCommandRunner _dbCommandRunner = new (connection);
     
@@ -31,20 +32,29 @@ public class CardRepository(IDbConnection connection) : ICardRepository
         if (cards is null)
             return false;
 
-        var parameters = cards
-            .Select(c => new 
-            { 
-                c.Id,
-                c.IndexPosition,
-                c.RowColumnId,
-                Width = c.Settings?.Width ?? 250,
-                Height = c.Settings?.Height ?? 250,
-                TitleHidden = c.Settings?.TitleHidden ?? false,
-                ImageHidden = c.Settings?.ImageHidden ?? false
-            })
-            .ToList();
+        var cardsList = cards.ToList();
+        var cardIds = cardsList.Select(c => c.Id).ToList();
+        var cardEntities = await dbContext.Cards
+            .Include(c => c.Settings)
+            .Where(c => cardIds.Contains(c.Id))
+            .ToDictionaryAsync(c => c.Id);
 
-        var result = await connection.ExecuteAsync(QueryStrings.UpdateBatchCardQuery, parameters);
+        foreach (var card in cardsList)
+        {
+            if (!cardEntities.TryGetValue(card.Id, out var entity))
+                continue;
+
+            entity.IndexPosition = card.IndexPosition!.Value;
+            entity.RowColumnId = card.RowColumnId!.Value;
+
+            if (entity.Settings is not null)
+            {
+                entity.Settings.Width = card.Settings?.Width ?? 250;
+                entity.Settings.Height = card.Settings?.Height ?? 250;
+            }
+        }
+
+        var result = await dbContext.SaveChangesAsync();
         return result > 0;
     }
 
