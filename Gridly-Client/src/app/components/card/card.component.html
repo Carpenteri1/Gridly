@@ -50,7 +50,7 @@
       <span><mat-icon class="card-mat-icon-size">{{card.iconData?.materialIcon}}</mat-icon></span>
       @if(storedWeatherData$ | async; as weatherData){
         @for(weather of weatherData; track weather){
-          @if (card.id === weather.cardId && card.type === CardTypes.Weather) {
+          @if (card.type === CardTypes.Weather && card.id === weather.cardId) {
             <ul class="weather-section">
               <li> {{ 'card.weatherSection.address' | translate }} {{weather.address}}</li>
               <li> {{ 'card.weatherSection.temp' | translate }} {{weather.temp}}</li>

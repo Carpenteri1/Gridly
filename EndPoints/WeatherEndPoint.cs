@@ -1,3 +1,4 @@
+using System.Net;
 using Gridly.Constants;
 using Gridly.Dtos;
 using Gridly.helpers;
@@ -16,6 +17,8 @@ public class WeatherEndPoint(
             EndpointStrings.GetVisualCrossingWeatherData,
             rawKey);
 
+        if (status != 200) throw new HttpRequestException("Weather provider returned an error status code: " + status + "");
+        
         var dto = dataConverter.DeserializeJson(body);
         return (status, dto);
     }

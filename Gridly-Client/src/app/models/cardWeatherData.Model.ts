@@ -1,5 +1,6 @@
-export class WeatherDataModel {
-   id!:number;
+export class CardWeatherDataModel {
+   cardId!:number;
+   weatherId!:number;
    address!:string;
    timezone!:string;
    description!:string;

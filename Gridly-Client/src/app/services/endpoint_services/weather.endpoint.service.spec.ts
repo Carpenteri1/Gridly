@@ -9,9 +9,10 @@ describe('WeatherEndpointService', () => {
   let service: WeatherEndpointService;
   let httpMock: HttpTestingController;
 
+  const cardId = 1;
+
   const weather: WeatherDataModel = {
     id: 1,
-    cardId: 1,
     address: 'Sweden,Stockholm',
     timezone: 'Europe/Stockholm',
     description: 'Clear',
@@ -77,11 +78,11 @@ describe('WeatherEndpointService', () => {
   it('sends a POST request to save weather data with the weather wrapped in the body', () => {
     let completed = false;
 
-    service.save(weather).subscribe(() => (completed = true));
+    service.save(weather,cardId).subscribe(() => (completed = true));
 
     const req = httpMock.expectOne(urlConstants.weather.save);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual({ weather });
+    expect(req.request.body).toEqual({ weather, cardId });
     req.flush(null);
 
     expect(completed).toBe(true);

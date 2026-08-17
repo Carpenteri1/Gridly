@@ -33,6 +33,7 @@ builder.Services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
 builder.Services.AddScoped<IWidgetRepository,WidgetRepository>();
 builder.Services.AddScoped<ILocalProvidersRepository,LocalProversRepository>();
 builder.Services.AddScoped<IWeatherRepository,WeatherRepository>();
+builder.Services.AddScoped<IWeatherDataConnectionRepository,WeatherDataConnectionRepository>();
 builder.Services.AddScoped<IProvidersEndPointExtensions,ProvidersEndPointExtensions>();
 
 builder.Services.AddSingleton<IMemoryCashingService, MemoryCashingServices>();

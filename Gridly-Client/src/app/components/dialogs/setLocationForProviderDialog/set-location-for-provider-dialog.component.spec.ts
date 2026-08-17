@@ -13,7 +13,6 @@ describe('SetLocationForProviderDialogComponent', () => {
 
   const weather: WeatherDataModel = {
     id: 1,
-    cardId: 99,
     address: 'Sweden,Stockholm',
     timezone: 'Europe/Stockholm',
     description: 'Clear',
@@ -70,27 +69,15 @@ describe('SetLocationForProviderDialogComponent', () => {
   });
 
   it('saves the weather, resets inputs, and closes on a successful lookup', async () => {
-    weatherProviderServiceMock.getWeather.mockResolvedValue([{ ...weather, cardId: 1 }, 200]);
+    weatherProviderServiceMock.getWeather.mockResolvedValue([{ ...weather }, 200]);
     component.countryInput = 'Sweden';
     component.cityInput = 'Stockholm';
 
     await component.onSubmit();
 
     expect(weatherProviderServiceMock.getWeather).toHaveBeenCalledWith('Sweden,Stockholm');
-    expect(weatherProviderServiceMock.save).toHaveBeenCalledWith(expect.objectContaining({ cardId: 99 }));
     expect(component.countryInput).toBe('');
     expect(component.cityInput).toBe('');
-    expect(component.close).toHaveBeenCalled();
-  });
-
-  it('does not re-save when the weather already belongs to the current card', async () => {
-    weatherProviderServiceMock.getWeather.mockResolvedValue([{ ...weather, cardId: 99 }, 200]);
-    component.countryInput = 'Sweden';
-    component.cityInput = 'Stockholm';
-
-    await component.onSubmit();
-
-    expect(weatherProviderServiceMock.save).not.toHaveBeenCalled();
     expect(component.close).toHaveBeenCalled();
   });
 

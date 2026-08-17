@@ -22,7 +22,6 @@ describe('EditCardDialogFacade', () => {
   };
 
   const makeWeather = (): WeatherDataModel => ({
-    cardId: 0,
     address: 'Stockholm, Sweden',
     timezone: 'Europe/Stockholm',
     description: 'clear',
@@ -155,17 +154,6 @@ describe('EditCardDialogFacade', () => {
       expect(facade.cityInput).toBe('');
     });
 
-    it('does not re-save when the returned weather already belongs to the requested card', async () => {
-      facade.countryInput = 'Sweden';
-      facade.cityInput = 'Stockholm';
-      weatherProviderServiceMock.getWeather.mockResolvedValue([{ ...makeWeather(), cardId: 9 }, 200]);
-
-      const result = await facade.saveLocation(9);
-
-      expect(result).toBe(false);
-      expect(weatherProviderServiceMock.save).not.toHaveBeenCalled();
-    });
-
     it('falls back to getVisualCrossingData and saves the freshly-fetched weather when getWeather fails', async () => {
       facade.countryInput = 'Sweden';
       facade.cityInput = 'Stockholm';
@@ -177,7 +165,8 @@ describe('EditCardDialogFacade', () => {
       expect(result).toBe(true);
       expect(weatherProviderServiceMock.getVisualCrossingData).toHaveBeenCalledWith('Sweden,Stockholm');
       expect(weatherProviderServiceMock.save).toHaveBeenCalledWith(
-        expect.objectContaining({"address": "Stockholm, Sweden", "cardId": 9, "description": "clear", "feelsLike": 20, "humidity": 50, "id": 0, "temp": 20, "timezone": "Europe/Stockholm", "windDir": 180, "windSpeed": 5})
+        expect.objectContaining({"address": "Stockholm, Sweden", "description": "clear", "feelsLike": 20, "humidity": 50, "id": 0, "temp": 20, "timezone": "Europe/Stockholm", "windDir": 180, "windSpeed": 5}),
+        9
       );
     });
 

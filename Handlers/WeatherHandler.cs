@@ -13,6 +13,7 @@ namespace Gridly.Handlers;
 public class WeatherHandler(
     IWeatherEndPoint weatherEndpoint,
     IWeatherRepository weatherRepository,
+    IWeatherDataConnectionRepository weatherDataConnectionRepository,
     ILocalProvidersRepository localProvidersRepository,
     IProviderKeysProtectionService providerKeysProtectionService) :
     IRequestHandler<GetWeatherQuery, IResult>,
@@ -26,7 +27,7 @@ public class WeatherHandler(
     {
         var weather = await weatherRepository.Get(query.Address);
         if(weather is null) return Results.NotFound();
-        
+
         var isFresh = DateTime.UtcNow - weather.FetchedAt < CacheWindow;
         return isFresh ? Results.Ok(weather) : Results.NotFound();
     }
@@ -72,14 +73,18 @@ public class WeatherHandler(
 
     public async Task<IResult> Handle(SaveWeatherCommand command, CancellationToken cancellationToken)
     {
-        var success = false;
-        var weather = await weatherRepository.GetById(command.Weather.CardId);
-        
+        var weather = await weatherRepository.Get(command.Weather.Address);
         if (weather is null)
-            success = await weatherRepository.Insert(command.Weather);
-        else 
-            success = await weatherRepository.Update(command.Weather);
+            weather = await weatherRepository.Upsert(command.Weather);
+     
+        var weatherConnnection = (await weatherDataConnectionRepository.GetManyById(command.CardId, null)).FirstOrDefault();
+
+        if (weatherConnnection is null)
+            await weatherDataConnectionRepository.Upsert(WeatherDataConnectionFactory.Create(command.CardId, command.Weather.Id));
+
+        if (weatherConnnection.WeatherId != weather.Id)
+            await weatherDataConnectionRepository.Upsert(WeatherDataConnectionFactory.Create(command.CardId, weather.Id));
         
-        return success ? Results.Ok() : Results.BadRequest();
+        return Results.Ok();
     }
 }

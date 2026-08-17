@@ -4,6 +4,7 @@ using Gridly.Models;
 using Gridly.Repositories;
 using Gridly.Services;
 using Gridly.Dtos;
+using Gridly.Tests.Infrastructure;
 
 namespace Gridly.Tests.Handlers;
 
@@ -35,6 +36,8 @@ public class ColumnRowHandlerTests
             new FakeSettingsRepository(),
             new FakeIconRepository(),
             new FakeIconConnectedRepository(),
+            new FakeWeatherRepository(),
+            new FakeWeatherDataConnectionRepository(),
             new FakeFileService());
         var command = new BatchSaveColumnRowCommands
         {
@@ -58,6 +61,39 @@ public class ColumnRowHandlerTests
         });
         Assert.Equal(["batch-edit-cards", "delete-rows"], operations);
         Assert.All(cardRepository.BatchEditedCards, card => Assert.Equal(2, card.RowColumnId));
+    }
+
+    [Fact]
+    public async Task Handle_WhenDeletingACardWithoutAWeatherConnection_NeverCallsDeleteIfOrphaned()
+    {
+        var operations = new List<string>();
+        var columnRowRepository = new FakeColumnRowRepository(operations)
+        {
+            Rows = [new ColumnRowModel { Id = 1, RowPosition = 1, Cards = [] }],
+        };
+        var cardRepository = new FakeCardRepository(operations)
+        {
+            Cards = [new CardModel { Id = 10, RowColumnId = 1, IndexPosition = 1, Name = "Plain", Url = "https://plain.example" }],
+        };
+        var weatherRepository = new FakeWeatherRepository();
+        var weatherDataConnectionRepository = new FakeWeatherDataConnectionRepository();
+        var handler = new ColumnRowHandler(
+            columnRowRepository,
+            cardRepository,
+            new FakeSettingsRepository(),
+            new FakeIconRepository(),
+            new FakeIconConnectedRepository(),
+            weatherRepository,
+            weatherDataConnectionRepository,
+            new FakeFileService());
+        var command = new BatchSaveColumnRowCommands
+        {
+            new() { Id = 1, RowPosition = 1, Cards = [] },
+        };
+
+        await handler.Handle(command, CancellationToken.None);
+
+        Assert.Equal([10], weatherDataConnectionRepository.DeletedCardIds);
     }
 
     private sealed class FakeColumnRowRepository(List<string> operations) : IColumnRowRepository
