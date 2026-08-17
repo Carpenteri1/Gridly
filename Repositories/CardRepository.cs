@@ -5,7 +5,6 @@ using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.Models;
 using Gridly.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;
 

@@ -7,10 +7,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Tests.Repositories;
 
-// CardRepository.BatchEdit is tested with a fake GridlyDbContext whose SaveChangesAsync
-// is overridden to return a canned value instead of persisting anything. No database
-// provider is configured, so no real save/insert of any kind - live or in-memory - can
-// happen; SaveChangesAsync is fully mocked out.
 public sealed class CardRepositoryTests
 {
     private static CardRepository CreateRepository(GridlyDbContext dbContext, IDbConnection connection) =>
