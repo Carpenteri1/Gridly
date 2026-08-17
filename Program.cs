@@ -24,7 +24,7 @@ builder.Services.AddScoped(sp =>
     sp.GetRequiredService<IDbConnectionServices>().CreateConnection());
 builder.Services.AddScoped<IDbConnectionServices,DbConnectionServices>();
 builder.Services.AddDbContext<GridlyDbContext>((sp, options) =>
-    options.UseSqlite(sp.GetRequiredService<IDbConnectionServices>().ConnectionString));
+    options.UseSqlite(sp.GetRequiredService<IDbConnectionServices>().GetConnectionString()));
 builder.Services.AddScoped<IGridlyDbContext>(sp => sp.GetRequiredService<GridlyDbContext>());
 builder.Services.AddScoped<IVersionEndPoint, VersionEndPoint>();
 builder.Services.AddScoped<IWeatherEndPoint, WeatherEndPoint>();

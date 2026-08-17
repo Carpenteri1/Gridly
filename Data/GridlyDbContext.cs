@@ -9,7 +9,7 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
     public DbSet<SettingsEntity> Settings => Set<SettingsEntity>();
     public DbSet<IconsConnectedEntity> IconsConnected => Set<IconsConnectedEntity>();
     public DbSet<IconEntity> Icons => Set<IconEntity>();
-
+    
     IQueryable<CardEntity> IGridlyDbContext.Cards => Cards;
     IQueryable<SettingsEntity> IGridlyDbContext.Settings => Settings;
     IQueryable<IconsConnectedEntity> IGridlyDbContext.IconsConnected => IconsConnected;

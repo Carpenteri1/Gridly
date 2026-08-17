@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;
 
-public class CardRepository(IDbConnection connection, IGridlyDbContext dbContext) : ICardRepository
+public class CardRepository(IDbConnection connection, GridlyDbContext dbContext) : ICardRepository
 {
     private DbCommandRunner _dbCommandRunner = new (connection);
     
@@ -32,20 +32,7 @@ public class CardRepository(IDbConnection connection, IGridlyDbContext dbContext
         if (cards is null)
             return false;
 
-        var parameters = cards
-            .Select(c => new 
-            { 
-                c.Id,
-                c.IndexPosition,
-                c.RowColumnId,
-                Width = c.Settings?.Width ?? 250,
-                Height = c.Settings?.Height ?? 250,
-                TitleHidden = c.Settings?.TitleHidden ?? false,
-                ImageHidden = c.Settings?.ImageHidden ?? false
-            })
-            .ToList();
-
-        var result = await connection.ExecuteAsync(QueryStrings.UpdateBatchCardQuery, parameters);
+        var result = await dbContext.SaveChangesAsync();
         return result > 0;
     }
 
@@ -77,11 +64,6 @@ public class CardRepository(IDbConnection connection, IGridlyDbContext dbContext
                 Base64Data = i.Base64Data!,
                 MaterialIcon = i.MaterialIcon!,
             };
-
-        // IGridlyDbContext exposes IQueryable<T> (not DbSet<T>) so it can be swapped for a plain
-        // in-memory fake in tests; that fake's LINQ-to-Objects provider doesn't implement
-        // IAsyncEnumerable, so EF's ToListAsync() would throw against it. Materializing
-        // synchronously works against both the fake and the real EF-backed query.
         var dtos = query.ToList();
         return Task.FromResult<IEnumerable<CardModel>?>(Factories.CardFactory.CreateMany(dtos));
     }
