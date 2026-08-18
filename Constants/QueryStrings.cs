@@ -7,11 +7,6 @@ public class QueryStrings
     VALUES (@RowPosition, @RowWidth);
     SELECT * FROM RowColumn WHERE Id = last_insert_rowid();";
     
-    public const string InsertToCardQuery = @"
-    INSERT INTO Card (RowColumnId, IndexPosition, Name, Url, IconUrl, Type) 
-    VALUES (@RowColumnId, @IndexPosition, @Name, @Url, @IconUrl, @Type);
-    SELECT * FROM Card WHERE Id = last_insert_rowid();";
-
     public const string InsertToSettingsQuery = @"
     INSERT INTO Settings (CardId, Width, Height, TitleHidden, ImageHidden) 
     VALUES (@CardId, @Width, @Height, @TitleHidden, @ImageHidden);
