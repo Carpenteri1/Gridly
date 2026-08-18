@@ -178,8 +178,13 @@ public sealed class CardRepositoryInsertTests
 
         var result = await repository.Insert(card);
 
-        Assert.Same(card, result);
         Assert.NotEqual(0, result.Id);
+        Assert.Equal("Docs", result.Name);
+        Assert.Equal("https://example.test", result.Url);
+        Assert.Equal("/icon.svg", result.IconUrl);
+        Assert.Equal("link", result.Type);
+        Assert.Equal(1, result.RowColumnId);
+        Assert.Equal(1, result.IndexPosition);
 
         var persisted = await dbContext.Cards.SingleAsync(c => c.Id == result.Id);
         Assert.Equal("Docs", persisted.Name);

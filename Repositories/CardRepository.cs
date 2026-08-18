@@ -27,8 +27,7 @@ public class CardRepository(IDbConnection connection, GridlyDbContext dbContext)
         };
         dbContext.Cards.Add(entity);
         await dbContext.SaveChangesAsync();
-        Card.Id = entity.Id;
-        return Card;
+        return Factories.CardFactory.Create(entity);
     }
 
     public async Task<bool> Edit(CardModel Card)
