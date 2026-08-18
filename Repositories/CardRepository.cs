@@ -5,6 +5,7 @@ using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.Models;
 using Gridly.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;
 
@@ -35,31 +36,36 @@ public class CardRepository(IDbConnection connection, GridlyDbContext dbContext)
         return result > 0;
     }
 
-    public async Task<IEnumerable<CardModel>?> Get()
+    public Task<IEnumerable<CardModel>?> Get()
     {
-        var builder = new SqlBuilder();
-        var template = builder.AddTemplate(QueryStrings.SelectCardQuery);
-        
-        builder.LeftJoin(QueryStrings.JoinSettingsQuery);
-        builder.LeftJoin(QueryStrings.JoinIconsConnectedDataQuery);
-        builder.LeftJoin(QueryStrings.JoinIconDataQuery);
-        builder.OrderBy(QueryStrings.IndexPositionWithAlias);
-        var Dtos = 
-            await _dbCommandRunner.SelectMany<CardDtoModel>(template.RawSql, template.Parameters);
-        return Factories.CardFactory.CreateMany(Dtos);
-    }
-    
-    public async Task<CardModel?> GetById(int cardId)
-    {
-        var builder = new SqlBuilder();
-        var template = builder.AddTemplate(QueryStrings.SelectCardQuery);
-        
-        builder.LeftJoin(QueryStrings.JoinSettingsQuery);
-        builder.LeftJoin(QueryStrings.JoinIconsConnectedDataQuery);
-        builder.LeftJoin(QueryStrings.JoinIconDataQuery);
-        builder.Where(QueryStrings.WhereCardIdEqualsCardIdWithAlias, new {cardId});
-        var dto = await _dbCommandRunner.Select<CardDtoModel>(template.RawSql,template.Parameters);
-        return Factories.CardFactory.Create(dto);
+        var query =
+            from co in dbContext.Cards.AsNoTracking()
+            join cs in dbContext.Settings on co.Id equals cs.CardId
+            join ic in dbContext.IconsConnected on (int?)co.Id equals ic.CardId
+            join i in dbContext.Icons on ic.IconId equals (int?)i.Id
+            orderby co.IndexPosition
+            select new CardDtoModel
+            {
+                CardId = co.Id,
+                IndexPosition = co.IndexPosition,
+                RowColumnId = co.RowColumnId,
+                CardName = co.Name!,
+                Url = co.Url!,
+                IconUrl = co.IconUrl!,
+                CardType = co.Type!,
+                SettingsId = cs.Id,
+                Width = cs.Width,
+                Height = cs.Height,
+                TitleHidden = cs.TitleHidden ?? false,
+                ImageHidden = cs.ImageHidden ?? false,
+                IconId = i.Id,
+                IconName = i.Name!,
+                Type = i.Type!,
+                Base64Data = i.Base64Data!,
+                MaterialIcon = i.MaterialIcon!,
+            };
+        var dtos = query.ToList();
+        return Task.FromResult<IEnumerable<CardModel>?>(Factories.CardFactory.CreateMany(dtos));
     }
 
     public async Task<bool> Delete(int id)

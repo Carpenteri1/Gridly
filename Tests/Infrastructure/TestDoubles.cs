@@ -1,6 +1,8 @@
 using Gridly.Commands;
+using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.EndPoints;
+using Gridly.Entities;
 using Gridly.Models;
 using Gridly.Querys;
 using Gridly.Repositories;

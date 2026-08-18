@@ -6,7 +6,6 @@ namespace Gridly.Data;
 public class DbConnectionServices : IDbConnectionServices
 {
     private readonly string connectionString;
-
     public DbConnectionServices(IConfiguration configuration, IHostEnvironment environment)
     {
         var configuredConnectionString = configuration.GetConnectionString("GridlyDb");

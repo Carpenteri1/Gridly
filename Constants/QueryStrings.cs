@@ -48,27 +48,6 @@ public class QueryStrings
         WeatherId = excluded.WeatherId
     RETURNING *;";
     
-    public const string SelectCardQuery = @"
-     SELECT 
-        co.Id AS CardId, 
-        co.IndexPosition, 
-        co.RowColumnId,
-        co.Name AS CardName, 
-        co.Url, 
-        co.IconUrl, 
-        co.Type AS CardType,
-        cs.ImageHidden AS ImageHidden, 
-        cs.TitleHidden AS TitleHidden,
-        cs.Width AS Width,
-        cs.Height AS Height,
-        cs.Id AS SettingsId,
-        i.Id AS IconId,
-        i.Type AS Type,
-        i.Name AS IconName,
-        i.Base64Data AS Base64Data,
-        i.MaterialIcon AS MaterialIcon
-        FROM Card co /**leftjoin**//**where**//**orderby**/";
-
     public const string SelectRowQuery = @"
     SELECT r.Id AS Id, r.RowPosition AS RowPosition, r.RowWidth AS RowWidth
     FROM RowColumn r /**leftjoin**//**where**//**orderby**/";
@@ -162,9 +141,6 @@ public class QueryStrings
 
     public const string DeleteFromWeatherDataConnectionQuery = "DELETE FROM WeatherDataConnection /**where**/";
 
-    public const string JoinIconDataQuery = "Icon i ON i.Id = ic.IconId";
-    public const string JoinIconsConnectedDataQuery = "IconsConnected ic ON ic.CardId = co.Id";
-    public const string JoinSettingsQuery = "Settings cs ON cs.CardId = co.Id";
     public const string JoinWidgetType = "WidgetType wt ON wt.Id = w.WidgetType";
 
     public const string WhereCardIdForeignKeyEqualId = "CardId = @CardId";
@@ -174,9 +150,7 @@ public class QueryStrings
     public const string WhereWeatherConnectedWeatherIdForeignKeyEqualIdWithAlias = "wc.WeatherId = @WeatherId";
     public const string WhereIconConnectedIconIdForeignKeyEqualIdWithAlias = "ic.IconId = @IconId";
     public const string WhereIconConnectedCardIdForeignKeyEqualIdWithAlias = "ic.CardId = @CardId";
-    public const string WhereCardIdEqualsCardIdWithAlias = "co.Id = @cardId";
     public const string WhereIconNameEqualsNameWithAlias = "i.Name = @Name";
     public const string WhereIconTypeEqualsTypeWithAlias = "i.Type = @Type";
     public const string RowPositionWithAlias = "r.RowPosition;";
-    public const string IndexPositionWithAlias = "co.IndexPosition;";
 }
