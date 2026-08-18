@@ -3,17 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Data;
 
-public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbContext(options), IGridlyDbContext
+public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbContext(options)
 {
     public DbSet<CardEntity> Cards => Set<CardEntity>();
     public DbSet<SettingsEntity> Settings => Set<SettingsEntity>();
     public DbSet<IconsConnectedEntity> IconsConnected => Set<IconsConnectedEntity>();
     public DbSet<IconEntity> Icons => Set<IconEntity>();
-    
-    IQueryable<CardEntity> IGridlyDbContext.Cards => Cards;
-    IQueryable<SettingsEntity> IGridlyDbContext.Settings => Settings;
-    IQueryable<IconsConnectedEntity> IGridlyDbContext.IconsConnected => IconsConnected;
-    IQueryable<IconEntity> IGridlyDbContext.Icons => Icons;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
