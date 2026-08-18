@@ -81,9 +81,9 @@ public class CardRepository(IDbConnection connection, GridlyDbContext dbContext)
 
     public async Task<bool> Delete(int id)
     {
-        var builder = new SqlBuilder();
-        var template = builder.AddTemplate(QueryStrings.DeleteFromCardQuery);
-        builder.Where(QueryStrings.WhereIdEqualsId, new { Id = id });
-        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
+        var rowsAffected = await dbContext.Cards
+            .Where(c => c.Id == id)
+            .ExecuteDeleteAsync();
+        return rowsAffected > 0;
     }
 }
