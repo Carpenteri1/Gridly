@@ -1,11 +1,24 @@
 using Gridly.Dtos;
+using Gridly.Entities;
 using Gridly.Models;
 
 namespace Gridly.Factories;
 
 public static class CardFactory
 {
-    public static CardModel Create(CardDtoModel dto) 
+    public static CardModel Create(CardEntity entity)
+        => new()
+        {
+            Id = entity.Id,
+            IndexPosition = entity.IndexPosition,
+            RowColumnId = entity.RowColumnId,
+            Name = entity.Name,
+            Url = entity.Url,
+            Type = entity.Type,
+            IconUrl = entity.IconUrl,
+        };
+
+    public static CardModel Create(CardDtoModel dto)
         => new()
         {
             Id = dto.CardId,

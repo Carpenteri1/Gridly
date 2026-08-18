@@ -3,6 +3,7 @@ using Dapper;
 using Gridly.Constants;
 using Gridly.Data;
 using Gridly.Dtos;
+using Gridly.Entities;
 using Gridly.Models;
 using Gridly.Services;
 using Microsoft.EntityFrameworkCore;
@@ -12,13 +13,23 @@ namespace Gridly.Repositories;
 public class CardRepository(IDbConnection connection, GridlyDbContext dbContext) : ICardRepository
 {
     private DbCommandRunner _dbCommandRunner = new (connection);
-    
+
     public async Task<CardModel> Insert(CardModel Card)
     {
-        return await _dbCommandRunner.Execute(QueryStrings.InsertToCardQuery, Card);
+        var entity = new CardEntity
+        {
+            RowColumnId = Card.RowColumnId!.Value,
+            IndexPosition = Card.IndexPosition!.Value,
+            Name = Card.Name,
+            Url = Card.Url,
+            IconUrl = Card.IconUrl,
+            Type = Card.Type,
+        };
+        dbContext.Cards.Add(entity);
+        await dbContext.SaveChangesAsync();
+        return Factories.CardFactory.Create(entity);
     }
-    
-    
+
     public async Task<bool> Edit(CardModel Card)
     {
         var builder = new SqlBuilder();

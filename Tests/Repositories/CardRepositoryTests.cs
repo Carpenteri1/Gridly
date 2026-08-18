@@ -153,3 +153,45 @@ public sealed class CardRepositoryGetTests : IDisposable
         if (File.Exists(_dbPath + ".bak")) File.Delete(_dbPath + ".bak");
     }
 }
+
+public sealed class CardRepositoryInsertTests
+{
+    [Fact]
+    public async Task Insert_WhenCardIsValid_PersistsRowAndReturnsCardWithGeneratedId()
+    {
+        using var connection = new SqliteConnection("Data Source=:memory:");
+        connection.Open();
+        using var dbContext = new GridlyDbContext(
+            new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
+        await dbContext.Database.EnsureCreatedAsync();
+        var repository = new CardRepository(connection, dbContext);
+
+        var card = new CardModel
+        {
+            RowColumnId = 1,
+            IndexPosition = 1,
+            Name = "Docs",
+            Url = "https://example.test",
+            IconUrl = "/icon.svg",
+            Type = "link",
+        };
+
+        var result = await repository.Insert(card);
+
+        Assert.NotEqual(0, result.Id);
+        Assert.Equal("Docs", result.Name);
+        Assert.Equal("https://example.test", result.Url);
+        Assert.Equal("/icon.svg", result.IconUrl);
+        Assert.Equal("link", result.Type);
+        Assert.Equal(1, result.RowColumnId);
+        Assert.Equal(1, result.IndexPosition);
+
+        var persisted = await dbContext.Cards.SingleAsync(c => c.Id == result.Id);
+        Assert.Equal("Docs", persisted.Name);
+        Assert.Equal("https://example.test", persisted.Url);
+        Assert.Equal("/icon.svg", persisted.IconUrl);
+        Assert.Equal("link", persisted.Type);
+        Assert.Equal(1, persisted.RowColumnId);
+        Assert.Equal(1, persisted.IndexPosition);
+    }
+}
