@@ -195,3 +195,49 @@ public sealed class CardRepositoryInsertTests
         Assert.Equal(1, persisted.IndexPosition);
     }
 }
+
+public sealed class CardRepositoryDeleteTests
+{
+    [Fact]
+    public async Task Delete_WhenCardExists_RemovesRowAndReturnsTrue()
+    {
+        using var connection = new SqliteConnection("Data Source=:memory:");
+        connection.Open();
+        using var dbContext = new GridlyDbContext(
+            new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
+        await dbContext.Database.EnsureCreatedAsync();
+        var repository = new CardRepository(connection, dbContext);
+
+        var cardEntity = new CardEntity
+        {
+            IndexPosition = 1,
+            RowColumnId = 1,
+            Name = "Docs",
+            Url = "https://example.test",
+            IconUrl = "/icon.svg",
+            Type = "link",
+        };
+        dbContext.Cards.Add(cardEntity);
+        await dbContext.SaveChangesAsync();
+
+        var result = await repository.Delete(cardEntity.Id);
+
+        Assert.True(result);
+        Assert.False(await dbContext.Cards.AnyAsync(c => c.Id == cardEntity.Id));
+    }
+
+    [Fact]
+    public async Task Delete_WhenCardDoesNotExist_ReturnsFalse()
+    {
+        using var connection = new SqliteConnection("Data Source=:memory:");
+        connection.Open();
+        using var dbContext = new GridlyDbContext(
+            new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
+        await dbContext.Database.EnsureCreatedAsync();
+        var repository = new CardRepository(connection, dbContext);
+
+        var result = await repository.Delete(999);
+
+        Assert.False(result);
+    }
+}

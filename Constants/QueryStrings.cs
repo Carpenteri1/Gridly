@@ -93,7 +93,6 @@ public class QueryStrings
         /**where**/";
 
     public const string DeleteFromSettingsQuery = "DELETE FROM Settings /**where**/";
-    public const string DeleteFromCardQuery = "DELETE FROM Card /**where**/";
     public const string DeleteFromIconsConnectedQuery = "DELETE FROM IconsConnected /**where**/";
     public const string DeleteFromIconQuery = "DELETE FROM Icon /**where**/";
     
