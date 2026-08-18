@@ -11,7 +11,7 @@ Gridly is a self-contained dashboard app for creating shortcuts to apps, service
 6. Repositories talk to the embedded local database through Entity Framework Core. Each repository uses a `DbContext` to query or persist EF Core entities, which a dedicated mapping/factory layer converts into the domain object handed back to the handler.
 
 ### Dependencies
-The project relies on a request-dispatch library for the CQRS pattern described above, Entity Framework Core plus an embedded database engine (so no external database server is required), and a testing framework used by the test project.
+The project relies on a request-dispatch library for the CQRS pattern described above, Entity Framework Core plus SQLite as the embedded database engine — it runs in-process and persists to a local file on disk, not to a separate database server and not purely in memory — and a testing framework used by the test project.
 
 ### LaunchSettings.json
 Defines run profiles per environment (e.g. plain HTTP for local development, and an IIS profile for Windows hosting). Each profile can set its own port and environment variables.
@@ -26,7 +26,7 @@ Everything that flows through the request-dispatch layer lives under a single `C
 One handler per feature area, each responsible for one or more related operations. This is where the actual business logic lives — a handler decides what to do with an incoming request, and delegates the low-level work to a repository or an outbound-call layer rather than doing that work itself. A single handler can own multiple related operations if it makes sense to group them.
 
 ### Repositories
-The data-access layer for the local embedded database. One repository per entity/table, each defined behind an interface so it can be swapped or mocked in tests, using Entity Framework Core's `DbContext` to query and persist data. On startup, a dedicated initialization step ensures all required tables exist and seeds any default reference data the app needs to function out of the box.
+The data-access layer for the local SQLite database (a file on disk, not an in-memory store). One repository per entity/table, each defined behind an interface so it can be swapped or mocked in tests, using Entity Framework Core's `DbContext` to query and persist data. On startup, a dedicated initialization step ensures all required tables exist and seeds any default reference data the app needs to function out of the box.
 
 ### EndPoints
 The layer responsible for outbound calls to external, third-party services — as opposed to repositories, which only talk to the local database. Each integration point is wrapped behind its own interface, uses a shared HTTP-calling helper to make the request, and a shared serialization helper to convert the response into a usable object.
@@ -80,7 +80,7 @@ When asked to make a change: create a branch off `sandbox` with `git switch -c` 
 Automated workflows handle building and testing on every branch, static/security scanning, merge rules, and releases.
 
 ### Backend — libraries, patterns, structure
-**Libraries:** a mediator library for the CQRS-style command/handler dispatch described above; Entity Framework Core for local data access, sitting on top of an embedded database engine rather than a client/server database; an in-memory caching abstraction built into the framework; and a unit test framework with a code-coverage collector.
+**Libraries:** a mediator library for the CQRS-style command/handler dispatch described above; Entity Framework Core for local data access, sitting on top of SQLite as the embedded database engine (runs in-process and persists to a local file, rather than a client/server database); an in-memory caching abstraction built into the framework (application-level caching, unrelated to how the database itself stores data); and a unit test framework with a code-coverage collector.
 
 **Patterns:**
 - CQRS via a mediator: every read or write is its own request type, dispatched to exactly one handler — controllers stay free of logic.
