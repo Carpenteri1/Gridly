@@ -8,10 +8,10 @@ Gridly is a self-contained dashboard app for creating shortcuts to apps, service
 3. Controllers contain no logic of their own. Each one takes the incoming request, wraps it in a request object, and hands it off to a request-dispatch layer.
 4. The dispatcher routes each request object to whichever handler is registered for that type (a CQRS-style pattern — every operation has its own dedicated request type).
 5. The handler carries out the operation: it calls into a repository (for local data access) or an outbound-call layer (for reaching third-party services), then returns a standard success/failure result back up to the controller.
-6. Repositories talk to the embedded local database through one of two coexisting data-access approaches, as the backend is mid-migration from a lightweight micro-ORM to Entity Framework Core: repositories/methods already migrated use an EF Core `DbContext` and its own persistence entities, mapped into the domain object by the existing mapping/factory layer; repositories/methods not yet migrated still build a raw query from a shared constants location, run it through a small shared data-access helper, and map the raw result into a plain data-transfer shape that the same mapping layer converts into the domain object. Migration happens repository-by-repository — and even method-by-method within a repository — rather than as a single cutover.
+6. Repositories talk to the embedded local database through Entity Framework Core. Each repository uses a `DbContext` to query or persist EF Core entities, which a dedicated mapping/factory layer converts into the domain object handed back to the handler.
 
 ### Dependencies
-The project relies on a request-dispatch library for the CQRS pattern described above, an embedded database engine (so no external database server is required) accessed through both a lightweight data-access library and — as the backend migrates repository-by-repository toward it — Entity Framework Core, and a testing framework used by the test project.
+The project relies on a request-dispatch library for the CQRS pattern described above, Entity Framework Core plus an embedded database engine (so no external database server is required), and a testing framework used by the test project.
 
 ### LaunchSettings.json
 Defines run profiles per environment (e.g. plain HTTP for local development, and an IIS profile for Windows hosting). Each profile can set its own port and environment variables.
@@ -26,7 +26,7 @@ Everything that flows through the request-dispatch layer lives under a single `C
 One handler per feature area, each responsible for one or more related operations. This is where the actual business logic lives — a handler decides what to do with an incoming request, and delegates the low-level work to a repository or an outbound-call layer rather than doing that work itself. A single handler can own multiple related operations if it makes sense to group them.
 
 ### Repositories
-The data-access layer for the local embedded database. One repository per entity/table, each defined behind an interface so it can be swapped or mocked in tests. Repositories are being migrated repository-by-repository — and, within a single repository, method-by-method — from the original Dapper-based approach to Entity Framework Core, so at any point some repositories/methods use an EF Core `DbContext` while others still use the raw-query approach described elsewhere in this document. Table/schema creation is unaffected by this migration: on startup, a dedicated initialization step (still raw SQL) ensures all required tables exist and seeds any default reference data the app needs to function out of the box.
+The data-access layer for the local embedded database. One repository per entity/table, each defined behind an interface so it can be swapped or mocked in tests, using Entity Framework Core's `DbContext` to query and persist data. On startup, a dedicated initialization step ensures all required tables exist and seeds any default reference data the app needs to function out of the box.
 
 ### EndPoints
 The layer responsible for outbound calls to external, third-party services — as opposed to repositories, which only talk to the local database. Each integration point is wrapped behind its own interface, uses a shared HTTP-calling helper to make the request, and a shared serialization helper to convert the response into a usable object.
@@ -44,7 +44,7 @@ The backend applies a lightweight DDD-inspired layering rather than a full rich-
 Rate limiting policies are registered centrally and applied per-endpoint where needed, generally scoped to whichever endpoints call out to external services with their own usage limits — each such integration gets its own named policy with limits tuned to that external service's constraints, rather than one shared global policy. New outbound integrations should follow the same pattern: define a policy sized to that service's limits, and apply it explicitly to the endpoint(s) that use it. User-facing mutation endpoints that touch secrets (e.g. saving a third-party API key) warrant their own policy too, sized to deter abuse/brute-forcing rather than to an external service's quota.
 
 ### Constants
-A central place for fixed values that would otherwise be scattered through the code: external/internal endpoint URLs, and raw query fragments used by the repositories.
+A central place for fixed values that would otherwise be scattered through the code: external/internal endpoint URLs and other shared configuration constants.
 
 ### Assets
 Stores icons, images, and other static assets needed by the app. A dedicated configuration value defines where on disk these are read from; some asset data may also be stored inline in the database rather than on disk.
@@ -80,7 +80,7 @@ When asked to make a change: create a branch off `sandbox` with `git switch -c` 
 Automated workflows handle building and testing on every branch, static/security scanning, merge rules, and releases.
 
 ### Backend — libraries, patterns, structure
-**Libraries:** a mediator library for the CQRS-style command/handler dispatch described above; for local data access, the backend is mid-migration from a lightweight micro-ORM (not a full ORM — no change tracking, no LINQ-to-SQL) paired with a query-builder helper toward Entity Framework Core, with both registered and in use side by side until each repository is fully converted, sitting on top of an embedded database engine rather than a client/server database; an in-memory caching abstraction built into the framework; and a unit test framework with a code-coverage collector.
+**Libraries:** a mediator library for the CQRS-style command/handler dispatch described above; Entity Framework Core for local data access, sitting on top of an embedded database engine rather than a client/server database; an in-memory caching abstraction built into the framework; and a unit test framework with a code-coverage collector.
 
 **Patterns:**
 - CQRS via a mediator: every read or write is its own request type, dispatched to exactly one handler — controllers stay free of logic.
