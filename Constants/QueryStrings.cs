@@ -85,10 +85,6 @@ public class QueryStrings
     public const string DeleteFromSettingsQuery = "DELETE FROM Settings /**where**/";
     public const string DeleteFromIconsConnectedQuery = "DELETE FROM IconsConnected /**where**/";
     public const string DeleteFromIconQuery = "DELETE FROM Icon /**where**/";
-    
-    public const string BatchDeleteRowColumnQuery = @"
-    DELETE FROM RowColumn
-    WHERE Id IN @RowColumnId;";
 
     public const string UpsertProviderKeyQuery = @"
     INSERT INTO ProviderKeys (Provider, EncryptedKey, Status, LastValidatedAt)
