@@ -12,11 +12,6 @@ public class QueryStrings
     VALUES (@CardId, @Width, @Height, @TitleHidden, @ImageHidden);
     SELECT * FROM Settings WHERE Id = last_insert_rowid();";
 
-    public const string InsertToIconQuery = @"
-    INSERT INTO Icon (Name, Type, Base64Data, MaterialIcon) 
-    VALUES (@Name, @Type, @Base64Data, @MaterialIcon);
-    SELECT * FROM Icon WHERE Id = last_insert_rowid();";
-
     public const string InsertToConnectedIconQuery = @"
     INSERT INTO IconsConnected (CardId, IconId) 
     VALUES (@CardId, @IconId);

@@ -3,6 +3,7 @@ using Dapper;
 using Gridly.Constants;
 using Gridly.Data;
 using Gridly.Factories;
+using Gridly.Entities;
 using Gridly.Models;
 using Gridly.Services;
 
@@ -14,7 +15,16 @@ public class IconRepository(IDbConnection connection, IFileService fileService, 
 
     public async Task<IconModel> Insert(IconModel icon)
     {
-        return await _dbCommandRunner.Execute(QueryStrings.InsertToIconQuery, icon);
+        var entity = new IconEntity
+        {
+            Name = icon.Name,
+            Type = icon.Type,
+            Base64Data = icon.Base64Data,
+            MaterialIcon = icon.MaterialIcon,
+        };
+        dbContext.Icons.Add(entity);
+        await dbContext.SaveChangesAsync();
+        return Factories.IconFactory.Create(entity);
     }
 
     public async Task<IconModel> Edit(IconModel icon)
