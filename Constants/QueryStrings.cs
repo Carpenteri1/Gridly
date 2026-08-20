@@ -50,14 +50,6 @@ public class QueryStrings
     SELECT *
     FROM IconsConnected ic /**leftjoin**//**where**/";
 
-    public const string UpdateIconQuery = @"
-    UPDATE Icon
-    SET Name = @Name, 
-        Type = @Type,
-        Base64Data = @Base64Data, 
-        MaterialIcon = @MaterialIcon
-        /**where**/";
-
     public const string UpdateCardQuery = @"
     UPDATE Card
     SET Name = @Name, 

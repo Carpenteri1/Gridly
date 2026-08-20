@@ -21,7 +21,7 @@ namespace Gridly.Factories
            Name = entity.Name ?? string.Empty,
            Type = entity.Type ?? string.Empty,
            Base64Data = entity.Base64Data ?? string.Empty,
-           MaterialIcon = entity.MaterialIcon ?? string.Empty
+           MaterialIcon = entity.MaterialIcon ?? "box"
        };
     }
 }
