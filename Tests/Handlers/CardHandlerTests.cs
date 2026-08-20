@@ -122,9 +122,6 @@ public class CardHandlerTests
     private sealed class FakeIconRepository : IIconRepository
     {
         public Task<IconModel> Insert(IconModel icon) => Task.FromResult(icon);
-        public Task<IconModel> Edit(IconModel icon) => Task.FromResult(icon);
-        public Task<IconModel> GetById(int Id) => Task.FromResult(new IconModel { Id = Id, Name = "", Type = "", Base64Data = "", MaterialIcon = "" });
-        public Task<IconModel> GetByFullName(IconModel icon) => Task.FromResult(icon);
         public List<string> FindUnusedIcons(IEnumerable<CardModel> cards) => [];
         public Task<bool> Delete(int Id) => Task.FromResult(true);
     }
