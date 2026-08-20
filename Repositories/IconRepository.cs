@@ -4,10 +4,11 @@ using Gridly.Constants;
 using Gridly.Data;
 using Gridly.Models;
 using Gridly.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;
 
-public class IconRepository(IDbConnection connection, IFileService fileService) : IIconRepository
+public class IconRepository(IDbConnection connection, IFileService fileService, GridlyDbContext dbContext) : IIconRepository
 {
     private DbCommandRunner _dbCommandRunner = new (connection);
 
@@ -42,12 +43,9 @@ public class IconRepository(IDbConnection connection, IFileService fileService) 
     }
 
     public async Task<bool> Delete(int Id)
-    { 
-        var builder = new SqlBuilder();                                                       
-        var template = builder.AddTemplate(QueryStrings.DeleteFromIconQuery); 
-        builder.Where(QueryStrings.WhereIdEqualsId, new { Id});
-        var s = await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
-        return s;
+    {
+        var result = await dbContext.Icons.Where(i => i.Id == Id).ExecuteDeleteAsync();
+        return result > 0;
     }
     
     public List<string> FindUnusedIcons(IEnumerable<CardModel> cards)
