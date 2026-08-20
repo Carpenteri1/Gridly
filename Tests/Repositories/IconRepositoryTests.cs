@@ -149,6 +149,42 @@ public sealed class IconRepositoryEditTests : IDisposable
     }
 }
 
+public sealed class IconRepositoryInsertTests
+{
+    [Fact]
+    public async Task Insert_WhenIconIsValid_PersistsRowAndReturnsIconWithGeneratedId()
+    {
+        using var connection = new SqliteConnection("Data Source=:memory:");
+        connection.Open();
+        using var dbContext = new GridlyDbContext(
+            new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
+        await dbContext.Database.EnsureCreatedAsync();
+        var repository = new IconRepository(connection, new FakeFileService(), dbContext);
+
+        var icon = new IconModel
+        {
+            Name = "grid",
+            Type = "svg",
+            Base64Data = "Zm9v",
+            MaterialIcon = "dashboard",
+        };
+
+        var result = await repository.Insert(icon);
+
+        Assert.NotEqual(0, result.Id);
+        Assert.Equal("grid", result.Name);
+        Assert.Equal("svg", result.Type);
+        Assert.Equal("Zm9v", result.Base64Data);
+        Assert.Equal("dashboard", result.MaterialIcon);
+
+        var persisted = await dbContext.Icons.SingleAsync(i => i.Id == result.Id);
+        Assert.Equal("grid", persisted.Name);
+        Assert.Equal("svg", persisted.Type);
+        Assert.Equal("Zm9v", persisted.Base64Data);
+        Assert.Equal("dashboard", persisted.MaterialIcon);
+    }
+}
+
 public sealed class IconRepositoryDeleteTests : IDisposable
 {
     private readonly SqliteConnection _connection = new("Data Source=:memory:");
