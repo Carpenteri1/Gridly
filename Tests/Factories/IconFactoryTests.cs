@@ -8,7 +8,7 @@ public class IconFactoryTests
     [Fact]
     public void Create_WithNullInput_ReturnsDefaultIcon()
     {
-        var result = IconFactory.Create(null);
+        var result = IconFactory.Create((IconModel?)null);
 
         Assert.Equal(string.Empty, result.Name);
         Assert.Equal(string.Empty, result.Type);

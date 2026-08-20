@@ -2,12 +2,13 @@ using System.Data;
 using Dapper;
 using Gridly.Constants;
 using Gridly.Data;
+using Gridly.Factories;
 using Gridly.Models;
 using Gridly.Services;
 
 namespace Gridly.Repositories;
 
-public class IconRepository(IDbConnection connection, IFileService fileService) : IIconRepository
+public class IconRepository(IDbConnection connection, IFileService fileService, GridlyDbContext dbContext) : IIconRepository
 {
     private DbCommandRunner _dbCommandRunner = new (connection);
 
@@ -18,10 +19,17 @@ public class IconRepository(IDbConnection connection, IFileService fileService) 
 
     public async Task<IconModel> Edit(IconModel icon)
     {
-        var builder = new SqlBuilder();
-        var template = builder.AddTemplate(QueryStrings.UpdateIconQuery, icon);
-        builder.Where(QueryStrings.WhereIdEqualsId, new { Id = icon.Id });
-        return await _dbCommandRunner.Execute(template.RawSql, icon);
+        var entity = await dbContext.Icons.FindAsync(icon.Id);
+        if (entity is null)
+            return icon;
+
+        entity.Name = icon.Name;
+        entity.Type = icon.Type;
+        entity.Base64Data = icon.Base64Data;
+        entity.MaterialIcon = icon.MaterialIcon;
+
+        await dbContext.SaveChangesAsync();
+        return IconFactory.Create(entity);
     }
 
     public async Task<IconModel> GetByFullName(IconModel icon)
