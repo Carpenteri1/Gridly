@@ -73,12 +73,6 @@ public class QueryStrings
         Type = @Type
         /**where**/";
     
-    public const string UpdateBatchRowColumnQuery = @"
-    UPDATE RowColumn 
-    SET RowPosition = @RowPosition, 
-    RowWidth = @RowWidth
-    WHERE Id = @Id;";
-    
     public const string UpdateSettingsQuery = @"
     UPDATE Settings
     SET CardId = @Id,

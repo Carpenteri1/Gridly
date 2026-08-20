@@ -45,16 +45,25 @@ public class ColumnRowRepository(IDbConnection connection, GridlyDbContext dbCon
         if (columnRows is null)
             return false;
 
-        var parameters = columnRows
-            .Select(r => new 
-            { 
-                r.Id,
-                r.RowPosition,
-                r.RowWidth
-            })
-            .ToList();
+        var rows = columnRows.ToList();
+        if (rows.Count == 0)
+            return false;
 
-        var result = await connection.ExecuteAsync(QueryStrings.UpdateBatchRowColumnQuery, parameters);
+        var ids = rows.Select(r => r.Id).ToList();
+        var entities = await dbContext.RowColumns
+            .Where(e => ids.Contains(e.Id))
+            .ToDictionaryAsync(e => e.Id);
+
+        foreach (var row in rows)
+        {
+            if (!entities.TryGetValue(row.Id, out var entity))
+                continue;
+
+            entity.RowPosition = row.RowPosition;
+            entity.RowWidth = row.RowWidth;
+        }
+
+        var result = await dbContext.SaveChangesAsync();
         return result > 0;
     }
 }
