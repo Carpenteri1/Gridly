@@ -41,10 +41,6 @@ public class QueryStrings
     public const string SelectWidgetQuery = @"
     SELECT w.Id AS Id, wt.Name AS WidgetType, w.Label AS Label, w.Description AS Description, w.Icon AS Icon
     FROM Widget w /**leftjoin**//**where**//**orderby**/";
-    
-    public const string SelectIconQuery = @"
-    SELECT i.Id, i.Name, i.Type, i.Base64Data, i.MaterialIcon 
-    FROM Icon i /**leftjoin**//**where**/";
 
     public const string SelectIconConnectedQuery = @"
     SELECT *
@@ -116,6 +112,4 @@ public class QueryStrings
     public const string WhereWeatherConnectedWeatherIdForeignKeyEqualIdWithAlias = "wc.WeatherId = @WeatherId";
     public const string WhereIconConnectedIconIdForeignKeyEqualIdWithAlias = "ic.IconId = @IconId";
     public const string WhereIconConnectedCardIdForeignKeyEqualIdWithAlias = "ic.CardId = @CardId";
-    public const string WhereIconNameEqualsNameWithAlias = "i.Name = @Name";
-    public const string WhereIconTypeEqualsTypeWithAlias = "i.Type = @Type";
 }
