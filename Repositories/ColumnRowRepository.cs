@@ -4,10 +4,11 @@ using Gridly.Constants;
 using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;
 
-public class ColumnRowRepository(IDbConnection connection) : IColumnRowRepository
+public class ColumnRowRepository(IDbConnection connection, GridlyDbContext dbContext) : IColumnRowRepository
 {
     private DbCommandRunner _dbCommandRunner = new (connection);
 
@@ -18,13 +19,11 @@ public class ColumnRowRepository(IDbConnection connection) : IColumnRowRepositor
 
     public async Task<IEnumerable<ColumnRowModel>?> Get()
     {
-        var builder = new SqlBuilder();
-        
-        var template = builder.AddTemplate(QueryStrings.SelectRowQuery);
-        builder.OrderBy(QueryStrings.RowPositionWithAlias);
-        var Dtos = 
-            await _dbCommandRunner.SelectMany<ColumnRowDtoModel>(template.RawSql, template.Parameters);
-        return Factories.ColumnRowFactory.CreateMany(Dtos);
+        var entities = await dbContext.RowColumns
+            .AsNoTracking()
+            .OrderBy(r => r.RowPosition)
+            .ToListAsync();
+        return Factories.ColumnRowFactory.CreateMany(entities);
     }
 
     public async Task<bool> BatchDelete(IEnumerable<ColumnRowModel> columnRows)

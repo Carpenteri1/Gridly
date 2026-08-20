@@ -43,10 +43,6 @@ public class QueryStrings
         WeatherId = excluded.WeatherId
     RETURNING *;";
     
-    public const string SelectRowQuery = @"
-    SELECT r.Id AS Id, r.RowPosition AS RowPosition, r.RowWidth AS RowWidth
-    FROM RowColumn r /**leftjoin**//**where**//**orderby**/";
-
     public const string SelectWidgetQuery = @"
     SELECT w.Id AS Id, wt.Name AS WidgetType, w.Label AS Label, w.Description AS Description, w.Icon AS Icon
     FROM Widget w /**leftjoin**//**where**//**orderby**/";
@@ -146,5 +142,4 @@ public class QueryStrings
     public const string WhereIconConnectedCardIdForeignKeyEqualIdWithAlias = "ic.CardId = @CardId";
     public const string WhereIconNameEqualsNameWithAlias = "i.Name = @Name";
     public const string WhereIconTypeEqualsTypeWithAlias = "i.Type = @Type";
-    public const string RowPositionWithAlias = "r.RowPosition;";
 }

@@ -9,6 +9,7 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
     public DbSet<SettingsEntity> Settings => Set<SettingsEntity>();
     public DbSet<IconsConnectedEntity> IconsConnected => Set<IconsConnectedEntity>();
     public DbSet<IconEntity> Icons => Set<IconEntity>();
+    public DbSet<RowColumnEntity> RowColumns => Set<RowColumnEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -41,6 +42,12 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
         {
             e.ToTable("Icon");
             e.HasKey(i => i.Id);
+        });
+
+        modelBuilder.Entity<RowColumnEntity>(e =>
+        {
+            e.ToTable("RowColumn");
+            e.HasKey(r => r.Id);
         });
     }
 }
