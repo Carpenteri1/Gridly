@@ -86,6 +86,69 @@ public sealed class IconRepositoryTests : IDisposable
     }
 }
 
+public sealed class IconRepositoryEditTests : IDisposable
+{
+    private readonly SqliteConnection _connection = new("Data Source=:memory:");
+    private readonly GridlyDbContext _dbContext;
+    private readonly IconRepository _repository;
+
+    public IconRepositoryEditTests()
+    {
+        _connection.Open();
+        _dbContext = new GridlyDbContext(
+            new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(_connection).Options);
+        _dbContext.Database.EnsureCreated();
+        _repository = new IconRepository(_connection, new FakeFileService(), _dbContext);
+    }
+
+    [Fact]
+    public async Task Edit_WhenIconExists_UpdatesAndReturnsUpdatedIcon()
+    {
+        var existing = new IconEntity { Name = "old", Type = "svg", Base64Data = "abc", MaterialIcon = "box" };
+        _dbContext.Icons.Add(existing);
+        await _dbContext.SaveChangesAsync();
+
+        var result = await _repository.Edit(new IconModel
+        {
+            Id = existing.Id,
+            Name = "new",
+            Type = "png",
+            Base64Data = "def",
+            MaterialIcon = "star"
+        });
+
+        Assert.Equal(existing.Id, result.Id);
+        Assert.Equal("new", result.Name);
+        Assert.Equal("png", result.Type);
+        Assert.Equal("def", result.Base64Data);
+        Assert.Equal("star", result.MaterialIcon);
+
+        var reloaded = await _dbContext.Icons.AsNoTracking().SingleAsync(i => i.Id == existing.Id);
+        Assert.Equal("new", reloaded.Name);
+        Assert.Equal("png", reloaded.Type);
+        Assert.Equal("def", reloaded.Base64Data);
+        Assert.Equal("star", reloaded.MaterialIcon);
+    }
+
+    [Fact]
+    public async Task Edit_WhenIconDoesNotExist_ReturnsInputUnchangedAndMakesNoChanges()
+    {
+        var icon = new IconModel { Id = 999, Name = "new", Type = "png", Base64Data = "def", MaterialIcon = "star" };
+
+        var result = await _repository.Edit(icon);
+
+        Assert.Same(icon, result);
+        Assert.Empty(await _dbContext.Icons.AsNoTracking().ToListAsync());
+    }
+
+    public void Dispose()
+    {
+        _dbContext.Dispose();
+        _connection.Dispose();
+        SqliteConnection.ClearAllPools();
+    }
+}
+
 public sealed class IconRepositoryDeleteTests : IDisposable
 {
     private readonly SqliteConnection _connection = new("Data Source=:memory:");
