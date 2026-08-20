@@ -1,6 +1,7 @@
 using System.Data;
 using Gridly.Data;
 using Gridly.Entities;
+using Gridly.Models;
 using Gridly.Repositories;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -69,5 +70,64 @@ public sealed class ColumnRowRepositoryGetTests : IDisposable
         SqliteConnection.ClearAllPools();
         if (File.Exists(_dbPath)) File.Delete(_dbPath);
         if (File.Exists(_dbPath + ".bak")) File.Delete(_dbPath + ".bak");
+    }
+}
+
+public sealed class ColumnRowRepositoryBatchDeleteTests : IDisposable
+{
+    private readonly SqliteConnection _connection = new("Data Source=:memory:");
+    private readonly GridlyDbContext _dbContext;
+    private readonly ColumnRowRepository _repository;
+
+    public ColumnRowRepositoryBatchDeleteTests()
+    {
+        _connection.Open();
+        _dbContext = new GridlyDbContext(
+            new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(_connection).Options);
+        _dbContext.Database.EnsureCreated();
+        _repository = new ColumnRowRepository(_connection, _dbContext);
+    }
+
+    [Fact]
+    public async Task BatchDelete_WhenRowsMatch_RemovesOnlyThoseRowsAndReturnsTrue()
+    {
+        var toDelete = new RowColumnEntity { RowPosition = 1, RowWidth = 12 };
+        var toKeep = new RowColumnEntity { RowPosition = 2, RowWidth = 6 };
+        _dbContext.RowColumns.AddRange(toDelete, toKeep);
+        await _dbContext.SaveChangesAsync();
+
+        var result = await _repository.BatchDelete([new ColumnRowModel { Id = toDelete.Id, RowPosition = 1, RowWidth = 12, Cards = [] }]);
+
+        Assert.True(result);
+        var remaining = await _dbContext.RowColumns.AsNoTracking().ToListAsync();
+        Assert.Single(remaining);
+        Assert.Equal(toKeep.Id, remaining[0].Id);
+    }
+
+    [Fact]
+    public async Task BatchDelete_WhenNoRowsMatch_ReturnsFalse()
+    {
+        var existing = new RowColumnEntity { RowPosition = 1, RowWidth = 12 };
+        _dbContext.RowColumns.Add(existing);
+        await _dbContext.SaveChangesAsync();
+
+        var result = await _repository.BatchDelete([new ColumnRowModel { Id = existing.Id + 1, RowPosition = 1, RowWidth = 12, Cards = [] }]);
+
+        Assert.False(result);
+        Assert.Single(await _dbContext.RowColumns.AsNoTracking().ToListAsync());
+    }
+
+    [Fact]
+    public async Task BatchDelete_WhenColumnRowsIsNull_ReturnsFalse()
+    {
+        var result = await _repository.BatchDelete(null!);
+
+        Assert.False(result);
+    }
+
+    public void Dispose()
+    {
+        _dbContext.Dispose();
+        _connection.Dispose();
     }
 }

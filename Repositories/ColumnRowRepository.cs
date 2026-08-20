@@ -30,14 +30,14 @@ public class ColumnRowRepository(IDbConnection connection, GridlyDbContext dbCon
     {
         if (columnRows is null)
             return false;
-        
+
         var ids = columnRows.Select(r => r.Id).ToArray();
 
-        var result = await connection.ExecuteAsync(
-            QueryStrings.BatchDeleteRowColumnQuery,
-            new { RowColumnId = ids });
-       
-        return result > 0;    
+        var result = await dbContext.RowColumns
+            .Where(r => ids.Contains(r.Id))
+            .ExecuteDeleteAsync();
+
+        return result > 0;
     }
     
     public async Task<bool> BatchEdit(IEnumerable<ColumnRowModel> columnRows)
