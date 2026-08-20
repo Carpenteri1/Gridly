@@ -68,6 +68,19 @@ public sealed class GridlyDbContextTests : IDisposable
         Assert.Equal("grid", icon.Name);
     }
 
+    [Fact]
+    public async Task RowColumns_MapsScalarProperties()
+    {
+        await new DbInitializer(_connection).EnsureTablesCreatedAsync();
+        await _connection.ExecuteAsync(
+            "INSERT INTO RowColumn (RowPosition, RowWidth) VALUES (2, 6);");
+
+        var rowColumn = await _dbContext.RowColumns.SingleAsync();
+
+        Assert.Equal(2, rowColumn.RowPosition);
+        Assert.Equal(6, rowColumn.RowWidth);
+    }
+
     public void Dispose()
     {
         _dbContext.Dispose();
