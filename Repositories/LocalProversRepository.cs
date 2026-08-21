@@ -30,14 +30,27 @@ public class LocalProversRepository(IDbConnection connection, GridlyDbContext db
 
     public async Task<bool> Upsert(string provider, string encryptedKey, string status)
     {
-        object parameters = new
+        var entity = await dbContext.ProviderKeys.FirstOrDefaultAsync(p => p.Provider == provider);
+        if (entity is not null)
         {
-            Provider = provider,
-            EncryptedKey = encryptedKey,
-            Status = status,
-            LastValidatedAt = DateTime.UtcNow
-        };
-        return await _dbCommandRunner.Execute(QueryStrings.UpsertProviderKeyQuery, parameters);
+            entity.EncryptedKey = encryptedKey;
+            entity.Status = status;
+            entity.LastValidatedAt = DateTime.UtcNow;
+        }
+        else
+        {
+            entity = new ProviderKeyEntity
+            {
+                Provider = provider,
+                EncryptedKey = encryptedKey,
+                Status = status,
+                LastValidatedAt = DateTime.UtcNow,
+            };
+            dbContext.ProviderKeys.Add(entity);
+        }
+
+        var affected = await dbContext.SaveChangesAsync();
+        return affected > 0;
     }
 
     public async Task<bool> UpdateStatus(string provider, string status)
