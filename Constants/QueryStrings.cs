@@ -7,11 +7,6 @@ public class QueryStrings
     VALUES (@RowPosition, @RowWidth);
     SELECT * FROM RowColumn WHERE Id = last_insert_rowid();";
     
-    public const string InsertToSettingsQuery = @"
-    INSERT INTO Settings (CardId, Width, Height, TitleHidden, ImageHidden) 
-    VALUES (@CardId, @Width, @Height, @TitleHidden, @ImageHidden);
-    SELECT * FROM Settings WHERE Id = last_insert_rowid();";
-
     public const string InsertToConnectedIconQuery = @"
     INSERT INTO IconsConnected (CardId, IconId) 
     VALUES (@CardId, @IconId);
@@ -56,16 +51,6 @@ public class QueryStrings
         Type = @Type
         /**where**/";
     
-    public const string UpdateSettingsQuery = @"
-    UPDATE Settings
-    SET CardId = @Id,
-        Width = @Width,
-        Height = @Height,
-        TitleHidden = @TitleHidden, 
-        ImageHidden = @ImageHidden 
-        /**where**/";
-
-    public const string DeleteFromSettingsQuery = "DELETE FROM Settings /**where**/";
     public const string DeleteFromIconsConnectedQuery = "DELETE FROM IconsConnected /**where**/";
 
     public const string UpsertProviderKeyQuery = @"
