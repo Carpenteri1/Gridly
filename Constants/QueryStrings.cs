@@ -6,11 +6,6 @@ public class QueryStrings
     INSERT INTO RowColumn (RowPosition, RowWidth) 
     VALUES (@RowPosition, @RowWidth);
     SELECT * FROM RowColumn WHERE Id = last_insert_rowid();";
-    
-    public const string InsertToConnectedIconQuery = @"
-    INSERT INTO IconsConnected (CardId, IconId) 
-    VALUES (@CardId, @IconId);
-    SELECT * FROM IconsConnected WHERE Id = last_insert_rowid();";
 
     public const string UpsertWeatherDataQuery = @"
     INSERT INTO WeatherData (Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt)
@@ -26,10 +21,6 @@ public class QueryStrings
         FetchedAt = excluded.FetchedAt
     RETURNING *;";
     
-    public const string SelectIconConnectedQuery = @"
-    SELECT *
-    FROM IconsConnected ic /**leftjoin**//**where**/";
-
     public const string UpdateCardQuery = @"
     UPDATE Card
     SET Name = @Name, 
@@ -40,8 +31,6 @@ public class QueryStrings
         Type = @Type
         /**where**/";
     
-    public const string DeleteFromIconsConnectedQuery = "DELETE FROM IconsConnected /**where**/";
-
     public const string UpsertProviderKeyQuery = @"
     INSERT INTO ProviderKeys (Provider, EncryptedKey, Status, LastValidatedAt)
     VALUES (@Provider, @EncryptedKey, @Status, @LastValidatedAt)
@@ -71,9 +60,6 @@ public class QueryStrings
     FROM WeatherDataConnection wc
     INNER JOIN WeatherData w ON w.Id = wc.WeatherId /**where**/";
 
-    public const string WhereCardIdForeignKeyEqualId = "CardId = @CardId";
     public const string WhereLocationEqualsLocation = "Address = @Address";
     public const string WhereIdEqualsId = "Id = @Id";
-    public const string WhereIconConnectedIconIdForeignKeyEqualIdWithAlias = "ic.IconId = @IconId";
-    public const string WhereIconConnectedCardIdForeignKeyEqualIdWithAlias = "ic.CardId = @CardId";
 }
