@@ -51,4 +51,47 @@ public sealed class LocalProversRepositoryTests
 
         Assert.Null(result);
     }
+
+    [Fact]
+    public async Task UpdateStatus_WhenProviderExists_UpdatesStatusAndReturnsTrue()
+    {
+        using var connection = new SqliteConnection("Data Source=:memory:");
+        connection.Open();
+        using var dbContext = new GridlyDbContext(
+            new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
+        await dbContext.Database.EnsureCreatedAsync();
+        var repository = new LocalProversRepository(connection, dbContext);
+
+        var entity = new ProviderKeyEntity
+        {
+            Provider = "VisualCrossing",
+            EncryptedKey = "encrypted-value",
+            Status = "Invalid",
+            LastValidatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+        };
+        dbContext.ProviderKeys.Add(entity);
+        await dbContext.SaveChangesAsync();
+
+        var result = await repository.UpdateStatus("VisualCrossing", "Valid");
+
+        Assert.True(result);
+        var persisted = await dbContext.ProviderKeys.AsNoTracking().SingleAsync(p => p.Id == entity.Id);
+        Assert.Equal("Valid", persisted.Status);
+        Assert.True(persisted.LastValidatedAt > new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+    }
+
+    [Fact]
+    public async Task UpdateStatus_WhenProviderDoesNotExist_ReturnsFalse()
+    {
+        using var connection = new SqliteConnection("Data Source=:memory:");
+        connection.Open();
+        using var dbContext = new GridlyDbContext(
+            new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
+        await dbContext.Database.EnsureCreatedAsync();
+        var repository = new LocalProversRepository(connection, dbContext);
+
+        var result = await repository.UpdateStatus("Unknown", "Valid");
+
+        Assert.False(result);
+    }
 }

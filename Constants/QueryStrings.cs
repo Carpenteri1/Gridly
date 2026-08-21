@@ -39,12 +39,6 @@ public class QueryStrings
         Status = excluded.Status,
         LastValidatedAt = excluded.LastValidatedAt;";
 
-    public const string UpdateProviderKeyStatusQuery = @"
-    UPDATE ProviderKeys
-    SET Status = @Status,
-        LastValidatedAt = @LastValidatedAt
-    WHERE Provider = @Provider;";
-
     public const string SelectWeatherDataQuery = @"
     SELECT Id, Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt
     FROM WeatherData /**where**/";
