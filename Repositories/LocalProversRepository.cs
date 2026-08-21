@@ -1,5 +1,3 @@
-using System.Data;
-using Gridly.Constants;
 using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.Entities;
@@ -7,10 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;
 
-public class LocalProversRepository(IDbConnection connection, GridlyDbContext dbContext) : ILocalProvidersRepository
+public class LocalProversRepository(GridlyDbContext dbContext) : ILocalProvidersRepository
 {
-    private DbCommandRunner _dbCommandRunner = new(connection);
-
     public async Task<ProviderKeyDtoModel?> Get(string provider)
     {
         var entity = await dbContext.ProviderKeys.AsNoTracking()

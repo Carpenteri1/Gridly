@@ -1,8 +1,4 @@
-using System.Data;
-using Dapper;
-using Gridly.Constants;
 using Gridly.Data;
-using Gridly.Factories;
 using Gridly.Entities;
 using Gridly.Models;
 using Gridly.Services;
@@ -10,10 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;
 
-public class IconRepository(IDbConnection connection, IFileService fileService, GridlyDbContext dbContext) : IIconRepository
+public class IconRepository(IFileService fileService, GridlyDbContext dbContext) : IIconRepository
 {
-    private DbCommandRunner _dbCommandRunner = new (connection);
-
     public async Task<IconModel> Insert(IconModel icon)
     {
         var entity = new IconEntity

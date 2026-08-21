@@ -51,7 +51,7 @@ public class WeatherPeriodicRefreshBackgroundService(
                 var (status, weather) = await weatherEndPoint.Get(entry.Address, rawKey);
                 if (status is StatusCodes.Status200OK && weather is not null)
                 {
-                    await weatherRepository.Upsert(WeatherDataFactory.Create(weather));
+                    await weatherRepository.Insert(WeatherDataFactory.Create(weather));
                     await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider,
                         nameof(ProvidersKeyStatusEnum.Valid));
 

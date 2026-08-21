@@ -21,7 +21,7 @@ public sealed class ColumnRowRepositoryGetTests : IDisposable
         _connection = new SqliteConnection(connectionString);
         _dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connectionString).Options);
-        _repository = new ColumnRowRepository(_connection, _dbContext);
+        _repository = new ColumnRowRepository(_dbContext);
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public sealed class ColumnRowRepositoryGetTests : IDisposable
         using var dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
         await dbContext.Database.EnsureCreatedAsync();
-        var repository = new ColumnRowRepository(connection, dbContext);
+        var repository = new ColumnRowRepository(dbContext);
 
         var second = new RowColumnEntity { RowPosition = 2, RowWidth = 6 };
         var first = new RowColumnEntity { RowPosition = 1, RowWidth = 12 };
@@ -85,7 +85,7 @@ public sealed class ColumnRowRepositoryBatchDeleteTests : IDisposable
         _dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(_connection).Options);
         _dbContext.Database.EnsureCreated();
-        _repository = new ColumnRowRepository(_connection, _dbContext);
+        _repository = new ColumnRowRepository(_dbContext);
     }
 
     [Fact]
@@ -144,7 +144,7 @@ public sealed class ColumnRowRepositoryBatchEditTests : IDisposable
         _dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(_connection).Options);
         _dbContext.Database.EnsureCreated();
-        _repository = new ColumnRowRepository(_connection, _dbContext);
+        _repository = new ColumnRowRepository(_dbContext);
     }
 
     [Fact]

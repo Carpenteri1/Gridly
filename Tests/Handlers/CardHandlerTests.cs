@@ -80,9 +80,7 @@ public class CardHandlerTests
         public List<CardModel> BatchEditedCards { get; private set; } = [];
 
         public Task<CardModel> Insert(CardModel Card) => Task.FromResult(Clone(Card));
-
-        public Task<bool> Edit(CardModel Card) => Task.FromResult(true);
-
+        
         public Task<bool> BatchEdit(IEnumerable<CardModel>? cards)
         {
             BatchEditedCards = cards?.Select(Clone).ToList() ?? [];

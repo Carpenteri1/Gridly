@@ -1,20 +1,22 @@
-using System.Data;
-using Dapper;
-using Gridly.Constants;
 using Gridly.Data;
-using Gridly.Dtos;
+using Gridly.Entities;
 using Gridly.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;
 
-public class ColumnRowRepository(IDbConnection connection, GridlyDbContext dbContext) : IColumnRowRepository
+public class ColumnRowRepository(GridlyDbContext dbContext) : IColumnRowRepository
 {
-    private DbCommandRunner _dbCommandRunner = new (connection);
-
     public async Task<ColumnRowModel> Insert(ColumnRowModel columnRow)
     {
-        return await _dbCommandRunner.Execute(QueryStrings.InsertToRowQuery, columnRow);
+        var entity = new RowColumnEntity
+        {
+            RowPosition = columnRow.RowPosition,
+            RowWidth = columnRow.RowWidth,
+        };
+        dbContext.RowColumns.Add(entity);
+        await dbContext.SaveChangesAsync();
+        return Factories.ColumnRowFactory.Create(entity);
     }
 
     public async Task<IEnumerable<ColumnRowModel>?> Get()

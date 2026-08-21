@@ -144,7 +144,7 @@ internal sealed class FakeWeatherRepository : IWeatherRepository
     public Task<IEnumerable<StoredWeatherDataDto>?> GetStoredWeatherData() =>
         Task.FromResult<IEnumerable<StoredWeatherDataDto>?>(Array.Empty<StoredWeatherDataDto>());
 
-    public Task<WeatherDataModel> Upsert(WeatherDataModel weather)
+    public Task<WeatherDataModel> Insert(WeatherDataModel weather)
     {
         UpsertCallCount++;
         weather.Id = _byAddress.TryGetValue(weather.Address, out var existing) ? existing.Id : _nextId++;
