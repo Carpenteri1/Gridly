@@ -1,6 +1,6 @@
 using Gridly.Models;
 
-namespace Gridly.EndPoints;
+namespace Gridly.EndPoints.Interfaces;
 
 public interface IVersionEndPoint
 {

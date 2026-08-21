@@ -1,10 +1,12 @@
 using Gridly.Commands;
 using Gridly.Constants;
 using Gridly.EndPoints;
+using Gridly.EndPoints.Interfaces;
 using Gridly.Enums;
 using Gridly.Factories;
 using Gridly.Querys;
 using Gridly.Repositories;
+using Gridly.Repositories.Interfaces;
 using Gridly.Services;
 using MediatR;
 

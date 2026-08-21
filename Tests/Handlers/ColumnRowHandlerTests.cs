@@ -4,6 +4,7 @@ using Gridly.Models;
 using Gridly.Repositories;
 using Gridly.Services;
 using Gridly.Dtos;
+using Gridly.Repositories.Interfaces;
 using Gridly.Tests.Infrastructure;
 
 namespace Gridly.Tests.Handlers;
@@ -36,8 +37,7 @@ public class ColumnRowHandlerTests
             new FakeSettingsRepository(),
             new FakeIconRepository(),
             new FakeIconConnectedRepository(),
-            new FakeWeatherDataConnectionRepository(),
-            new FakeFileService());
+            new FakeWeatherDataConnectionRepository());
         var command = new BatchSaveColumnRowCommands
         {
             new()
@@ -81,8 +81,7 @@ public class ColumnRowHandlerTests
             new FakeSettingsRepository(),
             new FakeIconRepository(),
             new FakeIconConnectedRepository(),
-            weatherDataConnectionRepository,
-            new FakeFileService());
+            weatherDataConnectionRepository);
         var command = new BatchSaveColumnRowCommands
         {
             new() { Id = 1, RowPosition = 1, Cards = [] },
@@ -198,17 +197,5 @@ public class ColumnRowHandlerTests
 
         public Task<IconConnectedDtoModel> Insert(IconConnectedDtoModel model) => Task.FromResult(model);
         public Task<bool> Delete(int cardId) => Task.FromResult(true);
-    }
-
-    private sealed class FakeFileService : IFileService
-    {
-        public bool FileExist(string filePath) => true;
-        public bool DeletedFile(string filePath) => true;
-        public bool WriteAllBitesToFile(string filePath, string content) => true;
-        public bool WriteToFile(string filePath, string content) => true;
-        public Task<string> ReadAllFromFileAsync(string filePath) => Task.FromResult(string.Empty);
-        public IEnumerable<FileInfo> GetAllIcons() => [];
-        public bool UploadIcon(IconModel iconModel) => true;
-        public bool DeleteIcon(string fileName, string fileType) => true;
     }
 }

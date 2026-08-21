@@ -1,43 +1,15 @@
 using Gridly.Commands;
-using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.EndPoints;
-using Gridly.Entities;
+using Gridly.EndPoints.Interfaces;
 using Gridly.Models;
 using Gridly.Querys;
 using Gridly.Repositories;
+using Gridly.Repositories.Interfaces;
 using Gridly.Services;
 using MediatR;
 
 namespace Gridly.Tests.Infrastructure;
-
-internal sealed class FakeFileService : IFileService
-{
-    public bool UploadIconResult { get; set; } = true;
-    public bool DeleteIconResult { get; set; } = true;
-    public IconModel? UploadedIcon { get; private set; }
-    public (string Name, string Type)? DeletedIcon { get; private set; }
-    public IEnumerable<FileInfo> Icons { get; set; } = Array.Empty<FileInfo>();
-
-    public bool FileExist(string filePath) => File.Exists(filePath);
-    public bool DeletedFile(string filePath) => true;
-    public bool WriteAllBitesToFile(string filePath, string content) => true;
-    public bool WriteToFile(string filePath, string content) => true;
-    public Task<string> ReadAllFromFileAsync(string filePath) => Task.FromResult(string.Empty);
-    public IEnumerable<FileInfo> GetAllIcons() => Icons;
-
-    public bool UploadIcon(IconModel iconData)
-    {
-        UploadedIcon = iconData;
-        return UploadIconResult;
-    }
-
-    public bool DeleteIcon(string name, string type)
-    {
-        DeletedIcon = (name, type);
-        return DeleteIconResult;
-    }
-}
 
 internal sealed class FakeMemoryCashingService : IMemoryCashingService
 {

@@ -3,6 +3,5 @@ namespace Gridly.Data;
 
 public interface IDbConnectionServices
 {
-    public IDbConnection CreateConnection();
     public string GetConnectionString();
 }

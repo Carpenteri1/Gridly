@@ -1,6 +1,6 @@
 using Gridly.Dtos;
 
-namespace Gridly.EndPoints;
+namespace Gridly.EndPoints.Interfaces;
 
 public interface IWeatherEndPoint
 {

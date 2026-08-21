@@ -1,6 +1,7 @@
 using Gridly.Dtos;
 using Gridly.Models;
 using Gridly.Repositories;
+using Gridly.Repositories.Interfaces;
 using Gridly.Services;
 using BackendCardHandler = Gridly.Handlers.CardHandler;
 

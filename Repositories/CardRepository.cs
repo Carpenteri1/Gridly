@@ -2,6 +2,7 @@ using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.Entities;
 using Gridly.Models;
+using Gridly.Repositories.Interfaces;
 using Gridly.Services;
 using Microsoft.EntityFrameworkCore;
 

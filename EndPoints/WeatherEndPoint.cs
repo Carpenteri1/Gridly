@@ -1,6 +1,7 @@
 using System.Net;
 using Gridly.Constants;
 using Gridly.Dtos;
+using Gridly.EndPoints.Interfaces;
 using Gridly.helpers;
 using Gridly.Services;
 

@@ -1,10 +1,9 @@
 using Gridly.Models;
 
-namespace Gridly.Services;
+namespace Gridly.Repositories.Interfaces;
 
 public interface IIconRepository
 {
     public Task<IconModel> Insert(IconModel icon);
-    public List<string> FindUnusedIcons(IEnumerable<CardModel> cards);
     public Task<bool> Delete(int Id);
 }

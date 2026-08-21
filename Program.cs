@@ -1,10 +1,5 @@
 using Gridly.Configuration;
 using Gridly.EndPoints;
-using Gridly.Repositories;
-using Gridly.Services;
-using Gridly.Data;
-using Gridly.helpers;
-using Microsoft.EntityFrameworkCore;
 
 var appDirectory = Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
 Directory.SetCurrentDirectory(appDirectory);
@@ -15,38 +10,11 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     ContentRootPath = appDirectory
 });
 
-builder.Services.AddControllersWithViews();
 await builder.Services.AddTokenBucketRateLimiter();
+builder.Services.Add();
+builder.Services.AddScoped();
+builder.Services.AddSingleton();
 
-builder.Services.AddScoped<DbInitializer>();
-builder.Services.AddScoped(sp =>
-    sp.GetRequiredService<IDbConnectionServices>().CreateConnection());
-builder.Services.AddScoped<IDbConnectionServices,DbConnectionServices>();
-builder.Services.AddDbContext<GridlyDbContext>((sp, options) =>
-    options.UseSqlite(sp.GetRequiredService<IDbConnectionServices>().GetConnectionString()));
-builder.Services.AddScoped<IVersionEndPoint, VersionEndPoint>();
-builder.Services.AddScoped<IWeatherEndPoint, WeatherEndPoint>();
-builder.Services.AddScoped<IProvidersEndPoint, ProvidersEndPoint>();
-builder.Services.AddScoped<ICardRepository,CardRepository>();
-builder.Services.AddScoped<IColumnRowRepository,ColumnRowRepository>();
-builder.Services.AddScoped<ISettingsRepository,SettingsRepository>();
-builder.Services.AddScoped<IIconRepository,IconRepository>();
-builder.Services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
-builder.Services.AddScoped<IWidgetRepository,WidgetRepository>();
-builder.Services.AddScoped<ILocalProvidersRepository,LocalProversRepository>();
-builder.Services.AddScoped<IWeatherRepository,WeatherRepository>();
-builder.Services.AddScoped<IWeatherDataConnectionRepository,WeatherDataConnectionRepository>();
-builder.Services.AddScoped<IProvidersEndPointExtensions,ProvidersEndPointExtensions>();
-
-builder.Services.AddSingleton<IMemoryCashingService, MemoryCashingServices>();
-builder.Services.AddSingleton<IHttpClientServices, HttpClientServices>();
-builder.Services.AddSingleton<IFileService, FileService>();
-builder.Services.AddSingleton<IProviderKeysProtectionService, ProviderKeysProtectionService>();
-builder.Services.AddSingleton(typeof(IDataConverter<>), typeof(DataConverter<>));
-builder.Services.AddHostedService<WeatherPeriodicRefreshBackgroundService>();
-
-builder.Services.AddMediatR(cfg => 
-    cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 var app = builder.Build();
 
 app.MapApiEndpoints();
@@ -54,15 +22,8 @@ app.UseStaticFiles();
 
 app.MapDefaultControllerRoute().RequireRateLimiting("fixed");
 
-app.UseRouting();
+//app.UseRouting();
 app.UseTokenBucketRateLimiter();
-
-using (var scope = app.Services.CreateScope())
-{
-    var dbInit = scope.ServiceProvider.GetRequiredService<DbInitializer>();
-    await dbInit.EnsureTablesCreatedAsync();
-}
-
 app.MapFallbackToFile("index.html");
 
 app.Run();

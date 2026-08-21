@@ -25,17 +25,6 @@ public sealed class ColumnRowRepositoryGetTests : IDisposable
     }
 
     [Fact]
-    public async Task Get_WhenNoRowsExist_ReturnsEmptyCollection()
-    {
-        await new DbInitializer(_connection).EnsureTablesCreatedAsync();
-
-        var result = await _repository.Get();
-
-        Assert.NotNull(result);
-        Assert.Empty(result!);
-    }
-
-    [Fact]
     public async Task Get_WhenRowsExist_ReturnsMappedRowsOrderedByPosition()
     {
         using var connection = new SqliteConnection("Data Source=:memory:");

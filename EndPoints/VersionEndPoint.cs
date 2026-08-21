@@ -1,4 +1,5 @@
 using Gridly.Constants;
+using Gridly.EndPoints.Interfaces;
 using Gridly.Models;
 using Gridly.Services;
 

@@ -1,4 +1,3 @@
-using System.Data;
 using Microsoft.Data.Sqlite;
 
 namespace Gridly.Data;
@@ -22,11 +21,6 @@ public class DbConnectionServices : IDbConnectionServices
             Directory.CreateDirectory(dbDirectory);
         }
         connectionString = sqliteBuilder.ConnectionString;
-    }
-
-    public IDbConnection CreateConnection()
-    {
-        return new SqliteConnection(connectionString);
     }
 
     public string GetConnectionString()

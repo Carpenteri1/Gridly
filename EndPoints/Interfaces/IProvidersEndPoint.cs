@@ -1,4 +1,4 @@
-namespace Gridly.EndPoints;
+namespace Gridly.EndPoints.Interfaces;
 
 public interface IProvidersEndPoint
 {

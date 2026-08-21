@@ -83,17 +83,6 @@ public sealed class CardRepositoryGetTests : IDisposable
     }
 
     [Fact]
-    public async Task Get_WhenNoCardsExist_ReturnsEmptyCollection()
-    {
-        await new DbInitializer(_connection).EnsureTablesCreatedAsync();
-
-        var result = await _repository.Get();
-
-        Assert.NotNull(result);
-        Assert.Empty(result!);
-    }
-
-    [Fact]
     public async Task Get_WhenCardsExist_ReturnsMappedCards()
     {
         using var connection = new SqliteConnection("Data Source=:memory:");

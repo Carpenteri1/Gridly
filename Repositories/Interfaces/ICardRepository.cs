@@ -1,6 +1,6 @@
 using Gridly.Models;
 
-namespace Gridly.Services;
+namespace Gridly.Repositories.Interfaces;
 
 public interface ICardRepository
 {
