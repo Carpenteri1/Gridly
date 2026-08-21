@@ -55,12 +55,14 @@ public class LocalProversRepository(IDbConnection connection, GridlyDbContext db
 
     public async Task<bool> UpdateStatus(string provider, string status)
     {
-        object parameters = new
-        {
-            Provider = provider,
-            Status = status,
-            LastValidatedAt = DateTime.UtcNow
-        };
-        return await _dbCommandRunner.Execute(QueryStrings.UpdateProviderKeyStatusQuery, parameters);
+        var entity = await dbContext.ProviderKeys.FirstOrDefaultAsync(p => p.Provider == provider);
+        if (entity is null)
+            return false;
+
+        entity.Status = status;
+        entity.LastValidatedAt = DateTime.UtcNow;
+
+        var result = await dbContext.SaveChangesAsync();
+        return result > 0;
     }
 }

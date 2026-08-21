@@ -30,12 +30,6 @@ public class QueryStrings
         IconUrl = @IconUrl,
         Type = @Type
         /**where**/";
-    
-    public const string UpdateProviderKeyStatusQuery = @"
-    UPDATE ProviderKeys
-    SET Status = @Status,
-        LastValidatedAt = @LastValidatedAt
-    WHERE Provider = @Provider;";
-    
+
     public const string WhereIdEqualsId = "Id = @Id";
 }
