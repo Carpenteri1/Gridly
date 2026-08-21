@@ -5,6 +5,7 @@ using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.Repositories;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Tests.Repositories;
 
@@ -17,6 +18,9 @@ public sealed class WeatherRepositoryTests : IDisposable
     {
         _connection = new SqliteConnection($"Data Source={_dbPath}");
     }
+
+    private GridlyDbContext CreateDbContext() =>
+        new(new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite((SqliteConnection)_connection).Options);
 
     private static WeatherDataModel MakeWeather(string address, string description) =>
         new()
@@ -36,7 +40,7 @@ public sealed class WeatherRepositoryTests : IDisposable
     public async Task Upsert_WhenAddressAlreadyExists_UpdatesInPlaceInsteadOfDuplicating()
     {
         await new DbInitializer(_connection).EnsureTablesCreatedAsync();
-        var repository = new WeatherRepository(_connection);
+        var repository = new WeatherRepository(_connection, CreateDbContext());
 
         var first = await repository.Upsert(MakeWeather("Stockholm", "clear"));
         var second = await repository.Upsert(MakeWeather("Stockholm", "cloudy"));
@@ -47,6 +51,48 @@ public sealed class WeatherRepositoryTests : IDisposable
         Assert.Equal("cloudy", stored.Description);
         var rowCount = await _connection.QuerySingleAsync<int>("SELECT COUNT(*) FROM WeatherData;");
         Assert.Equal(1, rowCount);
+    }
+
+    [Fact]
+    public async Task Get_WhenAddressDoesNotExist_ReturnsNull()
+    {
+        await new DbInitializer(_connection).EnsureTablesCreatedAsync();
+        var repository = new WeatherRepository(_connection, CreateDbContext());
+
+        var result = await repository.Get("Nowhere");
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task GetStoredWeatherData_WhenNoConnectionsExist_ReturnsEmpty()
+    {
+        await new DbInitializer(_connection).EnsureTablesCreatedAsync();
+        var repository = new WeatherRepository(_connection, CreateDbContext());
+
+        var result = await repository.GetStoredWeatherData();
+
+        Assert.NotNull(result);
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetStoredWeatherData_WhenConnectionsExist_ReturnsJoinedRowsWithCorrectIds()
+    {
+        await new DbInitializer(_connection).EnsureTablesCreatedAsync();
+        var repository = new WeatherRepository(_connection, CreateDbContext());
+        var (card1, _) = await SeedTwoCardsAsync();
+        var weather = await repository.Upsert(MakeWeather("Stockholm", "clear"));
+        await _connection.ExecuteAsync(
+            "INSERT INTO WeatherDataConnection (CardId, WeatherId) VALUES (@CardId, @WeatherId);",
+            new { CardId = card1, WeatherId = weather.Id });
+
+        var result = (await repository.GetStoredWeatherData())!.ToList();
+
+        var single = Assert.Single(result);
+        Assert.Equal(card1, single.CardId);
+        Assert.Equal(weather.Id, single.Id);
+        Assert.Equal("Stockholm", single.Address);
     }
 
     [Fact]
