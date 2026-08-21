@@ -1,4 +1,5 @@
 using Gridly.Dtos;
+using Gridly.Entities;
 
 namespace Gridly.Factories
 {
@@ -9,6 +10,14 @@ namespace Gridly.Factories
         {
             CardId = cardId,
             WeatherId = weatherId,
+        };
+
+        public static WeatherDataConnectionDtoModel Create(WeatherDataConnectionEntity entity)
+        => new WeatherDataConnectionDtoModel
+        {
+            Id = entity.Id,
+            CardId = entity.CardId,
+            WeatherId = entity.WeatherId,
         };
     }
 }

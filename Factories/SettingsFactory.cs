@@ -1,3 +1,4 @@
+using Gridly.Entities;
 using Gridly.Models;
 
 namespace Gridly.Factories
@@ -11,6 +12,17 @@ namespace Gridly.Factories
             Height = settings?.Height ?? 250,
             TitleHidden = settings?.TitleHidden ?? false,
             ImageHidden = settings?.ImageHidden ?? false
+       };
+
+        public static SettingsModel Create(SettingsEntity entity)
+       => new SettingsModel
+       {
+            Id = entity.Id,
+            CardId = entity.CardId,
+            Width = entity.Width,
+            Height = entity.Height,
+            TitleHidden = entity.TitleHidden ?? false,
+            ImageHidden = entity.ImageHidden ?? false
        };
     }
 }

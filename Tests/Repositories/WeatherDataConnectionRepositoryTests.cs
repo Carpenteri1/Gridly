@@ -1,108 +1,99 @@
-using System.Data;
-using Dapper;
 using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.Repositories;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Tests.Repositories;
 
 public sealed class WeatherDataConnectionRepositoryTests : IDisposable
 {
-    private readonly string _dbPath = Path.Combine(Path.GetTempPath(), $"gridly-weather-connections-{Guid.NewGuid():N}.db");
-    private readonly IDbConnection _connection;
+    private readonly SqliteConnection _connection = new("Data Source=:memory:");
+    private readonly GridlyDbContext _dbContext;
+    private readonly WeatherDataConnectionRepository _repository;
 
     public WeatherDataConnectionRepositoryTests()
     {
-        _connection = new SqliteConnection($"Data Source={_dbPath}");
-    }
-
-    private async Task<(int card1, int card2, int weather1, int weather2)> SeedFixtureAsync()
-    {
-        await new DbInitializer(_connection).EnsureTablesCreatedAsync();
-
-        var rowColumnId = await _connection.QuerySingleAsync<long>(
-            "INSERT INTO RowColumn (RowPosition, RowWidth) VALUES (1,1); SELECT last_insert_rowid();");
-        var cardAId = await _connection.QuerySingleAsync<long>(
-            "INSERT INTO Card (IndexPosition, RowColumnId, Name, Url, Type, IconUrl) VALUES (1, @row, 'A', '', 'Weather', ''); SELECT last_insert_rowid();",
-            new { row = rowColumnId });
-        var cardBId = await _connection.QuerySingleAsync<long>(
-            "INSERT INTO Card (IndexPosition, RowColumnId, Name, Url, Type, IconUrl) VALUES (2, @row, 'B', '', 'Weather', ''); SELECT last_insert_rowid();",
-            new { row = rowColumnId });
-
-        var weatherRepository = new WeatherRepository(_connection);
-        var weather1 = await weatherRepository.Upsert(new()
-        {
-            Address = "Stockholm", Timezone = "Europe/Stockholm", Description = "clear",
-            Temp = 20, FeelsLike = 20, Humidity = 50, WindSpeed = 5, WindDir = 180, FetchedAt = DateTime.UtcNow,
-        });
-        var weather2 = await weatherRepository.Upsert(new()
-        {
-            Address = "Gothenburg", Timezone = "Europe/Stockholm", Description = "rain",
-            Temp = 15, FeelsLike = 14, Humidity = 80, WindSpeed = 8, WindDir = 200, FetchedAt = DateTime.UtcNow,
-        });
-
-        return ((int)cardAId, (int)cardBId, weather1.Id, weather2.Id);
+        _connection.Open();
+        _dbContext = new GridlyDbContext(
+            new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(_connection).Options);
+        _dbContext.Database.EnsureCreated();
+        _repository = new WeatherDataConnectionRepository(_dbContext);
     }
 
     [Fact]
     public async Task Upsert_WhenCardHasNoConnectionYet_CreatesOne()
     {
-        var (card1, _, weather1, _) = await SeedFixtureAsync();
-        var repository = new WeatherDataConnectionRepository(_connection);
+        var result = await _repository.Upsert(new WeatherDataConnectionDtoModel { CardId = 1, WeatherId = 10 });
 
-        await repository.Upsert(new WeatherDataConnectionDtoModel { CardId = card1, WeatherId = weather1 });
-
-        var connections = await repository.GetManyById(card1, null);
+        Assert.NotNull(result.Id);
+        Assert.Equal(1, result.CardId);
+        Assert.Equal(10, result.WeatherId);
+        var connections = await _repository.GetManyById(1, null);
         Assert.Single(connections);
     }
 
     [Fact]
-    public async Task CardIdUniqueConstraint_RepointsExistingConnectionInsteadOfDuplicating()
+    public async Task Upsert_WhenCardAlreadyHasConnection_RepointsInsteadOfDuplicating()
     {
-        var (card1, _, weather1, weather2) = await SeedFixtureAsync();
-        var repository = new WeatherDataConnectionRepository(_connection);
-        await repository.Upsert(new WeatherDataConnectionDtoModel { CardId = card1, WeatherId = weather1 });
+        await _repository.Upsert(new WeatherDataConnectionDtoModel { CardId = 1, WeatherId = 10 });
 
-        await repository.Upsert(new WeatherDataConnectionDtoModel { CardId = card1, WeatherId = weather2 });
+        await _repository.Upsert(new WeatherDataConnectionDtoModel { CardId = 1, WeatherId = 20 });
 
-        var connections = (await repository.GetManyById(card1, null)).ToList();
+        var connections = (await _repository.GetManyById(1, null)).ToList();
         var connection = Assert.Single(connections);
-        Assert.Equal(weather2, connection.WeatherId);
+        Assert.Equal(20, connection.WeatherId);
     }
 
     [Fact]
-    public async Task GetManyById_WhenFilteringByWeatherId_ReturnsAllCardsSharingThatRow()
+    public async Task GetManyById_WhenFilteringByCardId_ReturnsOnlyThatCardsConnection()
     {
-        var (card1, card2, weather1, _) = await SeedFixtureAsync();
-        var repository = new WeatherDataConnectionRepository(_connection);
-        await repository.Upsert(new WeatherDataConnectionDtoModel { CardId = card1, WeatherId = weather1 });
-        await repository.Upsert(new WeatherDataConnectionDtoModel { CardId = card2, WeatherId = weather1 });
+        await _repository.Upsert(new WeatherDataConnectionDtoModel { CardId = 1, WeatherId = 10 });
+        await _repository.Upsert(new WeatherDataConnectionDtoModel { CardId = 2, WeatherId = 20 });
 
-        var connections = await repository.GetManyById(null, weather1);
+        var connections = (await _repository.GetManyById(1, null)).ToList();
+
+        var connection = Assert.Single(connections);
+        Assert.Equal(1, connection.CardId);
+        Assert.Equal(10, connection.WeatherId);
+    }
+
+    [Fact]
+    public async Task GetManyById_WhenFilteringByWeatherId_ReturnsAllCardsSharingThatWeather()
+    {
+        await _repository.Upsert(new WeatherDataConnectionDtoModel { CardId = 1, WeatherId = 10 });
+        await _repository.Upsert(new WeatherDataConnectionDtoModel { CardId = 2, WeatherId = 10 });
+
+        var connections = await _repository.GetManyById(null, 10);
 
         Assert.Equal(2, connections.Count());
     }
 
     [Fact]
-    public async Task Delete_RemovesOnlyTheGivenCardsConnection()
+    public async Task Delete_WhenConnectionExists_RemovesOnlyTheGivenCardsConnectionAndReturnsTrue()
     {
-        var (card1, card2, weather1, _) = await SeedFixtureAsync();
-        var repository = new WeatherDataConnectionRepository(_connection);
-        await repository.Upsert(new WeatherDataConnectionDtoModel { CardId = card1, WeatherId = weather1 });
-        await repository.Upsert(new WeatherDataConnectionDtoModel { CardId = card2, WeatherId = weather1 });
+        await _repository.Upsert(new WeatherDataConnectionDtoModel { CardId = 1, WeatherId = 10 });
+        await _repository.Upsert(new WeatherDataConnectionDtoModel { CardId = 2, WeatherId = 10 });
 
-        await repository.Delete(card1);
+        var result = await _repository.Delete(1);
 
-        Assert.Empty(await repository.GetManyById(card1, null));
-        Assert.Single(await repository.GetManyById(card2, null));
+        Assert.True(result);
+        Assert.Empty(await _repository.GetManyById(1, null));
+        Assert.Single(await _repository.GetManyById(2, null));
+    }
+
+    [Fact]
+    public async Task Delete_WhenConnectionDoesNotExist_ReturnsFalse()
+    {
+        var result = await _repository.Delete(999);
+
+        Assert.False(result);
     }
 
     public void Dispose()
     {
+        _dbContext.Dispose();
         _connection.Dispose();
         SqliteConnection.ClearAllPools();
-        if (File.Exists(_dbPath)) File.Delete(_dbPath);
-        if (File.Exists(_dbPath + ".bak")) File.Delete(_dbPath + ".bak");
     }
 }

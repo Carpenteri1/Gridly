@@ -6,11 +6,6 @@ public class QueryStrings
     INSERT INTO RowColumn (RowPosition, RowWidth) 
     VALUES (@RowPosition, @RowWidth);
     SELECT * FROM RowColumn WHERE Id = last_insert_rowid();";
-    
-    public const string InsertToSettingsQuery = @"
-    INSERT INTO Settings (CardId, Width, Height, TitleHidden, ImageHidden) 
-    VALUES (@CardId, @Width, @Height, @TitleHidden, @ImageHidden);
-    SELECT * FROM Settings WHERE Id = last_insert_rowid();";
 
     public const string UpsertWeatherDataQuery = @"
     INSERT INTO WeatherData (Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt)
@@ -25,13 +20,6 @@ public class QueryStrings
         WindDir = excluded.WindDir,
         FetchedAt = excluded.FetchedAt
     RETURNING *;";
-
-    public const string UpsertWeatherDataConnectionQuery = @"
-    INSERT INTO WeatherDataConnection (CardId, WeatherId)
-    VALUES (@CardId, @WeatherId)
-    ON CONFLICT(CardId) DO UPDATE SET
-        WeatherId = excluded.WeatherId
-    RETURNING *;";
     
     public const string UpdateCardQuery = @"
     UPDATE Card
@@ -43,17 +31,6 @@ public class QueryStrings
         Type = @Type
         /**where**/";
     
-    public const string UpdateSettingsQuery = @"
-    UPDATE Settings
-    SET CardId = @Id,
-        Width = @Width,
-        Height = @Height,
-        TitleHidden = @TitleHidden, 
-        ImageHidden = @ImageHidden 
-        /**where**/";
-
-    public const string DeleteFromSettingsQuery = "DELETE FROM Settings /**where**/";
-
     public const string UpsertProviderKeyQuery = @"
     INSERT INTO ProviderKeys (Provider, EncryptedKey, Status, LastValidatedAt)
     VALUES (@Provider, @EncryptedKey, @Status, @LastValidatedAt)
@@ -83,15 +60,6 @@ public class QueryStrings
     FROM WeatherDataConnection wc
     INNER JOIN WeatherData w ON w.Id = wc.WeatherId /**where**/";
 
-    public const string SelectWeatherDataConnectionQuery = @"
-    SELECT *
-    FROM WeatherDataConnection wc /**where**/";
-
-    public const string DeleteFromWeatherDataConnectionQuery = "DELETE FROM WeatherDataConnection /**where**/";
-
-    public const string WhereCardIdForeignKeyEqualId = "CardId = @CardId";
     public const string WhereLocationEqualsLocation = "Address = @Address";
     public const string WhereIdEqualsId = "Id = @Id";
-    public const string WhereWeatherConnectedCardIdForeignKeyEqualIdWithAlias = "wc.CardId = @CardId";
-    public const string WhereWeatherConnectedWeatherIdForeignKeyEqualIdWithAlias = "wc.WeatherId = @WeatherId";
 }

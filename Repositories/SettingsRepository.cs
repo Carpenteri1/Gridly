@@ -1,32 +1,47 @@
-using System.Data;
-using Dapper;
-using Gridly.Constants;
 using Gridly.Data;
+using Gridly.Entities;
+using Gridly.Factories;
 using Gridly.Models;
 using Gridly.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;
 
-public class SettingsRepository(IDbConnection connection) : ISettingsRepository
+public class SettingsRepository(GridlyDbContext dbContext) : ISettingsRepository
 {
-    private DbCommandRunner _dbCommandRunner = new (connection);
-    
-    public async Task<SettingsModel> Insert(SettingsModel settings) => 
-        await _dbCommandRunner.Execute(QueryStrings.InsertToSettingsQuery, settings);
-    
+    public async Task<SettingsModel> Insert(SettingsModel settings)
+    {
+        var entity = new SettingsEntity
+        {
+            CardId = settings.CardId!.Value,
+            Width = settings.Width,
+            Height = settings.Height,
+            TitleHidden = settings.TitleHidden,
+            ImageHidden = settings.ImageHidden,
+        };
+        dbContext.Settings.Add(entity);
+        await dbContext.SaveChangesAsync();
+        return SettingsFactory.Create(entity);
+    }
+
     public async Task<SettingsModel> Edit(SettingsModel settings)
     {
-        var builder = new SqlBuilder();
-        var template = builder.AddTemplate(QueryStrings.UpdateSettingsQuery);
-        builder.Where(QueryStrings.WhereCardIdForeignKeyEqualId, settings);
-        return await _dbCommandRunner.Execute(template.RawSql,settings);
+        var entity = await dbContext.Settings.FirstOrDefaultAsync(s => s.CardId == settings.CardId);
+        if (entity is null)
+            return settings;
+
+        entity.Width = settings.Width;
+        entity.Height = settings.Height;
+        entity.TitleHidden = settings.TitleHidden;
+        entity.ImageHidden = settings.ImageHidden;
+
+        await dbContext.SaveChangesAsync();
+        return SettingsFactory.Create(entity);
     }
-    
+
     public async Task<bool> Delete(int Id)
     {
-        var builder = new SqlBuilder();                                                       
-        var template = builder.AddTemplate(QueryStrings.DeleteFromSettingsQuery); 
-        builder.Where(QueryStrings.WhereCardIdForeignKeyEqualId, new { CardId = Id });
-        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters);
+        var result = await dbContext.Settings.Where(s => s.CardId == Id).ExecuteDeleteAsync();
+        return result > 0;
     }
 }

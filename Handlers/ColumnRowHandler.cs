@@ -92,7 +92,7 @@ public class ColumnRowHandler(
                     var card = row.Cards[cardIndex];
                     card.RowColumnId = row.Id;
                     card.IndexPosition = cardIndex + 1;
-                    card.Settings ??= SettingsFactory.Create(null);
+                    card.Settings ??= SettingsFactory.Create((SettingsModel?)null);
 
                     if (card.Id != 0)
                         continue;
