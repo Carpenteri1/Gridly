@@ -36,17 +36,6 @@ public class QueryStrings
     SET Status = @Status,
         LastValidatedAt = @LastValidatedAt
     WHERE Provider = @Provider;";
-
-    public const string SelectWeatherDataQuery = @"
-    SELECT Id, Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt
-    FROM WeatherData /**where**/";
-
-    public const string SelectAllWeatherDataQuery = @"
-    SELECT wc.CardId, w.Id AS WeatherId, w.Address, w.Timezone, w.Description,
-        w.Temp, w.FeelsLike, w.Humidity, w.WindSpeed, w.WindDir, w.FetchedAt
-    FROM WeatherDataConnection wc
-    INNER JOIN WeatherData w ON w.Id = wc.WeatherId /**where**/";
-
-    public const string WhereLocationEqualsLocation = "Address = @Address";
+    
     public const string WhereIdEqualsId = "Id = @Id";
 }
