@@ -4,6 +4,7 @@ using Gridly.Factories;
 using Gridly.helpers;
 using Gridly.Models;
 using Gridly.Repositories;
+using Gridly.Repositories.Interfaces;
 using Gridly.Services;
 using MediatR;
 
@@ -14,13 +15,10 @@ public class ColumnRowHandler(
     ISettingsRepository settingsRepository,
     IIconRepository iconRepository,
     IIconConnectedRepository iconConnectedRepository,
-    IWeatherDataConnectionRepository weatherDataConnectionRepository,
-    IFileService fileService):
+    IWeatherDataConnectionRepository weatherDataConnectionRepository):
     IRequestHandler<GetAllRowColumnsQuery, IResult>,
     IRequestHandler<BatchSaveColumnRowCommands, IResult>
 {
-    private readonly CardHandlerHelper handlerHelper = new(fileService);
-    
     public async Task<IResult> Handle(GetAllRowColumnsQuery query, CancellationToken cancellationToken)
     {
         var storedRowColumns = (await columnRowRepository.Get())?.ToList() ?? new List<ColumnRowModel>();
@@ -161,9 +159,7 @@ public class ColumnRowHandler(
                 return;
 
             await iconRepository.Delete(card.IconData.Id);
-
-            if (handlerHelper.IconDataHasValue(card.IconData))
-                handlerHelper.DeleteIcon(card.IconData);
+            
         }
     }
 

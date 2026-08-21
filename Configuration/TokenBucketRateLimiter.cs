@@ -1,6 +1,3 @@
-using Gridly.Models;
-using Microsoft.AspNetCore.RateLimiting;
-
 namespace Gridly.Configuration;
 
 public class TokenBucketRateLimiterMiddleware

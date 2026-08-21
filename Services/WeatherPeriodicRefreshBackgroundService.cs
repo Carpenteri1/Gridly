@@ -1,8 +1,10 @@
 using Gridly.Constants;
 using Gridly.EndPoints;
+using Gridly.EndPoints.Interfaces;
 using Gridly.Enums;
 using Gridly.Factories;
 using Gridly.Repositories;
+using Gridly.Repositories.Interfaces;
 
 namespace Gridly.Services;
 

@@ -1,5 +1,6 @@
 using Gridly.Querys;
 using Gridly.Repositories;
+using Gridly.Repositories.Interfaces;
 using MediatR;
 
 namespace Gridly.Handlers;

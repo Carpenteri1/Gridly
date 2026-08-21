@@ -1,6 +1,6 @@
 using Gridly.Dtos;
 
-namespace Gridly.Repositories;
+namespace Gridly.Repositories.Interfaces;
 
 public interface ILocalProvidersRepository
 {

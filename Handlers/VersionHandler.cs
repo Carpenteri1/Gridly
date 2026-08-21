@@ -1,5 +1,6 @@
 using Gridly.Querys;
 using Gridly.EndPoints;
+using Gridly.EndPoints.Interfaces;
 using Gridly.Models;
 using Gridly.Services;
 using MediatR;

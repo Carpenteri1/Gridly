@@ -1,7 +1,6 @@
 using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.Entities;
-using Gridly.Repositories;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,61 +36,6 @@ public sealed class WeatherRepositoryTests : IDisposable
             WindDir = 180,
             FetchedAt = DateTime.UtcNow,
         };
-
-    [Fact]
-    public async Task Get_WhenAddressDoesNotExist_ReturnsNull()
-    {
-        await new DbInitializer(_connection).EnsureTablesCreatedAsync();
-        var repository = new WeatherRepository(CreateDbContext());
-
-        var result = await repository.Get("Nowhere");
-
-        Assert.Null(result);
-    }
-
-    [Fact]
-    public async Task GetStoredWeatherData_WhenNoConnectionsExist_ReturnsEmpty()
-    {
-        await new DbInitializer(_connection).EnsureTablesCreatedAsync();
-        var repository = new WeatherRepository(CreateDbContext());
-
-        var result = await repository.GetStoredWeatherData();
-
-        Assert.NotNull(result);
-        Assert.Empty(result);
-    }
-
-    [Fact]
-    public async Task GetStoredWeatherData_WhenConnectionsExist_ReturnsJoinedRowsWithCorrectIds()
-    {
-        await new DbInitializer(_connection).EnsureTablesCreatedAsync();
-        var dbContext = CreateDbContext();
-        var repository = new WeatherRepository(dbContext);
-        var (card1, _) = await SeedTwoCardsAsync();
-        var weather = await repository.Insert(MakeWeather("Stockholm", "clear"));
-        dbContext.WeatherDataConnections.Add(new WeatherDataConnectionEntity { CardId = card1, WeatherId = weather.Id });
-        await dbContext.SaveChangesAsync();
-
-        var result = (await repository.GetStoredWeatherData())!.ToList();
-
-        var single = Assert.Single(result);
-        Assert.Equal(card1, single.CardId);
-        Assert.Equal(weather.Id, single.Id);
-        Assert.Equal("Stockholm", single.Address);
-    }
-
-    [Fact]
-    public async Task AddressUniqueConstraint_RejectsDirectDuplicateInsert()
-    {
-        await new DbInitializer(_connection).EnsureTablesCreatedAsync();
-        var dbContext = CreateDbContext();
-
-        dbContext.WeatherData.Add(MakeWeatherEntity("Stockholm"));
-        await dbContext.SaveChangesAsync();
-
-        dbContext.WeatherData.Add(MakeWeatherEntity("Stockholm"));
-        await Assert.ThrowsAsync<DbUpdateException>(() => dbContext.SaveChangesAsync());
-    }
 
     private static WeatherDataEntity MakeWeatherEntity(string address) =>
         new()

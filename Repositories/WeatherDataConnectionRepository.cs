@@ -2,6 +2,7 @@ using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.Entities;
 using Gridly.Factories;
+using Gridly.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;

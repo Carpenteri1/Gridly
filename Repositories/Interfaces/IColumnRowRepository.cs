@@ -1,6 +1,6 @@
 using Gridly.Models;
 
-namespace Gridly.Repositories;
+namespace Gridly.Repositories.Interfaces;
 
 public interface IColumnRowRepository
 {
