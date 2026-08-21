@@ -1,4 +1,5 @@
 ﻿using Gridly.Dtos;
+using Gridly.Entities;
 
 namespace Gridly.Factories
 {
@@ -9,6 +10,14 @@ namespace Gridly.Factories
         {
             IconId = iconId,
             CardId = cardId,
+        };
+
+        public static IconConnectedDtoModel Create(IconsConnectedEntity entity)
+        => new IconConnectedDtoModel
+        {
+            Id = entity.Id,
+            IconId = entity.IconId,
+            CardId = entity.CardId,
         };
     }
 }
