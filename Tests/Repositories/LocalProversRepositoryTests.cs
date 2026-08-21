@@ -18,7 +18,7 @@ public sealed class LocalProversRepositoryUpsertTests : IDisposable
         _dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(_connection).Options);
         _dbContext.Database.EnsureCreated();
-        _repository = new LocalProversRepository(_connection, _dbContext);
+        _repository = new LocalProversRepository(_dbContext);
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public sealed class LocalProversRepositoryProviderUniqueConstraintTests
         using var dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
         await dbContext.Database.EnsureCreatedAsync();
-        var repository = new LocalProversRepository(connection, dbContext);
+        var repository = new LocalProversRepository(dbContext);
 
         var result = await repository.Get("Unknown");
 
@@ -80,7 +80,7 @@ public sealed class LocalProversRepositoryProviderUniqueConstraintTests
         using var dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
         await dbContext.Database.EnsureCreatedAsync();
-        var repository = new LocalProversRepository(connection, dbContext);
+        var repository = new LocalProversRepository(dbContext);
 
         var entity = new ProviderKeyEntity
         {
@@ -108,7 +108,7 @@ public sealed class LocalProversRepositoryProviderUniqueConstraintTests
         using var dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
         await dbContext.Database.EnsureCreatedAsync();
-        var repository = new LocalProversRepository(connection, dbContext);
+        var repository = new LocalProversRepository(dbContext);
 
         var result = await repository.UpdateStatus("Unknown", "Valid");
 

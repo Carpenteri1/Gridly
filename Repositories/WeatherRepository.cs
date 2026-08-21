@@ -1,16 +1,13 @@
-using System.Data;
-using Gridly.Constants;
 using Gridly.Data;
 using Gridly.Dtos;
+using Gridly.Entities;
 using Gridly.Factories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;
 
-public class WeatherRepository(IDbConnection connection, GridlyDbContext dbContext) : IWeatherRepository
+public class WeatherRepository(GridlyDbContext dbContext) : IWeatherRepository
 {
-    private DbCommandRunner _dbCommandRunner = new(connection);
-
     public async Task<WeatherDataModel?> Get(string address)
     {
         var entity = await dbContext.WeatherData.AsNoTracking()
@@ -40,6 +37,23 @@ public class WeatherRepository(IDbConnection connection, GridlyDbContext dbConte
         return await query.ToListAsync();
     }
 
-    public async Task<WeatherDataModel> Upsert(WeatherDataModel weather) =>
-        await _dbCommandRunner.Execute(QueryStrings.UpsertWeatherDataQuery, weather);
+    public async Task<WeatherDataModel> Insert(WeatherDataModel weather)
+    {
+        var entity = new WeatherDataEntity
+        {
+            Address = weather.Address,
+            Timezone = weather.Timezone,
+            Description = weather.Description,
+            Temp = weather.Temp,
+            FeelsLike = weather.FeelsLike,
+            Humidity = weather.Humidity,
+            WindSpeed = weather.WindSpeed,
+            WindDir = weather.WindDir,
+            FetchedAt = weather.FetchedAt,
+        };
+        
+        dbContext.WeatherData.Add(entity);
+        await dbContext.SaveChangesAsync();
+        return WeatherDataFactory.Create(entity);
+    }
 }

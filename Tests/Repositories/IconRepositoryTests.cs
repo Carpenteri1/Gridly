@@ -22,7 +22,7 @@ public sealed class IconRepositoryTests : IDisposable
         {
             Icons = new[] { new FileInfo(usedIcon), new FileInfo(unusedIcon) }
         };
-        var repository = new IconRepository(null!, fileService, null!);
+        var repository = new IconRepository(fileService, null!);
         var cards = new[]
         {
             new CardModel
@@ -46,7 +46,7 @@ public sealed class IconRepositoryTests : IDisposable
         {
             Icons = new[] { new FileInfo(usedIcon) }
         };
-        var repository = new IconRepository(null!, fileService, null!);
+        var repository = new IconRepository(fileService, null!);
         var cards = new[]
         {
             new CardModel
@@ -63,7 +63,7 @@ public sealed class IconRepositoryTests : IDisposable
     [Fact]
     public void FindUnusedIcons_WhenThereAreNoFiles_ReturnsEmptyList()
     {
-        var repository = new IconRepository(null!, new FakeFileService(), null!);
+        var repository = new IconRepository(new FakeFileService(), null!);
 
         var result = repository.FindUnusedIcons(Array.Empty<CardModel>());
 
@@ -96,7 +96,7 @@ public sealed class IconRepositoryInsertTests
         using var dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
         await dbContext.Database.EnsureCreatedAsync();
-        var repository = new IconRepository(connection, new FakeFileService(), dbContext);
+        var repository = new IconRepository(new FakeFileService(), dbContext);
 
         var icon = new IconModel
         {
@@ -134,7 +134,7 @@ public sealed class IconRepositoryDeleteTests : IDisposable
         _dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(_connection).Options);
         _dbContext.Database.EnsureCreated();
-        _repository = new IconRepository(_connection, new FakeFileService(), _dbContext);
+        _repository = new IconRepository(new FakeFileService(), _dbContext);
     }
 
     [Fact]

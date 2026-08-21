@@ -11,7 +11,7 @@ namespace Gridly.Tests.Repositories;
 public sealed class CardRepositoryTests
 {
     private static CardRepository CreateRepository(GridlyDbContext dbContext, IDbConnection connection) =>
-        new(connection, dbContext);
+        new(dbContext);
 
     private static FakeGridlyDbContext CreateFakeDbContext(int saveChangesResult) =>
         new(new DbContextOptionsBuilder<GridlyDbContext>().Options, saveChangesResult);
@@ -79,7 +79,7 @@ public sealed class CardRepositoryGetTests : IDisposable
         _connection = new SqliteConnection(connectionString);
         _dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connectionString).Options);
-        _repository = new CardRepository(_connection, _dbContext);
+        _repository = new CardRepository(_dbContext);
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public sealed class CardRepositoryGetTests : IDisposable
         using var dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
         await dbContext.Database.EnsureCreatedAsync();
-        var repository = new CardRepository(connection, dbContext);
+        var repository = new CardRepository(dbContext);
 
         var icon = new IconEntity
         {
@@ -164,7 +164,7 @@ public sealed class CardRepositoryInsertTests
         using var dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
         await dbContext.Database.EnsureCreatedAsync();
-        var repository = new CardRepository(connection, dbContext);
+        var repository = new CardRepository(dbContext);
 
         var card = new CardModel
         {
@@ -206,7 +206,7 @@ public sealed class CardRepositoryDeleteTests
         using var dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
         await dbContext.Database.EnsureCreatedAsync();
-        var repository = new CardRepository(connection, dbContext);
+        var repository = new CardRepository(dbContext);
 
         var cardEntity = new CardEntity
         {
@@ -234,7 +234,7 @@ public sealed class CardRepositoryDeleteTests
         using var dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
         await dbContext.Database.EnsureCreatedAsync();
-        var repository = new CardRepository(connection, dbContext);
+        var repository = new CardRepository(dbContext);
 
         var result = await repository.Delete(999);
 

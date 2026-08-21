@@ -150,9 +150,7 @@ public class ColumnRowHandlerTests
         public List<CardModel> BatchEditedCards { get; private set; } = [];
 
         public Task<CardModel> Insert(CardModel Card) => Task.FromResult(Card);
-
-        public Task<bool> Edit(CardModel Card) => Task.FromResult(true);
-
+        
         public Task<bool> BatchEdit(IEnumerable<CardModel>? cards)
         {
             operations.Add("batch-edit-cards");

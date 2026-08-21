@@ -75,7 +75,7 @@ public class WeatherHandler(
     {
         var weather = await weatherRepository.Get(command.Weather.Address);
         if (weather is null)
-            weather = await weatherRepository.Upsert(command.Weather);
+            weather = await weatherRepository.Insert(command.Weather);
      
         var weatherConnnection = (await weatherDataConnectionRepository.GetManyById(command.CardId, null)).FirstOrDefault();
 
