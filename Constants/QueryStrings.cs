@@ -7,11 +7,6 @@ public class QueryStrings
     VALUES (@RowPosition, @RowWidth);
     SELECT * FROM RowColumn WHERE Id = last_insert_rowid();";
     
-    public const string InsertToSettingsQuery = @"
-    INSERT INTO Settings (CardId, Width, Height, TitleHidden, ImageHidden) 
-    VALUES (@CardId, @Width, @Height, @TitleHidden, @ImageHidden);
-    SELECT * FROM Settings WHERE Id = last_insert_rowid();";
-
     public const string InsertToConnectedIconQuery = @"
     INSERT INTO IconsConnected (CardId, IconId) 
     VALUES (@CardId, @IconId);
@@ -30,11 +25,7 @@ public class QueryStrings
         WindDir = excluded.WindDir,
         FetchedAt = excluded.FetchedAt
     RETURNING *;";
-
-    public const string SelectWidgetQuery = @"
-    SELECT w.Id AS Id, wt.Name AS WidgetType, w.Label AS Label, w.Description AS Description, w.Icon AS Icon
-    FROM Widget w /**leftjoin**//**where**//**orderby**/";
-
+    
     public const string SelectIconConnectedQuery = @"
     SELECT *
     FROM IconsConnected ic /**leftjoin**//**where**/";
@@ -49,16 +40,6 @@ public class QueryStrings
         Type = @Type
         /**where**/";
     
-    public const string UpdateSettingsQuery = @"
-    UPDATE Settings
-    SET CardId = @Id,
-        Width = @Width,
-        Height = @Height,
-        TitleHidden = @TitleHidden, 
-        ImageHidden = @ImageHidden 
-        /**where**/";
-
-    public const string DeleteFromSettingsQuery = "DELETE FROM Settings /**where**/";
     public const string DeleteFromIconsConnectedQuery = "DELETE FROM IconsConnected /**where**/";
 
     public const string UpsertProviderKeyQuery = @"
@@ -89,8 +70,6 @@ public class QueryStrings
         w.Temp, w.FeelsLike, w.Humidity, w.WindSpeed, w.WindDir, w.FetchedAt
     FROM WeatherDataConnection wc
     INNER JOIN WeatherData w ON w.Id = wc.WeatherId /**where**/";
-
-    public const string JoinWidgetType = "WidgetType wt ON wt.Id = w.WidgetType";
 
     public const string WhereCardIdForeignKeyEqualId = "CardId = @CardId";
     public const string WhereLocationEqualsLocation = "Address = @Address";
