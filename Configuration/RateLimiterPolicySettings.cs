@@ -7,13 +7,13 @@ public static class RateLimiterPolicySettings
 {
     public const string VersionProviderPolicy = "version";
     public const string WeatherProviderPolicy = "weather";
-    public const string RemoteProviderKeyPolicy = "remoteProviderKey";
+    public const string RemoteKeyProviderPolicy = "remoteKeyProvider";
 
     public static async Task<IServiceCollection> AddTokenBucketRateLimiter(this IServiceCollection services) {
 
         var versionRate = new VersionRateLimiterModel();
         var weatherRate = new WeatherRateLimiterModel();
-        var providerKeyRate = new ProviderKeyRateLimiterModel();
+        var keyProviderRate = new KeyProviderRateLimiterModel();
 
         services.AddRateLimiter(_ => _
             .AddTokenBucketLimiter(VersionProviderPolicy, opt =>
@@ -32,12 +32,12 @@ public static class RateLimiterPolicySettings
                 opt.TokensPerPeriod = weatherRate.TokensPerPeriod;
                 opt.AutoReplenishment = true;
             })
-            .AddTokenBucketLimiter(RemoteProviderKeyPolicy, opt =>
+            .AddTokenBucketLimiter(RemoteKeyProviderPolicy, opt =>
             {
-                opt.TokenLimit = providerKeyRate.Limit;
-                opt.QueueLimit = providerKeyRate.QueueLimit;
-                opt.ReplenishmentPeriod = providerKeyRate.Window;
-                opt.TokensPerPeriod = providerKeyRate.TokensPerPeriod;
+                opt.TokenLimit = keyProviderRate.Limit;
+                opt.QueueLimit = keyProviderRate.QueueLimit;
+                opt.ReplenishmentPeriod = keyProviderRate.Window;
+                opt.TokensPerPeriod = keyProviderRate.TokensPerPeriod;
                 opt.AutoReplenishment = true;
             }));
         

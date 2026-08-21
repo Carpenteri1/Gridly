@@ -16,7 +16,6 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 });
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddControllers();
 await builder.Services.AddTokenBucketRateLimiter();
 
 builder.Services.AddScoped<DbInitializer>();
@@ -50,13 +49,10 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 var app = builder.Build();
 
+app.MapApiEndpoints();
 app.UseStaticFiles();
 
 app.MapDefaultControllerRoute().RequireRateLimiting("fixed");
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Main}/{action=Index}");
 
 app.UseRouting();
 app.UseTokenBucketRateLimiter();
@@ -67,7 +63,6 @@ using (var scope = app.Services.CreateScope())
     await dbInit.EnsureTablesCreatedAsync();
 }
 
-app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 app.Run();

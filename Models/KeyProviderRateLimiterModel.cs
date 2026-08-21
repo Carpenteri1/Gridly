@@ -1,5 +1,5 @@
 namespace Gridly.Models;
-public class ProviderKeyRateLimiterModel
+public class KeyProviderRateLimiterModel
 {
     public int QueueLimit { get; private set; } = 1;
     public int Limit { get; private set; } = 1;
