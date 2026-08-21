@@ -31,14 +31,6 @@ public class QueryStrings
         Type = @Type
         /**where**/";
     
-    public const string UpsertProviderKeyQuery = @"
-    INSERT INTO ProviderKeys (Provider, EncryptedKey, Status, LastValidatedAt)
-    VALUES (@Provider, @EncryptedKey, @Status, @LastValidatedAt)
-    ON CONFLICT(Provider) DO UPDATE SET
-        EncryptedKey = excluded.EncryptedKey,
-        Status = excluded.Status,
-        LastValidatedAt = excluded.LastValidatedAt;";
-
     public const string UpdateProviderKeyStatusQuery = @"
     UPDATE ProviderKeys
     SET Status = @Status,
