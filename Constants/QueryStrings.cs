@@ -31,13 +31,6 @@ public class QueryStrings
         FetchedAt = excluded.FetchedAt
     RETURNING *;";
 
-    public const string UpsertWeatherDataConnectionQuery = @"
-    INSERT INTO WeatherDataConnection (CardId, WeatherId)
-    VALUES (@CardId, @WeatherId)
-    ON CONFLICT(CardId) DO UPDATE SET
-        WeatherId = excluded.WeatherId
-    RETURNING *;";
-    
     public const string SelectWidgetQuery = @"
     SELECT w.Id AS Id, wt.Name AS WidgetType, w.Label AS Label, w.Description AS Description, w.Icon AS Icon
     FROM Widget w /**leftjoin**//**where**//**orderby**/";
@@ -97,19 +90,11 @@ public class QueryStrings
     FROM WeatherDataConnection wc
     INNER JOIN WeatherData w ON w.Id = wc.WeatherId /**where**/";
 
-    public const string SelectWeatherDataConnectionQuery = @"
-    SELECT *
-    FROM WeatherDataConnection wc /**where**/";
-
-    public const string DeleteFromWeatherDataConnectionQuery = "DELETE FROM WeatherDataConnection /**where**/";
-
     public const string JoinWidgetType = "WidgetType wt ON wt.Id = w.WidgetType";
 
     public const string WhereCardIdForeignKeyEqualId = "CardId = @CardId";
     public const string WhereLocationEqualsLocation = "Address = @Address";
     public const string WhereIdEqualsId = "Id = @Id";
-    public const string WhereWeatherConnectedCardIdForeignKeyEqualIdWithAlias = "wc.CardId = @CardId";
-    public const string WhereWeatherConnectedWeatherIdForeignKeyEqualIdWithAlias = "wc.WeatherId = @WeatherId";
     public const string WhereIconConnectedIconIdForeignKeyEqualIdWithAlias = "ic.IconId = @IconId";
     public const string WhereIconConnectedCardIdForeignKeyEqualIdWithAlias = "ic.CardId = @CardId";
 }

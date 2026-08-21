@@ -10,6 +10,7 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
     public DbSet<IconsConnectedEntity> IconsConnected => Set<IconsConnectedEntity>();
     public DbSet<IconEntity> Icons => Set<IconEntity>();
     public DbSet<RowColumnEntity> RowColumns => Set<RowColumnEntity>();
+    public DbSet<WeatherDataConnectionEntity> WeatherDataConnections => Set<WeatherDataConnectionEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,6 +49,13 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
         {
             e.ToTable("RowColumn");
             e.HasKey(r => r.Id);
+        });
+
+        modelBuilder.Entity<WeatherDataConnectionEntity>(e =>
+        {
+            e.ToTable("WeatherDataConnection");
+            e.HasKey(w => w.Id);
+            e.HasIndex(w => w.CardId).IsUnique();
         });
     }
 }
