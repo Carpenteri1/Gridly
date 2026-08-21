@@ -37,11 +37,6 @@ public class QueryStrings
         LastValidatedAt = @LastValidatedAt
     WHERE Provider = @Provider;";
 
-    public const string SelectProviderKeyQuery = @"
-    SELECT Id, Provider, EncryptedKey, Status, LastValidatedAt
-    FROM ProviderKeys
-    WHERE Provider = @Provider;";
-
     public const string SelectWeatherDataQuery = @"
     SELECT Id, Address, Timezone, Description, Temp, FeelsLike, Humidity, WindSpeed, WindDir, FetchedAt
     FROM WeatherData /**where**/";

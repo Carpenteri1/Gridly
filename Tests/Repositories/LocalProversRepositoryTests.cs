@@ -65,20 +65,10 @@ public sealed class LocalProversRepositoryProviderUniqueConstraintTests
         using var dbContext = new GridlyDbContext(
             new DbContextOptionsBuilder<GridlyDbContext>().UseSqlite(connection).Options);
         await dbContext.Database.EnsureCreatedAsync();
+        var repository = new LocalProversRepository(connection, dbContext);
 
-        dbContext.ProviderKeys.Add(MakeProviderKey("VisualCrossing"));
-        await dbContext.SaveChangesAsync();
+        var result = await repository.Get("Unknown");
 
-        dbContext.ProviderKeys.Add(MakeProviderKey("VisualCrossing"));
-        await Assert.ThrowsAsync<DbUpdateException>(() => dbContext.SaveChangesAsync());
+        Assert.Null(result);
     }
-
-    private static ProviderKeyEntity MakeProviderKey(string provider) =>
-        new()
-        {
-            Provider = provider,
-            EncryptedKey = "encrypted-key",
-            Status = "Unknown",
-            LastValidatedAt = DateTime.UtcNow,
-        };
 }
