@@ -22,7 +22,6 @@ app.UseStaticFiles();
 
 app.MapDefaultControllerRoute().RequireRateLimiting("fixed");
 
-//app.UseRouting();
 app.UseTokenBucketRateLimiter();
 app.MapFallbackToFile("index.html");
 
