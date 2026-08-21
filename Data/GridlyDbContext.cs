@@ -13,6 +13,7 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
     public DbSet<WidgetEntity> Widgets => Set<WidgetEntity>();
     public DbSet<WidgetTypeEntity> WidgetTypes => Set<WidgetTypeEntity>();
     public DbSet<WeatherDataConnectionEntity> WeatherDataConnections => Set<WeatherDataConnectionEntity>();
+    public DbSet<ProviderKeyEntity> ProviderKeys => Set<ProviderKeyEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -70,6 +71,13 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
             e.ToTable("WeatherDataConnection");
             e.HasKey(w => w.Id);
             e.HasIndex(w => w.CardId).IsUnique();
+        });
+
+        modelBuilder.Entity<ProviderKeyEntity>(e =>
+        {
+            e.ToTable("ProviderKeys");
+            e.HasKey(p => p.Id);
+            e.HasIndex(p => p.Provider).IsUnique();
         });
     }
 }
