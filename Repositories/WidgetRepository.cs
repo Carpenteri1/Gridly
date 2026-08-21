@@ -1,24 +1,28 @@
-using System.Data;
-using Dapper;
-using Gridly.Constants;
 using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;
 
-public class WidgetRepository(IDbConnection connection) : IWidgetRepository
+public class WidgetRepository(GridlyDbContext dbContext) : IWidgetRepository
 {
-    private DbCommandRunner _dbCommandRunner = new (connection);
-
     public async Task<IEnumerable<WidgetModel>> Get()
     {
-        var builder = new SqlBuilder();
-        
-        var template = builder.AddTemplate(QueryStrings.SelectWidgetQuery);
-        builder.LeftJoin(QueryStrings.JoinWidgetType);
-        var Dtos = 
-            await _dbCommandRunner.SelectMany<WidgetDtoModel>(template.RawSql, template.Parameters);
-        return Factories.WidgetFactory.CreateMany(Dtos);
+        var query =
+            from w in dbContext.Widgets.AsNoTracking()
+            join wt in dbContext.WidgetTypes.AsNoTracking() on w.WidgetType equals (int?)wt.Id into wtGroup
+            from wt in wtGroup.DefaultIfEmpty()
+            select new WidgetDtoModel
+            {
+                Id = w.Id,
+                WidgetType = wt != null ? wt.Name! : string.Empty,
+                Label = w.Label!,
+                Description = w.Description!,
+                Icon = w.Icon!,
+            };
+
+        var dtos = await query.ToListAsync();
+        return Factories.WidgetFactory.CreateMany(dtos);
     }
 }

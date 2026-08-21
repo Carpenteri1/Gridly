@@ -10,6 +10,8 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
     public DbSet<IconsConnectedEntity> IconsConnected => Set<IconsConnectedEntity>();
     public DbSet<IconEntity> Icons => Set<IconEntity>();
     public DbSet<RowColumnEntity> RowColumns => Set<RowColumnEntity>();
+    public DbSet<WidgetEntity> Widgets => Set<WidgetEntity>();
+    public DbSet<WidgetTypeEntity> WidgetTypes => Set<WidgetTypeEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,6 +50,18 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
         {
             e.ToTable("RowColumn");
             e.HasKey(r => r.Id);
+        });
+
+        modelBuilder.Entity<WidgetEntity>(e =>
+        {
+            e.ToTable("Widget");
+            e.HasKey(w => w.Id);
+        });
+
+        modelBuilder.Entity<WidgetTypeEntity>(e =>
+        {
+            e.ToTable("WidgetType");
+            e.HasKey(wt => wt.Id);
         });
     }
 }

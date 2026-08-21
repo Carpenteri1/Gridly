@@ -33,10 +33,6 @@ public class QueryStrings
         WeatherId = excluded.WeatherId
     RETURNING *;";
     
-    public const string SelectWidgetQuery = @"
-    SELECT w.Id AS Id, wt.Name AS WidgetType, w.Label AS Label, w.Description AS Description, w.Icon AS Icon
-    FROM Widget w /**leftjoin**//**where**//**orderby**/";
-
     public const string UpdateCardQuery = @"
     UPDATE Card
     SET Name = @Name, 
@@ -92,8 +88,6 @@ public class QueryStrings
     FROM WeatherDataConnection wc /**where**/";
 
     public const string DeleteFromWeatherDataConnectionQuery = "DELETE FROM WeatherDataConnection /**where**/";
-
-    public const string JoinWidgetType = "WidgetType wt ON wt.Id = w.WidgetType";
 
     public const string WhereCardIdForeignKeyEqualId = "CardId = @CardId";
     public const string WhereLocationEqualsLocation = "Address = @Address";
