@@ -4,9 +4,9 @@ using Gridly.Querys;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Gridly.Services;
+namespace Gridly.EndPoints;
 
-public static class ApiServices
+public static class ApiEndpoints
 { 
     public static void MapApiEndpoints(this IEndpointRouteBuilder app)
     {
