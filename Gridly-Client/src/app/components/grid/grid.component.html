@@ -1,15 +1,64 @@
-@if (cards$ | async; as cards) {
-  <div class="grid-layout" cdkDropList cdkDropListOrientation="horizontal" [cdkDropListDisabled]="!editActive()" [cdkDropListData]="cards" (cdkDropListDropped)="Drop($event)">
-    @for (card of cards; track card.id) {
-    <div
-      class="shadow-sm grid-card-style"
-      [style.height.px]="card.settings?.height"
-      [style.width.px]="card.settings?.width"
-      cdkDrag
-      [cdkDragDisabled]="!editActive()"
-      [id]="card.id.toString()">
-      <app-card-component [card]="card"></app-card-component>
-    </div>
+@if (rows$ | async; as rows) {
+  <div #gridLayout class="grid-layout">
+    @if (editActive()) {
+      @for (position of insertRowPositions(rows); track position) {
+        <div
+          [id]="insertRowId(position)"
+          class="grid-row-insert-target"
+          cdkDropList
+          cdkDropListOrientation="horizontal"
+          [cdkDropListData]="emptyRow()"
+          [cdkDropListConnectedTo]="rowIds(rows)"
+          (cdkDropListDropped)="dropToNewRow($event, rows, position)">
+          <span></span>
+        </div>
+        @if (rows[position - 1]; as row) {
+      <div class="grid-row grid-row-theme"
+           [id]="rowId(row.rowPosition!)"
+           cdkDropList
+           cdkDropListOrientation="horizontal"
+           [cdkDropListConnectedTo]="rowIds(rows)"
+           [cdkDropListDisabled]="!editActive()"
+           [cdkDropListData]="row.cards"
+           (cdkDropListDropped)="drop($event, rows ,row.rowPosition!)">
+        @for (card of row.cards; track cardTrack(card, $index)) {
+          <div
+            class="shadow-sm grid-card-style"
+            [style.height.px]="card.settings?.height"
+            [style.width.px]="card.settings?.width"
+            cdkDrag
+            [cdkDragData]="card"
+            [cdkDragDisabled]="!editActive()"
+            [id]="cardDomId(row, card)">
+            <app-card-component [card]="card"></app-card-component>
+          </div>
+        }
+      </div>
+        }
+      }
+    } @else {
+      @for (row of rows; track row.id || row.rowPosition) {
+        <div class="grid-row grid-row-theme"
+             [id]="rowId(row.rowPosition!)"
+             cdkDropList
+             cdkDropListOrientation="horizontal"
+             [cdkDropListConnectedTo]="rowIds(rows)"
+             [cdkDropListDisabled]="true"
+             [cdkDropListData]="row.cards">
+          @for (card of row.cards; track cardTrack(card, $index)) {
+            <div
+              class="shadow-sm grid-card-style"
+              [style.height.px]="card.settings?.height"
+              [style.width.px]="card.settings?.width"
+              cdkDrag
+              [cdkDragData]="card"
+              [cdkDragDisabled]="true"
+              [id]="cardDomId(row, card)">
+              <app-card-component [card]="card"></app-card-component>
+            </div>
+          }
+        </div>
+      }
     }
   </div>
 }

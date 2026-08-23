@@ -48,3 +48,9 @@
   width: 80px;
   height: 80px;
 }
+
+.weather-section{
+  text-align: left;
+  text-decoration: none;
+  font-size:12px;
+}

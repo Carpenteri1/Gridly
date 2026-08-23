@@ -1,38 +1,41 @@
-using System.Data;
-using Dapper;
-using Gridly.Constants;
 using Gridly.Data;
 using Gridly.Dtos;
+using Gridly.Entities;
+using Gridly.Factories;
+using Gridly.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Repositories;
 
-public class IconConnectedRepository(IDbConnection connection) : IIconConnectedRepository
+public class IconConnectedRepository(GridlyDbContext dbContext) : IIconConnectedRepository
 {
-    private DbCommandRunner _dbCommandRunner = new (connection);
-    
     public async Task<IconConnectedDtoModel> Insert(IconConnectedDtoModel model)
     {
-        return await _dbCommandRunner.Execute(QueryStrings.InsertToConnectedIconQuery, model);
+        var entity = new IconsConnectedEntity
+        {
+            CardId = model.CardId,
+            IconId = model.IconId,
+        };
+        dbContext.IconsConnected.Add(entity);
+        await dbContext.SaveChangesAsync();
+        return IconConnectedFactory.Create(entity);
     }
 
     public async Task<IEnumerable<IconConnectedDtoModel>> GetManyById(int? cardId, int? iconId)
     {
-        var builder = new SqlBuilder();
-        var template = builder.AddTemplate(QueryStrings.SelectIconConnectedQuery);
-        
-        if(cardId != null)
-            builder.Where(QueryStrings.WhereIconConnectedCardIdForeignKeyEqualIdWithAlias, new {CardId = cardId});
-        if(iconId != null)
-            builder.Where(QueryStrings.WhereIconConnectedIconIdForeignKeyEqualIdWithAlias, new {IconId = iconId});
+        var query = dbContext.IconsConnected.AsQueryable();
+        if (cardId != null)
+            query = query.Where(ic => ic.CardId == cardId);
+        if (iconId != null)
+            query = query.Where(ic => ic.IconId == iconId);
 
-        return await _dbCommandRunner.SelectMany<IconConnectedDtoModel>(template.RawSql, template.Parameters);
+        var entities = await query.ToListAsync();
+        return entities.Select(IconConnectedFactory.Create);
     }
 
     public async Task<bool> Delete(int cardId)
     {
-        var builder = new SqlBuilder();
-        var template = builder.AddTemplate(QueryStrings.DeleteFromIconsConnectedQuery);
-        builder.Where(QueryStrings.WhereCardIdForeignKeyEqualId, new {CardId = cardId});
-        return await _dbCommandRunner.Execute(template.RawSql, template.Parameters) != null;
+        var result = await dbContext.IconsConnected.Where(ic => ic.CardId == cardId).ExecuteDeleteAsync();
+        return result > 0;
     }
 }

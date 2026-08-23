@@ -5,14 +5,11 @@
     "build": "ng build",
     "lint": "ng lint",
     "watch": "ng build --watch --configuration development",
-    "test": "jest --runInBand",
-    "node-run": "node dist/gridly-client/server/server.mjs",
-    "start": "gulp build-angular-net",
-    "start-angular": "gulp build-angular"
+    "test": "jest --runInBand --coverage"
   },
   "private": true,
   "dependencies": {
-    "@angular-devkit/build-angular": "21.2.9",
+    "@angular-devkit/build-angular": "21.2.13",
     "@angular/common": "21.2.13",
     "@angular/compiler": "21.2.13",
     "@angular/core": "21.2.13",
@@ -23,7 +20,9 @@
     "@angular/platform-browser-dynamic": "21.2.13",
     "@angular/platform-server": "21.2.13",
     "@angular/router": "21.2.13",
-    "@angular/ssr": "21.2.9",
+    "@angular/ssr": "21.2.13",
+    "@ngx-translate/core": "^18.0.0",
+    "@ngx-translate/http-loader": "^18.0.0",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "gulp": "^5.0.1",

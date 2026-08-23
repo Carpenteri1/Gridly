@@ -1,0 +1,11 @@
+using Gridly.Models;
+
+namespace Gridly.Repositories.Interfaces;
+
+public interface ICardRepository
+{
+    public Task<CardModel> Insert(CardModel Card);
+    public Task<bool> BatchEdit(IEnumerable<CardModel>? cards);
+    public Task<IEnumerable<CardModel>?> Get();
+    public Task<bool> Delete(int Id);
+}

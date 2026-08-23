@@ -1,14 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CardModel } from '../../models/card.Model';
-import { CardService } from '../../services/card_services/card.service';
 import { CardRulesService } from '../../services/card_services/card-rules.service';
 import { GridService } from '../../services/grid_services/grid.service';
+import { ProviderKeysService } from '../../services/provider_key_services/provider-keys.service';
+import { ProviderKeyStatusModel } from '../../models/providerKeyStatus.Model';
+import { ProviderKeyStatus } from '../../enums/provider-key-status.enum';
+import { CardTypes } from '../../enums/card.types.enum';
+import { EditCardDialogComponent } from '../dialogs/editCardDialog/edit-card-dialog.component';
+import { DeleteCardDialogComponent } from '../dialogs/deleteCardDialog/delete-card-dialog.component';
+import { ProviderKeyDialogComponent } from '../dialogs/apiKeyDialog/provider-key-dialog.component';
+import { SetLocationForProviderDialogComponent } from '../dialogs/setLocationForProviderDialog/set-location-for-provider-dialog.component';
+import { StubTranslatePipe } from '../../testing/stub-translate.pipe';
+import { DialogService } from '../../services/dialog_services/dialog.service';
 import { CardComponent } from './card.component';
 
 type CardComponentFixture = CardComponent & {
   edit(card: CardModel): void;
-  remove(id: number): void;
+  remove(card: CardModel): void;
   hasMaterialIcon(card: CardModel): boolean;
 };
 
@@ -25,35 +35,57 @@ describe('CardComponent', () => {
     settings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
   };
 
-  const cardServiceMock = {
-    currentcard: jest.fn(() => [currentCard]),
-    delete: jest.fn(),
-    edit: jest.fn(),
-  };
-
   const cardRulesServiceMock = {
     hasMaterialIcon: jest.fn(() => true),
   };
 
   const editMode = signal(true);
-  const gridServiceMock = { inEditMode: editMode.asReadonly() };
+  const gridServiceMock = {
+    inEditMode: editMode.asReadonly(),
+    updateCardInView: jest.fn(),
+    removeCardFromView: jest.fn(),
+  };
+
+  const providerKeyStatus = signal<ProviderKeyStatusModel | null>(null);
+  const providerKeysServiceMock = {
+    currentStatus: providerKeyStatus.asReadonly(),
+    refreshStatus: jest.fn(),
+    save: jest.fn(),
+    onKeySaved: jest.fn(),
+  };
+
+  const translateServiceMock = {
+    instant: (key: string) => key,
+  };
+
+  const createComponent = (card: CardModel) => {
+    fixture = TestBed.createComponent(CardComponent);
+    createCardComponent = fixture.componentInstance;
+    fixture.componentRef.setInput('card', card);
+    fixture.detectChanges();
+  };
 
   beforeEach(async () => {
     jest.clearAllMocks();
+    providerKeyStatus.set(null);
 
     await TestBed.configureTestingModule({
       imports: [CardComponent],
       providers: [
-        { provide: CardService, useValue: cardServiceMock },
         { provide: CardRulesService, useValue: cardRulesServiceMock },
         { provide: GridService, useValue: gridServiceMock },
+        { provide: ProviderKeysService, useValue: providerKeysServiceMock },
+        { provide: TranslateService, useValue: translateServiceMock },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(CardComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(EditCardDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(DeleteCardDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(ProviderKeyDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .overrideComponent(SetLocationForProviderDialogComponent, { remove: { imports: [TranslatePipe] }, add: { imports: [StubTranslatePipe] } })
+      .compileComponents();
 
-    fixture = TestBed.createComponent(CardComponent);
-    createCardComponent = fixture.componentInstance;
-    fixture.componentRef.setInput('card', currentCard);
-    fixture.detectChanges();
+    createComponent(currentCard);
   });
 
   it('renders the current card name and material icon', () => {
@@ -62,37 +94,121 @@ describe('CardComponent', () => {
     expect(element.querySelector('mat-icon')?.textContent).toContain('cloud');
     expect(element.textContent).toContain('Weather');
   });
+  it('opens the edit, delete and add-provider-key dialogs for the current card', async () => {
+    await createCardComponent.openEditDialog();
+    createCardComponent.openDeleteDialog();
+    createCardComponent.openAddProviderKeyDialog();
 
-  it('opens the edit and delete dialogs from the card methods', () => {
-    createCardComponent.openEditDialog();
+    expect(createCardComponent.isEditDialogOpenForCard()).toBe(true);
+    expect(createCardComponent.isDeleteDialogOpenForCard()).toBe(true);
+    expect(createCardComponent.isAddProviderKeyDialogOpen()).toBe(true);
+  });
+
+  it('closes both the edit and delete dialogs when the matching dialog id is emitted', async () => {
+    await createCardComponent.openEditDialog();
     createCardComponent.openDeleteDialog();
 
-    expect(createCardComponent.isEditDialogOpen).toBe(true);
-    expect(createCardComponent.isDeleteDialogOpen).toBe(true);
+    createCardComponent.handleDialogChange(currentCard.id);
+
+    expect(createCardComponent.isEditDialogOpenForCard()).toBe(false);
+    expect(createCardComponent.isDeleteDialogOpenForCard()).toBe(false);
   });
 
-  it('closes both dialogs when the matching dialog id is emitted', () => {
-    createCardComponent.isEditDialogOpen = true;
-    createCardComponent.isDeleteDialogOpen = true;
+  it('leaves the dialogs open when a non-matching dialog id is emitted', async () => {
+    await createCardComponent.openEditDialog();
 
-    createCardComponent.handleDialogChange(7);
+    createCardComponent.handleDialogChange(currentCard.id + 1);
 
-    expect(createCardComponent.isEditDialogOpen).toBe(false);
-    expect(createCardComponent.isDeleteDialogOpen).toBe(false);
+    expect(createCardComponent.isEditDialogOpenForCard()).toBe(true);
   });
 
-  it('delegates edit and remove actions to the card service', () => {
+  it('closes the api key dialog and opens the location dialog once no key dialog remains open', () => {
+    createCardComponent.openAddProviderKeyDialog();
+
+    (createCardComponent as unknown as { SaveProviderKey(id: number): void }).SaveProviderKey(currentCard.id);
+
+    expect(createCardComponent.isAddProviderKeyDialogOpen()).toBe(false);
+    expect(createCardComponent.isSetProviderLocationDialogOpen()).toBe(true);
+  });
+
+  it('does not open the location dialog while another card still has the key dialog open', () => {
+    const dialogService = TestBed.inject(DialogService);
+    dialogService.openProviderKeyDialog(currentCard.id + 1);
+
+    (createCardComponent as unknown as { SaveProviderKey(id: number): void }).SaveProviderKey(currentCard.id + 1);
+
+    expect(createCardComponent.isSetProviderLocationDialogOpen()).toBe(false);
+  });
+
+  it('closes the location dialog when the matching dialog id is emitted', () => {
+    const dialogService = TestBed.inject(DialogService);
+    dialogService.openSetProviderLocationDialog(currentCard.id);
+
+    (createCardComponent as unknown as { SaveProviderLocation(id: number): void }).SaveProviderLocation(currentCard.id);
+
+    expect(createCardComponent.isSetProviderLocationDialogOpen()).toBe(false);
+  });
+
+  it('leaves the location dialog open when a non-matching dialog id is emitted', () => {
+    const dialogService = TestBed.inject(DialogService);
+    dialogService.openSetProviderLocationDialog(currentCard.id);
+
+    (createCardComponent as unknown as { SaveProviderLocation(id: number): void }).SaveProviderLocation(currentCard.id + 1);
+
+    expect(createCardComponent.isSetProviderLocationDialogOpen()).toBe(true);
+  });
+
+  it('delegates edit and remove actions to the grid service', () => {
     (createCardComponent as CardComponentFixture).edit(currentCard);
-    (createCardComponent as CardComponentFixture).remove(7);
+    (createCardComponent as CardComponentFixture).remove(currentCard);
 
-    expect(cardServiceMock.edit).toHaveBeenCalledWith(currentCard);
-    expect(cardServiceMock.delete).toHaveBeenCalledWith(7);
+    expect(gridServiceMock.updateCardInView).toHaveBeenCalledWith(currentCard, currentCard);
+    expect(gridServiceMock.removeCardFromView).toHaveBeenCalledWith(currentCard);
   });
-  
+
   it('hasMaterialIcon returns the value from the card rules service', () => {
     const result = (createCardComponent as CardComponentFixture).hasMaterialIcon(currentCard);
     expect(cardRulesServiceMock.hasMaterialIcon).toHaveBeenCalledWith(currentCard);
     expect(result).toBe(true);
+  });
+
+  describe('provider key button', () => {
+    const weatherCard: CardModel = { ...currentCard, type: CardTypes.Weather };
+
+    const keyButton = () =>
+      (fixture.nativeElement as HTMLElement).querySelector('.bi-key');
+
+    it('is shown on a weather card when no key is stored', () => {
+      providerKeyStatus.set({ exists: false, keyStatus: ProviderKeyStatus.Unknown });
+      createComponent(weatherCard);
+
+      expect(createCardComponent.showProviderKeyButton()).toBe(true);
+      expect(keyButton()).not.toBeNull();
+    });
+
+    it('is shown on a weather card when the stored key is invalid', () => {
+      providerKeyStatus.set({ exists: true, keyStatus: ProviderKeyStatus.Invalid });
+      createComponent(weatherCard);
+
+      expect(createCardComponent.showProviderKeyButton()).toBe(true);
+      expect(keyButton()).not.toBeNull();
+    });
+
+    it('is hidden on a weather card once the stored key is valid', () => {
+      providerKeyStatus.set({ exists: true, keyStatus: ProviderKeyStatus.Valid });
+      createComponent(weatherCard);
+
+      expect(createCardComponent.showProviderKeyButton()).toBe(false);
+      expect(keyButton()).toBeNull();
+    });
+
+    it('is hidden on cards that are not weather cards', () => {
+      providerKeyStatus.set({ exists: false, keyStatus: ProviderKeyStatus.Unknown });
+      createComponent({ ...currentCard, type: CardTypes.Empty });
+
+      expect(createCardComponent.showProviderKeyButton()).toBe(false);
+      expect(keyButton()).toBeNull();
+    });
   });
 
 });

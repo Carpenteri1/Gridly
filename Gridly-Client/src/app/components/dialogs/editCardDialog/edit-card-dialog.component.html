@@ -9,66 +9,107 @@
 
     <div class="ew-body">
       <form (ngSubmit)="onSubmit()">
-        <mat-form-field class="mb-3 w-100 gap-2 form-control">
-          <mat-label for="name-input" class="form-label">{{TextStringsUtil.DialogEditCardInputNameTitle}}</mat-label>
-          <input 
-            type="text" 
-            matInput
-            id="name-input"
-            class="form-control" 
-            placeholder="Enter name"
-            name="name"
-            [(ngModel)]="facade.card.name"
-            required>
-        </mat-form-field>
+        @if (facade.card.type !== CardTypes.Weather) {
+          <mat-form-field class="mb-3 w-100 gap-2 form-control">
+            <mat-label for="name-input" class="form-label">{{'editCardDialog.text.inputNameTitle' | translate}}</mat-label>
+            <input
+              type="text"
+              matInput
+              id="name-input"
+              class="form-control"
+              placeholder="Enter name"
+              name="name"
+              [(ngModel)]="facade.card.name"
+              required>
+          </mat-form-field>
 
-        <mat-form-field class="mb-3 w-100 gap-2 form-control">
-          <mat-label for="url-input" class="form-label">{{TextStringsUtil.DialogEditCardInputUrlTitle}}</mat-label>
-          <input 
-            matInput
-            type="text" 
-            id="url-input"
-            class="form-control" 
-            [(ngModel)]="facade.card.url"
-            placeholder="Enter URL"
-            name="url"
-            required>
-        </mat-form-field>
+          <mat-form-field class="mb-3 w-100 gap-2 form-control">
+            <mat-label for="url-input" class="form-label">{{'editCardDialog.text.inputUrlTitle' | translate}}</mat-label>
+            <input
+              matInput
+              type="text"
+              id="url-input"
+              class="form-control"
+              [(ngModel)]="facade.card.url"
+              placeholder="Enter URL"
+              name="url"
+              required>
+          </mat-form-field>
 
-        <mat-form-field class="mb-3 w-100 gap-2 form-control">
-          <mat-label>{{TextStringsUtil.DialogEditCardInputSearchIconTitle}}</mat-label>
-        <div class="d-flex">
-          <input 
-            matInput
-            type="text"
-            #iconInput
-            (input)="facade.onSearch(iconInput.value)" 
-            placeholder="Enter Icon name"
-            name="icon">
-          <button matSuffix id="dropDownButton" (click)="dropDown.open();$event.stopPropagation()" type="button">
-            <mat-icon>arrow_drop_down</mat-icon>
-          </button>
-        </div>
-          <div class="d-flex">
-            <mat-select #dropDown [value]="facade.card.iconData?.materialIcon" (selectionChange)="facade.setIcon($event.value)">             
-              @if (facade.icons$ | async; as icons)
-              {
-                @for (icon of icons.icons; track icon) {
-                  <mat-option [value]="icon"><mat-icon>{{icon}}</mat-icon></mat-option>
+          <mat-form-field class="mb-3 w-100 gap-2 form-control">
+            <mat-label>{{'editCardDialog.text.inputSearchIconTitle' | translate}}</mat-label>
+            <div class="d-flex">
+              <input
+                matInput
+                type="text"
+                #iconInput
+                (input)="facade.onSearch(iconInput.value)"
+                placeholder="Enter Icon name"
+                name="icon">
+              <button matSuffix id="dropDownButton" (click)="dropDown.open();$event.stopPropagation()" type="button">
+                <mat-icon>arrow_drop_down</mat-icon>
+              </button>
+            </div>
+            <div class="d-flex">
+              <mat-select #dropDown [value]="facade.card.iconData?.materialIcon" (selectionChange)="facade.setIcon($event.value)">
+                @if (facade.icons$ | async; as icons)
+                {
+                  @for (icon of icons.icons; track icon) {
+                    <mat-option [value]="icon"><mat-icon>{{icon}}</mat-icon></mat-option>
+                  }
                 }
-              }
-            </mat-select>
-          </div>
-        </mat-form-field>
+              </mat-select>
+            </div>
+          </mat-form-field>
+        }
+        @else{
+          <fieldset class="mb-3">
+            <legend class="form-label h6">{{'editCardDialog.text.weatherSectionTitle' | translate}}</legend>
+            <mat-form-field class="mb-2 w-100 gap-2 form-control">
+              <mat-label for="location-country-input" class="form-label">{{'editCardDialog.text.inputCountryTitle' | translate}}</mat-label>
+              <input
+                type="text"
+                matInput
+                id="location-country-input"
+                class="form-control"
+                placeholder="Enter country"
+                name="locationCountry"
+                [(ngModel)]="facade.countryInput">
+            </mat-form-field>
+
+            <mat-form-field class="mb-2 w-100 gap-2 form-control">
+              <mat-label for="location-city-input" class="form-label">{{'editCardDialog.text.inputCityTitle' | translate}}</mat-label>
+              <input
+                type="text"
+                matInput
+                id="location-city-input"
+                class="form-control"
+                placeholder="Enter city"
+                name="locationCity"
+                [(ngModel)]="facade.cityInput">
+            </mat-form-field>
+
+            @if (facade.cityInput === '' || facade.countryInput === '') {
+              <p class="text-danger">{{'editCardFacadDialog.error.inputBlank' | translate}}</p>
+            }
+
+            @if (facade.errorStatus  === 401 || facade.errorStatus === 412) {
+              <p class="text-danger">{{'editCardFacadDialog.error.invalidProviderKey' | translate}}</p>
+            }
+            @if(facade.errorStatus === 404) {
+              <p class="text-danger">{{'editCardFacadDialog.error.locationNotFound' | translate}}</p>
+            }
+          </fieldset>
+        }
         <!--
         <div class="mb-3">
-          <label for="icon-select" class="form-label">{{TextStringsUtil.ModalEditComponentLinkToImageTitle}}</label>
-          <select 
+          <label for="icon-select" class="form-label">{{'editCardDialog.text.linkToImageTitle' | translate}}</label>
+          <select
             id="icon-select"
-            class="form-select" 
+            class="form-select"
             name="icon">
             [(ngModel)]="this.modalModel.selectedDropDownValue" placeholder="Select option"
-            (selectionChange)="this.ResetImageInput()">         
+            (selectionChange)="this.ResetImageInput()">
             <option [value]="1"> title one </option>
             <option [value]="2"> title two</option>
            @for(icon of icons; track icon.id) {
@@ -80,7 +121,7 @@
         <!--TODO  [hidden]="this.modalModel.selectedDropDownValue != 1"
         <div class="mb-3" >
           <label> </label>
-            <input placeholder="Icon" type="file" id="formFile" #fileInput (change)="onFileUpload($event)"/>  
+            <input placeholder="Icon" type="file" id="formFile" #fileInput (change)="onFileUpload($event)"/>
         </div>
 -->
         <!--TODO  [hidden]="this.modalModel.selectedDropDownValue != 2"
@@ -89,8 +130,8 @@
         </div>
 -->
         <div class="d-flex justify-content-end gap-2 mt-4">
-          <button type="button" class="btn btn-secondary" (click)="close()">{{TextStringsUtil.DialogEditCardCancelBtnTitle}}</button>
-          <button type="submit" class="btn btn-primary">{{TextStringsUtil.DialogEditCardAcceptBtnTitle}}</button>
+          <button type="button" class="btn btn-secondary" (click)="close()">{{'editCardDialog.text.cancelBtnTitle' | translate}}</button>
+          <button type="submit" class="btn btn-primary">{{'editCardDialog.text.acceptBtnTitle' | translate}}</button>
         </div>
       </form>
     </div>
