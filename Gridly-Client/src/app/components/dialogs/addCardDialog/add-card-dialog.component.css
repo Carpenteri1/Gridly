@@ -16,7 +16,9 @@
 .option-btn:hover {
   border-color: var(--bs-primary);
 }
-.option-icon { font-size: 2rem; color: var(--bs-primary); }
+.option-icon {
+  color: var(--bs-primary);
+}
 
 dialog.aw-dialog {
   border: none;

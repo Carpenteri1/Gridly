@@ -1,0 +1,26 @@
+using System.Net;
+using Gridly.Constants;
+using Gridly.Dtos;
+using Gridly.EndPoints.Interfaces;
+using Gridly.helpers;
+using Gridly.Services;
+
+namespace Gridly.EndPoints;
+
+public class WeatherEndPoint(
+    IDataConverter<WeatherDataDto> dataConverter,
+    IProvidersEndPointExtensions providersEndPointExtensions) : IWeatherEndPoint
+{
+    public async Task<(int, WeatherDataDto? Weather)> Get(string address, string rawKey)
+    {
+        var (status, body) = await providersEndPointExtensions.CallWeatherProvider(
+            address,
+            EndpointStrings.GetVisualCrossingWeatherData,
+            rawKey);
+
+        if (status != 200) throw new HttpRequestException("Weather provider returned an error status code: " + status + "");
+        
+        var dto = dataConverter.DeserializeJson(body);
+        return (status, dto);
+    }
+}

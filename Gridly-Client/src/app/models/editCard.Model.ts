@@ -1,6 +1,6 @@
 import {CardModel} from "./card.Model";
 
 export class EditCardModel {
-  editComponent!: CardModel;
+  editCard!: CardModel;
   selectedDropDownIconValue!: number;
 }
