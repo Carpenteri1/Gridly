@@ -1,13 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AsyncPipe } from '@angular/common';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DialogService } from '../../../services/dialog_services/dialog.service';
 import { CardModel } from '../../../models/card.Model';
 import { IconModel } from '../../../models/icon.Model';
 import { AddCardDialogComponent } from './add-card-dialog.component';
-import { CardTypes } from '../../../types/card.types.enum';
+import { CardTypes } from '../../../enums/card.types.enum';
+import { Widget } from '../../../interfaces/widget.Interface';
+import { StubTranslatePipe } from '../../../testing/stub-translate.pipe';
 
 describe('AddCardDialogComponent', () => {
   let fixture: ComponentFixture<AddCardDialogComponent>;
-  let component: AddCardDialogComponent;
+  let dialogComponent: AddCardDialogComponent;
 
   const dialogServiceMock = {
     onFileUpload: jest.fn(),
@@ -18,31 +22,49 @@ describe('AddCardDialogComponent', () => {
       imageHidden: false,
       titleHidden: false,
     }),
-    icon: () => ({
+    setIcon: () => ({
       id: undefined,
       type: '',
       name: '',
       base64Data: '',
-      materialIcon: 'add_box',
+      materialIcon: 'box',
     } as IconModel)
   };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  const translateServiceMock = {
+    instant: (key: string) => key,
+  };
+
+  const widget = (widgetType: CardTypes): Widget => ({
+    id: 1,
+    widgetType,
+    label: '',
+    description: '',
+    icon: '',
+  });
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       imports: [AddCardDialogComponent],
-      providers: [{ provide: DialogService, useValue: dialogServiceMock }],
-    }).compileComponents();
+      providers: [
+        { provide: DialogService, useValue: dialogServiceMock },
+        { provide: TranslateService, useValue: translateServiceMock },
+      ],
+    }).overrideComponent(AddCardDialogComponent, {
+      remove: { imports: [TranslatePipe] },
+      add: { imports: [AsyncPipe, StubTranslatePipe] },
+    });
 
     fixture = TestBed.createComponent(AddCardDialogComponent);
-    component = fixture.componentInstance;
+    dialogComponent = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('emits a new card payload for both supported card types', () => {
-    const emitSpy = jest.spyOn(component.newCard, 'emit');
+    const emitSpy = jest.spyOn(dialogComponent.newCard, 'emit');
 
-    component.onSelect(CardTypes.Empty);
-    component.onSelect(CardTypes.Custom);
+    dialogComponent.onSelect(widget(CardTypes.Empty));
+    dialogComponent.onSelect(widget(CardTypes.Custom));
 
     expect(emitSpy).toHaveBeenCalledTimes(2);
     expect(emitSpy.mock.calls[0][0]).toBeDefined();
@@ -50,9 +72,9 @@ describe('AddCardDialogComponent', () => {
   });
 
   it('emits a fully initialized card model', () => {
-    const emitSpy = jest.spyOn(component.newCard, 'emit');
+    const emitSpy = jest.spyOn(dialogComponent.newCard, 'emit');
 
-    component.onSelect(CardTypes.Empty);
+    dialogComponent.onSelect(widget(CardTypes.Empty));
 
     const card = emitSpy.mock.calls[0]?.[0] as CardModel | undefined;
 
@@ -63,7 +85,7 @@ describe('AddCardDialogComponent', () => {
     }
 
     card.settings ??= dialogServiceMock.settings();
-    card.iconData ??= dialogServiceMock.icon();
+    card.iconData ??= dialogServiceMock.setIcon();
 
     expect(card.settings).toEqual({
       width: 250,
@@ -76,7 +98,7 @@ describe('AddCardDialogComponent', () => {
       type: '',
       name: '',
       base64Data: '',
-      materialIcon: 'add_box',
+      materialIcon: 'box',
     });
   });
 });
