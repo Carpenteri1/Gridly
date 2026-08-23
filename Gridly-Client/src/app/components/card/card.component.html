@@ -1,9 +1,9 @@
 <div class="row h-10">
-  @if (inEditMode())
+  @if (editActive())
   {
       <div class="col">
-        <button type="button" 
-        (click)="openEditDialog()" 
+        <button type="button"
+        (click)="openEditDialog()"
         class="btn edit-button start-50" style="margin-left: 0.5em;">
           <i class="bi bi-pencil-square" ></i>
         </button>
@@ -15,45 +15,76 @@
           <i class="bi bi-arrows-move"></i>
         </button>
       </div>
+    @if(showProviderKeyButton())
+    {
       <div class="col d-flex justify-content-end">
         <button
-        (click)="openDeleteDialog()" 
+          (click)="openAddProviderKeyDialog()"
           class="btn edit-button">
-          <i class="bi bi-x-lg"></i>
+          <i class="bi bi-key"></i>
         </button>
       </div>
+    }
+    <div class="col d-flex justify-content-end">
+      <button
+        (click)="openDeleteDialog()"
+        class="btn edit-button">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
       <div class="col d-flex justify-content-end">
         <button
         appMakeResizable
-        [canResize]="inEditMode()"
-        [targetId]="card.id"
+        [canResize]="editActive()"
+        [targetCard]="card"
         type="button"
         class="btn edit-button resize-button">
         <i class="bi bi-arrows-angle-expand"></i>
       </button>
       </div>
-
   }
 </div>
-      <a
-        class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2"
-        [href]="card.url"
-        target="_blank"
-        rel="noreferrer">
-        <span>
-        @if (hasMaterialIcon(card)) 
+  @if(card.type === CardTypes.Weather) {
+    <a
+      class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2">
+      <span><mat-icon class="card-mat-icon-size">{{card.iconData?.materialIcon}}</mat-icon></span>
+      @if(storedWeatherData$ | async; as weatherData){
+        @for(weather of weatherData; track weather){
+          @if (card.type === CardTypes.Weather && card.id === weather.cardId) {
+            <ul class="weather-section">
+              <li> {{ 'card.weatherSection.address' | translate }} {{weather.address}}</li>
+              <li> {{ 'card.weatherSection.temp' | translate }} {{weather.temp}}</li>
+              <li> {{ 'card.weatherSection.feelsLike' | translate }} {{weather.feelsLike}}</li>
+              <li> {{ 'card.weatherSection.humidity' | translate }} {{weather.humidity}}</li>
+              <li> {{ 'card.weatherSection.windDir' | translate }} {{weather.windDir}}</li>
+              <li> {{ 'card.weatherSection.windSpeed' | translate }} {{weather.windSpeed}}</li>
+            </ul>
+          }
+        }
+      }
+    </a>
+  }
+  @else{
+    <a
+      class="d-flex flex-column text-decoration-none justify-content-center text-white-50 h-75 text-center pt-2"
+      [href]="card.url"
+      target="_blank"
+      rel="noreferrer">
+      <p>{{card.id}}</p>
+      <span>
+        @if (hasMaterialIcon(card))
         {
           <mat-icon class="card-mat-icon-size">
             {{card.iconData?.materialIcon}}
           </mat-icon>
         }
         </span>
-        <p>{{card.id}}</p>
-        <h5 [hidden]="card.settings?.titleHidden" class="fw-bold">{{card.name || TextStringsUtil.EmptyCardTitle}}</h5>
-        <p class="text-center">{{card.url}}</p>
-  </a>
+      <h5 [hidden]="card.settings?.titleHidden" class="fw-bold">{{card.name || ('card.text.emptyTitle' | translate)}}</h5>
+      <p class="text-center">{{card.url}}</p>
+    </a>
+  }
   <app-edit-card-dialog
-    [open]="isEditDialogOpen"
+    [open]="isEditDialogOpenForCard()"
     [cardId]="card.id"
     [id]="card.id"
     [card]="card"
@@ -61,9 +92,19 @@
     (openChange)="handleDialogChange($event)">
   </app-edit-card-dialog>
   <app-delete-card-dialog
-    [open]="isDeleteDialogOpen"
+    [open]="isDeleteDialogOpenForCard()"
     [cardId]="card.id"
     [id]="card.id"
-    (remove)="remove(card.id)"
+    (remove)="remove(card)"
     (openChange)="handleDialogChange($event)">
   </app-delete-card-dialog>
+  <app-provider-key-dialog
+    [open]="isAddProviderKeyDialogOpen()"
+    [id]="card.id"
+    (openChange)="SaveProviderKey($event)">
+  </app-provider-key-dialog>
+  <app-set-location-for-provider-dialog
+    [open]="isSetProviderLocationDialogOpen()"
+    [id]="card.id"
+    (openChange)="SaveProviderLocation($event)">
+  </app-set-location-for-provider-dialog>

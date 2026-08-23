@@ -1,15 +1,41 @@
 .grid-layout{
-  padding: 1em;
-  margin-top: 3em;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, max-content));
-  grid-auto-rows: minmax(250px, max-content);
-  row-gap: 4em;
-  column-gap: 1em;
-  justify-content: left;
+  padding: 2em;
+  margin-top: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
-.grid-item-style {
+.grid-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 32px;
+  min-height: 120px;
+  padding: 16px;
+}
+
+.grid-row-theme {
+  background-color: rgba(20, 21, 23, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+}
+
+.grid-row-empty {
+  align-items: center;
+}
+
+.grid-row-insert-target {
+  min-height: 24px;
+  border: 1px dashed rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  background-color: rgba(20, 21, 23, 0.28);
+}
+
+.grid-row-insert-target:empty::before {
+  content: "";
+}
+
+.grid-card-style {
   background-color: #141517;
   border-bottom: 20px;
   border-radius: 10px;

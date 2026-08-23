@@ -2,6 +2,6 @@
 {
     public class SearchIconsResultDto
     {
-        public string[] Icons { get; set; }
+        public required string[] Icons { get; set; }
     }
 }

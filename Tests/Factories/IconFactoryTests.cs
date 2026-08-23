@@ -8,12 +8,12 @@ public class IconFactoryTests
     [Fact]
     public void Create_WithNullInput_ReturnsDefaultIcon()
     {
-        var result = IconFactory.Create(null);
+        var result = IconFactory.Create((IconModel?)null);
 
         Assert.Equal(string.Empty, result.Name);
         Assert.Equal(string.Empty, result.Type);
         Assert.Equal(string.Empty, result.Base64Data);
-        Assert.Equal("add_box e146", result.MaterialIcon);
+        Assert.Equal("box", result.MaterialIcon);
     }
 
     [Fact]
@@ -48,6 +48,6 @@ public class IconFactoryTests
 
         var result = IconFactory.Create(icon);
 
-        Assert.Equal("add_box e146", result.MaterialIcon);
+        Assert.Equal("box", result.MaterialIcon);
     }
 }

@@ -4,15 +4,15 @@ import { CardModel } from '../../models/card.Model';
 
 @Injectable({ providedIn: 'root' })
 export class CardRulesService {
-  private getSettings(component: CardModel | null | undefined) {
-    return component?.settings ?? component?.settings;
+  private getSettings(card: CardModel | null | undefined) {
+    return card?.settings ?? card?.settings;
   }
 
-  hasRequiredFields(component: CardModel | null | undefined): boolean {
-    return component !== undefined &&
-      component !== null &&
-      component.name !== '' &&
-      component.url !== '';
+  hasRequiredFields(card: CardModel | null | undefined): boolean {
+    return card !== undefined &&
+      card !== null &&
+      card.name !== '' &&
+      card.url !== '';
   }
 
   hasValidName(name: string | null | undefined): boolean {
@@ -29,41 +29,41 @@ export class CardRulesService {
       RegexStringsUtil.urlPattern.test(url);
   }
 
-  hasValidCardData(component: CardModel | null | undefined): boolean {
-    if (component === undefined ||
-      component === null ||
-      component.name === '' ||
-      component.url === '')
+  hasValidCardData(card: CardModel | null | undefined): boolean {
+    if (card === undefined ||
+      card === null ||
+      card.name === '' ||
+      card.url === '')
       return false;
 
-    return this.hasValidName(component.name) &&
-      this.hasValidUrl(component.url);
+    return this.hasValidName(card.name) &&
+      this.hasValidUrl(card.url);
   }
 
-  hasIconData(component: CardModel | null | undefined): boolean {
-    return component !== undefined &&
-      component !== null &&
-      component.iconData !== undefined &&
-      component.iconData.name !== '' &&
-      component.iconData.type !== undefined &&
-      component.iconData.base64Data !== '' &&
-      !this.getSettings(component)?.imageHidden;
+  hasIconData(card: CardModel | null | undefined): boolean {
+    return card !== undefined &&
+      card !== null &&
+      card.iconData !== undefined &&
+      card.iconData.name !== '' &&
+      card.iconData.type !== undefined &&
+      card.iconData.base64Data !== '' &&
+      !this.getSettings(card)?.imageHidden;
+  }
+  
+  hasIconUrl(card: CardModel | null | undefined): boolean {
+    return card !== undefined &&
+      card !== null &&
+      card.iconUrl !== undefined &&
+      card.iconUrl !== '' &&
+      RegexStringsUtil.iconUrlPattern.test(card.iconUrl) &&
+      !this.getSettings(card)?.imageHidden;
   }
 
-  hasIconUrl(component: CardModel | null | undefined): boolean {
-    return component !== undefined &&
-      component !== null &&
-      component.iconUrl !== undefined &&
-      component.iconUrl !== '' &&
-      RegexStringsUtil.iconUrlPattern.test(component.iconUrl) &&
-      !this.getSettings(component)?.imageHidden;
-  }
-
-  hasMaterialIcon(component: CardModel | null | undefined): boolean {
-    return component !== undefined &&
-      component !== null &&
-      component.iconData?.materialIcon !== undefined &&
-      component.iconData.materialIcon !== '' &&
-      !this.getSettings(component)?.imageHidden;
+  hasMaterialIcon(card: CardModel | null | undefined): boolean {
+    return card !== undefined &&
+      card !== null &&
+      card.iconData?.materialIcon !== undefined &&
+      card.iconData.materialIcon !== '' &&
+      !this.getSettings(card)?.imageHidden;
   }
 }

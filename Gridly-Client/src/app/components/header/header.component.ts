@@ -1,60 +1,66 @@
-import { Component, inject, signal } from "@angular/core";
-import { TextStringsUtil } from "../../constants/text.strings.util";
+import {Component, computed, inject} from "@angular/core";
+import { TranslatePipe } from '@ngx-translate/core';
 import { CommonModule } from "@angular/common";
 import { VersionService } from "../../services/version_services/version.service";
 import { AddCardDialogComponent } from "../dialogs/addCardDialog/add-card-dialog.component";
-import { CardTypes } from "../../types/card.types.enum";
 import { CardModel } from "../../models/card.Model";
-import { CardService } from "../../services/card_services/card.service";
 import { GridService } from "../../services/grid_services/grid.service";
+import {ProviderKeyDialogComponent} from "../dialogs/apiKeyDialog/provider-key-dialog.component";
+import {DialogService} from "../../services/dialog_services/dialog.service";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   standalone: true,
-  imports: [CommonModule, AddCardDialogComponent]
+  imports: [CommonModule, TranslatePipe, AddCardDialogComponent, ProviderKeyDialogComponent]
 })
 export class HeaderComponent {
 
-  #cardService = inject(CardService);
   #versionService = inject(VersionService);
   #gridService = inject(GridService);
+  #dialogService = inject(DialogService);
 
   version$ = this.#versionService.version$;
 
-  showMenu = signal(false);
+  _isAddProviderDialogOpen = this.#dialogService.isAddProviderDialogOpen
 
-  protected readonly TextStringsUtil = TextStringsUtil;
-  protected addDialogActive = false;
-  //TODO move to dialog
-  protected cardOptions = [
-    { type: CardTypes.Empty, label: 'Add empty card', description: '', icon: 'bi bi-box' },
-    { type: CardTypes.Custom, label: 'Add custom card', description: '', icon: 'bi bi-box-fill' },
-  ];
+  addDialogActive = false;
 
+  editActive = this.#gridService.inEditMode;
 
-  /* TODO variants later maybe
-
-  cardOptions = [
-    { type: 'chart', label: 'Chart', description: 'Visualize trends', icon: 'bi bi-graph-up' },
-    { type: 'table', label: 'Table', description: 'Tabular data', icon: 'bi bi-table' },
-    { type: 'kpi',   label: 'KPI',   description: 'Single metric',   icon: 'bi bi-speedometer2' },
-    { type: 'note',  label: 'Note',  description: 'Plain text note', icon: 'bi bi-sticky' }
-  ];*/
-
-  protected async add(card: CardModel): Promise<void> {
-    this.addDialogActive = !this.addDialogActive;
-    await this.#cardService.add(card);
-  }
-
-  //componentService.EditComponentsData(componentService.Components)
-  //TODO get all components and activate edit mode
-  protected setEditMode(): void {
-    this.#gridService.toggle();
+  protected add(card: CardModel): void {
+    this.addDialogActive = false;
+    this.#gridService.addCardToFirstAvailableRow(card);
   }
 
   toggleMenu(): void {
-    this.showMenu.update((showMenu) => !showMenu);
+    this.#gridService.toggleEdit();
+    if (!this.#gridService.inEditMode()) {
+      this.reloadPage();
+    }
+  }
+
+  isAddProviderDialogOpen = computed(() =>
+    this._isAddProviderDialogOpen() === 0
+  );
+
+  openAddProviderKeyDialog(): void {
+    this.#dialogService.openProviderKeyDialog(0);
+  }
+
+  async save(): Promise<void> {
+    await this.#gridService.batchSave(this.#gridService.currentRowColumns());
+    this.toggleMenu();
+  }
+
+  protected reloadPage(): void {
+    location.reload();
+  }
+
+  protected handleDialogChange(dialogId: number): void {
+    if (dialogId === 0) {
+      this.#dialogService.closeAddProviderKeyDialog();
+    }
   }
 }
