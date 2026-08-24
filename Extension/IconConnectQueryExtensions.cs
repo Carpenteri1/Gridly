@@ -13,4 +13,4 @@ public static class IconConnectQueryExtensions
             connection = connection.Where(c => c.IconId == iconId);
         return connection;
     }
-}
+}   

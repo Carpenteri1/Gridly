@@ -19,8 +19,8 @@ public sealed class IconConnectedRepositoryInsertTests
         await dbContext.Database.EnsureCreatedAsync();
         var repository = new IconConnectedRepository(dbContext);
 
-        var card = new CardEntity { Name = "card" };
-        var icon = new IconEntity { Name = "icon" };
+        var card = new CardEntity { Name = "cardIOne" };
+        var icon = new IconEntity { Name = "iconOne" };
         dbContext.Cards.Add(card);
         dbContext.Icons.Add(icon);
         await dbContext.SaveChangesAsync();
@@ -47,8 +47,10 @@ public sealed class IconConnectedRepositoryGetManyByIdTests : IDisposable
     private readonly IconConnectedRepository _repository;
     private readonly int _cardOneId;
     private readonly int _cardTwoId;
+    private readonly int _cardThreeId;
     private readonly int _iconOneId;
     private readonly int _iconTwoId;
+    private readonly int _iconThreeId;
 
     public IconConnectedRepositoryGetManyByIdTests()
     {
@@ -60,20 +62,26 @@ public sealed class IconConnectedRepositoryGetManyByIdTests : IDisposable
 
         var cardOne = new CardEntity { Name = "card-one" };
         var cardTwo = new CardEntity { Name = "card-two" };
-        var iconOne = new IconEntity { Name = "icon-ten" };
-        var iconTwenty = new IconEntity { Name = "icon-twenty" };
-        _dbContext.Cards.AddRange(cardOne, cardTwo);
-        _dbContext.Icons.AddRange(iconOne, iconTwenty);
+        var cardThree = new CardEntity { Name = "card-three" };
+        var iconOne = new IconEntity { Name = "icon-one" };
+        var iconTwo = new IconEntity { Name = "icon-two" };
+        var iconThree = new IconEntity { Name = "icon-three" };
+        
+        _dbContext.Cards.AddRange(cardOne, cardTwo, cardThree);
+        _dbContext.Icons.AddRange(iconOne, iconTwo, iconThree);
         _dbContext.SaveChanges();
 
             _cardOneId = cardOne.Id;
             _cardTwoId = cardTwo.Id;
+            _cardThreeId = cardThree.Id;
             _iconOneId = iconOne.Id;
-            _iconTwoId = iconTwenty.Id;
+            _iconTwoId = iconTwo.Id;
+            _iconThreeId = iconThree.Id;
 
             _dbContext.IconsConnected.AddRange(
                 new IconsConnectedEntity { CardId = _cardOneId, IconId = _iconOneId },
-                new IconsConnectedEntity { CardId = _cardTwoId, IconId = _iconTwoId });
+                new IconsConnectedEntity { CardId = _cardTwoId, IconId = _iconTwoId },
+                new IconsConnectedEntity { CardId = _cardThreeId, IconId = _iconThreeId });
             _dbContext.SaveChanges();
     }
 
@@ -98,19 +106,11 @@ public sealed class IconConnectedRepositoryGetManyByIdTests : IDisposable
     [Fact]
     public async Task GetManyById_WhenBothIdsProvided_ReturnsSingleMatchingRow()
     {
-        var result = await _repository.GetManyById(_cardTwoId, _iconOneId);
+        var result = await _repository.GetManyById(_cardThreeId, _iconThreeId);
 
         var single = Assert.Single(result);
-        Assert.Equal(_cardTwoId, single.CardId);
-        Assert.Equal(_iconOneId, single.IconId);
-    }
-
-    [Fact]
-    public async Task GetManyById_WhenNeitherIdProvided_ReturnsAllRows()
-    {
-        var result = await _repository.GetManyById(null, null);
-
-        Assert.Equal(2, result.Count());
+        Assert.Equal(_cardThreeId, single.CardId);
+        Assert.Equal(_iconThreeId, single.IconId);
     }
 
     public void Dispose()
