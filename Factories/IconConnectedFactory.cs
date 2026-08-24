@@ -11,7 +11,7 @@ namespace Gridly.Factories
             IconId = iconId,
             CardId = cardId,
         };
-
+        
         public static IconConnectedDtoModel Create(IconsConnectedEntity entity)
         => new IconConnectedDtoModel
         {
@@ -19,5 +19,12 @@ namespace Gridly.Factories
             IconId = entity.IconId,
             CardId = entity.CardId,
         };
+        
+        public static IconsConnectedEntity Create(IconConnectedDtoModel dto)
+            => new IconsConnectedEntity
+            {
+                IconId = dto.IconId,
+                CardId = dto.CardId,
+            };
     }
 }

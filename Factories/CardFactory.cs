@@ -7,7 +7,10 @@ namespace Gridly.Factories;
 public static class CardFactory
 {
     public static CardModel Create(CardEntity entity)
-        => new()
+    {
+        var icon = entity.IconsConnected?.Icon;
+
+        return new CardModel
         {
             Id = entity.Id,
             IndexPosition = entity.IndexPosition,
@@ -16,6 +19,39 @@ public static class CardFactory
             Url = entity.Url,
             Type = entity.Type,
             IconUrl = entity.IconUrl,
+            Settings = entity.Settings is null
+                ? null
+                : new SettingsModel
+                {
+                    Id = entity.Settings.Id,
+                    CardId = entity.Settings.CardId,
+                    Width = entity.Settings.Width,
+                    Height = entity.Settings.Height,
+                    TitleHidden = entity.Settings.TitleHidden ?? false,
+                    ImageHidden = entity.Settings.ImageHidden ?? false,
+                },
+            IconData = icon is null
+                ? null
+                : new IconModel
+                {
+                    Id = icon.Id,
+                    Name = icon.Name!,
+                    Type = icon.Type!,
+                    Base64Data = icon.Base64Data!,
+                    MaterialIcon = icon.MaterialIcon!,
+                },
+        };
+    }
+    
+    public static CardEntity Create(CardModel card)
+        => new()
+        {
+            IndexPosition = card.IndexPosition,
+            RowColumnId = card.RowColumnId,
+            Name = card.Name,
+            Url = card.Url,
+            Type = card.Type,
+            IconUrl = card.IconUrl,
         };
 
     public static CardModel Create(CardDtoModel dto)

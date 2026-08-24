@@ -1,6 +1,6 @@
 using Gridly.Data;
 using Gridly.Dtos;
-using Gridly.Entities;
+using Gridly.Extension;
 using Gridly.Factories;
 using Gridly.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -9,13 +9,9 @@ namespace Gridly.Repositories;
 
 public class IconConnectedRepository(GridlyDbContext dbContext) : IIconConnectedRepository
 {
-    public async Task<IconConnectedDtoModel> Insert(IconConnectedDtoModel model)
+    public async Task<IconConnectedDtoModel> Insert(IconConnectedDtoModel dto)
     {
-        var entity = new IconsConnectedEntity
-        {
-            CardId = model.CardId,
-            IconId = model.IconId,
-        };
+        var entity  = IconConnectedFactory.Create(dto);
         dbContext.IconsConnected.Add(entity);
         await dbContext.SaveChangesAsync();
         return IconConnectedFactory.Create(entity);
@@ -23,19 +19,13 @@ public class IconConnectedRepository(GridlyDbContext dbContext) : IIconConnected
 
     public async Task<IEnumerable<IconConnectedDtoModel>> GetManyById(int? cardId, int? iconId)
     {
-        var query = dbContext.IconsConnected.AsQueryable();
-        if (cardId != null)
-            query = query.Where(ic => ic.CardId == cardId);
-        if (iconId != null)
-            query = query.Where(ic => ic.IconId == iconId);
-
-        var entities = await query.ToListAsync();
+        var entities = await dbContext.IconsConnected
+            .WhereId(cardId, iconId)
+            .ToListAsync();
+        
         return entities.Select(IconConnectedFactory.Create);
     }
 
-    public async Task<bool> Delete(int cardId)
-    {
-        var result = await dbContext.IconsConnected.Where(ic => ic.CardId == cardId).ExecuteDeleteAsync();
-        return result > 0;
-    }
+    public async Task<bool> Delete(int cardId) => 
+        await dbContext.IconsConnected.Where(ic => ic.CardId == cardId).ExecuteDeleteAsync() > 0;
 }

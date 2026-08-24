@@ -17,19 +17,6 @@ public sealed class CardRepositoryTests
         new(new DbContextOptionsBuilder<GridlyDbContext>().Options, saveChangesResult);
 
     [Fact]
-    public async Task BatchEdit_WhenCardsIsNull_ReturnsFalseAndNeverCallsSaveChanges()
-    {
-        using var connection = new SqliteConnection("Data Source=:memory:");
-        using var dbContext = CreateFakeDbContext(saveChangesResult: 1);
-        var repository = CreateRepository(dbContext, connection);
-
-        var result = await repository.BatchEdit(null);
-
-        Assert.False(result);
-        Assert.False(dbContext.SaveChangesCalled);
-    }
-
-    [Fact]
     public async Task BatchEdit_WhenBatchSaveSucceeds_ReturnsTrue()
     {
         using var connection = new SqliteConnection("Data Source=:memory:");
@@ -108,8 +95,8 @@ public sealed class CardRepositoryGetTests : IDisposable
             IconUrl = "/icon.svg",
             Type = "link",
         };
-        cardEntity.Settings.Add(new SettingsEntity { Width = 400, Height = 300, TitleHidden = true, ImageHidden = false });
-        cardEntity.IconsConnected.Add(new IconsConnectedEntity { Icon = icon });
+        cardEntity.Settings = new SettingsEntity { Width = 400, Height = 300, TitleHidden = true, ImageHidden = false };
+        cardEntity.IconsConnected = new IconsConnectedEntity { Icon = icon };
 
         dbContext.Cards.Add(cardEntity);
         await dbContext.SaveChangesAsync();

@@ -1,11 +1,8 @@
 using Gridly.Commands;
 using Gridly.Querys;
 using Gridly.Factories;
-using Gridly.helpers;
 using Gridly.Models;
-using Gridly.Repositories;
 using Gridly.Repositories.Interfaces;
-using Gridly.Services;
 using MediatR;
 
 namespace Gridly.Handlers;
@@ -102,9 +99,9 @@ public class ColumnRowHandler(
                     settings.CardId = insertedCard.Id;
                     card.Settings = await settingsRepository.Insert(settings);
 
-                    var icon = IconFactory.Create(card.IconData);
-                    card.IconData = await iconRepository.Insert(icon);
-                    await iconConnectedRepository.Insert(IconConnectedFactory.Create(insertedCard.Id, card.IconData.Id));
+                    //var icon = IconFactory.Create(card.IconData);
+                    //card.IconData = await iconRepository.Insert(icon);
+                    //await iconConnectedRepository.Insert(IconConnectedFactory.Create(insertedCard.Id, card.IconData.Id));
                 }
             }
         }

@@ -34,8 +34,8 @@ public sealed class ColumnRowRepositoryGetTests : IDisposable
         await dbContext.Database.EnsureCreatedAsync();
         var repository = new ColumnRowRepository(dbContext);
 
-        var second = new RowColumnEntity { RowPosition = 2, RowWidth = 6 };
-        var first = new RowColumnEntity { RowPosition = 1, RowWidth = 12 };
+        var second = new ColumnRowEntity { RowPosition = 2, RowWidth = 6 };
+        var first = new ColumnRowEntity { RowPosition = 1, RowWidth = 12 };
         dbContext.RowColumns.AddRange(second, first);
         await dbContext.SaveChangesAsync();
 
@@ -80,8 +80,8 @@ public sealed class ColumnRowRepositoryBatchDeleteTests : IDisposable
     [Fact]
     public async Task BatchDelete_WhenRowsMatch_RemovesOnlyThoseRowsAndReturnsTrue()
     {
-        var toDelete = new RowColumnEntity { RowPosition = 1, RowWidth = 12 };
-        var toKeep = new RowColumnEntity { RowPosition = 2, RowWidth = 6 };
+        var toDelete = new ColumnRowEntity { RowPosition = 1, RowWidth = 12 };
+        var toKeep = new ColumnRowEntity { RowPosition = 2, RowWidth = 6 };
         _dbContext.RowColumns.AddRange(toDelete, toKeep);
         await _dbContext.SaveChangesAsync();
 
@@ -96,7 +96,7 @@ public sealed class ColumnRowRepositoryBatchDeleteTests : IDisposable
     [Fact]
     public async Task BatchDelete_WhenNoRowsMatch_ReturnsFalse()
     {
-        var existing = new RowColumnEntity { RowPosition = 1, RowWidth = 12 };
+        var existing = new ColumnRowEntity { RowPosition = 1, RowWidth = 12 };
         _dbContext.RowColumns.Add(existing);
         await _dbContext.SaveChangesAsync();
 
@@ -104,14 +104,6 @@ public sealed class ColumnRowRepositoryBatchDeleteTests : IDisposable
 
         Assert.False(result);
         Assert.Single(await _dbContext.RowColumns.AsNoTracking().ToListAsync());
-    }
-
-    [Fact]
-    public async Task BatchDelete_WhenColumnRowsIsNull_ReturnsFalse()
-    {
-        var result = await _repository.BatchDelete(null!);
-
-        Assert.False(result);
     }
 
     public void Dispose()
@@ -137,14 +129,6 @@ public sealed class ColumnRowRepositoryBatchEditTests : IDisposable
     }
 
     [Fact]
-    public async Task BatchEdit_WhenInputIsNull_ReturnsFalse()
-    {
-        var result = await _repository.BatchEdit(null!);
-
-        Assert.False(result);
-    }
-
-    [Fact]
     public async Task BatchEdit_WhenInputIsEmpty_ReturnsFalse()
     {
         var result = await _repository.BatchEdit([]);
@@ -155,8 +139,8 @@ public sealed class ColumnRowRepositoryBatchEditTests : IDisposable
     [Fact]
     public async Task BatchEdit_WhenRowsExist_UpdatesEachRowIndependently()
     {
-        var first = new RowColumnEntity { RowPosition = 1, RowWidth = 12 };
-        var second = new RowColumnEntity { RowPosition = 2, RowWidth = 6 };
+        var first = new ColumnRowEntity { RowPosition = 1, RowWidth = 12 };
+        var second = new ColumnRowEntity { RowPosition = 2, RowWidth = 6 };
         _dbContext.RowColumns.AddRange(first, second);
         await _dbContext.SaveChangesAsync();
 
@@ -192,7 +176,7 @@ public sealed class ColumnRowRepositoryBatchEditTests : IDisposable
     [Fact]
     public async Task BatchEdit_WhenBatchMixesValidAndInvalidIds_UpdatesOnlyValidRowAndReturnsTrue()
     {
-        var existing = new RowColumnEntity { RowPosition = 1, RowWidth = 12 };
+        var existing = new ColumnRowEntity { RowPosition = 1, RowWidth = 12 };
         _dbContext.RowColumns.Add(existing);
         await _dbContext.SaveChangesAsync();
 

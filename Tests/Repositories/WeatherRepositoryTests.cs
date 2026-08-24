@@ -54,7 +54,7 @@ public sealed class WeatherRepositoryTests : IDisposable
     private async Task<(int card1, int card2)> SeedTwoCardsAsync()
     {
         var dbContext = CreateDbContext();
-        var rowColumn = new RowColumnEntity { RowPosition = 1, RowWidth = 1 };
+        var rowColumn = new ColumnRowEntity { RowPosition = 1, RowWidth = 1 };
         dbContext.RowColumns.Add(rowColumn);
         await dbContext.SaveChangesAsync();
 

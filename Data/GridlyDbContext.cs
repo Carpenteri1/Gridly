@@ -9,7 +9,7 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
     public DbSet<SettingsEntity> Settings => Set<SettingsEntity>();
     public DbSet<IconsConnectedEntity> IconsConnected => Set<IconsConnectedEntity>();
     public DbSet<IconEntity> Icons => Set<IconEntity>();
-    public DbSet<RowColumnEntity> RowColumns => Set<RowColumnEntity>();
+    public DbSet<ColumnRowEntity> RowColumns => Set<ColumnRowEntity>();
     public DbSet<WidgetEntity> Widgets => Set<WidgetEntity>();
     public DbSet<WidgetTypeEntity> WidgetTypes => Set<WidgetTypeEntity>();
     public DbSet<WeatherDataConnectionEntity> WeatherDataConnections => Set<WeatherDataConnectionEntity>();
@@ -23,10 +23,9 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
             e.ToTable("Card");
             e.HasKey(c => c.Id);
             e.Property(c => c.Url).HasColumnName("URL");
-            e.HasMany(c => c.Settings).WithOne(s => s.Card)
-                .HasForeignKey(s => s.CardId).OnDelete(DeleteBehavior.NoAction);
-            e.HasMany(c => c.IconsConnected).WithOne(ic => ic.Card)
-                .HasForeignKey(ic => ic.CardId).OnDelete(DeleteBehavior.NoAction);
+            e.HasOne(c => c.Settings).WithOne(x => x.Card)
+                .HasForeignKey<SettingsEntity>(s => s.CardId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<SettingsEntity>(e =>
@@ -49,7 +48,7 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
             e.HasKey(i => i.Id);
         });
 
-        modelBuilder.Entity<RowColumnEntity>(e =>
+        modelBuilder.Entity<ColumnRowEntity>(e =>
         {
             e.ToTable("RowColumn");
             e.HasKey(r => r.Id);
