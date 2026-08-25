@@ -25,4 +25,7 @@ public static class ColumnRowFactory
 
     public static IEnumerable<ColumnRowModel> CreateMany(IEnumerable<ColumnRowEntity> entities)
         => entities.Select(Create);
+    
+    public static IEnumerable<ColumnRowEntity> CreateMany(IEnumerable<ColumnRowModel> entities)
+        => entities.Select(Create);
 }

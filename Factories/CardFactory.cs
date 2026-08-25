@@ -52,6 +52,19 @@ public static class CardFactory
             Url = card.Url,
             Type = card.Type,
             IconUrl = card.IconUrl,
+            IconsConnected = new IconsConnectedEntity
+            {
+                CardId = card.Id,
+                IconId = card.IconData!.Id
+            },
+            Settings = new SettingsEntity
+            {
+                CardId = card.Id,
+                Height = card.Settings!.Height,
+                Width = card.Settings!.Width,
+                ImageHidden = card.Settings.ImageHidden,
+                TitleHidden = card.Settings.TitleHidden,
+            }
         };
 
     public static CardModel Create(CardDtoModel dto)
@@ -82,7 +95,9 @@ public static class CardFactory
                 ImageHidden = dto.ImageHidden
             }
         };
-
     public static IEnumerable<CardModel> CreateMany(IEnumerable<CardDtoModel> dtos) 
         => dtos.Select(Create);
+    
+    public static IEnumerable<CardEntity> CreateMany(IEnumerable<CardModel> models) 
+        => models.Select(Create);
 }
