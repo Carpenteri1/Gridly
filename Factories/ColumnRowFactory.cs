@@ -11,7 +11,7 @@ public static class ColumnRowFactory
             Id = entity.Id,
             RowPosition = entity.RowPosition,
             RowWidth = entity.RowWidth,
-            Cards = []
+            Cards = entity.Cards?.Select(CardFactory.Create) ?? []
         };
     
     public static ColumnRowEntity Create(ColumnRowModel model)
@@ -24,8 +24,5 @@ public static class ColumnRowFactory
 
 
     public static IEnumerable<ColumnRowModel> CreateMany(IEnumerable<ColumnRowEntity> entities)
-        => entities.Select(Create);
-    
-    public static IEnumerable<ColumnRowEntity> CreateMany(IEnumerable<ColumnRowModel> entities)
         => entities.Select(Create);
 }

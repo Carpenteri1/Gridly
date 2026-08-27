@@ -52,14 +52,14 @@ public static class CardFactory
             Url = card.Url,
             Type = card.Type,
             IconUrl = card.IconUrl,
-            IconsConnected = new IconsConnectedEntity
-            {
-                CardId = card.Id,
-                IconId = card.IconData!.Id
-            },
+            IconsConnected = card.IconData is null
+                ? null
+                : new IconsConnectedEntity
+                {
+                    Icon = IconFactory.Create(card.IconData)
+                },
             Settings = new SettingsEntity
             {
-                CardId = card.Id,
                 Height = card.Settings!.Height,
                 Width = card.Settings!.Width,
                 ImageHidden = card.Settings.ImageHidden,
