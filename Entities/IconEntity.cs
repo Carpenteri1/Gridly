@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Gridly.Entities;
 
 public class IconEntity
@@ -8,5 +10,6 @@ public class IconEntity
     public string? Base64Data { get; set; }
     public string? MaterialIcon { get; set; }
 
+    [JsonIgnore]
     public ICollection<IconsConnectedEntity> IconsConnected { get; set; } = [];
 }

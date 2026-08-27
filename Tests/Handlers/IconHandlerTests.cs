@@ -1,11 +1,10 @@
 using Gridly.Querys;
 using Gridly.Constants;
 using Gridly.Dtos;
+using Gridly.Handlers;
 using Gridly.Tests.Infrastructure;
 
 namespace Gridly.Tests.Handlers;
-
-using SearchIconsHandler = global::CardHandler;
 
 public class IconHandlerTests
 {
@@ -15,7 +14,7 @@ public class IconHandlerTests
         var cache = new FakeMemoryCashingService();
         cache.Seed("mat-icons", new[] { "home e001", "grid_view e002", "search e003" });
         var httpClient = new FakeHttpClientServices();
-        var handler = new SearchIconsHandler(httpClient, cache);
+        var handler = new IconHandler(httpClient, cache);
 
         var result = await handler.Handle(new SearchIconsQuery { SearchTerm = "GRID" }, CancellationToken.None);
         var payload = ResultAssertions.AssertOk<SearchIconsResultDto>(result);
@@ -33,7 +32,7 @@ public class IconHandlerTests
         {
             Response = (true, "home e001\ngrid_view e002\nsearch e003")
         };
-        var handler = new SearchIconsHandler(httpClient, cache);
+        var handler = new IconHandler(httpClient, cache);
 
         var result = await handler.Handle(new SearchIconsQuery { SearchTerm = "e00" }, CancellationToken.None);
         var payload = ResultAssertions.AssertOk<SearchIconsResultDto>(result);
@@ -49,7 +48,7 @@ public class IconHandlerTests
     {
         var cache = new FakeMemoryCashingService();
         var httpClient = new FakeHttpClientServices { Response = (true, string.Empty) };
-        var handler = new SearchIconsHandler(httpClient, cache);
+        var handler = new IconHandler(httpClient, cache);
 
         var result = await handler.Handle(new SearchIconsQuery { SearchTerm = "grid" }, CancellationToken.None);
 
@@ -65,7 +64,7 @@ public class IconHandlerTests
         var cache = new FakeMemoryCashingService();
         cache.Seed("mat-icons", icons);
         var httpClient = new FakeHttpClientServices();
-        var handler = new SearchIconsHandler(httpClient, cache);
+        var handler = new IconHandler(httpClient, cache);
 
         var result = await handler.Handle(new SearchIconsQuery { SearchTerm = "grid_" }, CancellationToken.None);
         var payload = ResultAssertions.AssertOk<SearchIconsResultDto>(result);
