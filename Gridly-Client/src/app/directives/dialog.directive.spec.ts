@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DialogDirective } from './dialog.directive';
@@ -6,6 +6,10 @@ import { DialogDirective } from './dialog.directive';
 @Component({
   standalone: true,
   imports: [DialogDirective],
+  // Angular 22 defaults components without an explicit strategy to OnPush; this test host
+  // reassigns @Input()-bound fields directly and relies on plain (non-OnPush) re-checks.
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
+  changeDetection: ChangeDetectionStrategy.Default,
   template: `
     <dialog appDialogWindow [dialogId]="dialogId" [id]="id" [open]="open" (openChange)="onOpenChange($event)">
       <button type="button" class="inner-btn">inner</button>
