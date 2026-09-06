@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { CardModel } from '../models/card.Model';
@@ -7,6 +7,10 @@ import { ResizableDirective } from './resizable.directive';
 @Component({
   standalone: true,
   imports: [ResizableDirective],
+  // Angular 22 defaults components without an explicit strategy to OnPush; this test host
+  // reassigns @Input()-bound fields directly and relies on plain (non-OnPush) re-checks.
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
+  changeDetection: ChangeDetectionStrategy.Default,
   template: `
     <div class="grid-card-style">
       <div class="resize-handle" appMakeResizable [canResize]="canResize" [targetCard]="targetCard"></div>
