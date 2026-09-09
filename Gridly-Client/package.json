@@ -9,7 +9,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-devkit/build-angular": "21.2.19",
+    "@angular-devkit/build-angular": "22.1.7",
     "@angular/common": "21.2.19",
     "@angular/compiler": "21.2.19 ",
     "@angular/core": "21.2.19",
