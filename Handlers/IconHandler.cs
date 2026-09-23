@@ -4,7 +4,9 @@ using Gridly.Dtos;
 using Gridly.Services;
 using MediatR;
 
-public class CardHandler(
+namespace Gridly.Handlers;
+
+public class IconHandler(
     IHttpClientServices httpClientServices,
     IMemoryCashingService memoryCache) : 
         IRequestHandler<GetIconQuery, IResult>,

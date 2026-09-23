@@ -9,7 +9,7 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
     public DbSet<SettingsEntity> Settings => Set<SettingsEntity>();
     public DbSet<IconsConnectedEntity> IconsConnected => Set<IconsConnectedEntity>();
     public DbSet<IconEntity> Icons => Set<IconEntity>();
-    public DbSet<RowColumnEntity> RowColumns => Set<RowColumnEntity>();
+    public DbSet<ColumnRowEntity> RowColumns => Set<ColumnRowEntity>();
     public DbSet<WidgetEntity> Widgets => Set<WidgetEntity>();
     public DbSet<WidgetTypeEntity> WidgetTypes => Set<WidgetTypeEntity>();
     public DbSet<WeatherDataConnectionEntity> WeatherDataConnections => Set<WeatherDataConnectionEntity>();
@@ -23,10 +23,9 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
             e.ToTable("Card");
             e.HasKey(c => c.Id);
             e.Property(c => c.Url).HasColumnName("URL");
-            e.HasMany(c => c.Settings).WithOne(s => s.Card)
-                .HasForeignKey(s => s.CardId).OnDelete(DeleteBehavior.NoAction);
-            e.HasMany(c => c.IconsConnected).WithOne(ic => ic.Card)
-                .HasForeignKey(ic => ic.CardId).OnDelete(DeleteBehavior.NoAction);
+            e.HasOne(c => c.Settings).WithOne(x => x.Card)
+                .HasForeignKey<SettingsEntity>(s => s.CardId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<SettingsEntity>(e =>
@@ -40,7 +39,7 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
             e.ToTable("IconsConnected");
             e.HasKey(ic => ic.Id);
             e.HasOne(ic => ic.Icon).WithMany(i => i.IconsConnected)
-                .HasForeignKey(ic => ic.IconId).OnDelete(DeleteBehavior.NoAction);
+                .HasForeignKey(ic => ic.IconId).OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<IconEntity>(e =>
@@ -49,22 +48,34 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
             e.HasKey(i => i.Id);
         });
 
-        modelBuilder.Entity<RowColumnEntity>(e =>
+        modelBuilder.Entity<ColumnRowEntity>(e =>
         {
             e.ToTable("RowColumn");
             e.HasKey(r => r.Id);
+            e.HasMany(c => c.Cards)
+                .WithOne()
+                .HasForeignKey(c => c.RowColumnId);
         });
 
         modelBuilder.Entity<WidgetEntity>(e =>
         {
             e.ToTable("Widget");
             e.HasKey(w => w.Id);
+            e.HasData(
+                new WidgetEntity { Id = 1, Description = "", Icon = "cloud", Label = "Weather", WidgetType = 3 },
+                new WidgetEntity { Id = 2, Description = "", Icon = "box", Label = "Custom", WidgetType = 2 },
+                new WidgetEntity { Id = 3, Description = "", Icon = "Box", Label = "Empty", WidgetType = 1 }
+            );
         });
 
         modelBuilder.Entity<WidgetTypeEntity>(e =>
         {
             e.ToTable("WidgetType");
             e.HasKey(wt => wt.Id);
+            e.HasData(
+                new WidgetTypeEntity { Id = 1, Name = "Empty"},
+                new WidgetTypeEntity { Id = 2, Name = "Custom"}, 
+                new WidgetTypeEntity { Id = 3, Name = "Weather"});
         });
 
         modelBuilder.Entity<WeatherDataConnectionEntity>(e =>
@@ -79,6 +90,10 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
             e.ToTable("WeatherData");
             e.HasKey(w => w.Id);
             e.HasIndex(w => w.Address).IsUnique();
+            e.HasData(
+                new WeatherDataEntity { Id = 1, Address = "London", Description = "Cloudy", Temp = 10, FeelsLike = 11, Humidity = 50, WindSpeed = 5, WindDir = 180, FetchedAt = DateTime.UtcNow, Timezone = "Europe/London"},
+                new WeatherDataEntity { Id = 2, Address = "Stockholm", Description = "Clear", Temp = 20, FeelsLike = 20, Humidity = 50, WindSpeed = 5, WindDir = 180, FetchedAt = DateTime.UtcNow, Timezone = "Europe/Stockholm"}
+            );
         });
 
         modelBuilder.Entity<ProviderKeyEntity>(e =>
