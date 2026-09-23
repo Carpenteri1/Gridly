@@ -30,7 +30,7 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Install Angular dependencies
-        run: npm install -D typescript
+        run: npm install
         working-directory:  ${{ env.ANGULAR_PATH }}
 
       - name: Build Angular
