@@ -1,4 +1,5 @@
 using Gridly.Configuration;
+using Gridly.Data;
 using Gridly.EndPoints;
 
 var appDirectory = Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
@@ -16,7 +17,8 @@ builder.Services.AddScoped();
 builder.Services.AddSingleton();
 
 var app = builder.Build();
-
+using var scope = app.Services.CreateScope();
+scope.ServiceProvider.GetRequiredService<GridlyDbContext>().Database.EnsureCreated();
 app.MapApiEndpoints();
 app.UseStaticFiles();
 

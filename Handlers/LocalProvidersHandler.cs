@@ -1,7 +1,6 @@
 using Gridly.Enums;
 using Gridly.Models;
 using Gridly.Querys;
-using Gridly.Repositories;
 using Gridly.Repositories.Interfaces;
 using MediatR;
 

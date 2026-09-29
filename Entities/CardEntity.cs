@@ -10,6 +10,6 @@ public class CardEntity
     public string? Type { get; set; }
     public string? IconUrl { get; set; }
 
-    public ICollection<SettingsEntity> Settings { get; set; } = [];
-    public ICollection<IconsConnectedEntity> IconsConnected { get; set; } = [];
+    public SettingsEntity? Settings { get; set; }
+    public IconsConnectedEntity? IconsConnected { get; set; }
 }

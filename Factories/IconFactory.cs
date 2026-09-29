@@ -5,8 +5,8 @@ namespace Gridly.Factories
 {
     public static class IconFactory
     {
-        public static IconModel Create(IconModel? icon)
-       => new IconModel
+        public static IconEntity Create(IconModel? icon)
+       => new IconEntity()
        {
            Name = icon?.Name ?? string.Empty,
            Type = icon?.Type ?? string.Empty,

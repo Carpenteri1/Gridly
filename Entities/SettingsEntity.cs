@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Gridly.Entities;
 
 public class SettingsEntity
@@ -9,5 +11,6 @@ public class SettingsEntity
     public bool? TitleHidden { get; set; }
     public bool? ImageHidden { get; set; }
 
+    [JsonIgnore]
     public CardEntity? Card { get; set; }
 }

@@ -1,5 +1,5 @@
 using Gridly.Data;
-using Gridly.Entities;
+using Gridly.Extension;
 using Gridly.Models;
 using Gridly.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +10,7 @@ public class ColumnRowRepository(GridlyDbContext dbContext) : IColumnRowReposito
 {
     public async Task<ColumnRowModel> Insert(ColumnRowModel columnRow)
     {
-        var entity = new RowColumnEntity
-        {
-            RowPosition = columnRow.RowPosition,
-            RowWidth = columnRow.RowWidth,
-        };
+        var entity = Factories.ColumnRowFactory.Create(columnRow);
         dbContext.RowColumns.Add(entity);
         await dbContext.SaveChangesAsync();
         return Factories.ColumnRowFactory.Create(entity);
@@ -29,35 +25,18 @@ public class ColumnRowRepository(GridlyDbContext dbContext) : IColumnRowReposito
         return Factories.ColumnRowFactory.CreateMany(entities);
     }
 
-    public async Task<bool> BatchDelete(IEnumerable<ColumnRowModel> columnRows)
-    {
-        if (columnRows is null)
-            return false;
-
-        var ids = columnRows.Select(r => r.Id).ToArray();
-
-        var result = await dbContext.RowColumns
-            .Where(r => ids.Contains(r.Id))
-            .ExecuteDeleteAsync();
-
-        return result > 0;
-    }
+    public async Task<bool> BatchDelete(IEnumerable<ColumnRowModel> columnRows) 
+        => await dbContext.RowColumns
+            .SelectMatchingRows(columnRows)
+            .ExecuteDeleteAsync() > 0;
     
     public async Task<bool> BatchEdit(IEnumerable<ColumnRowModel> columnRows)
     {
-        if (columnRows is null)
-            return false;
-
-        var rows = columnRows.ToList();
-        if (rows.Count == 0)
-            return false;
-
-        var ids = rows.Select(r => r.Id).ToList();
         var entities = await dbContext.RowColumns
-            .Where(e => ids.Contains(e.Id))
+            .SelectMatchingRows(columnRows)
             .ToDictionaryAsync(e => e.Id);
-
-        foreach (var row in rows)
+        
+        foreach (var row in columnRows.ToList())
         {
             if (!entities.TryGetValue(row.Id, out var entity))
                 continue;
@@ -66,7 +45,6 @@ public class ColumnRowRepository(GridlyDbContext dbContext) : IColumnRowReposito
             entity.RowWidth = row.RowWidth;
         }
 
-        var result = await dbContext.SaveChangesAsync();
-        return result > 0;
+        return await dbContext.SaveChangesAsync() > 0;
     }
 }
