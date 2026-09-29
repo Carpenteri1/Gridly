@@ -46,6 +46,7 @@ public static class CardFactory
     public static CardEntity Create(CardModel card)
         => new()
         {
+            Id = card.Id,
             IndexPosition = card.IndexPosition,
             RowColumnId = card.RowColumnId,
             Name = card.Name,

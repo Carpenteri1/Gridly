@@ -28,70 +28,68 @@ public class ColumnRowHandler(
     public async Task<IResult> Handle(BatchSaveColumnRowCommands commands, CancellationToken cancellationToken)
     {
         var existingRows = await dbContext.RowColumns
-            .GetRowsAndConnectedCards()
-            .ToListAsync(cancellationToken);
-        
-        if (existingRows.Count == 0)
-        {
-            var rowEntities = commands.Select(command =>
-            {
-                var rowEntity = ColumnRowFactory.Create(command);
-                rowEntity.Cards = CardFactory.CreateMany(command.Cards).ToList();
-                return rowEntity;
-            }).ToList();
+            .ToDictionaryAsync(row => row.Id, cancellationToken);
+        var existingCards = await dbContext.Cards
+            .ToDictionaryAsync(card => card.Id, cancellationToken);
 
-            await dbContext.RowColumns.AddRangeAsync(rowEntities, cancellationToken);
-            await dbContext.SaveChangesAsync(cancellationToken);
+        var keptRowIds = new HashSet<int>();
+        var keptCardIds = new HashSet<int>();
 
-            return Results.Ok();
-        }
-        
-        //TODO seemes to break view below here
-        var rowsToDelete = commands.Where(command => command.Cards.Count() == 0).ToList();
-        var rowsToUpdate = commands.Where(command => command.Cards.Count() > 0).ToList();
-        
-        if (rowsToUpdate.Any())
+        foreach (var command in commands.Where(command => command.Cards.Any()))
         {
-            foreach (var existingRow in existingRows)
+            if (!existingRows.TryGetValue(command.Id, out var rowEntity))
             {
-                foreach (var row in rowsToUpdate)
+                rowEntity = ColumnRowFactory.Create(command);
+                rowEntity.Id = 0;
+                dbContext.RowColumns.Add(rowEntity);
+            }
+
+            keptRowIds.Add(rowEntity.Id);
+            rowEntity.RowPosition = command.RowPosition;
+            rowEntity.RowWidth = command.RowWidth;
+            rowEntity.Cards ??= [];
+
+            foreach (var card in command.Cards)
+            {
+                if (!existingCards.TryGetValue(card.Id, out var cardEntity))
                 {
-                    if (existingRow.Id != row.Id) continue;
-                    
-                    //Move card to new row
-                    if (existingRow.Cards != null && 
-                        existingRow.Cards.Count != row.Cards.Count())
-                    {
-                        foreach (var existingCard in existingRow.Cards)
-                        {
-                            foreach (var card in row.Cards)
-                            {
-                                if (card.Id != existingCard.Id) continue;
-                                existingCard.IndexPosition = card.IndexPosition;
-                                existingCard.RowColumnId = card.RowColumnId;
-                            }   
-                        }
-                        
-                    }
-                    existingRow.Cards = Factories.CardFactory.CreateMany(row.Cards).ToList();
+                    rowEntity.Cards.Add(CardFactory.Create(card));
+                    continue;
                 }
-            }   
-        }
 
-        if (rowsToDelete.Any())
-        {
-            foreach (var existingRow in existingRows)
-            {
-                foreach (var row in rowsToDelete)
-                {
-                    if (existingRow.Id != row.Id) continue;
-                    dbContext.RowColumns.Remove(existingRow);
-                }   
+                keptCardIds.Add(cardEntity.Id);
+
+                cardEntity.IndexPosition = card.IndexPosition;
+                
+                if (!rowEntity.Cards.Contains(cardEntity))
+                    rowEntity.Cards.Add(cardEntity);
             }
         }
         
-        await dbContext.SaveChangesAsync(cancellationToken);
+        dbContext.ChangeTracker.DetectChanges();
 
-        return rowsToUpdate.Any() ? Results.Ok(rowsToUpdate) : Results.NoContent();
+        var cardIdsToDelete = existingCards.Keys
+            .Where(cardId => !keptCardIds.Contains(cardId))
+            .ToList();
+
+        if (cardIdsToDelete.Count > 0)
+        {
+            var iconLinksToDelete = await dbContext.IconsConnected
+                .Where(link => link.CardId != null && cardIdsToDelete.Contains(link.CardId.Value))
+                .ToListAsync(cancellationToken);
+            var weatherLinksToDelete = await dbContext.WeatherDataConnections
+                .Where(link => cardIdsToDelete.Contains(link.CardId))
+                .ToListAsync(cancellationToken);
+
+            dbContext.IconsConnected.RemoveRange(iconLinksToDelete);
+            dbContext.WeatherDataConnections.RemoveRange(weatherLinksToDelete);
+            dbContext.Cards.RemoveRange(cardIdsToDelete.Select(cardId => existingCards[cardId]));
+        }
+
+        dbContext.RowColumns.RemoveRange(existingRows.Values
+            .Where(row => !keptRowIds.Contains(row.Id)));
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return Results.Ok();
     }
 }
