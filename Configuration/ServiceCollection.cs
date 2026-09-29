@@ -20,9 +20,7 @@ public static class ServiceCollection
         services.AddScoped<ICardRepository,CardRepository>();
         services.AddScoped<IColumnRowRepository,ColumnRowRepository>();
         services.AddScoped<ISettingsRepository,SettingsRepository>();
-        services.AddScoped<IIconRepository,IconRepository>();
         services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
-        services.AddScoped<IWidgetRepository,WidgetRepository>();
         services.AddScoped<ILocalProvidersRepository,LocalProversRepository>();
         services.AddScoped<IWeatherRepository,WeatherRepository>();
         services.AddScoped<IWeatherDataConnectionRepository,WeatherDataConnectionRepository>();

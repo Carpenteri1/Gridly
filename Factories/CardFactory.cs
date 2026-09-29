@@ -98,7 +98,4 @@ public static class CardFactory
         };
     public static IEnumerable<CardModel> CreateMany(IEnumerable<CardDtoModel> dtos) 
         => dtos.Select(Create);
-    
-    public static IEnumerable<CardEntity> CreateMany(IEnumerable<CardModel> models) 
-        => models.Select(Create);
 }
