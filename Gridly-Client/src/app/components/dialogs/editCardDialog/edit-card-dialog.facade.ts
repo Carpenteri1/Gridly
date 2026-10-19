@@ -36,7 +36,7 @@ export class EditCardDialogFacade {
   }
 
   get isWeatherCard(): boolean {
-    return this.card.type === CardTypes.Weather;
+    return this.card.widgetType === CardTypes.Weather;
   }
 
   onSearch(input: string): void {
@@ -47,10 +47,10 @@ export class EditCardDialogFacade {
 
     const iconData = new IconModel();
     iconData.materialIcon = event;
-    iconData.type = "";
+    iconData.fileType = "";
     iconData.name = "";
     iconData.base64Data = "";
-    iconData.type = "";
+    iconData.fileType = "";
 
     this.card.iconData = iconData;
     this.card.iconData.materialIcon = event;

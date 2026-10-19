@@ -1,23 +1,22 @@
 using Gridly.Commands;
 using Gridly.Constants;
-using Gridly.EndPoints;
+using Gridly.Data;
 using Gridly.EndPoints.Interfaces;
 using Gridly.Enums;
 using Gridly.Factories;
 using Gridly.Querys;
-using Gridly.Repositories;
 using Gridly.Repositories.Interfaces;
 using Gridly.Services;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Handlers;
 
 public class WeatherHandler(
     IWeatherEndPoint weatherEndpoint,
-    IWeatherRepository weatherRepository,
-    IWeatherDataConnectionRepository weatherDataConnectionRepository,
     ILocalProvidersRepository localProvidersRepository,
-    IProviderKeysProtectionService providerKeysProtectionService) :
+    IProviderKeysProtectionService providerKeysProtectionService,
+    GridlyDbContext dbContext) :
     IRequestHandler<GetWeatherQuery, IResult>,
     IRequestHandler<GetVisualCrossingDataQuery, IResult>,
     IRequestHandler<GetStoredWeatheDataQuery, IResult>,
@@ -27,7 +26,10 @@ public class WeatherHandler(
 
     public async Task<IResult> Handle(GetWeatherQuery query, CancellationToken cancellationToken)
     {
-        var weather = await weatherRepository.Get(query.Address);
+        var weather = await dbContext.WeatherData
+            .AsNoTracking()
+            .FirstOrDefaultAsync(w => w.Address == query.Address,cancellationToken);
+        
         if(weather is null) return Results.NotFound();
 
         var isFresh = DateTime.UtcNow - weather.FetchedAt < CacheWindow;
@@ -36,13 +38,15 @@ public class WeatherHandler(
 
     public async Task<IResult> Handle(GetVisualCrossingDataQuery query, CancellationToken cancellationToken)
     {
-        var storedKey = await localProvidersRepository.Get(EndpointStrings.VisualCrossingProvider);
+        var storedKeyEntity = await dbContext.ProviderKeys
+            .FirstOrDefaultAsync(p => p.Provider == EndpointStrings.VisualCrossingProvider,cancellationToken);
         
-        if(storedKey is null) return Results.Unauthorized();
-        if(storedKey.Status == nameof(ProvidersKeyStatusEnum.Invalid) || 
-           storedKey.Status is nameof(ProvidersKeyStatusEnum.Unknown)) return Results.Unauthorized();
-        
-        var rawKey = providerKeysProtectionService.Unprotect(storedKey.EncryptedKey);
+        if (storedKeyEntity is null ||
+            storedKeyEntity.Status == nameof(ProvidersKeyStatusEnum.Invalid) || 
+            storedKeyEntity.Status is nameof(ProvidersKeyStatusEnum.Unknown) ||
+            storedKeyEntity.EncryptedKey is null) return Results.Unauthorized();
+
+        var rawKey = providerKeysProtectionService.Unprotect(storedKeyEntity.EncryptedKey);
         var (status, dto) = await weatherEndpoint.Get(query.Address, rawKey);
         
         if(dto is null) return Results.NotFound();
@@ -53,11 +57,12 @@ public class WeatherHandler(
                 await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Invalid));
                 return Results.Unauthorized();
             case StatusCodes.Status403Forbidden:
-                await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Valid));
+                await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Invalid));
                 return Results.Forbid();
             case < StatusCodes.Status200OK or >= StatusCodes.Status300MultipleChoices:
                 return Results.BadRequest();
             case StatusCodes.Status200OK:
+                //TODO move over to EF corex
                 await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Valid));
                 var weather = WeatherDataFactory.Create(dto);
                 weather.FetchedAt = DateTime.UtcNow;
@@ -69,21 +74,31 @@ public class WeatherHandler(
     
     public async Task<IResult> Handle(GetStoredWeatheDataQuery request, CancellationToken cancellationToken)
     {
-        var storedWeatherData = await weatherRepository.GetStoredWeatherData();
-        return storedWeatherData is not null ? Results.Ok(storedWeatherData) : Results.NoContent();
+        var weatherData = await dbContext.WeatherData
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+        
+        return weatherData.Any() ? Results.Ok(weatherData.ToList()) : Results.NoContent();
     }
 
     public async Task<IResult> Handle(SaveWeatherCommand command, CancellationToken cancellationToken)
     {
-        var weather = await weatherRepository.Get(command.Weather.Address);
-        if (weather is null)
-            weather = await weatherRepository.Insert(command.Weather);
-     
-        var weatherConnnection = (await weatherDataConnectionRepository.GetManyById(command.CardId, null)).FirstOrDefault();
+        var weatherEntity = await dbContext.WeatherData
+            .FirstOrDefaultAsync(w => w.Address == command.Weather.Address, cancellationToken);
 
-        if (weatherConnnection is null || weatherConnnection.WeatherId != weather.Id)
-            await weatherDataConnectionRepository.Upsert(WeatherDataConnectionFactory.Create(command.CardId, weather.Id));
+        if (weatherEntity is null)
+            weatherEntity = WeatherDataFactory.Create(command.Weather);
         
-        return Results.Ok();
+        var weatherDataConnectionEntity = await dbContext.WeatherDataConnections
+            .FirstOrDefaultAsync(w => w.CardId == command.CardId,cancellationToken);
+
+        if (weatherDataConnectionEntity is null || weatherDataConnectionEntity.WeatherId != weatherEntity.Id)
+        { 
+            weatherDataConnectionEntity = WeatherDataConnectionFactory.Create(command.CardId, weatherEntity.Id);
+            await dbContext.WeatherDataConnections.AddAsync(weatherDataConnectionEntity,cancellationToken);
+        }
+
+        var success = await dbContext.SaveChangesAsync(cancellationToken);
+        return success == 1 ? Results.Ok() : Results.Problem(statusCode: StatusCodes.Status500InternalServerError, detail: "ErrorSavingWeather");
     }
 }

@@ -9,7 +9,7 @@ namespace Gridly.Factories
        => new IconEntity()
        {
            Name = icon?.Name ?? string.Empty,
-           Type = icon?.Type ?? string.Empty,
+           FileType = icon?.FileType ?? string.Empty,
            Base64Data = icon?.Base64Data ?? string.Empty,
            MaterialIcon = icon?.MaterialIcon ?? "box"
        };
@@ -19,7 +19,7 @@ namespace Gridly.Factories
        {
            Id = entity.Id,
            Name = entity.Name ?? string.Empty,
-           Type = entity.Type ?? string.Empty,
+           FileType = entity.FileType ?? string.Empty,
            Base64Data = entity.Base64Data ?? string.Empty,
            MaterialIcon = entity.MaterialIcon ?? "box"
        };

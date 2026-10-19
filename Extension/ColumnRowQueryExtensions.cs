@@ -6,10 +6,10 @@ namespace Gridly.Extension;
 public static class ColumnRowQueryExtensions
 {
     public static IQueryable<ColumnRowEntity> SelectMatchingRows(
-        this IQueryable<ColumnRowEntity> row, 
+        this IQueryable<ColumnRowEntity> rowEntities, 
         IEnumerable<ColumnRowModel> columnRows)
     {
         var ids = columnRows.Select(r => r.Id).ToArray();
-        return row.Where(r => ids.Contains(r.Id));
+        return rowEntities.Where(r => ids.Contains(r.Id));
     }
 }

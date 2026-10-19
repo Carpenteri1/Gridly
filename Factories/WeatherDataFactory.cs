@@ -35,4 +35,22 @@ public class WeatherDataFactory
             FetchedAt = dto.fetchedAt,
         };
     }
+    
+    public static WeatherDataEntity Create(WeatherDataModel weatherModel)
+    {
+        return new (){
+            Address = weatherModel.Address,
+            Timezone = weatherModel.Timezone,
+            Description = weatherModel.Description,
+            Temp = weatherModel.Temp,
+            FeelsLike = weatherModel.FeelsLike,
+            Humidity = weatherModel.Humidity,
+            WindSpeed = weatherModel.WindSpeed,
+            WindDir = weatherModel.WindDir,
+            FetchedAt = DateTime.UtcNow,
+        };
+    }
+    
+    public static IEnumerable<WeatherDataModel> CreateMany(IEnumerable<WeatherDataEntity> entities)
+        => entities.Select(Create);
 }

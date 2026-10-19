@@ -6,7 +6,7 @@ public class IconEntity
 {
     public int Id { get; set; }
     public string? Name { get; set; }
-    public string? Type { get; set; }
+    public string? FileType { get; set; }
     public string? Base64Data { get; set; }
     public string? MaterialIcon { get; set; }
 

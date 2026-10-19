@@ -5,12 +5,12 @@ namespace Gridly.Factories
 {
     public class WeatherDataConnectionFactory
     {
-        public static WeatherDataConnectionDtoModel Create(int cardId, int weatherId)
-        => new WeatherDataConnectionDtoModel
-        {
-            CardId = cardId,
-            WeatherId = weatherId,
-        };
+        public static WeatherDataConnectionEntity Create(int cardId, int weatherId)
+            => new()
+            {
+                CardId = cardId,
+                WeatherId = weatherId,
+            };
 
         public static WeatherDataConnectionDtoModel Create(WeatherDataConnectionEntity entity)
         => new WeatherDataConnectionDtoModel

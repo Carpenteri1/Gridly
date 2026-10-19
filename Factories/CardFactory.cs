@@ -17,7 +17,7 @@ public static class CardFactory
             RowColumnId = entity.RowColumnId,
             Name = entity.Name,
             Url = entity.Url,
-            Type = entity.Type,
+            WidgetType = entity.WidgetType,
             IconUrl = entity.IconUrl,
             Settings = entity.Settings is null
                 ? null
@@ -36,7 +36,7 @@ public static class CardFactory
                 {
                     Id = icon.Id,
                     Name = icon.Name!,
-                    Type = icon.Type!,
+                    FileType = icon.FileType!,
                     Base64Data = icon.Base64Data!,
                     MaterialIcon = icon.MaterialIcon!,
                 },
@@ -51,7 +51,7 @@ public static class CardFactory
             RowColumnId = card.RowColumnId,
             Name = card.Name,
             Url = card.Url,
-            Type = card.Type,
+            WidgetType = card.WidgetType,
             IconUrl = card.IconUrl,
             IconsConnected = card.IconData is null
                 ? null
@@ -76,13 +76,13 @@ public static class CardFactory
             RowColumnId = dto.RowColumnId,
             Name = dto.CardName,
             Url = dto.Url,
-            Type = dto.CardType,
+            WidgetType = dto.WidgetType,
             IconUrl = dto.IconUrl,
             IconData = new IconModel
             {
                 Id = dto.IconId,
                 Name = dto.IconName,
-                Type = dto.Type,
+                FileType = dto.FileType,
                 Base64Data = dto.Base64Data,
                 MaterialIcon = dto.MaterialIcon
             },

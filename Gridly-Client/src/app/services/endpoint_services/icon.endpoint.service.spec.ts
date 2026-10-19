@@ -23,7 +23,7 @@ describe('IconEndpointService', () => {
   });
 
   it('sends a GET request to the icon endpoint and returns the response', () => {
-    const icon: IconModel = { type: 'svg', name: 'dashboard', base64Data: 'abc', materialIcon: 'dashboard' };
+    const icon: IconModel = { fileType: 'svg', name: 'dashboard', base64Data: 'abc', materialIcon: 'dashboard' };
     let result: IconModel | undefined;
 
     service.get().subscribe((res) => (result = res));

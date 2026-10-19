@@ -11,7 +11,6 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
     public DbSet<IconEntity> Icons => Set<IconEntity>();
     public DbSet<ColumnRowEntity> RowColumns => Set<ColumnRowEntity>();
     public DbSet<WidgetEntity> Widgets => Set<WidgetEntity>();
-    public DbSet<WidgetTypeEntity> WidgetTypes => Set<WidgetTypeEntity>();
     public DbSet<WeatherDataConnectionEntity> WeatherDataConnections => Set<WeatherDataConnectionEntity>();
     public DbSet<ProviderKeyEntity> ProviderKeys => Set<ProviderKeyEntity>();
     public DbSet<WeatherDataEntity> WeatherData => Set<WeatherDataEntity>();
@@ -66,16 +65,6 @@ public class GridlyDbContext(DbContextOptions<GridlyDbContext> options) : DbCont
                 new WidgetEntity { Id = 2, Description = "", Icon = "box", Label = "Custom", WidgetType = 2 },
                 new WidgetEntity { Id = 3, Description = "", Icon = "Box", Label = "Empty", WidgetType = 1 }
             );
-        });
-
-        modelBuilder.Entity<WidgetTypeEntity>(e =>
-        {
-            e.ToTable("WidgetType");
-            e.HasKey(wt => wt.Id);
-            e.HasData(
-                new WidgetTypeEntity { Id = 1, Name = "Empty"},
-                new WidgetTypeEntity { Id = 2, Name = "Custom"}, 
-                new WidgetTypeEntity { Id = 3, Name = "Weather"});
         });
 
         modelBuilder.Entity<WeatherDataConnectionEntity>(e =>

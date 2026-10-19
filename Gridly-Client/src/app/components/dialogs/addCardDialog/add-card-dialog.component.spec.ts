@@ -24,7 +24,7 @@ describe('AddCardDialogComponent', () => {
     }),
     setIcon: () => ({
       id: undefined,
-      type: '',
+      fileType: '',
       name: '',
       base64Data: '',
       materialIcon: 'box',
@@ -95,7 +95,7 @@ describe('AddCardDialogComponent', () => {
     });
     expect(card.iconData).toEqual({
       id: undefined,
-      type: '',
+      fileType: '',
       name: '',
       base64Data: '',
       materialIcon: 'box',
