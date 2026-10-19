@@ -46,7 +46,7 @@ export class DialogService {
     const extension = this.getFileExtension(file!.name);
 
     iconData.name = this.getFileName(file!.name);
-    iconData.type = extension;
+    iconData.fileType = extension;
     iconData.materialIcon = '';
     iconData.base64Data = await this.readFileAsBase64(file!);
 
@@ -69,7 +69,7 @@ export class DialogService {
   setIcon(icon : string): IconModel {
     return {
       id: undefined,
-      type: '',
+      fileType: '',
       name: '',
       base64Data: '',
       materialIcon: icon,

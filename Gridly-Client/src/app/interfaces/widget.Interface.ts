@@ -1,6 +1,6 @@
 export interface Widget {
   id: number,
-  widgetType: string,
+  widgetType: number,
   label: string,
   description: string,
   icon: string,

@@ -22,7 +22,7 @@ describe('WidgetEndpointService', () => {
   });
 
   it('sends a GET request to the widget endpoint and returns the response', () => {
-    const widgets: Widget[] = [{ id: 1, widgetType: 'Empty', label: 'Empty', description: '', icon: '' }];
+    const widgets: Widget[] = [{ id: 1, widgetType: 1, label: 'Empty', description: '', icon: '' }];
     let result: Widget[] | undefined;
 
     service.get().subscribe((res) => (result = res));

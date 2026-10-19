@@ -10,7 +10,7 @@ describe('CardRulesService', () => {
     indexPosition: 1,
     name: 'Alpha',
     url: 'https://alpha.example',
-    iconData: { name: 'dashboard', type: 'svg', base64Data: 'abc', materialIcon: 'dashboard' },
+    iconData: { name: 'dashboard', fileType: 'svg', base64Data: 'abc', materialIcon: 'dashboard' },
     settings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
   };
   const componentWithIconUrl: CardModel = {

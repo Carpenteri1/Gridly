@@ -9,7 +9,7 @@
 
     <div class="ew-body">
       <form (ngSubmit)="onSubmit()">
-        @if (facade.card.type !== CardTypes.Weather) {
+        @if (facade.card.widgetType !== CardTypes.Weather) {
           <mat-form-field class="mb-3 w-100 gap-2 form-control">
             <mat-label for="name-input" class="form-label">{{'editCardDialog.text.inputNameTitle' | translate}}</mat-label>
             <input

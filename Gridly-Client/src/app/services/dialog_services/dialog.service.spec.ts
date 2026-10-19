@@ -54,7 +54,7 @@ describe('DialogService', () => {
       base64Data: 'encoded-image',
       materialIcon: '',
       name: 'weather',
-      type: 'svg',
+      fileType: 'svg',
     });
 
     expect(readFileAsBase64Spy).toHaveBeenCalledWith(file);
@@ -69,7 +69,7 @@ describe('DialogService', () => {
     const result = await service.onFileUpload(event);
 
     expect(result).toBeDefined();
-    expect(result?.type).toBe('svg');
+    expect(result?.fileType).toBe('svg');
   });
 
   it('keeps the whole file name when it has no extension', async () => {
@@ -95,7 +95,7 @@ describe('DialogService', () => {
   it('builds icon data for a given material icon name', () => {
     expect(service.setIcon('box')).toEqual({
       id: undefined,
-      type: '',
+      fileType: '',
       name: '',
       base64Data: '',
       materialIcon: 'box',

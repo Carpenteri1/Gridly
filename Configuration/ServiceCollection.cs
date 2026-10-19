@@ -17,12 +17,8 @@ public static class ServiceCollection
         services.AddScoped<IVersionEndPoint, VersionEndPoint>();
         services.AddScoped<IWeatherEndPoint, WeatherEndPoint>();
         services.AddScoped<IProvidersEndPoint, ProvidersEndPoint>();
-        services.AddScoped<ICardRepository,CardRepository>();
-        services.AddScoped<IColumnRowRepository,ColumnRowRepository>();
         services.AddScoped<ISettingsRepository,SettingsRepository>();
-        services.AddScoped<IIconRepository,IconRepository>();
         services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
-        services.AddScoped<IWidgetRepository,WidgetRepository>();
         services.AddScoped<ILocalProvidersRepository,LocalProversRepository>();
         services.AddScoped<IWeatherRepository,WeatherRepository>();
         services.AddScoped<IWeatherDataConnectionRepository,WeatherDataConnectionRepository>();

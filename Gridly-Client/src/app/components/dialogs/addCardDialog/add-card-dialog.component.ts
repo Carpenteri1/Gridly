@@ -32,7 +32,7 @@ export class AddCardDialogComponent
   onSelect(widget: Widget) {
     const card = new CardModel();
     card.name = widget.label;
-    card.type = widget.widgetType;
+    card.widgetType = widget.widgetType;
     card.settings = this.#dialogService.settings();
     card.iconData = this.#dialogService.setIcon(widget.icon);
 

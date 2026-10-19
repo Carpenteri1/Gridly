@@ -110,10 +110,10 @@ describe('EditCardDialogFacade', () => {
   });
 
   it('reports isWeatherCard based on the card type', () => {
-    facade.card.type = CardTypes.Custom;
+    facade.card.widgetType = CardTypes.Custom;
     expect(facade.isWeatherCard).toBe(false);
 
-    facade.card.type = CardTypes.Weather;
+    facade.card.widgetType = CardTypes.Weather;
     expect(facade.isWeatherCard).toBe(true);
   });
 

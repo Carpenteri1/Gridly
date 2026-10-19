@@ -1,20 +1,27 @@
 using Gridly.Querys;
 using Gridly.Constants;
+using Gridly.Data;
 using Gridly.Dtos;
 using Gridly.Services;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gridly.Handlers;
 
 public class IconHandler(
     IHttpClientServices httpClientServices,
-    IMemoryCashingService memoryCache) : 
+    IMemoryCashingService memoryCache,
+    GridlyDbContext dbContext) : 
         IRequestHandler<GetIconQuery, IResult>,
         IRequestHandler<SearchIconsQuery, IResult>
 {
     public async Task<IResult> Handle(GetIconQuery query, CancellationToken cancellationToken)
     {
-        return Results.Ok();
+        var iconEntities = await dbContext.Icons
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+        
+        return iconEntities.Any() ? Results.Ok(iconEntities) : Results.NoContent();
     }
 
     public async Task<IResult> Handle(SearchIconsQuery query, CancellationToken cancellationToken)
