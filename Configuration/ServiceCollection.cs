@@ -17,8 +17,6 @@ public static class ServiceCollection
         services.AddScoped<IVersionEndPoint, VersionEndPoint>();
         services.AddScoped<IWeatherEndPoint, WeatherEndPoint>();
         services.AddScoped<IProvidersEndPoint, ProvidersEndPoint>();
-        services.AddScoped<ISettingsRepository,SettingsRepository>();
-        services.AddScoped<IIconConnectedRepository,IconConnectedRepository>();
         services.AddScoped<ILocalProvidersRepository,LocalProversRepository>();
         services.AddScoped<IWeatherRepository,WeatherRepository>();
         services.AddScoped<IWeatherDataConnectionRepository,WeatherDataConnectionRepository>();

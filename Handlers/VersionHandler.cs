@@ -16,17 +16,18 @@ public class VersionHandler(
     public async Task<IResult> Handle(GetVersionQuery query, CancellationToken cancellationToken)
     {
         var cashedVersion = memoryCashingService.Get<VersionModel>("version");
-        if (cashedVersion == null)
+        if (cashedVersion != null)
+            return cashedVersion != null ? Results.Ok(cashedVersion) : Results.NotFound();
+        
+        var (success, version) = await versionEndPoint.GetVersion();
+        if (success)
         {
-            var (success, version) = await versionEndPoint.GetVersion();
-            if (success)
-            {
-                memoryCashingService.Store("version", version!);
-                cashedVersion = version;
-            }
+            memoryCashingService.Store("version", version!);
+            cashedVersion = version;
         }
 
         return cashedVersion != null ? Results.Ok(cashedVersion) : Results.NotFound();
+
     }
 
     public async Task<IResult> Handle(GetLatestVersionQuery query, CancellationToken cancellationToken)

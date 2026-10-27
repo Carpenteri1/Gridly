@@ -45,8 +45,5 @@
 
   <!-- No patched SQLitePCLRaw.lib.e_sqlite3 exists yet for this advisory (tracked upstream in
        dotnet/dotnet#7294); remove this suppression once Microsoft.Data.Sqlite ships a fix. -->
-  <ItemGroup>
-    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-2m69-gcr7-jv3q" />
-  </ItemGroup>
 
 </Project>

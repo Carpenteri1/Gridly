@@ -1,14 +1,15 @@
 using Gridly.Constants;
-using Gridly.EndPoints;
+using Gridly.Data;
 using Gridly.EndPoints.Interfaces;
 using Gridly.Enums;
+using Gridly.Extension;
 using Gridly.Factories;
-using Gridly.Repositories;
 using Gridly.Repositories.Interfaces;
 
 namespace Gridly.Services;
 
 public class WeatherPeriodicRefreshBackgroundService(
+    GridlyDbContext dbContext,
     ILogger<WeatherPeriodicRefreshBackgroundService> logger,
     IServiceScopeFactory serviceScopeFactory,
     IProviderKeysProtectionService providerKeysProtectionService) : PeriodicRefreshBackgroundService
@@ -17,7 +18,7 @@ public class WeatherPeriodicRefreshBackgroundService(
 
     protected override async Task RefreshData(CancellationToken cancellationToken)
     {
-        using var scope = serviceScopeFactory.CreateScope();//Creates temperary dependency injection scope
+        using var scope = serviceScopeFactory.CreateScope();//Creates temperary dependency injection in scope
         var weatherRepository = scope.ServiceProvider.GetRequiredService<IWeatherRepository>();
         var weatherEndPoint = scope.ServiceProvider.GetRequiredService<IWeatherEndPoint>();
         var localProvidersRepository = scope.ServiceProvider.GetRequiredService<ILocalProvidersRepository>();
@@ -25,14 +26,14 @@ public class WeatherPeriodicRefreshBackgroundService(
         var stored = await weatherRepository.GetStoredWeatherData();
         if (stored is null) return;
 
-        var storedKey = await localProvidersRepository.Get(EndpointStrings.VisualCrossingProvider);
+        var storedKey = await dbContext.ProviderKeys.GetLocalProviderKeyByProvider(EndpointStrings.VisualCrossingProvider);
         if (storedKey is null)
         {
             logger.LogWarning("Hourly weather refresh skipped because no Visual Crossing provider key is stored");
             return;
         }
 
-        var rawKey = providerKeysProtectionService.Unprotect(storedKey.EncryptedKey);
+        var rawKey = providerKeysProtectionService.Unprotect(storedKey.EncryptedKey!);
         if (string.IsNullOrWhiteSpace(rawKey))
         {
             logger.LogWarning("Hourly weather refresh skipped because no Valid Visual Crossing provider key is stored");
