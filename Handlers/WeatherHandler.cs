@@ -14,7 +14,6 @@ namespace Gridly.Handlers;
 
 public class WeatherHandler(
     IWeatherEndPoint weatherEndpoint,
-    ILocalProvidersRepository localProvidersRepository,
     IProviderKeysProtectionService providerKeysProtectionService,
     GridlyDbContext dbContext) :
     IRequestHandler<GetWeatherQuery, IResult>,
@@ -51,25 +50,28 @@ public class WeatherHandler(
         
         if(dto is null) return Results.NotFound();
         
-        switch (status)
+        if (status == StatusCodes.Status200OK)
         {
-            case StatusCodes.Status401Unauthorized:
-                await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Invalid));
-                return Results.Unauthorized();
-            case StatusCodes.Status403Forbidden:
-                await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Invalid));
-                return Results.Forbid();
-            case < StatusCodes.Status200OK or >= StatusCodes.Status300MultipleChoices:
-                return Results.BadRequest();
-            case StatusCodes.Status200OK:
-                //TODO move over to EF corex
-                await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider, nameof(ProvidersKeyStatusEnum.Valid));
-                var weather = WeatherDataFactory.Create(dto);
-                weather.FetchedAt = DateTime.UtcNow;
-                return Results.Ok(weather);
-            default:
-                return Results.Problem(statusCode: StatusCodes.Status503ServiceUnavailable, detail: "ProviderUnavailable");
+            storedKeyEntity.Status = nameof(ProvidersKeyStatusEnum.Valid);
+            var weather = WeatherDataFactory.Create(dto);
+            weather.FetchedAt = DateTime.UtcNow;
+            return Results.Ok(weather);
         }
+
+        if (status == StatusCodes.Status401Unauthorized ||
+            status == StatusCodes.Status403Forbidden)
+        {
+            storedKeyEntity.Status = nameof(ProvidersKeyStatusEnum.Invalid);
+        }
+
+        if (status < StatusCodes.Status200OK ||
+            status >= StatusCodes.Status300MultipleChoices)
+        {
+            return Results.BadRequest();
+        }
+        
+        return Results.Problem(statusCode: StatusCodes.Status503ServiceUnavailable, detail: "ProviderUnavailable");
+        
     }
     
     public async Task<IResult> Handle(GetStoredWeatheDataQuery request, CancellationToken cancellationToken)
