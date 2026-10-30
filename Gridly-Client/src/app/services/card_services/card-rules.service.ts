@@ -45,7 +45,7 @@ export class CardRulesService {
       card !== null &&
       card.iconData !== undefined &&
       card.iconData.name !== '' &&
-      card.iconData.type !== undefined &&
+      card.iconData.fileType !== undefined &&
       card.iconData.base64Data !== '' &&
       !this.getSettings(card)?.imageHidden;
   }

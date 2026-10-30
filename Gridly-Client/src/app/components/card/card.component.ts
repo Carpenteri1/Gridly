@@ -55,7 +55,7 @@ export class CardComponent {
   editActive = this.#gridService.inEditMode;
 
   showProviderKeyButton = computed(() => {
-    if (this.card.type !== CardTypes.Weather) return false;
+    if (this.card.widgetType !== CardTypes.Weather) return false;
     const status = this.providerKeyStatus();
     return !(status?.exists && status.keyStatus === ProviderKeyStatus.Valid);
   });

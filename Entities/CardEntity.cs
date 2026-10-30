@@ -7,7 +7,7 @@ public class CardEntity
     public int RowColumnId { get; set; }
     public string? Name { get; set; }
     public string? Url { get; set; }
-    public string? Type { get; set; }
+    public int WidgetType { get; set; }
     public string? IconUrl { get; set; }
 
     public SettingsEntity? Settings { get; set; }

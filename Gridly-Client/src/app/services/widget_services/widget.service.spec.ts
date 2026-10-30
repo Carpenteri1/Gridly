@@ -7,7 +7,7 @@ import { WidgetService } from './widget.service';
 describe('WidgetService', () => {
   let service: WidgetService;
 
-  const widgets: Widget[] = [{ id: 1, widgetType: 'Empty', label: 'Empty', description: '', icon: '' }];
+  const widgets: Widget[] = [{ id: 1, widgetType: 1, label: 'Empty', description: '', icon: '' }];
 
   const endpointMock = {
     get: jest.fn(() => of(widgets)),

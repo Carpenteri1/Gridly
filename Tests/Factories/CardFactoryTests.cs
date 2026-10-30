@@ -14,11 +14,11 @@ public class CardFactoryTests
             IndexPosition = 3,
             RowColumnId = 1,
             CardName = "Docs",
-            CardType = "",
+            WidgetType = 1,
             Url = "https://example.test",
             IconUrl = "/icons/docs.svg",
             IconName = "",
-            Type = "",
+            FileType = "",
             Base64Data = "",
             MaterialIcon = ""
         };
@@ -40,8 +40,8 @@ public class CardFactoryTests
     {
         var dtos = new[]
         {
-            new CardDtoModel { CardId = 1, CardName = "First", CardType = "", Url = "", IconUrl = "", IconName = "", Type = "", Base64Data = "", MaterialIcon = "" },
-            new CardDtoModel { CardId = 2, CardName = "Second", CardType = "", Url = "", IconUrl = "", IconName = "", Type = "", Base64Data = "", MaterialIcon = "" }
+            new CardDtoModel { CardId = 1, CardName = "First", WidgetType = 1, Url = "", IconUrl = "", IconName = "", FileType = "", Base64Data = "", MaterialIcon = "" },
+            new CardDtoModel { CardId = 2, CardName = "Second", WidgetType = 1, Url = "", IconUrl = "", IconName = "", FileType = "", Base64Data = "", MaterialIcon = "" }
         };
 
         var result = CardFactory.CreateMany(dtos).ToArray();
@@ -60,12 +60,12 @@ public class CardFactoryTests
         {
             CardId = 8,
             CardName = "",
-            CardType = "",
+            WidgetType = 1,
             Url = "",
             IconUrl = "",
             IconId = 21,
             IconName = "grid",
-            Type = "svg",
+            FileType = "svg",
             Base64Data = "Zm9v",
             MaterialIcon = "dashboard",
             SettingsId = 13,
@@ -80,7 +80,7 @@ public class CardFactoryTests
         Assert.NotNull(result.IconData);
         Assert.Equal(21, result.IconData.Id);
         Assert.Equal("grid", result.IconData.Name);
-        Assert.Equal("svg", result.IconData.Type);
+        Assert.Equal("svg", result.IconData.FileType);
         Assert.Equal("Zm9v", result.IconData.Base64Data);
         Assert.Equal("dashboard", result.IconData.MaterialIcon);
 

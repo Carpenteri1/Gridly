@@ -28,8 +28,6 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
-    <PackageReference Include="dapper" Version="2.1.66" />
-    <PackageReference Include="dapper.sqlbuilder" Version="2.1.66" />
     <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
@@ -45,8 +43,5 @@
 
   <!-- No patched SQLitePCLRaw.lib.e_sqlite3 exists yet for this advisory (tracked upstream in
        dotnet/dotnet#7294); remove this suppression once Microsoft.Data.Sqlite ships a fix. -->
-  <ItemGroup>
-    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-2m69-gcr7-jv3q" />
-  </ItemGroup>
 
 </Project>

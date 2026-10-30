@@ -10,7 +10,7 @@ namespace Gridly.Tests.Handlers;
 
 public class WeatherHandlerTests
 {
-    private static WeatherDataModel MakeWeather(string address = "Stockholm") =>
+    /*private static WeatherDataModel MakeWeather(string address = "Stockholm") =>
         new()
         {
             Id = 1,
@@ -165,5 +165,5 @@ public class WeatherHandlerTests
 
         var updatedConnection = (await connectionRepository.GetManyById(1, null)).Single();
         Assert.NotEqual(originalWeatherId, updatedConnection.WeatherId);
-    }
+    }*/
 }

@@ -18,9 +18,10 @@ public class WeatherDataFactory
         WindDir = entity.WindDir,
         FetchedAt = entity.FetchedAt,
     };
-
-    public static WeatherDataModel Create(WeatherDataDto dto)
+    
+    public static WeatherDataEntity Create(WeatherDataDto dto)
     {
+        if (dto == null) throw new ArgumentNullException(nameof(dto));
         var day = dto.days.FirstOrDefault();
         return new()
         {
@@ -35,4 +36,25 @@ public class WeatherDataFactory
             FetchedAt = dto.fetchedAt,
         };
     }
+    
+    public static WeatherDataEntity Create(WeatherDataModel weatherModel)
+    {
+        return new (){
+            Address = weatherModel.Address,
+            Timezone = weatherModel.Timezone,
+            Description = weatherModel.Description,
+            Temp = weatherModel.Temp,
+            FeelsLike = weatherModel.FeelsLike,
+            Humidity = weatherModel.Humidity,
+            WindSpeed = weatherModel.WindSpeed,
+            WindDir = weatherModel.WindDir,
+            FetchedAt = DateTime.UtcNow,
+        };
+    }
+    
+    public static IEnumerable<WeatherDataModel> CreateMany(IEnumerable<WeatherDataEntity> entities)
+        => entities.Select(Create);
+    
+    public static IEnumerable<WeatherDataEntity> CreateMany(IEnumerable<WeatherDataDto> dtos)
+        => dtos.Select(Create);
 }

@@ -1,6 +1,5 @@
 export enum CardTypes {
-    Empty = 'Empty',
-    Custom = 'Custom',
-    Weather = 'Weather',
+    Empty = 1,
+    Custom = 2,
+    Weather = 3,
   }
-

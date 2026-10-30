@@ -11,7 +11,7 @@ public class IconFactoryTests
         var result = IconFactory.Create((IconModel?)null);
 
         Assert.Equal(string.Empty, result.Name);
-        Assert.Equal(string.Empty, result.Type);
+        Assert.Equal(string.Empty, result.FileType);
         Assert.Equal(string.Empty, result.Base64Data);
         Assert.Equal("box", result.MaterialIcon);
     }
@@ -22,7 +22,7 @@ public class IconFactoryTests
         var icon = new IconModel
         {
             Name = "grid",
-            Type = "svg",
+            FileType = "svg",
             Base64Data = "Zm9v",
             MaterialIcon = "dashboard"
         };
@@ -30,7 +30,7 @@ public class IconFactoryTests
         var result = IconFactory.Create(icon);
 
         Assert.Equal(icon.Name, result.Name);
-        Assert.Equal(icon.Type, result.Type);
+        Assert.Equal(icon.FileType, result.FileType);
         Assert.Equal(icon.Base64Data, result.Base64Data);
         Assert.Equal(icon.MaterialIcon, result.MaterialIcon);
     }
@@ -41,7 +41,7 @@ public class IconFactoryTests
         var icon = new IconModel
         {
             Name = "grid",
-            Type = "svg",
+            FileType = "svg",
             Base64Data = "Zm9v",
             MaterialIcon = null!
         };

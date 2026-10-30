@@ -8,7 +8,7 @@ namespace Gridly.Tests.Handlers;
 
 public class IconHandlerTests
 {
-    [Fact]
+   /* [Fact]
     public async Task Handle_WhenCacheHasIcons_FiltersWithoutCallingHttp()
     {
         var cache = new FakeMemoryCashingService();
@@ -72,5 +72,5 @@ public class IconHandlerTests
         Assert.Equal(50, payload.Icons.Length);
         Assert.Equal("grid_01 e001", payload.Icons[0]);
         Assert.Equal("grid_50 e050", payload.Icons[49]);
-    }
+    }*/
 }

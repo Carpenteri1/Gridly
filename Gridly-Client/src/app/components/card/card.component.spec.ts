@@ -31,7 +31,7 @@ describe('CardComponent', () => {
     indexPosition: 1,
     name: 'Weather',
     url: 'https://weather.example',
-    iconData: { name: '', type: '', base64Data: '', materialIcon: 'cloud' },
+    iconData: { name: '', fileType: '', base64Data: '', materialIcon: 'cloud' },
     settings: { width: 250, height: 250, imageHidden: false, titleHidden: false },
   };
 
@@ -173,7 +173,7 @@ describe('CardComponent', () => {
   });
 
   describe('provider key button', () => {
-    const weatherCard: CardModel = { ...currentCard, type: CardTypes.Weather };
+    const weatherCard: CardModel = { ...currentCard, widgetType: CardTypes.Weather };
 
     const keyButton = () =>
       (fixture.nativeElement as HTMLElement).querySelector('.bi-key');
@@ -204,7 +204,7 @@ describe('CardComponent', () => {
 
     it('is hidden on cards that are not weather cards', () => {
       providerKeyStatus.set({ exists: false, keyStatus: ProviderKeyStatus.Unknown });
-      createComponent({ ...currentCard, type: CardTypes.Empty });
+      createComponent({ ...currentCard, widgetType: CardTypes.Empty });
 
       expect(createCardComponent.showProviderKeyButton()).toBe(false);
       expect(keyButton()).toBeNull();
