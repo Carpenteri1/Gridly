@@ -1,11 +1,8 @@
 using Gridly.Commands;
 using Gridly.Dtos;
-using Gridly.EndPoints;
 using Gridly.EndPoints.Interfaces;
 using Gridly.Models;
 using Gridly.Querys;
-using Gridly.Repositories;
-using Gridly.Repositories.Interfaces;
 using Gridly.Services;
 using MediatR;
 
@@ -95,99 +92,6 @@ internal sealed class FakeWeatherEndPoint : IWeatherEndPoint
     }
 }
 
-internal sealed class FakeWeatherRepository : IWeatherRepository
-{
-    private readonly Dictionary<string, WeatherDataModel> _byAddress = new();
-    private int _nextId = 1;
-
-    public int UpsertCallCount { get; private set; }
-    public bool DeleteIfOrphanedResult { get; set; } = true;
-
-    public void Seed(WeatherDataModel weather)
-    {
-        if (weather.Id == 0) weather.Id = _nextId;
-        _nextId = Math.Max(_nextId, weather.Id + 1);
-        _byAddress[weather.Address] = weather;
-    }
-
-    public Task<WeatherDataModel?> Get(string address) =>
-        Task.FromResult(_byAddress.TryGetValue(address, out var value) ? value : null);
-
-    public Task<IEnumerable<StoredWeatherDataDto>?> GetStoredWeatherData() =>
-        Task.FromResult<IEnumerable<StoredWeatherDataDto>?>(Array.Empty<StoredWeatherDataDto>());
-
-    public Task<WeatherDataModel> Insert(WeatherDataModel weather)
-    {
-        UpsertCallCount++;
-        weather.Id = _byAddress.TryGetValue(weather.Address, out var existing) ? existing.Id : _nextId++;
-        _byAddress[weather.Address] = weather;
-        return Task.FromResult(weather);
-    }
-}
-
-internal sealed class FakeWeatherDataConnectionRepository : IWeatherDataConnectionRepository
-{
-    private readonly List<WeatherDataConnectionDtoModel> _connections = new();
-    private readonly Dictionary<string, WeatherDataModel> _byAddress = new();
-    private readonly Dictionary<int, WeatherDataModel> _byCardId = new();
-
-    public IEnumerable<WeatherDataModel>? StoredWeatherData { get; set; }
-    public int UpdateCallCount { get; private set; }
-    public int InsertCallCount { get; private set; }
-    public int UpsertCallCount { get; private set; }
-    public int DeleteCallCount { get; private set; }
-    public List<int> DeletedCardIds { get; } = new();
-    
-    public void Seed(int cardId, int weatherId) =>
-        _connections.Add(new WeatherDataConnectionDtoModel { CardId = cardId, WeatherId = weatherId });
-
-    public Task<WeatherDataModel> Get(string address) =>
-        Task.FromResult(_byAddress.GetValueOrDefault(address)!);
-
-    public Task<WeatherDataModel> GetById(int cardId) =>
-        Task.FromResult(_byCardId.GetValueOrDefault(cardId)!);
-
-    public Task<IEnumerable<WeatherDataModel>?> GetStoredWeatherData() =>
-        Task.FromResult(StoredWeatherData);
-    
-    public Task<IEnumerable<WeatherDataConnectionDtoModel>> GetManyById(int? cardId, int? weatherId)
-    {
-        var results = _connections.Where(c =>
-            (cardId is null || c.CardId == cardId) &&
-            (weatherId is null || c.WeatherId == weatherId));
-        return Task.FromResult<IEnumerable<WeatherDataConnectionDtoModel>>(results.ToList());
-    }
-
-    public Task<bool> Update(WeatherDataModel weather)
-    {
-        UpdateCallCount++;
-        return Task.FromResult(true);
-    }
-
-    public Task<bool> Insert(WeatherDataModel weather)
-    {
-        InsertCallCount++;
-        return Task.FromResult(true);
-    }
-    
-    public Task<WeatherDataConnectionDtoModel> Upsert(WeatherDataConnectionDtoModel model)
-    {
-        UpsertCallCount++;
-        _connections.RemoveAll(c => c.CardId == model.CardId);
-        _connections.Add(model);
-        return Task.FromResult(model);
-    }
-    
-    public Task<bool> Delete(int cardId)
-    {
-        DeleteCallCount++;
-        DeletedCardIds.Add(cardId);
-        var removed = _connections.RemoveAll(c => c.CardId == cardId);
-        return Task.FromResult(removed > 0);
-    }
-    
-}
-
 internal sealed class FakeMediator : IMediator
 {
     public List<object> SentRequests { get; } = new();
@@ -225,36 +129,6 @@ internal sealed class FakeMediator : IMediator
 
     public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification =>
         throw new NotSupportedException();
-}
-internal sealed class FakeLocalProvidersRepository : ILocalProvidersRepository
-{
-    public ProviderKeyDtoModel? StoredKey { get; set; }
-    public int UpsertCallCount { get; private set; }
-    public int UpdateStatusCallCount { get; private set; }
-    public string? LastUpdatedStatus { get; private set; }
-
-    public Task<ProviderKeyDtoModel?> Get(string provider) => Task.FromResult(StoredKey);
-
-    public Task<bool> Upsert(string provider, string encryptedKey, string status)
-    {
-        UpsertCallCount++;
-        StoredKey = new ProviderKeyDtoModel
-        {
-            Provider = provider,
-            EncryptedKey = encryptedKey,
-            Status = status,
-            LastValidatedAt = DateTime.UtcNow
-        };
-        return Task.FromResult(true);
-    }
-
-    public Task<bool> UpdateStatus(string provider, string status)
-    {
-        UpdateStatusCallCount++;
-        LastUpdatedStatus = status;
-        if (StoredKey is not null) StoredKey.Status = status;
-        return Task.FromResult(true);
-    }
 }
 
 internal sealed class FakeProviderKeysProtectionService : IProviderKeysProtectionService

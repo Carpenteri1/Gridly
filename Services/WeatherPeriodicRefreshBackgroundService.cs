@@ -4,27 +4,21 @@ using Gridly.EndPoints.Interfaces;
 using Gridly.Enums;
 using Gridly.Extension;
 using Gridly.Factories;
-using Gridly.Repositories.Interfaces;
 
 namespace Gridly.Services;
 
 public class WeatherPeriodicRefreshBackgroundService(
     GridlyDbContext dbContext,
     ILogger<WeatherPeriodicRefreshBackgroundService> logger,
-    IServiceScopeFactory serviceScopeFactory,
-    IProviderKeysProtectionService providerKeysProtectionService) : PeriodicRefreshBackgroundService
+    IProviderKeysProtectionService providerKeysProtectionService,
+    IWeatherEndPoint weatherEndPoint) : PeriodicRefreshBackgroundService
 {
     protected override TimeSpan Interval => TimeSpan.FromHours(1);
 
     protected override async Task RefreshData(CancellationToken cancellationToken)
     {
-        using var scope = serviceScopeFactory.CreateScope();//Creates temperary dependency injection in scope
-        var weatherRepository = scope.ServiceProvider.GetRequiredService<IWeatherRepository>();
-        var weatherEndPoint = scope.ServiceProvider.GetRequiredService<IWeatherEndPoint>();
-        var localProvidersRepository = scope.ServiceProvider.GetRequiredService<ILocalProvidersRepository>();
-
-        var stored = await weatherRepository.GetStoredWeatherData();
-        if (stored is null) return;
+        var weatherDataEntities = dbContext.WeatherData.AsQueryable();
+        if (weatherDataEntities is null) return;
 
         var storedKey = await dbContext.ProviderKeys.GetLocalProviderKeyByProvider(EndpointStrings.VisualCrossingProvider);
         if (storedKey is null)
@@ -42,7 +36,7 @@ public class WeatherPeriodicRefreshBackgroundService(
         
         var isFirstCall = true;
         
-        foreach (var entry in stored)
+        foreach (var entry in weatherDataEntities)
         {
             if (cancellationToken.IsCancellationRequested) return;
 
@@ -54,10 +48,12 @@ public class WeatherPeriodicRefreshBackgroundService(
                 var (status, weather) = await weatherEndPoint.Get(entry.Address, rawKey);
                 if (status is StatusCodes.Status200OK && weather is not null)
                 {
-                    await weatherRepository.Insert(WeatherDataFactory.Create(weather));
-                    await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider,
-                        nameof(ProvidersKeyStatusEnum.Valid));
-
+                    var convertedWeatherDataEntities = WeatherDataFactory.Create(weather);
+                    dbContext.WeatherData.Add(convertedWeatherDataEntities);
+                    
+                    var localProviderEntity = await dbContext.ProviderKeys.GetLocalProviderKeyByProvider(EndpointStrings.VisualCrossingProvider);
+                    localProviderEntity!.Status = nameof(ProvidersKeyStatusEnum.Valid);
+                    await dbContext.SaveChangesAsync(cancellationToken);
                     logger.LogInformation("Hourly weather refresh for {Address} completed", entry.Address);
                 }
             }
@@ -65,10 +61,11 @@ public class WeatherPeriodicRefreshBackgroundService(
             {
                 var s = ex.StatusCode;
                 logger.LogWarning(
-                    "Hourly weather refresh for {Address} did not return fresh data",
-                    entry.Address);
-                await localProvidersRepository.UpdateStatus(EndpointStrings.VisualCrossingProvider,
-                    nameof(ProvidersKeyStatusEnum.Invalid));
+                    "Hourly weather refresh for {Address} did not return fresh data, status code {StatusCode}",
+                    entry.Address, ex.StatusCode);
+                var localProviderEntity = await dbContext.ProviderKeys.GetLocalProviderKeyByProvider(EndpointStrings.VisualCrossingProvider);
+                localProviderEntity!.Status = nameof(ProvidersKeyStatusEnum.Valid);
+
             }
             catch (Exception)
             {

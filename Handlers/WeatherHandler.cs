@@ -5,7 +5,6 @@ using Gridly.EndPoints.Interfaces;
 using Gridly.Enums;
 using Gridly.Factories;
 using Gridly.Querys;
-using Gridly.Repositories.Interfaces;
 using Gridly.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +54,7 @@ public class WeatherHandler(
             storedKeyEntity.Status = nameof(ProvidersKeyStatusEnum.Valid);
             var weather = WeatherDataFactory.Create(dto);
             weather.FetchedAt = DateTime.UtcNow;
+            await dbContext.SaveChangesAsync(cancellationToken);
             return Results.Ok(weather);
         }
 

@@ -1,10 +1,8 @@
 using Gridly.Commands;
 using Gridly.Handlers;
 using Gridly.Models;
-using Gridly.Repositories;
 using Gridly.Services;
 using Gridly.Dtos;
-using Gridly.Repositories.Interfaces;
 using Gridly.Tests.Infrastructure;
 
 namespace Gridly.Tests.Handlers;

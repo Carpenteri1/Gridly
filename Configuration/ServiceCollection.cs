@@ -2,8 +2,6 @@ using Gridly.Data;
 using Gridly.EndPoints;
 using Gridly.EndPoints.Interfaces;
 using Gridly.helpers;
-using Gridly.Repositories;
-using Gridly.Repositories.Interfaces;
 using Gridly.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,9 +15,6 @@ public static class ServiceCollection
         services.AddScoped<IVersionEndPoint, VersionEndPoint>();
         services.AddScoped<IWeatherEndPoint, WeatherEndPoint>();
         services.AddScoped<IProvidersEndPoint, ProvidersEndPoint>();
-        services.AddScoped<ILocalProvidersRepository,LocalProversRepository>();
-        services.AddScoped<IWeatherRepository,WeatherRepository>();
-        services.AddScoped<IWeatherDataConnectionRepository,WeatherDataConnectionRepository>();
         services.AddScoped<IProvidersEndPointExtensions,ProvidersEndPointExtensions>();
     }
 
