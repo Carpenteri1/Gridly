@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# CodeRabbit only reads this file from the repository root.
+reviews:
+  auto_review:
+    enabled: true
+    drafts: false
+    # Review every PR targeting the integration branch and the release branch.
+    base_branches:
+      - "^sandbox$"
+      - "^main$"
